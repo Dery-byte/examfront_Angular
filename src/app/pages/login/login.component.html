@@ -1,0 +1,113 @@
+<div class="bootstrap-wrapper">
+
+  
+    <div class="container">
+        <div class="row">
+            <div class="col-md-6 offset-md-3">
+    <mat-card>
+    <div class="container text-center">
+        <img style="border-radius: 50%;" src="../../../assets/logo1.jpg" height="150" width="150" alt="logo.png">
+    </div>
+                <h1 class="text-center">Login Here!!</h1>
+                <form (ngSubmit)="formSubmit()">
+
+                <mat-stepper #stepper>
+                  <mat-step [stepControl]="firstFormGroup" errorMessage="Name is required.">
+
+                      <ng-template matStepLabel>Enter Username</ng-template>
+                      <mat-form-field appearance="fill" class="full-width">
+                        <mat-label>Username</mat-label>
+                        <input 
+                        [(ngModel)]="loginData.username"
+                        name="username"
+                        type="text"
+                        matInput placeholder="Enter here">
+                      </mat-form-field>
+                      <div>
+                        <!-- <button mat-button matStepperNext>Next</button> -->
+                      </div>
+                  </mat-step>
+                  <mat-step [stepControl]="secondFormGroup" errorMessage="Address is required.">
+                      <ng-template matStepLabel>Enter Password</ng-template>
+                      <mat-form-field appearance="fill" class="full-width">
+                        <mat-label>Password</mat-label>
+                        <input
+                        [(ngModel)]="loginData.password"
+                        required
+                        name="password"
+                        type="password" matInput placeholder="Enter here">
+                      </mat-form-field>
+                      <div>
+                        <!-- <p>Go to a different step to see the error state</p>
+                        <button mat-button matStepperPrevious>Back</button>
+                        <button mat-button matStepperNext>Next</button> -->
+                      </div>
+                  </mat-step>
+                
+                  <mat-step>
+                    <ng-template matStepLabel>Done!</ng-template>
+                    <!-- <p>Ensure all detaies are correct, then login.</p> -->
+                    <div>
+
+                      <button type="submit" mat-raised-button color="primary">Login</button>
+                      <!-- <button mat-button matStepperPrevious>Back</button>
+                      <button mat-button (click)="stepper.reset()">Reset</button> -->
+                    </div>
+                  </mat-step>
+                </mat-stepper>
+              </form>
+                
+
+                <!-- {{loginData | json}} -->
+
+                <!-- <form (ngSubmit)="formSubmit()">
+    
+                    <mat-form-field class="full-width" appearance="outline">
+                        <mat-label>Username</mat-label>
+                        <input 
+                        [(ngModel)]="loginData.username"
+
+                          name="username"
+                          type="text"
+                        matInput placeholder="Enter here">
+                        <mat-hint>Valid Username!! </mat-hint>
+                      </mat-form-field>
+    
+                      <mat-form-field class="full-width" appearance="outline">
+                        <mat-label>Password</mat-label>
+                        <input
+
+                        [(ngModel)]="loginData.password"
+                        required
+    
+                      name="password"
+                        type="password" matInput placeholder="Enter here">
+                      </mat-form-field>
+    
+                
+    
+                      <div class="container text-center">
+                          
+                          <button type="submit" mat-raised-button color="primary">Login</button>
+                          <button class="ml10" type="submit" mat-raised-button color="accent">Reset</button>
+
+                          
+                      </div>
+                </form> -->
+            </mat-card>
+    
+            </div>
+        </div>
+    </div>
+    
+    </div>
+
+
+
+
+
+
+
+
+
+    

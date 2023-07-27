@@ -1,0 +1,136 @@
+<!-- <mat-card *ngIf="user">
+    <h1>Your Profile Details</h1>
+    <mat-card-content>
+        <div class="boostrap-wrapper">
+            <div class="container">
+                <div class="container text-center" >
+                    <img src="../../../assets/profile.jpg" alt="profile image" class="profile-image"/>
+                    <h1 class="mt20">{{user.firstname}} {{user.lastname}}</h1>
+                </div>
+                <div class="row">
+                    <div class="col-md-10 offset-md-1">
+                        <table class ="table text-center">
+
+                            <tr>
+                                <td> Username </td>
+                                <td> {{user.username}} </td>
+                            </tr>
+
+                            <tr>
+                                <td> Userid </td>
+                                <td> Exam {{user.id}} </td>
+                            </tr>
+
+                            <tr>
+                                <td> Phone </td>
+                                <td> {{user.phone}} </td>
+                            </tr>
+
+                            <tr>
+                                <td> Role </td>
+                                <td> {{user.authorities[0].authority}} </td>
+                            </tr>
+                            
+                            <tr>
+                                <td> Status </td>
+                                <td>{{user.enabled? "ACTIVE":"INACTIVE"}} </td>
+                            </tr>
+                            <tr>
+                                <td> Account Expired </td>
+                                <td>{{user.credentialsNonExpired? "NO":"YES"}} </td>
+                            </tr>
+                            <tr>
+                                <td> Account Locked </td>
+                                <td>{{user.accountNonLocked? "NO":"YES"}} </td>
+                            </tr>
+                            <tr>
+                                <td> Credential Expired </td>
+                                <td>{{user.accountNonExpired? "NO":"YES"}} </td>
+                            </tr>
+                        </table>
+
+                    </div>
+                </div>
+            </div>
+        </div>
+    </mat-card-content>
+    <div class="container text-center mt15">
+        <button mat-raised-button color="primary">UPDATE</button>
+        <button mat-raised-button color="accent">DELETE</button>
+
+    </div>
+
+</mat-card> -->
+
+
+
+<mat-card>
+    <div class="contianer">
+        <div class="row">
+            <div class="cold-md-4">
+                <div class="container text-center " >
+                    <img src="../../../assets/profile.jpg" alt="profile image" class="profile-image ml20"/>
+                    <h1>Account details</h1>
+                    <!-- <h1 class="mt20">{{user.firstname}} {{user.lastname}}</h1> -->
+                </div>
+            </div>
+
+            <div class="col-md-8">
+                <div class="container text-center" >
+                    <h1 class="mt20">{{user.firstname}} {{user.lastname}}</h1>
+                    <label>immanuelderry31@gmail.com - Administrator</label>
+                </div>
+            </div>
+        </div>
+<mat-divider></mat-divider>
+        <div class="container">
+            <div class="row">
+                <div class="col-md-12">
+
+                    <table  class ="table">
+                        <tr>
+                            <td> Username </td>
+                            <td> {{user.username}} </td>
+                        </tr>
+
+                        <tr>
+                            <td> Userid </td>
+                            <td> Exam {{user.id}} </td>
+                        </tr>
+
+                        <tr>
+                            <td> Phone </td>
+                            <td> {{user.phone}} </td>
+                        </tr>
+
+                        <tr>
+                            <td> Role </td>
+                            <td> {{user.authorities[0].authority}} </td>
+                        </tr>
+                        
+                        <tr>
+                            <td> Status </td>
+                            <td>{{user.enabled? "ACTIVE":"INACTIVE"}} </td>
+                        </tr>
+                        <tr>
+                            <td> Account Expired </td>
+                            <td>{{user.credentialsNonExpired? "NO":"YES"}} </td>
+                        </tr>
+                        <tr>
+                            <td> Account Locked </td>
+                            <td>{{user.accountNonLocked? "NO":"YES"}} </td>
+                        </tr>
+                        <tr>
+                            <td> Credential Expired </td>
+                            <td>{{user.accountNonExpired? "NO":"YES"}} </td>
+                        </tr>
+                    </table>
+
+                </div>
+            </div>
+        </div>
+    </div>
+  </mat-card>
+  
+
+ 

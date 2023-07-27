@@ -1,0 +1,231 @@
+
+
+<!-- {{questionss|json}} -->
+<div class="bootstrap-wrapper" *ngIf="!isSubmit">
+    <div class="container-fluid">
+        <div class="row">
+            <div class="col-md-2">
+<!-- instructions -->
+              <mat-card style="margin-top: 70px;">
+                <mat-card-content>
+                    <h1><b>Instructions</b></h1>
+                    <ul>
+                     <li>Do not refresh the page. You might get new questions</li>
+                     <li>Do not switch tabs</li>
+                     <li>Also do not minimize the windows</li>
+                    </ul>
+                </mat-card-content>
+              </mat-card>
+
+            </div>
+            <div class="col-md-8">
+<!-- questions -->
+
+<ng-container>
+    <h1 class="mt20">On going quiz <b>{{questions[0].quiz.title}}</b></h1>
+</ng-container>
+
+
+<mat-card *ngFor="let q of questions| paginate:{itemsPerPage: tableSize, currentPage:page, totalItems:count}; let i = index" class="mt10">
+
+    <mat-card-content>
+        <div class="row">
+            <div class="col-md-11">
+       <p>  <b> Q {{q.count}} </b> <span class="ml10" [innerHTML]="q.content"></span>
+    </p>        </div>
+
+   
+    <div class="col-md-1" *ngIf="q.givenAnswer">
+        <mat-checkbox class="example-margin" checked disabled></mat-checkbox>
+    </div>
+
+        </div>
+
+        <mat-divider></mat-divider>
+        <br/>
+        <div class="row mt20">
+            <div class="col-md-6">
+                <input type="radio" 
+                [value]="q.option1" [name]="i" 
+
+                [(ngModel)]="q.givenAnswer"
+                />
+                {{q.option1}}
+                
+            </div>
+
+            <div class="col-md-6">  
+                <input type="radio" 
+                [value]="q.option2" 
+                [name]="i" 
+                [(ngModel)]="q.givenAnswer"
+                />
+                {{q.option2}}    
+            </div>
+            <div class="col-md-6"> 
+                <input type="radio" [value]="q.option3" [name]="i"
+                [(ngModel)]="q.givenAnswer"
+                />
+                {{q.option3}}
+            </div>
+        
+        <div class="col-md-6">
+            <input type="radio" [value]="q.option4" [name]="i"
+            [(ngModel)]="q.givenAnswer"
+            />
+            {{q.option4}}
+        </div>
+        </div>
+    </mat-card-content>
+</mat-card>
+
+<!-- PAGINATION -->
+<div>
+    <pagination-controls 
+    previousLabel="Prev"
+    nextLabel="Next" 
+    (pageChange)="onTableDataChange($event)"
+    >
+    </pagination-controls>
+</div>
+    
+
+<div class="contianer text-center mt20 mb20">
+<button mat-raised-button  color="primary" (click)="submitQuiz()" >Submit Quiz</button>
+
+</div>
+</div>
+
+
+
+<div class="col-md-2">
+<!-- progres -->
+<mat-card  style="margin-top: 70px;">
+    <mat-card-header>
+        <mat-card-title>Progress </mat-card-title>
+        <mat-card-subtitle>
+            Quiz will be submitted automatically when time elapses <b>(0:0) </b>
+        </mat-card-subtitle>
+    </mat-card-header>
+    <mat-card-content>
+        <h1 class="text-center">{{ getFormmatedTime() }}</h1>
+        <!-- <mat-spinner [value]="(this.time/(this.questions.length * 2 * 60)) * 100"  -->
+        <mat-spinner [value]="(timer/(this.questions.length * 2 * 60)) * 100" 
+
+        mode="determinate" 
+        color="accent" 
+        style="margin: auto;"></mat-spinner>
+
+    </mat-card-content>
+</mat-card>
+            </div>
+        </div>
+    </div>
+</div>
+
+
+
+
+
+<!-- QUESTIONS LOAD AFTER SUBMIT -->
+<!-- questions -->
+<div class="bootstrap-wrapper" *ngIf="isSubmit">
+    <div class="row mt20">
+        <div class="col-md-6 offset-md-3">
+            <ng-container>
+                <h1 class="mt20" id="quiztitle">Quiz <b>{{questions[0].quiz.title}}</b></h1>
+            </ng-container>
+            <div class="row">
+                <div class="col-md-6 offset-md-8" >
+                    <h3>Marks : {{marksGot}}/{{maxMarks}}</h3>
+                    <h3> Correct Answers : {{correctAnswers}}</h3>
+                    <h3>Attempted questions : {{attempted}}</h3>
+
+
+<!-- <app-print-quiz [attempts]="attempteed"></app-print-quiz>                -->
+
+
+</div>
+            </div>
+
+<mat-card *ngFor="let qA of questionWithAnswers; let i = index" class="mt10">
+
+    <mat-card-content>
+       <p>  <b> Q {{ i + 1}} </b> <span class="ml10" [innerHTML]="qA.content"></span></p>
+        <mat-divider></mat-divider>
+        <br/>
+
+    <!-- Worked like magic -->
+
+        <div class="row mt20">
+            <div class="col-md-6">
+                <input type="checkbox"   
+                [checked]="qA.option1 == qA.answer"
+                disabled
+                />
+                {{qA.option1}}
+            </div>
+
+            <div class="col-md-6">  
+                <input type="checkbox"  
+                [name]="i"
+                 [checked]="qA.option2 == qA.answer"
+                 disabled
+                />
+                {{qA.option2}}    
+            </div>
+            <div class="col-md-6"> 
+                <input type="checkbox"   
+                  [checked]="qA.option3 == qA.answer"
+                  disabled
+                 />
+                {{qA.option3}}
+            </div>
+        
+        <div class="col-md-6">
+            <input type="checkbox"  
+             [checked]="qA.option4 == qA.answer"
+             disabled
+             />
+            {{qA.option4}}
+
+        </div>
+
+
+      
+
+<!-- 
+        <div class="col-md-6"  *ngIf="qA.answer==qA.option1">
+        <input type="checkbox" checked disabled>
+            {{qA.option1}}
+        </div> 
+        
+        <div class="col-md-6" *ngIf="qA.answer==qA.option2">
+         <input type="checkbox" checked disabled>
+             {{qA.option2}}
+         </div> 
+         
+         <div class="col-md-6"  *ngIf="qA.answer==qA.option3">
+         <input type="checkbox" checked disabled>
+             {{qA.option3}}
+         </div> 
+         
+         <div class="col-md-6"  *ngIf="qA.answer==qA.option4">
+         <input type="checkbox" checked disabled>
+             {{qA.option4}}
+         </div>  -->
+
+
+        </div>
+    </mat-card-content>
+</mat-card>
+<!-- <mat-card-actions>
+    <div class="container text-center">
+    <button (click)="printPage()" mat-raised-button color="accent">Print</button>
+    <button mat-raised-button  color="primary" class="ml10" routerLink="/user-dashboard/0">Home</button>
+</div>
+   </mat-card-actions> -->
+</div>
+</div>
+</div>
+

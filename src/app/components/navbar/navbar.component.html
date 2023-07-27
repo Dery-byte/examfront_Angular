@@ -1,0 +1,60 @@
+<mat-toolbar color="accent">
+    <a
+    
+    [routerLink]="'/'" mat-icon-button 
+    class="example-icon" 
+    aria-label="Example icon-button with menu icon">
+      <mat-icon>menu_book</mat-icon>
+    </a>
+
+    <span >Exam Portal </span>
+    <span class="example-spacer"></span>
+
+
+    <a  
+    *ngIf="!isloggedIn"
+
+    [routerLink]="'/login'"
+    mat-icon-button class="example-icon favorite-icon mrl" aria-label="Example icon-button with heart icon">
+     login
+    </a>
+
+    <a 
+    *ngIf="!isloggedIn"
+
+    [routerLink]="'/signup'"
+    mat-icon-button class="example-icon favorite-icon mr ml " aria-label="Example icon-button with heart icon">
+        Register
+    </a>
+    <!-- <a 
+    (click)="logout()"
+    *ngIf="isloggedIn"
+    mat-icon-button class="example-icon favorite-icon mr ml " aria-label="Example icon-button with heart icon">
+        Logout
+    </a> -->
+
+   
+
+
+
+    <div class="container " >
+        <img src="../../../assets/profile.jpg" alt="profile image" class="profile-imag mt20" width="40" height="40"/>        <!-- <h1 class="mt20">{{user.firstname}} {{user.lastname}}</h1> -->
+    </div>
+
+    <button 
+    *ngIf="isloggedIn && user"
+    routerLink="/admin/profile"
+    mat-icon-button class="example-icon favorite-icon mr ml " aria-label="Example icon-button with heart icon">
+        {{ user.username | uppercase}}
+  </button>
+
+
+  <a 
+    (click)="logout()"
+    *ngIf="isloggedIn"
+    mat-icon-button class="example-icon favorite-icon mr ml " aria-label="Example icon-button with heart icon">
+    <mat-icon mat-list-icon  class="icon-position" >logout</mat-icon>
+    </a>
+       
+  </mat-toolbar>
+  

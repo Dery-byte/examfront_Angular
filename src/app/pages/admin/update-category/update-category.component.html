@@ -1,0 +1,33 @@
+<mat-card>
+    <h1>Update Category</h1>
+
+    <!-- {{category | json}} -->
+    <mat-card-content>
+    <div class="bootstrap-wrapper">
+        <div class="row">
+            <div class="col-md-8 offset-md-2">
+                <form *ngIf="category" (ngSubmit)="updateCategoryData()">                
+                    
+                    <mat-label>Title</mat-label>
+
+                    <mat-form-field class ="w100" appearance="outline">
+
+                    <input   [(ngModel)] = "category.title"  type="text" name="title" matInput>
+                    </mat-form-field>
+                    <mat-label>Description</mat-label>
+
+                    <mat-form-field class ="w100" appearance="outline">
+                    
+                        <textarea     [(ngModel)] = "category.description" rows="10" name="description" matInput>
+
+                        </textarea>
+                        </mat-form-field>
+<div class="container text-center mt15">
+    <button mat-raised-button color="accent" type="submit">Update</button>
+</div>
+                    </form>
+            </div>
+        </div>
+    </div>
+    </mat-card-content>
+</mat-card>

@@ -1,0 +1,16 @@
+.example-spacer{
+    flex: 1 1 auto;
+}
+
+.mrl{
+    margin-right: 50px;
+}
+
+.ml{
+    margin-right: 140px;
+}
+
+
+.profile-imag{
+    border-radius: 50px;
+}

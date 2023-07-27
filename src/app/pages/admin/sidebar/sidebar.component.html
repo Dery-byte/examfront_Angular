@@ -1,0 +1,38 @@
+<mat-card>
+    <mat-action-list>
+<div mat-subheader>Menu</div>
+
+<button mat-list-item routerLink="/admin/"> <mat-icon mat-list-icon  class="icon-position">home</mat-icon> &nbsp;Home</button>
+
+<button mat-list-item routerLink="/admin/profile">
+     <mat-icon mat-list-icon  class="icon-position">account_circle</mat-icon> &nbsp;Profie</button>
+
+<button mat-list-item routerLink="/admin/categories" class="cat">
+     <mat-icon mat-list-icon  class="icon-position">list</mat-icon> &nbsp;Categories</button>
+
+<button mat-list-item routerLink="/admin/add-category">
+     <mat-icon mat-list-icon  class="icon-position" >add_circle_outline</mat-icon> &nbsp;Add Categories</button>
+
+
+     <button mat-list-item routerLink="/admin/quizzes">
+        <mat-icon mat-list-icon  class="icon-position">add</mat-icon> &nbsp;Quizzes</button>
+        
+<button mat-list-item routerLink="/admin/add-quiz">
+     <mat-icon mat-list-icon  class="icon-position">quiz</mat-icon> &nbsp;Add Quiz
+
+
+</button>
+
+
+<button   (click)="logout()"
+*ngIf="isloggedIn" mat-list-item>
+     <mat-icon mat-list-icon  class="icon-position" >logout</mat-icon>Logout
+</button>
+
+
+
+    </mat-action-list>
+</mat-card>
+
+
+<!-- alt + shift + downkey => paste option -->
