@@ -81,7 +81,6 @@ export class PrintQuizComponent implements OnInit {
         // this.attempted = JSON.parse(localStorage.getItem("Attempted"));
         this.loadResults();
 
-        
       },
       (error)=>{
         console.log("Error Loading qustions");
