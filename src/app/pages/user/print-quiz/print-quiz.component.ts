@@ -71,8 +71,8 @@ export class PrintQuizComponent implements OnInit {
     }
      
     loadQuestionsWithAnswers(){
-      // this._questions.getQuestionsOfQuiz(this.qid).subscribe((data:any)=>{
-        this._questions.getQuestionsOfQuizForText(this.qid).subscribe((data:any)=>{ // this does the question shuffle on print
+      this._questions.getQuestionsOfQuiz(this.qid).subscribe((data:any)=>{
+        // this._questions.getQuestionsOfQuizForText(this.qid).subscribe((data:any)=>{ // this does the question shuffle on print
 
         // console.log(data[0].answer);
         this.questionWithAnswers=data;

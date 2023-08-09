@@ -110,13 +110,14 @@ private intervalId: any;
         q['givenAnswer']="";
       });
     
-      this.preventBackButton();
     },
     (error)=>{
       console.log("Error Loading qustions");
       Swal.fire("Error","Error loading questions", "error");
     }
     );
+    this.preventBackButton();
+
   }
 
   
