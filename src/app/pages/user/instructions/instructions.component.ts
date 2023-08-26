@@ -25,7 +25,6 @@ export class InstructionsComponent implements OnInit {
     }
     );
 
-
   }
 
   
@@ -77,10 +76,12 @@ export class InstructionsComponent implements OnInit {
       title: "Enter Quiz Password!",
       text: "",
       input: 'text',
-      showCancelButton: true        
+      // icon: 'success',
+      showCancelButton: true    
+      
   }).then((result) => {
       if (result.value== this.quiz.quizpassword) {
-          console.log("Result: " + this.quiz.quizpassword);
+          // console.log("Result: " + this.quiz.quizpassword);
           //  const url= './start/' + this.qid;
           this._router.navigate(['./start/' + this.qid]);
           // this.refreshPrevent();
@@ -89,6 +90,10 @@ export class InstructionsComponent implements OnInit {
           Swal.fire("Incorrect Password",'', 'info');
     //     }
       }
+      else if (result.isDenied){
+        Swal.fire("Cancelled",'', 'info');
+  //     }
+    }
   });
 
   }
