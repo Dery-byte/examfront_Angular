@@ -36,9 +36,19 @@
 
     </div>
 </div>
+
+<!-- ADD QUIZ PASSWORD -->
+<mat-form-field class="w100" appearance="fill">
+    <mat-label>Quiz Password</mat-label>
+    <input [(ngModel)] = "quizData.quizpassword"  
+    type="quizPassword" name="quizpassword" matInput>
+</mat-form-field>
+
+
 <mat-slide-toggle name="active" [(ngModel)] = "quizData.active"
 class="mb20" 
 > Publish Status</mat-slide-toggle>
+
 <br/>
 <mat-form-field appearance="fill" class="mt20 w100">
     <mat-label>Select Category</mat-label>

@@ -25,9 +25,10 @@ export class InstructionsComponent implements OnInit {
     }
     );
 
+
   }
 
-
+  
   
   // openPopup(){
   //   // const url= './start/' + this.qid;
@@ -53,24 +54,42 @@ export class InstructionsComponent implements OnInit {
 
   startQuiz()
   {
-    Swal.fire({
-      title:"Are you Ready to start ?",
-      showCancelButton:true,
-      confirmButtonText:"Start",
-      denyButtonText:"Not Ready",
-      icon:"info",
-    }).then((results)=>{
-        if(results.isConfirmed){
-          // const url= './start/' + this.qid;
-          // this._router.navigate(['./start-quiz/' + this.qid]);
 
+    // Swal.fire({
+    //   title:"Are you Ready to start ?",
+    //   showCancelButton:true,
+    //   confirmButtonText:"Start",
+    //   denyButtonText:"Not Ready",
+    //   icon:"info",
+    // }).then((results)=>{
+    //     if(results.isConfirmed){
+    //       // const url= './start/' + this.qid;
+    //       // this._router.navigate(['./start-quiz/' + this.qid]);
+    //       this._router.navigate(['./start/' + this.qid]);
+    //       // this.refreshPrevent();
+    //     }
+    //     else if (results.isDenied){
+    //       Swal.fire("Changes are not Saved",'', 'info');
+    //     }
+    //   });
+
+    Swal.fire({
+      title: "Enter Quiz Password!",
+      text: "",
+      input: 'text',
+      showCancelButton: true        
+  }).then((result) => {
+      if (result.value== this.quiz.quizpassword) {
+          console.log("Result: " + this.quiz.quizpassword);
+          //  const url= './start/' + this.qid;
           this._router.navigate(['./start/' + this.qid]);
           // this.refreshPrevent();
+        }
+        else if (result.value!=this.quiz.quizpassword){
+          Swal.fire("Incorrect Password",'', 'info');
+    //     }
+      }
+  });
 
-        }
-        else if (results.isDenied){
-          Swal.fire("Changes are not Saved",'', 'info');
-        }
-      });
   }
 }

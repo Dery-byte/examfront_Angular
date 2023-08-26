@@ -18,6 +18,7 @@ quizData={
   description:"",
   maxMarks:"",
   numberOfQuestions:"",
+  quizpassword:"",
   active:true,
   category:
   {
@@ -56,6 +57,7 @@ this._quiz.addQuiz(this.quizData).subscribe(
       title:"",
       description:"",
       maxMarks:"",
+      quizpassword:"",
       numberOfQuestions:"",
       active:true,
      category:
