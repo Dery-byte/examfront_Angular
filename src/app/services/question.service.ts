@@ -40,16 +40,43 @@ export class QuestionService {
 
   //Update Question
   public updateQuestion(question){
-    return this._http.put(`${baseUrl}/question/updateQuestions`, question)
+    return this._http.put(`${baseUrl}/question/updateQuestions`, question);
   }
+
+
+  //Add user ID and Quiz ID 
+  public addUserIdQuizId(qid,user){
+    return this._http.post(`${baseUrl}/question/add-quizUserId/${qid}`, user);
+  }
+
+//get report with ID parameter
+public getReportIdUserId(rid){
+  return this._http.get(`${baseUrl}/getReport/{rid}`);
+}
+
+public getReport(){
+  return this._http.get(`${baseUrl}/getReport`);
+}
+
+
+  //eval-quiz ORIGINAL
+// public evalQuiz(question){
+// return this._http.post(`${baseUrl}/question/eval-quiz`, question)
+// .pipe(
+//   tap(()=>{
+//     this.refreshNeeded.next();
+//   })
+// )};
+
+
   //eval-quiz
-public evalQuiz(question){
-return this._http.post(`${baseUrl}/question/eval-quiz`, question)
-.pipe(
-  tap(()=>{
-    this.refreshNeeded.next();
-  })
-)};
+  public evalQuiz(qid,question){
+    return this._http.post(`${baseUrl}/question/eval-quiz/${qid}`, question)
+    .pipe(
+      tap(()=>{
+        this.refreshNeeded.next();
+      })
+    )};
 }
 
 

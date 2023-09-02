@@ -137,7 +137,7 @@ export class PrintQuizComponent implements OnInit {
   
   evalQuiz(){
   //Evaluate questions
-  this._questions.evalQuiz(this.questionss).subscribe((data:any)=>{
+  this._questions.evalQuiz( this.qid,this.questionss).subscribe((data:any)=>{
   console.log(data);
   this.marksGot=parseFloat(Number(data.marksGot).toFixed(2));
   this.correctAnswers = data.correctAnswers;

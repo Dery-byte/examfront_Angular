@@ -58,14 +58,14 @@ private intervalId: any;
       // Custom code to be executed before the page is unloaded
       localStorage.setItem(this.countdownKey, JSON.stringify(this.timer));
       event.preventDefault();
-      this.preventBackButton();
+      // this.preventBackButton();
 
       event.returnValue = '' as any; // This is required for some older browsers
     }
   
     @HostListener('window:unload', ['$event'])
     unloadHandler(event: Event): void {
-      this.preventBackButton();
+      // this.preventBackButton();
     }
 
 
@@ -77,7 +77,7 @@ private intervalId: any;
     this.loadQuestions();
     this.startTimer();
     this.loadQuestionsFromLocalStorage();
-    this.preventBackButton();
+    // this.preventBackButton();
 }
 
 
@@ -93,15 +93,17 @@ private intervalId: any;
         q.count =index + 1;
         return q;
       });
+
+
       // console.log(data[0])  
        // BECAREFULL ABOUT HERE
-       var timerString = localStorage.getItem('countdown_timer');
+       let timerString = localStorage.getItem('countdown_timer');
        // Converting the string to a number using parseInt()
-       var timerNumber = parseInt(timerString, 10);
+       const timerNumber = parseInt(timerString, 10);
        console.log(typeof(timerNumber));
       if(timerNumber){
         this.timer = timerNumber;
-        //Remove value from local storage after accesing it.
+        //Remove value from local storage after accessing it.
         localStorage.removeItem("countdown_timer");
       }else{
         this.timer = this.questions.length * 2 * 60;
@@ -112,7 +114,7 @@ private intervalId: any;
     
     },
     (error)=>{
-      console.log("Error Loading qustions");
+      console.log("Error Loading questions");
       Swal.fire("Error","Error loading questions", "error");
     }
     );
@@ -129,7 +131,7 @@ private intervalId: any;
       console.log(this.questionWithAnswers);
     },
     (error)=>{
-      console.log("Error Loading qustions");
+      console.log("Error Loading questions");
       Swal.fire("Error","Error loading questions", "error");
     }
     );
@@ -153,7 +155,6 @@ history.pushState(null,null,location.href);
     }).then((e)=>{
       if(e.isConfirmed){
         this.evalQuiz();
-
         //Make calculation
         // this.saveGivenAndAnswer();
         this.printQuiz();
@@ -206,7 +207,7 @@ if(this.timer<=0){
   this.evalQuiz();
   clearInterval(t);
   // localStorage.removeItem("exam");
-  this.preventBackButton();
+  // this.preventBackButton();
 }
 else{
    this.timer--;
@@ -219,13 +220,14 @@ getFormmatedTime(){
   return `${mm} min : ${ss} sec` 
 }
 evalQuiz(){
-  //Evaluate questions
-this._questions.evalQuiz(this.questions).subscribe((data:any)=>{
+//Evaluate questions
+this._questions.evalQuiz(this.qid,this.questions).subscribe((data:any)=>{
 console.log(this.questions);
 console.log(data);
 this.marksGot=parseFloat(Number(data.marksGot).toFixed(2));
 this.correctAnswers = data.correctAnswers;
 this.attempted = data.attempted;
+
 this.maxMarks=data.maxMarks;
 localStorage.setItem('CorrectAnswer', JSON.stringify(this.correctAnswers));
 localStorage.setItem('MarksGot', JSON.stringify(this.marksGot));

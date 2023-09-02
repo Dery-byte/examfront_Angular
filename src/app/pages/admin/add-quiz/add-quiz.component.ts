@@ -19,6 +19,7 @@ quizData={
   maxMarks:"",
   numberOfQuestions:"",
   quizpassword:"",
+  attempted:false,
   active:true,
   category:
   {
@@ -59,6 +60,7 @@ this._quiz.addQuiz(this.quizData).subscribe(
       maxMarks:"",
       quizpassword:"",
       numberOfQuestions:"",
+      attempted:false,
       active:true,
      category:
       {
@@ -71,7 +73,7 @@ this._quiz.addQuiz(this.quizData).subscribe(
    
   },
   (error)=>{
-    Swal.fire("Error !! ", "An error occured while adding quiz", "error");
+    Swal.fire("Error !! ", "An error occurred while adding quiz", "error");
   }
 );
   }
