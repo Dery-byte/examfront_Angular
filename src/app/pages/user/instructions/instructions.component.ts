@@ -22,6 +22,7 @@ export class InstructionsComponent implements OnInit {
   reportQuizId;
   currentUserId;
   isLegible=false;
+  idNumberReport:number[]=[];
 
 
   quizData={
@@ -44,9 +45,6 @@ export class InstructionsComponent implements OnInit {
     private _router:Router){}
 
   ngOnInit(): void {
-  this.getUserDetails();
-
-  // this.isLegible=(this.userId==this.currentUserId && this.reportQuizId== this.currentQuizId);
 
     this.qid = this._route.snapshot.params['qid'];
     this._quiz.getQuiz(this.qid).subscribe((data:any)=>{
@@ -63,70 +61,13 @@ export class InstructionsComponent implements OnInit {
 
 
     this.fectchReport();
-
-    this.checkUserLegibility();    
-    // console.log(this.isLegible);
-
-  }
-
-  // TestEligibilty(){
-
-  //   if(this.report && this.qid){
-  //     const isMatch = this.report.some(item=>item.someProperty==this.qid);
-  //     if(isMatch){
-  //       console.log("Match");
-  //     }
-  //     else{
-  //       console.log("No Match");
-  //     }
-  //   }
-   
-  // }
-  getUserDetails(){ }
-
-
-
-  checkUserLegibility(){
-    //  const userDetails =localStorage.getItem('user');
-    //     const Object = JSON.parse(userDetails);
-    //     this.report.forEach((q)=>{
-    //       this.userId = q.user.id;
-    //       this.reportQuizId=q.quiz.qId;
-    //       this.currentQuizId =this.qid;
-    //       this.currentUserId = Object.id;
-    //       console.log(this.userId);
-    //       console.log(this.reportQuizId);
-    //       console.log(this.currentQuizId);
-    //       console.log(this.currentUserId);
-    //     });
-    //     if(this.userId==this.currentUserId && this.reportQuizId== this.currentQuizId){
-    //       this.isLegible;
-    //       console.log("Quiz Taken Already!!!!!!!");
-    //     }
-    //     else{
-    //       this.isLegible;
-    //       console.log("You have not taken the quiz yet!!!!");
-    //     }
-
-    
-
-    // if(this.userId==this.currentUserId && this.reportQuizId== this.currentQuizId){
-    //   this.isLegible;
-    //   console.log("Quiz Taken Already!!!!!!!");
-    // }
-    // else{
-    //   this.isLegible;
-    //   console.log("You have not taken the quiz yet!!!!");
-    // }
-    
   }
 
   fectchReport(){
     this._questions.getReport().subscribe((data)=>{
       this.report=data;
       this.report.forEach((q)=>{
-console.log(q.quiz.qId);});
-// this.isLegible=(this.userId==this.currentUserId && this.reportQuizId== this.currentQuizId);
+});
 
 const userDetails =localStorage.getItem('user');
 const Object = JSON.parse(userDetails);
@@ -135,22 +76,18 @@ this.report.forEach((q)=>{
   this.reportQuizId=q.quiz.qId;
   this.currentQuizId =this.qid;
   this.currentUserId = Object.id;
-  console.log(this.userId);
+
+  if(q.user.id===this.currentUserId){
+this.idNumberReport.push(q.user.id);
+  }
+  console.log(this.idNumberReport[0]);
+  console.log(this.currentUserId);
   console.log(this.reportQuizId);
   console.log(this.currentQuizId);
-  console.log(this.currentUserId);
+ 
 });
 
-console.log(this.userId);
-console.log(this.reportQuizId);
-console.log(this.currentQuizId);
-console.log(this.currentUserId);
-
-//  this.isLegible = (this.userId==this.currentUserId && this.reportQuizId==this.currentQuizId);
-
-// this.isLegible = (!this.reportQuizId==this.currentQuizId);
- this.isLegible = (this.userId==this.currentUserId);
-
+ this.isLegible = (this.idNumberReport[0]==this.currentUserId && this.reportQuizId==this.currentQuizId);
 
 console.log(this.isLegible);
 if(this.isLegible){
