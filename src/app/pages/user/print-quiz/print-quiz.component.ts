@@ -29,6 +29,7 @@ export class PrintQuizComponent implements OnInit {
   second:number;
   minutes:number;
   count_timer:any;
+  username:any;
   
     constructor( private _quiz:QuizService,
        private locationSt:LocationStrategy, 
@@ -50,6 +51,9 @@ export class PrintQuizComponent implements OnInit {
   }
   
     ngOnInit(): void {
+      const userDetails =localStorage.getItem('user');
+      const Object = JSON.parse(userDetails);
+      this.username=Object.username;
       this.qid = this._route.snapshot.params['qid'];
       this.loadResults();
       this.loadQuestionsWithAnswers(); 
@@ -83,7 +87,7 @@ export class PrintQuizComponent implements OnInit {
 
       },
       (error)=>{
-        console.log("Error Loading qustions");
+        console.log("Error Loading questions");
         Swal.fire("Error","Error loading questions", "error");
       }
       );
@@ -108,8 +112,8 @@ export class PrintQuizComponent implements OnInit {
 
       },
       (error)=>{
-        console.log("Error Loading qustions");
-        Swal.fire("Error","Error loading questi", "error");
+        console.log("Error Loading questions");
+        Swal.fire("Error","Error loading question", "error");
       }
       );
     }
@@ -169,6 +173,7 @@ export class PrintQuizComponent implements OnInit {
   
   
   printPage(){
+    document.title= this.username;
     window.print();
     this.removeResults();
     // this.preventBackButton();

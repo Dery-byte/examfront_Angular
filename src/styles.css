@@ -1,4 +1,19 @@
 /* You can add global styles to this file, and also import other style files */
+@media print {
+
+    .navbar,#homePrintbtn{
+display: none !important;
+    }
+   
+    @page {
+        /* margin: 0; */
+        margin-bottom: 0;
+      }
+      /* @page :first {
+        margin-bottom: 0;
+      } */
+}
+
 
 html, body {
      height: 100%;
