@@ -58,7 +58,6 @@ public getReport(){
   return this._http.get(`${baseUrl}/getReport`);
 }
 
-
   //eval-quiz ORIGINAL
 // public evalQuiz(question){
 // return this._http.post(`${baseUrl}/question/eval-quiz`, question)

@@ -52,6 +52,7 @@ import { CanvasJSAngularChartsModule } from '@canvasjs/angular-charts';
 import { PrintQuizComponent } from './pages/user/print-quiz/print-quiz.component';
 import { UpdateQuestionComponent } from './pages/admin/update-question/update-question.component';
 // import { StartQuizComponent } from './pages/user/start-quiz/start-quiz.component';
+import {MatTooltipModule} from '@angular/material/tooltip';
 import {MatCheckboxModule} from '@angular/material/checkbox';
 
 @NgModule({
@@ -111,6 +112,7 @@ import {MatCheckboxModule} from '@angular/material/checkbox';
     MatNativeDateModule,
     MatTabsModule,
     CanvasJSAngularChartsModule,
+    MatTooltipModule,
     MatCheckboxModule,
     NgxPaginationModule,
     NgxUiLoaderHttpModule.forRoot({

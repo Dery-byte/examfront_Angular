@@ -10,6 +10,7 @@ import { Router, NavigationStart, NavigationEnd, NavigationError, NavigationCanc
 import Swal from 'sweetalert2';
 
 
+
 @Component({
   selector: 'app-print-quiz',
   templateUrl: './print-quiz.component.html',
@@ -47,7 +48,6 @@ export class PrintQuizComponent implements OnInit {
   @HostListener('window:unload', ['$event'])
   unloadHandler(event: Event): void {
     this.preventBackButton();
-
   }
   
     ngOnInit(): void {

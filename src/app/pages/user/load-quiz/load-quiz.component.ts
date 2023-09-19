@@ -2,7 +2,7 @@ import { Component, OnInit } from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
 import { QuestionService } from 'src/app/services/question.service';
 import { QuizService } from 'src/app/services/quiz.service';
-
+import { PrintQuizComponent } from '../print-quiz/print-quiz.component';
 @Component({
   selector: 'app-load-quiz',
   templateUrl: './load-quiz.component.html',
@@ -12,7 +12,9 @@ export class LoadQuizComponent  implements OnInit {
 
   catId;
   quizzes;
-  constructor( private _route:ActivatedRoute, private _quiz:QuizService){}
+  constructor( private _route:ActivatedRoute, private _quiz:QuizService,
+    // private print_quiz:PrintQuizComponent,
+    ){}
 
 
   ngOnInit(): void {
@@ -25,7 +27,7 @@ export class LoadQuizComponent  implements OnInit {
         this.quizzes=data;
       }, 
       (error)=>{
-        alert("Faild to load quizzes");
+        alert("Failed to load quizzes");
       }
       );
     }
@@ -41,6 +43,9 @@ this._quiz.getActieQuizzesOfCategory(this.catId).subscribe((data:any)=>{
     }
   });
     // console.log("Load all quizzes");
+  }
+  hola(){
+    // this.print_quiz.printQuiz();
   }
 }
 

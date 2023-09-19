@@ -11,13 +11,23 @@
             <ng-container>
                 <h1 class="mt20" id="quiztitle">Quiz <b>{{questions[0].quiz.title}}</b></h1>
             </ng-container>
-            <div class="row">
-                <div class="col-md-6 offset-md-8" >
-                    <h3>Marks : {{marksGot}}/{{maxMarks}}</h3>
-                    <h3> Correct Answers : {{correctAnswers}}</h3>
-                    <h3>Attempted questions : {{attempted}}</h3>
+            <!-- <div class="row"> -->
+                <div class="caption" >
+                    <p id="cape">University of Cape Coast. <br>
+                        
+                        School of Physicals Sciences. <br>Department of Computer and Information Technology<br>
+                        <b>WEB Technology Quiz 1 Time Allowed: <i>15 Minutes</i></b>
+
+                    </p>
                 </div>
-            </div>
+                    <span id="marks">             
+                     <p>Marks : <span id="marksU">{{marksGot}}/{{maxMarks}}</span></p>
+                    <p> Correct Answers : {{correctAnswers}}</p>
+                    <p>Attempted questions : {{attempted}}</p>
+
+                </span>
+
+            <!-- </div> -->
 
 <mat-card *ngFor="let qA of questionWithAnswers; let i = index" class="mt10">
 
@@ -92,6 +102,7 @@
 <mat-card-actions>
     <div class="container text-center">
     <button (click)="printPage()" mat-raised-button color="accent" id="homePrintbtn">Print</button>
+    
     <button mat-raised-button  color="primary" class="ml10" id="homePrintbtn" routerLink="/user-dashboard/0">Home</button>
 </div>
    </mat-card-actions>

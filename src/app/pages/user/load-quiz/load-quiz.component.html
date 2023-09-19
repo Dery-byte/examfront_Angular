@@ -21,7 +21,12 @@
                      <p class="truncate"> {{q.description}}</p>
                     </mat-card-content>
                     <mat-card-action>
-                        <button mat-button color="primary" >View</button>
+                        <button (click)="printPage()" mat-button color="primary" 
+                        matTooltip="Print quiz Results"
+                        aria-label="Button that displays a tooltip when focused or hovered over" >Print </button>
+                        <!-- <button (click)="printPage()" mat-raised-button color="accent" id="homePrintbtn">Print</button> -->
+
+
                         <button mat-button color="accent" [routerLink]="'/user-dashboard/instructions/'+q.qId">Start</button>
                         <button mat-button color="accent"> {{q.numberOfQuestions}} Questions</button>
                         <button mat-button color="accent">{{q.maxMarks}} Marks</button>
@@ -33,7 +38,7 @@
             <div class="col-md-12" *ngIf="quizzes.length==0">
                 <mat-card>
                     <mat-card-content>
-                     <h1>No data Available in this category</h1>
+                     <h1>No quiz available for this Course</h1>
                     </mat-card-content>
                 </mat-card>
             </div>
