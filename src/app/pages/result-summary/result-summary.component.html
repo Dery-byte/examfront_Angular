@@ -1,0 +1,21 @@
+    <h1>Result Summary</h1>
+    <div mat-dialog-content>
+        <mat-form-field>
+            <mat-label>Username</mat-label>
+            <input formControlName="username" matInput>
+        </mat-form-field>
+        <mat-form-field>
+            <mat-label>Email</mat-label>
+            <input formControlName="email" matInput>
+        </mat-form-field>
+    </div>
+
+    <div mat-dialog-actions>
+        <!-- <button mat-raised-button color="primary">Reset</button> -->
+
+        <button mat-raised-button (click)="closepoup()" color="warn">Close</button>
+        <button mat-raised-button (click)="printPage()" color="primary">Print</button>
+
+        <!-- <button mat-raised-button color="accent">Cancel</button> -->
+
+    </div>

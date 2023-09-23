@@ -3,6 +3,9 @@ import { ActivatedRoute } from '@angular/router';
 import { QuestionService } from 'src/app/services/question.service';
 import { QuizService } from 'src/app/services/quiz.service';
 import { PrintQuizComponent } from '../print-quiz/print-quiz.component';
+import {MatDialog, MAT_DIALOG_DATA, MatDialogRef, MatDialogModule} from '@angular/material/dialog';
+import { ResultSummaryComponent } from '../../result-summary/result-summary.component';
+
 @Component({
   selector: 'app-load-quiz',
   templateUrl: './load-quiz.component.html',
@@ -12,10 +15,18 @@ export class LoadQuizComponent  implements OnInit {
 
   catId;
   quizzes;
-  constructor( private _route:ActivatedRoute, private _quiz:QuizService,
+  constructor( private _route:ActivatedRoute, private _quiz:QuizService,public dialog: MatDialog,
     // private print_quiz:PrintQuizComponent,
     ){}
 
+
+
+    OpenSummary(){
+      this.dialog.open(ResultSummaryComponent,{
+        width:'40%',
+        // height:'450px'
+      })
+    }
 
   ngOnInit(): void {
 

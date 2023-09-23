@@ -1,8 +1,13 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit , Inject} from '@angular/core';
 import { MatSnackBar } from '@angular/material/snack-bar';
 import { Router } from '@angular/router';
+import Swal from 'sweetalert2';
 import { LoginService } from 'src/app/services/login.service';
 import {FormBuilder, Validators} from '@angular/forms';
+import {MatDialog, MAT_DIALOG_DATA, MatDialogRef, MatDialogModule} from '@angular/material/dialog';
+import { ResetpopupComponent } from '../resetpopup/resetpopup.component';
+
+
 
 @Component({
   selector: 'app-login',
@@ -25,7 +30,53 @@ export class LoginComponent implements OnInit {
     password:'',
   }
 
-  constructor(private snack:MatSnackBar, private login:LoginService, private router:Router, private _formBuilder: FormBuilder){}
+
+ 
+
+  
+  constructor(private snack:MatSnackBar, private login:LoginService, private router:Router, private _formBuilder: FormBuilder, public dialog: MatDialog){}
+ 
+
+  Openpopup(){
+    this.dialog.open(ResetpopupComponent,{
+      width:'40%',
+      // height:'450px'
+    })
+  }
+  
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+ 
+
+
   ngOnInit(): void{}
 
   formSubmit(){

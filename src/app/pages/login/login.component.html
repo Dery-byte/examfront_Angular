@@ -48,8 +48,7 @@
                     <ng-template matStepLabel>Done!</ng-template>
                     <!-- <p>Ensure all detaies are correct, then login.</p> -->
                     <div>
-
-                      <button type="submit" mat-raised-button color="primary">Login</button>
+                      <button type="submit" mat-raised-button  color="primary">Login</button>
                       <!-- <button mat-button matStepperPrevious>Back</button>
                       <button mat-button (click)="stepper.reset()">Reset</button> -->
                     </div>
@@ -57,10 +56,10 @@
                 </mat-stepper>
               </form>
               <div class="row">
-                <div class="col-md-12 offset-md-7">
-                  <button mat-raised-button color="primary" class="" >Forgotten Password?</button>
+                <div class="col-md-12 offset-md-7"> 
+                  <button mat-raised-button color="primary" (click)="Openpopup()" class="" >Forgotten Password?</button>
                 </div>
-                </div>
+                </div>        
 
 
                 <!-- {{loginData | json}} -->

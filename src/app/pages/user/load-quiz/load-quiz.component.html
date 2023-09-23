@@ -22,8 +22,10 @@
                     </mat-card-content>
                     <mat-card-action>
                         <button (click)="printPage()" mat-button color="primary" 
-                        matTooltip="Print quiz Results"
-                        aria-label="Button that displays a tooltip when focused or hovered over" >Print </button>
+                        matTooltip="Summary Results"
+                        aria-label="Button that displays a tooltip when focused or hovered over" (click)="OpenSummary()" >View </button>
+                        <!-- <button mat-raised-button color="primary" (click)="OpenSummary()" class="" >pop</button> -->
+
                         <!-- <button (click)="printPage()" mat-raised-button color="accent" id="homePrintbtn">Print</button> -->
 
 
