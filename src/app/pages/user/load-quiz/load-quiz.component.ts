@@ -1,5 +1,5 @@
 import { Component, OnInit } from '@angular/core';
-import { ActivatedRoute } from '@angular/router';
+import { ActivatedRoute, Route, Router } from '@angular/router';
 import { QuestionService } from 'src/app/services/question.service';
 import { QuizService } from 'src/app/services/quiz.service';
 import { PrintQuizComponent } from '../print-quiz/print-quiz.component';
@@ -14,8 +14,9 @@ import { ResultSummaryComponent } from '../../result-summary/result-summary.comp
 export class LoadQuizComponent  implements OnInit {
 
   catId;
+  qId
   quizzes;
-  constructor( private _route:ActivatedRoute, private _quiz:QuizService,public dialog: MatDialog,
+  constructor( private _route:ActivatedRoute, private _quiz:QuizService,public dialog: MatDialog, private router:Router
     // private print_quiz:PrintQuizComponent,
     ){}
 
@@ -29,6 +30,9 @@ export class LoadQuizComponent  implements OnInit {
     }
 
   ngOnInit(): void {
+    // this.qId = this.router.navigate(['qid']);
+
+    console.log(this.qId)
 
    this._route.params.subscribe((params)=>{
     this.catId =params['catId'];

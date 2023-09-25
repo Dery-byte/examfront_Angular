@@ -110,7 +110,7 @@
     <mat-card-content>
         <h1 class="text-center">{{ getFormmatedTime() }}</h1>
         <!-- <mat-spinner [value]="(this.time/(this.questions.length * 2 * 60)) * 100"  -->
-        <mat-spinner [value]="(timer/(this.questions.length * 2 * 60)) * 100" 
+        <mat-spinner [value]="(timer/(this.questions.length * 2 * 60)) * 100 " 
 
         mode="determinate" 
         color="accent" 
@@ -133,7 +133,7 @@
     <div class="row mt20">
         <div class="col-md-6 offset-md-3">
             <ng-container>
-                <h1 class="mt20" id="quiztitle">Quiz <b>{{questions[0].quiz.title}}</b></h1>
+                <h1 class="mt20" id="quiztitle">{{questions[0].quiz.category.title}}<b>{{questions[0].quiz.title}}</b></h1>
             </ng-container>
             <div class="row">
                 <div class="col-md-6 offset-md-8" >

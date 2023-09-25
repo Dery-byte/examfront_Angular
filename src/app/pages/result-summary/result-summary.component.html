@@ -1,21 +1,20 @@
+<div class=" container text-center" *ngIf="iSresultsSummary">
     <h1>Result Summary</h1>
-    <div mat-dialog-content>
-        <mat-form-field>
-            <mat-label>Username</mat-label>
-            <input formControlName="username" matInput>
-        </mat-form-field>
-        <mat-form-field>
-            <mat-label>Email</mat-label>
-            <input formControlName="email" matInput>
-        </mat-form-field>
-    </div>
+    <!-- {{all|json}} -->
+    <br>
+    Quiz Type: {{all[0].quiz.title}} <br>
+    Course: {{all[0].quiz.category.title}} <br>
+    Marks: {{all[0].marks}} <br>
+    Progress :{{all[0].progress}}
+    {{all[3].marks}}
+    {{all[3].maxMarks}}
 
     <div mat-dialog-actions>
-        <!-- <button mat-raised-button color="primary">Reset</button> -->
-
         <button mat-raised-button (click)="closepoup()" color="warn">Close</button>
-        <button mat-raised-button (click)="printPage()" color="primary">Print</button>
-
-        <!-- <button mat-raised-button color="accent">Cancel</button> -->
-
+        <!-- <button mat-raised-button (click)="printPage()" color="primary">Print</button> -->
     </div>
+</div>
+<div class=" container text-center" *ngIf="!iSresultsSummary">
+    <h1>No Results Summary, Take quiz before!</h1>
+
+</div>

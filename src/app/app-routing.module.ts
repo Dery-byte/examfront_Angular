@@ -22,6 +22,7 @@ import { StartComponent } from './pages/user/start/start.component';
 import { UpdateCategoryComponent } from './pages/admin/update-category/update-category.component';
 import { PrintQuizComponent } from './pages/user/print-quiz/print-quiz.component';
 import { UpdateQuestionComponent } from './pages/admin/update-question/update-question.component';
+import { ResultSummaryComponent } from './pages/result-summary/result-summary.component';
 // import { StartQuizComponent } from './pages/user/start-quiz/start-quiz.component';
 
 const routes: Routes = [
@@ -117,6 +118,12 @@ const routes: Routes = [
     path:'start/:qid',
     component:StartComponent,
     canActivate: [NormalGuard],
+  },
+
+  {
+    path:':qid',
+    component:ResultSummaryComponent,
+    canActivate:[NormalGuard],
   },
   // {
   //   path:'start-quiz/:qid',

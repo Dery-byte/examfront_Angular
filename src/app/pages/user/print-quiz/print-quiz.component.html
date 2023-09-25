@@ -1,5 +1,8 @@
-<!-- <p>print-quiz works!</p>
-{{questions|json }} -->
+
+
+<!-- {{questions[0].quiz|json}} -->
+<!-- {{questions[0].quiz.category.title |json}}
+{{questions[0].quiz.maxMarks |json}} -->
 
 
 
@@ -9,14 +12,15 @@
     <div class="row mt20">
         <div class="col-md-6 offset-md-3">
             <ng-container>
-                <h1 class="mt20" id="quiztitle">Quiz <b>{{questions[0].quiz.title}}</b></h1>
+                <!-- <h1 class="mt20" id="quiztitle">Quiz <b>{{questions[0].quiz.title}}</b></h1> -->
             </ng-container>
             <!-- <div class="row"> -->
                 <div class="caption" >
                     <p id="cape">University of Cape Coast. <br>
                         
-                        School of Physicals Sciences. <br>Department of Computer and Information Technology<br>
-                        <b>WEB Technology Quiz 1 Time Allowed: <i>15 Minutes</i></b>
+                        School of Physicals Sciences. <br>Department of Computer Science and Information Technology<br>
+                        <b>{{questions[0].quiz.category.title}}</b> {{questions[0].quiz.title}}. Time Allowed: <i><b> {{questions[0].quiz.maxMarks * 1}} minutes</b>
+                        </i>
 
                     </p>
                 </div>
