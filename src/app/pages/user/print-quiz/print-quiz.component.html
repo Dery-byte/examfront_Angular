@@ -1,5 +1,3 @@
-
-
 <!-- {{questions[0].quiz|json}} -->
 <!-- {{questions[0].quiz.category.title |json}}
 {{questions[0].quiz.maxMarks |json}} -->
@@ -8,78 +6,68 @@
 
 <!-- QUESTIONS LOAD AFTER SUBMIT -->
 <!-- questions -->
-<div class="bootstrap-wrapper" >
+<div class="bootstrap-wrapper">
     <div class="row mt20">
         <div class="col-md-6 offset-md-3">
             <ng-container>
                 <!-- <h1 class="mt20" id="quiztitle">Quiz <b>{{questions[0].quiz.title}}</b></h1> -->
             </ng-container>
             <!-- <div class="row"> -->
-                <div class="caption" >
-                    <p id="cape">University of Cape Coast. <br>
-                        
-                        School of Physicals Sciences. <br>Department of Computer Science and Information Technology<br>
-                        <b>{{questions[0].quiz.category.title}}</b> {{questions[0].quiz.title}}. Time Allowed: <i><b> {{questions[0].quiz.maxMarks * 1}} minutes</b>
-                        </i>
+            <div class="caption">
+                <p id="cape">University of Cape Coast.<br>
 
-                    </p>
-                </div>
-                    <span id="marks">             
-                     <p>Marks : <span id="marksU">{{marksGot}}/{{maxMarks}}</span></p>
-                    <p> Correct Answers : {{correctAnswers}}</p>
-                    <p>Attempted questions : {{attempted}}</p>
+                    School of Physical Sciences. <br>Department of Computer Science and Information Technology<br>
+                    <b>{{questions[0].quiz.category.title}}</b>
+                    {{questions[0].quiz.title}}. Time Allowed:
+                    <i>
+                        <b> {{questions[0].quiz.quizTime * 1}} minutes</b>
+                    </i>
+                </p>
+                <h1> Index Number:{{username}}</h1>
+            </div>
 
-                </span>
+            <span id="marks">
+                <p>Marks : <span id="marksU">{{marksGot}}/{{maxMarks}}</span></p>
+                <p> Correct Answers : {{correctAnswers}}</p>
+                <p>Attempted questions : {{attempted}}</p>
+            </span>
 
             <!-- </div> -->
 
-<mat-card *ngFor="let qA of questionWithAnswers; let i = index" class="mt10">
+            <mat-card *ngFor="let qA of questionWithAnswers; let i = index" class="mt10">
 
-    <mat-card-content>
-       <p>  <b> Q {{ i + 1}} </b> <span class="ml10" [innerHTML]="qA.content"></span></p>
-        <mat-divider></mat-divider>
-        <br/>
+                <mat-card-content>
+                    <p> <b> Q {{ i + 1}} </b> <span class="ml10" [innerHTML]="qA.content"></span></p>
+                    <mat-divider></mat-divider>
+                    <br />
 
-    <!-- Worked like magic -->
+                    <!-- Worked like magic -->
 
-        <div class="row mt20">
-            <div class="col-md-6">
-                <input type="checkbox"   
-                [checked]="qA.option1 == qA.answer"
-                disabled
-                />
-                {{qA.option1}}
-            </div>
+                    <div class="row mt20">
+                        <div class="col-md-6">
+                            <input type="checkbox" [checked]="qA.option1 == qA.answer" disabled />
+                            {{qA.option1}}
+                        </div>
 
-            <div class="col-md-6">  
-                <input type="checkbox"  
-                [name]="i"
-                 [checked]="qA.option2 == qA.answer"
-                 disabled
-                />
-                {{qA.option2}}    
-            </div>
-            <div class="col-md-6"> 
-                <input type="checkbox"   
-                  [checked]="qA.option3 == qA.answer"
-                  disabled
-                 />
-                {{qA.option3}}
-            </div>
-        
-        <div class="col-md-6">
-            <input type="checkbox"  
-             [checked]="qA.option4 == qA.answer"
-             disabled
-             />
-            {{qA.option4}}
+                        <div class="col-md-6">
+                            <input type="checkbox" [name]="i" [checked]="qA.option2 == qA.answer" disabled />
+                            {{qA.option2}}
+                        </div>
+                        <div class="col-md-6">
+                            <input type="checkbox" [checked]="qA.option3 == qA.answer" disabled />
+                            {{qA.option3}}
+                        </div>
 
-        </div>
+                        <div class="col-md-6">
+                            <input type="checkbox" [checked]="qA.option4 == qA.answer" disabled />
+                            {{qA.option4}}
+
+                        </div>
 
 
-      
 
-<!-- 
+
+                        <!-- 
         <div class="col-md-6"  *ngIf="qA.answer==qA.option1">
         <input type="checkbox" checked disabled>
             {{qA.option1}}
@@ -100,16 +88,17 @@
              {{qA.option4}}
          </div>  -->
 
+                    </div>
+                </mat-card-content>
+            </mat-card>
+            <mat-card-actions>
+                <div class="container text-center">
+                    <button (click)="printPage()" mat-raised-button color="accent" id="homePrintbtn">Print</button>
+
+                    <button mat-raised-button color="primary" class="ml10" id="homePrintbtn"
+                        routerLink="/user-dashboard/0">Home</button>
+                </div>
+            </mat-card-actions>
         </div>
-    </mat-card-content>
-</mat-card>
-<mat-card-actions>
-    <div class="container text-center">
-    <button (click)="printPage()" mat-raised-button color="accent" id="homePrintbtn">Print</button>
-    
-    <button mat-raised-button  color="primary" class="ml10" id="homePrintbtn" routerLink="/user-dashboard/0">Home</button>
-</div>
-   </mat-card-actions>
-</div>
-</div>
+    </div>
 </div>

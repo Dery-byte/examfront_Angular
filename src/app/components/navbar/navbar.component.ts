@@ -19,7 +19,7 @@ export class NavbarComponent implements OnInit {
     this.isloggedIn = this.login.isLoggedIn();
     this.user = this.login.getUser();
     this.login.loginStatusSubject.asObservable().subscribe(data=>{
-      // this.isloggedIn = this.login.isLoggedIn();
+      this.isloggedIn = this.login.isLoggedIn();
       // this.user = this.login.getUser();
     }); 
   }
@@ -29,6 +29,8 @@ export class NavbarComponent implements OnInit {
     this.login.logout();
     this.isloggedIn=false;
     this.user = null;
-    window.location.reload();
+    // window.location.reload();
+    window.location.href="/login"; 
+
   }
 }

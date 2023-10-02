@@ -16,24 +16,24 @@ export class LoadQuizComponent  implements OnInit {
   catId;
   qId
   quizzes;
+  currentQID
   constructor( private _route:ActivatedRoute, private _quiz:QuizService,public dialog: MatDialog, private router:Router
     // private print_quiz:PrintQuizComponent,
     ){}
 
 
 
-    OpenSummary(){
+    OpenSummary(id:number){
       this.dialog.open(ResultSummaryComponent,{
         width:'40%',
         // height:'450px'
       })
+      this.currentQID=id;
     }
 
   ngOnInit(): void {
     // this.qId = this.router.navigate(['qid']);
-
     console.log(this.qId)
-
    this._route.params.subscribe((params)=>{
     this.catId =params['catId'];
     console.log(this.catId);

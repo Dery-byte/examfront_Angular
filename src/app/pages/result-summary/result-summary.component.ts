@@ -1,4 +1,4 @@
-import { Component } from '@angular/core';
+import { Component} from '@angular/core';
 import { MatDialogRef } from '@angular/material/dialog';
 import { ActivatedRoute, Router } from '@angular/router';
 import { ReportServiceService } from 'src/app/services/report-service.service';
@@ -10,7 +10,6 @@ import { ReportServiceService } from 'src/app/services/report-service.service';
   styleUrls: ['./result-summary.component.css']
 })
 export class ResultSummaryComponent {
-
 
   constructor(private ref: MatDialogRef<ResultSummaryComponent>, private _route: ActivatedRoute, private router: Router,
     private _report: ReportServiceService) { }
@@ -27,7 +26,6 @@ export class ResultSummaryComponent {
   iSresultsSummary=false;
   ngOnInit(): void {
     this.qid = this._route.snapshot.params['qid'];
-
     // this.qId = this.router.navigate(['qid']);
     this.viewSummary();
     this.allresults()
@@ -51,7 +49,6 @@ export class ResultSummaryComponent {
       // console.log(this.qid);
       console.log(this.all);
 
-
 const userDetails =localStorage.getItem('user');
 const Object = JSON.parse(userDetails);
       this.userId = q.user.id;
@@ -61,10 +58,14 @@ const Object = JSON.parse(userDetails);
       });
       console.log(this.currentUserId)
       console.log(this.userId)
-      console.log(this.currentQuizId)
       console.log(this.reportQuizId)
-      this.iSresultsSummary = (this.userId==this.currentUserId && this.reportQuizId==3);
 
+      console.log(this.currentQuizId)
+
+
+
+
+      this.iSresultsSummary = (this.userId==this.currentUserId && this.reportQuizId==3);
       console.log(this.iSresultsSummary);
 
     });

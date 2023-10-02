@@ -44,13 +44,16 @@ this.userService.addUser(this.user).subscribe( (data:any)=>{
   console.log(data);
   // alert("Success");
   swal.fire('Succesful', 'User id is ' + data.id, 'success');
+
+  window.location.href="/login"; 
+
 },
 (error)=>{
 //Error mesage here
 console.log(error);
 // alert("Error");
 
-this.snack.open('Somthing went wrong ! ! ','',{
+this.snack.open('Something went wrong ! ! ','',{
   duration:1000,
 });
 }

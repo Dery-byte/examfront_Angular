@@ -29,10 +29,6 @@ export class LoginComponent implements OnInit {
     username:'',
     password:'',
   }
-
-
- 
-
   
   constructor(private snack:MatSnackBar, private login:LoginService, private router:Router, private _formBuilder: FormBuilder, public dialog: MatDialog){}
  
@@ -43,41 +39,7 @@ export class LoginComponent implements OnInit {
       // height:'450px'
     })
   }
-  
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
- 
-
-
-  ngOnInit(): void{}
+    ngOnInit(): void{}
 
   formSubmit(){
     console.log("login btn clicked");

@@ -8,97 +8,49 @@
     <div class="container text-center">
         <img style="border-radius: 50%;" src="../../../assets/logo1.jpg" height="150" width="150" alt="logo.png">
     </div>
-                <h1 class="text-center">Login Here!!</h1>
-                <form (ngSubmit)="formSubmit()">
+               
 
-                <mat-stepper #stepper>
-                  <mat-step [stepControl]="firstFormGroup" errorMessage="Name is required.">
+                <div class="login-form-flex">
+                  <mat-card>
 
-                      <ng-template matStepLabel>Enter Username</ng-template>
-                      <mat-form-field appearance="fill" class="full-width">
+                  <form (ngSubmit)="formSubmit()">
+
+                    <h1 class="text-center">Login Here!!</h1>
+                    <mat-card-content>
+                      <mat-form-field>
                         <mat-label>Username</mat-label>
                         <input 
                         [(ngModel)]="loginData.username"
                         name="username"
+                        required
                         type="text"
-                        matInput placeholder="Enter here">
+                        matInput placeholder="User Name">
                       </mat-form-field>
-                      <div>
-                        <!-- <button mat-button matStepperNext>Next</button> -->
-                      </div>
-                  </mat-step>
-                  <mat-step [stepControl]="secondFormGroup" errorMessage="Address is required.">
-                      <ng-template matStepLabel>Enter Password</ng-template>
-                      <mat-form-field appearance="fill" class="full-width">
+                      <br/>
+                      <mat-form-field>
                         <mat-label>Password</mat-label>
-                        <input
+                        <input 
                         [(ngModel)]="loginData.password"
                         required
                         name="password"
-                        type="password" matInput placeholder="Enter here">
+                        type="password" matInput placeholder="Password"/>
                       </mat-form-field>
-                      <div>
-                        <!-- <p>Go to a different step to see the error state</p>
-                        <button mat-button matStepperPrevious>Back</button>
-                        <button mat-button matStepperNext>Next</button> -->
-                      </div>
-                  </mat-step>
+                    </mat-card-content>
+
+
+                    <button type="submit" class="button-flex" mat-raised-button color="primary">Login</button>
                 
-                  <mat-step>
-                    <ng-template matStepLabel>Done!</ng-template>
-                    <!-- <p>Ensure all detaies are correct, then login.</p> -->
-                    <div>
-                      <button type="submit" mat-raised-button  color="primary">Login</button>
-                      <!-- <button mat-button matStepperPrevious>Back</button>
-                      <button mat-button (click)="stepper.reset()">Reset</button> -->
-                    </div>
-                  </mat-step>
-                </mat-stepper>
               </form>
-              <div class="row">
-                <div class="col-md-12 offset-md-7"> 
-                  <button mat-raised-button color="primary" (click)="Openpopup()" class="" >Forgotten Password?</button>
+              <mat-card-actions>
+                <div class="button-flex-container"> 
+                  <button mat-button color="primary" (click)="Openpopup()" class="" >Forgotten Password?</button>
                 </div>
-                </div>        
+            </mat-card-actions>
+          </mat-card>
 
 
-                <!-- {{loginData | json}} -->
-
-                <!-- <form (ngSubmit)="formSubmit()">
-    
-                    <mat-form-field class="full-width" appearance="outline">
-                        <mat-label>Username</mat-label>
-                        <input 
-                        [(ngModel)]="loginData.username"
-
-                          name="username"
-                          type="text"
-                        matInput placeholder="Enter here">
-                        <mat-hint>Valid Username!! </mat-hint>
-                      </mat-form-field>
-    
-                      <mat-form-field class="full-width" appearance="outline">
-                        <mat-label>Password</mat-label>
-                        <input
-
-                        [(ngModel)]="loginData.password"
-                        required
-    
-                      name="password"
-                        type="password" matInput placeholder="Enter here">
-                      </mat-form-field>
-    
-                
-    
-                      <div class="container text-center">
-                          
-                          <button type="submit" mat-raised-button color="primary">Login</button>
-                          <button class="ml10" type="submit" mat-raised-button color="accent">Reset</button>
-
-                          
-                      </div>
-                </form> -->
-
+          
+            </div>
             </mat-card>
             </div>
         </div>

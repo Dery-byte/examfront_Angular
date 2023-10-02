@@ -3,55 +3,56 @@
         <div class="row">
             <div class="col-md-12">
                 <mat-card class="mt20">
-                <mat-card-header>
-                    <!-- Heading -->
-                    <mat-card-title>
-                        Quiz Instructions || Read it carefully
-                    </mat-card-title>
-                    <mat-card-subtitle>
-                        One step to go
-                    </mat-card-subtitle>
-                </mat-card-header>
+                    <mat-card-header>
+                        <!-- Heading -->
+                        <mat-card-title>
+                            Quiz Instructions || Read it carefully
+                        </mat-card-title>
+                        <mat-card-subtitle>
+                            One step to go
+                        </mat-card-subtitle>
+                    </mat-card-header>
 
-                <mat-card-content class="ml20">
-                    <!-- Content -->
-                    <h1>{{quiz.title}}</h1>
-                    <p>{{quiz.description}}</p>
-                    <mat-divider></mat-divider>
-                    <br>
-                    <h1>Important Notice</h1>
-                    <ul>
-                        <li>This quiz is for practice purposes</li>
-                        <li>This quiz is just for <b> {{quiz.maxMarks * 1}} minutes </b> </li> 
-                        <li>You can attempt any number times</li>
-                        <li>There are <b>{{quiz.numberOfQuestions}} questions </b> in total</li>
-                        <li>Each question carries <b> {{quiz.maxMarks/quiz.numberOfQuestions}} mark(s)</b>. No negative marking for wrong ones.</li>
-                        <li>All questions are Multiple choice.</li>
-                    </ul>
-                    <mat-divider></mat-divider>
-                    <br>
-                    <h1>Attempting Quiz</h1>
-                    <ul>
-                        <li>Click the <b>Start Quiz</b> button to start the quiz</li>
-                        <li>The time will start as soon as you click the start button </li> 
-                        <li>You can't resume this quiz, if interrupted for any reason</li>
-                        <li>Click on submit Quiz button on th completion of the quiz</li>
-                        <li>Click on Next button to move to the next question</li>
-                        <li>Your report will be generated as PDF automatically. </li>
-                    </ul>
-                </mat-card-content>
+                    <mat-card-content class="ml20">
+                        <!-- Content -->
+                        <h1>{{quiz.title}}</h1>
+                        <p>{{quiz.description}}</p>
+                        <mat-divider></mat-divider>
+                        <br>
+                        <h1>Important Notice</h1>
+                        <ul>
+                            <li>This quiz is for practice purposes</li>
+                            <li>This quiz is just for <b> {{quiz.quizTime}} minutes </b> </li>
+                            <li>You can attempt any number times</li>
+                            <li>There are <b>{{quiz.numberOfQuestions}} questions </b> in total</li>
+                            <li>Each question carries <b> {{quiz.maxMarks/quiz.numberOfQuestions}} mark(s)</b>. No
+                                negative marking for wrong ones.</li>
+                            <li>All questions are Multiple choice.</li>
+                        </ul>
+                        <mat-divider></mat-divider>
+                        <br>
+                        <h1>Attempting Quiz</h1>
+                        <ul>
+                            <li>Click the <b>Start Quiz</b> button to start the quiz</li>
+                            <li>The time will start as soon as you click the start button </li>
+                            <li>You can't resume this quiz, if interrupted for any reason</li>
+                            <li>Click on submit Quiz button on th completion of the quiz</li>
+                            <li>Click on Next button to move to the next question</li>
+                            <li>Your report will be generated as PDF automatically. </li>
+                        </ul>
+                    </mat-card-content>
 
-                <mat-card-actions >
-    <!-- Action -->
-                    <div class=" container text-center" *ngIf="!isLegible">
-                    <button mat-raised-button color="primary" class="" (click)="startQuiz()" >Start Quiz</button>
-                </div>
+                    <mat-card-actions>
+                        <!-- Action -->
+                        <div class=" container text-center" *ngIf="!isLegible">
+                            <button mat-raised-button color="primary" class="" (click)="startQuiz()">Start Quiz</button>
+                        </div>
 
-                <div class=" container text-center" *ngIf="isLegible">
-                    <button mat-raised-button color="accent" class="">Quiz Completed</button>
-            </div>
-     <!-- Action -->
-                </mat-card-actions>
+                        <div class=" container text-center" *ngIf="isLegible">
+                            <button mat-raised-button color="accent" class="">Quiz Completed</button>
+                        </div>
+                        <!-- Action -->
+                    </mat-card-actions>
                 </mat-card>
 
 
@@ -59,5 +60,3 @@
         </div>
     </div>
 </div>
-
-

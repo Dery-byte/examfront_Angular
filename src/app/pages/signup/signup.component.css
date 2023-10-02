@@ -2,3 +2,24 @@
 
     width: 100%;
 }
+
+.box{
+    align-items: center;
+}
+
+
+.example-full-width{
+    align-content: center;
+}
+
+.full-width{
+    align-content: center;
+}
+
+
+.login-form-flex {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    height: 100%;
+  }
