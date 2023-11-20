@@ -1,4 +1,8 @@
-import { Component } from '@angular/core';
+import { Component ,OnInit} from '@angular/core';
+import { CategoryService } from 'src/app/services/category.service';
+import { MatSnackBar } from '@angular/material/snack-bar';
+import Swal from 'sweetalert2';
+
 @Component({
   selector: 'app-welcome',
   templateUrl: './welcome.component.html',
@@ -6,7 +10,26 @@ import { Component } from '@angular/core';
 
 
 })
-export class WelcomeComponent {
+export class WelcomeComponent implements OnInit{
+	categories=[];
+
+	constructor(private _cat:CategoryService, private _snackbar:MatSnackBar){}
+
+ngOnInit(): void {
+this._cat.getCategories().subscribe(
+(data:any)=>{
+  this.categories=data;
+  // console.log(this.categories);
+},
+(error)=>{
+  console.log(error);
+  Swal.fire('Error !!', 'Server Error', 'error');
+}
+)
+}
+	
+
+
 
   chart: any;
 	chartOptions = {

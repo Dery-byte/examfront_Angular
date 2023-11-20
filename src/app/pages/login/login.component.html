@@ -8,13 +8,10 @@
     <div class="container text-center">
         <img style="border-radius: 50%;" src="../../../assets/logo1.jpg" height="150" width="150" alt="logo.png">
     </div>
-               
 
                 <div class="login-form-flex">
                   <mat-card>
-
                   <form (ngSubmit)="formSubmit()">
-
                     <h1 class="text-center">Login Here!!</h1>
                     <mat-card-content>
                       <mat-form-field>
@@ -36,27 +33,75 @@
                         type="password" matInput placeholder="Password"/>
                       </mat-form-field>
                     </mat-card-content>
-
-
                     <button type="submit" class="button-flex" mat-raised-button color="primary">Login</button>
-                
               </form>
-              <mat-card-actions>
-                <div class="button-flex-container"> 
-                  <button mat-button color="primary" (click)="Openpopup()" class="" >Forgotten Password?</button>
-                </div>
-            </mat-card-actions>
+             <mat-card-actions>
+              <div class="button-flex-container"> 
+                <!-- <button mat-button color="primary" (click)="Openpopup()" class="" >Forgotten Password?</button> -->
+                <button mat-button color="primary"  (click)="openNew()">Forgotten Password?</button>
+            
+              </div>
+          </mat-card-actions>
           </mat-card>
-
-
-          
             </div>
             </mat-card>
             </div>
         </div>
+
+
+
+
+
+        
+<!-- DIALOG BOX STARTS FROM HERE -->
+<p-dialog [(visible)]="productDialog" [style]="{width: '300px', height:'550px'}" header="Provide your Details to reset password">
+    <mat-card>
+    <form (ngSubmit)="passwordChange()">
+        <!-- <h1>Fill this form to reset Password</h1> -->
+    <mat-card-content>
+    <mat-form-field>
+                <mat-label>Username</mat-label>
+                <input 
+                [(ngModel)]="passwordResetData.username"
+                formControlName="username" matInput>
+            </mat-form-field>
+            <mat-form-field>
+                <mat-label>Email</mat-label>
+                <input 
+                [(ngModel)]="passwordResetData.email"
+                formControlName="email" matInput>
+            </mat-form-field>
+            <mat-form-field>
+                <mat-label>New Password</mat-label>
+                <input 
+                [(ngModel)]="passwordResetData.newpassword"
+
+                formControlName="newPassword" matInput>
+            </mat-form-field>
+            <mat-form-field>
+                <mat-label>Confirm Password</mat-label>
+                <input 
+                [(ngModel)]="passwordResetData.confirmPassword"
+                formControlName="confirmNewpassword" matInput>
+            </mat-form-field>
+        </mat-card-content>
+
+    <mat-card-actions>
+    <button type="submit" mat-raised-button color="primary">Reset</button>
+            <button mat-raised-button  color="warn">Cancel</button>
+     </mat-card-actions>
+
+
+    </form>
+</mat-card>
+</p-dialog>
+<!-- DIALOG BOX ENDS HERE -->
     </div>
+
+    </div>
+ 
     
-    </div>
+
 
 
 

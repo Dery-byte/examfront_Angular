@@ -5,10 +5,6 @@ import Swal from 'sweetalert2';
 import { LoginService } from 'src/app/services/login.service';
 import {FormBuilder, Validators} from '@angular/forms';
 import {MatDialog, MAT_DIALOG_DATA, MatDialogRef, MatDialogModule} from '@angular/material/dialog';
-import { ResetpopupComponent } from '../resetpopup/resetpopup.component';
-
-
-
 @Component({
   selector: 'app-login',
   templateUrl: './login.component.html',
@@ -18,6 +14,9 @@ import { ResetpopupComponent } from '../resetpopup/resetpopup.component';
 
 
 export class LoginComponent implements OnInit {
+
+  productDialog: boolean;
+
   firstFormGroup = this._formBuilder.group({
     firstCtrl: ['', Validators.required],
   });
@@ -25,21 +24,45 @@ export class LoginComponent implements OnInit {
     secondCtrl: ['', Validators.required],
   });
   isEditable = false;  
+
   loginData={
     username:'',
     password:'',
+  }
+
+
+
+
+  passwordResetData={
+    username:'',
+    email:'',
+    newpassword:'',
+    confirmPassword:''
+
   }
   
   constructor(private snack:MatSnackBar, private login:LoginService, private router:Router, private _formBuilder: FormBuilder, public dialog: MatDialog){}
  
 
-  Openpopup(){
-    this.dialog.open(ResetpopupComponent,{
-      width:'40%',
-      // height:'450px'
-    })
-  }
+  // Openpopup(){
+  //   this.dialog.open(ResetpopupComponent,{
+  //     width:'40%',
+  //     // height:'450px'
+  //   })
+  // }
     ngOnInit(): void{}
+    
+    hideDialog() {
+      this.productDialog = false;
+      // this.submitted = false;
+  }
+  openNew() {
+      // this.product = {};
+      // this.submitted = false;
+      this.productDialog = true;
+  }
+
+    deleteSelectedProducts(){}
 
   formSubmit(){
     console.log("login btn clicked");
@@ -108,7 +131,18 @@ else{
 
 
 
+  passwordChange(){
+    console.log("Reset btn clicked");
+    this.login.resetPassword(this.passwordResetData).subscribe((data:any)=>{
+      console.log('Reset was successful');
+      console.log(data);
+    })
 
+  }
+saveProduct() {
+    
+    
+}
   
 
 }

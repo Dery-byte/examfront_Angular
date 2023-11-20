@@ -25,10 +25,7 @@
                         matTooltip="Summary Results"
                         aria-label="Button that displays a tooltip when focused or hovered over" (click)="OpenSummary(q.qid)" >View </button>
                         <!-- <button mat-raised-button color="primary" (click)="OpenSummary()" class="" >pop</button> -->
-
                         <!-- <button (click)="printPage()" mat-raised-button color="accent" id="homePrintbtn">Print</button> -->
-
-
                         <button mat-button color="accent" [routerLink]="'/user-dashboard/instructions/'+q.qId">Start</button>
                         <button mat-button color="accent"> {{q.numberOfQuestions}} Questions</button>
                         <button mat-button color="accent">{{q.maxMarks}} Marks</button>
@@ -47,12 +44,31 @@
 
 
 
-        </div>
-        
-
-        
+        </div>        
     </div>
     
 </div>
 
 <!-- {{quizzes | json}} -->
+
+
+<!-- Summary details form -->
+<div class=" container text-center" *ngIf="iSresultsSummary">
+    <h1>Result Summary</h1>
+    <!-- {{all|json}} -->
+    <br>
+    Quiz Type: {{all[0].quiz.title}} <br>
+    Course: {{all[0].quiz.category.title}} <br>
+    Marks: {{all[0].marks}} <br>
+    Progress :{{all[0].progress}}
+   
+
+    <div mat-dialog-actions>
+        <button mat-raised-button (click)="closepoup()" color="warn">Close</button>
+        <!-- <button mat-raised-button (click)="printPage()" color="primary">Print</button> -->
+    </div>
+</div>
+<div class=" container text-center" *ngIf="!iSresultsSummary">
+    <h1>No Results Summary, Take quiz before!</h1>
+
+</div>

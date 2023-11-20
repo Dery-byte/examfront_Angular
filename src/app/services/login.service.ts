@@ -12,6 +12,9 @@ export class LoginService {
 
   constructor(private http:HttpClient) { }
 
+
+
+
   //get the current logged in user
 
   public getCurrentUser(){
@@ -76,5 +79,13 @@ export class LoginService {
   public getUserRole(){
     let user = this.getUser();
     return user.authorities[0].authority;
+  }
+
+
+  // RESET PASSWORD
+
+  public resetPassword(resetData:any){
+    return this.http.put(`${baseUrl}/changePassword`, resetData);
+
   }
 }

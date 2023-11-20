@@ -54,8 +54,16 @@ import { UpdateQuestionComponent } from './pages/admin/update-question/update-qu
 import {MatTooltipModule} from '@angular/material/tooltip';
 import {MatCheckboxModule} from '@angular/material/checkbox';
 import {MatDialog, MAT_DIALOG_DATA, MatDialogRef, MatDialogModule} from '@angular/material/dialog';
-import { ResetpopupComponent } from './pages/resetpopup/resetpopup.component';
 import { ResultSummaryComponent } from './pages/result-summary/result-summary.component';
+
+
+// PRIMENG
+import { DialogModule } from 'primeng/dialog';
+import { InputTextModule } from 'primeng/inputtext';
+import { InputTextareaModule } from 'primeng/inputtextarea';
+import { ButtonModule } from 'primeng/button';
+
+
 
 @NgModule({
   declarations: [
@@ -85,7 +93,6 @@ import { ResultSummaryComponent } from './pages/result-summary/result-summary.co
     UpdateCategoryComponent,
     PrintQuizComponent,
     UpdateQuestionComponent,
-    ResetpopupComponent,
     ResultSummaryComponent,
   ],
   imports: [
@@ -119,6 +126,14 @@ import { ResultSummaryComponent } from './pages/result-summary/result-summary.co
     MatCheckboxModule,
     NgxPaginationModule,
      MatDialogModule,
+
+     
+     DialogModule,
+     InputTextModule,
+  
+    InputTextareaModule,
+    
+    ButtonModule,
     NgxUiLoaderHttpModule.forRoot({
       showForeground:true,
     }),

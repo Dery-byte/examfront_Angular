@@ -31,6 +31,8 @@ export class LoadQuizComponent  implements OnInit {
       this.currentQID=id;
     }
 
+    iSresultsSummary=false;
+
   ngOnInit(): void {
     // this.qId = this.router.navigate(['qid']);
     console.log(this.qId)

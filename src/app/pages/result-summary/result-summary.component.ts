@@ -24,6 +24,7 @@ export class ResultSummaryComponent {
   currentQuizId
   currentUserId
   iSresultsSummary=false;
+
   ngOnInit(): void {
     this.qid = this._route.snapshot.params['qid'];
     // this.qId = this.router.navigate(['qid']);
@@ -73,11 +74,6 @@ const Object = JSON.parse(userDetails);
 
   // Filter the quiz gotten
   
-
-
-
-
-
   closepoup() {
     this.ref.close();
   }
