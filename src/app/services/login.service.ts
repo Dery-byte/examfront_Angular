@@ -13,10 +13,13 @@ export class LoginService {
   constructor(private http:HttpClient) { }
 
 
+//get all Users
 
+  public getAllUsers(){
+    return this.http.get(`${baseUrl}/users`);
+  }
 
   //get the current logged in user
-
   public getCurrentUser(){
     return this.http.get(`${baseUrl}/current-user`);
   }

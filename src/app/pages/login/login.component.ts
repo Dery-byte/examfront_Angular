@@ -30,35 +30,40 @@ export class LoginComponent implements OnInit {
     password:'',
   }
 
-
-
-
-  passwordResetData={
+  resetData={
     username:'',
     email:'',
-    newpassword:'',
+    password:'',
     confirmPassword:''
-
   }
+
+  allUsers=[];
   
   constructor(private snack:MatSnackBar, private login:LoginService, private router:Router, private _formBuilder: FormBuilder, public dialog: MatDialog){}
  
-
-  // Openpopup(){
-  //   this.dialog.open(ResetpopupComponent,{
-  //     width:'40%',
-  //     // height:'450px'
-  //   })
-  // }
-    ngOnInit(): void{}
+    ngOnInit(): void{
+      this.allusers();
+    }
     
+    allusers(){
+      this.login.getAllUsers().subscribe((users:any)=>{
+        this.allUsers=users;
+        // this.allUsers.forEach((u)=>{
+        //   this.allUsers=u.username
+        //   console.log(this.allUsers);
+        // });
+//console.log(this.allUsers[0].username);
+console.log(this.allUsers)
+
+
+
+      });
+    }
+
     hideDialog() {
       this.productDialog = false;
-      // this.submitted = false;
   }
   openNew() {
-      // this.product = {};
-      // this.submitted = false;
       this.productDialog = true;
   }
 
@@ -106,8 +111,6 @@ else if(this.login.getUserRole()=="NORMAL"){
   window.location.href="/user-dashboard/0";
   // this.router.navigate(["user-dashboard"]);
   // this.login.loginStatusSubject.next(true);
-
-
 }
 else{
   this.login.logout();
@@ -132,13 +135,49 @@ else{
 
 
   passwordChange(){
-    console.log("Reset btn clicked");
-    this.login.resetPassword(this.passwordResetData).subscribe((data:any)=>{
-      console.log('Reset was successful');
-      console.log(data);
-    })
+    console.log(this.allUsers);
+     this.allUsers.forEach((u)=>{
+      console.log(u.username)
+      console.log(this.resetData.username)
+      if(u.username == this.resetData.username.trim()){
 
-  }
+         this.login.resetPassword(this.resetData).subscribe((resetdata:any)=>
+         {
+          // Swal.fire("Success ", "Quiz Updated Successfully","success").then((e)=>
+          // {
+          //   // this.router.navigate(["/"]);
+          //   // window.location.href="/"; 
+
+          // });
+        },
+    (error)=>{
+      this.resetData.username='',
+      this.resetData.email='',
+      this.resetData.password='',
+      this.resetData.confirmPassword='',
+      Swal.fire({
+        title:"Success",
+        text:"Password reset was successful",
+        icon:"success",
+        timer:1000, 
+        showConfirmButton:true
+      }).then(()=>{
+        window.location.href="/login"; 
+      });
+   
+    });
+
+
+    
+      }
+    },
+    (error)=>{
+      Swal.fire("Error", "Password reset unsuccessful", "error");
+    });
+      // console.log("Not in the list")
+   
+    }
+  
 saveProduct() {
     
     

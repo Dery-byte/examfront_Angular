@@ -137,7 +137,6 @@ import { ButtonModule } from 'primeng/button';
     NgxUiLoaderHttpModule.forRoot({
       showForeground:true,
     }),
-
   ],
   providers: [authInterceptorProviders, StartComponent],
   bootstrap: [AppComponent]

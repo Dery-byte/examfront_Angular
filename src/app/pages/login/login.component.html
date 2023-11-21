@@ -12,6 +12,7 @@
                 <div class="login-form-flex">
                   <mat-card>
                   <form (ngSubmit)="formSubmit()">
+                    <!-- {{loginData|json}} -->
                     <h1 class="text-center">Login Here!!</h1>
                     <mat-card-content>
                       <mat-form-field>
@@ -56,40 +57,50 @@
 <!-- DIALOG BOX STARTS FROM HERE -->
 <p-dialog [(visible)]="productDialog" [style]="{width: '300px', height:'550px'}" header="Provide your Details to reset password">
     <mat-card>
+                          <!-- {{resetData |json}} -->
+
     <form (ngSubmit)="passwordChange()">
         <!-- <h1>Fill this form to reset Password</h1> -->
     <mat-card-content>
     <mat-form-field>
                 <mat-label>Username</mat-label>
                 <input 
-                [(ngModel)]="passwordResetData.username"
-                formControlName="username" matInput>
+                [(ngModel)]="resetData.username"
+                required
+                name="username"
+                type="text"
+                 matInput placeholder="Username">
             </mat-form-field>
             <mat-form-field>
                 <mat-label>Email</mat-label>
                 <input 
-                [(ngModel)]="passwordResetData.email"
-                formControlName="email" matInput>
+                [(ngModel)]="resetData.email"
+                name="email"
+                type="text"
+                 matInput placeholder="Email">
             </mat-form-field>
             <mat-form-field>
                 <mat-label>New Password</mat-label>
                 <input 
-                [(ngModel)]="passwordResetData.newpassword"
-
-                formControlName="newPassword" matInput>
+                [(ngModel)]="resetData.password"
+                name="newpassword"
+                type="text"
+                 matInput placeholder="New Password">
             </mat-form-field>
             <mat-form-field>
                 <mat-label>Confirm Password</mat-label>
                 <input 
-                [(ngModel)]="passwordResetData.confirmPassword"
-                formControlName="confirmNewpassword" matInput>
+                [(ngModel)]="resetData.confirmPassword"
+                name="confirmPassword"
+                type="text"
+                 matInput placeholder="Confirm Password">
             </mat-form-field>
         </mat-card-content>
 
     <mat-card-actions>
     <button type="submit" mat-raised-button color="primary">Reset</button>
-            <button mat-raised-button  color="warn">Cancel</button>
-     </mat-card-actions>
+    <button type="submit" mat-raised-button  color="warn">Cancel</button>
+    </mat-card-actions>
 
 
     </form>
