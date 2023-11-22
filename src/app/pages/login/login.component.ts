@@ -70,8 +70,7 @@ console.log(this.allUsers)
     deleteSelectedProducts(){}
 
   formSubmit(){
-    console.log("login btn clicked");
-
+this.hideDialog();
     if(this.loginData.username.trim()==' ' || this.loginData.password ==null){
   this.snack.open('Username is required !! ', '',{
   duration:3000,});
@@ -132,10 +131,9 @@ else{
 
   }
 
-
-
   passwordChange(){
     console.log(this.allUsers);
+    this.hideDialog();
      this.allUsers.forEach((u)=>{
       console.log(u.username)
       console.log(this.resetData.username)
@@ -151,31 +149,34 @@ else{
           // });
         },
     (error)=>{
-      this.resetData.username='',
-      this.resetData.email='',
-      this.resetData.password='',
-      this.resetData.confirmPassword='',
+      this.resetPasswordForm();
       Swal.fire({
         title:"Success",
         text:"Password reset was successful",
         icon:"success",
-        timer:1000, 
+        timer:10000, 
         showConfirmButton:true
       }).then(()=>{
-        window.location.href="/login"; 
+        // window.location.href="/login"; 
       });
    
     });
 
-
     
-      }
-    },
-    (error)=>{
+      }else{
+        this.resetPasswordForm();
       Swal.fire("Error", "Password reset unsuccessful", "error");
+        console.log("Username not in the database");
+      }
     });
       // console.log("Not in the list")
-   
+    }
+
+    resetPasswordForm(){
+      this.resetData.username='',
+      this.resetData.email='',
+      this.resetData.password='',
+      this.resetData.confirmPassword=''
     }
   
 saveProduct() {
