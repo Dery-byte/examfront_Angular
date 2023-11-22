@@ -40,7 +40,6 @@ return this._http.delete(`${baseUrl}/quiz/${qId}`);
 public getQuiz(qId){
   return this._http.get(`${baseUrl}/singleQuiz/${qId}`);
 }
-
 //update Quiz
 public updateQuiz(quiz){
 return this._http.put(`${baseUrl}/update`, quiz);
@@ -61,6 +60,7 @@ public actieQuizzes(){
 public getActieQuizzesOfCategory(cid){
   return this._http.get(`${baseUrl}/category/active/${cid}`)
 }
+
 
 }
  

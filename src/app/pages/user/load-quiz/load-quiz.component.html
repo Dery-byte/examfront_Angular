@@ -23,7 +23,7 @@
                     <mat-card-action>
                         <button (click)="printPage()" mat-button color="primary" 
                         matTooltip="Summary Results"
-                        aria-label="Button that displays a tooltip when focused or hovered over" (click)="OpenSummary(q.qid)" >View </button>
+                        aria-label="Button that displays a tooltip when focused or hovered over"  (click)="openNew(q.qId)">View </button>
                         <!-- <button mat-raised-button color="primary" (click)="OpenSummary()" class="" >pop</button> -->
                         <!-- <button (click)="printPage()" mat-raised-button color="accent" id="homePrintbtn">Print</button> -->
                         <button mat-button color="accent" [routerLink]="'/user-dashboard/instructions/'+q.qId">Start</button>
@@ -72,3 +72,53 @@
     <h1>No Results Summary, Take quiz before!</h1>
 
 </div>
+
+
+
+
+<!-- Proper summary result show -->
+
+
+<p-dialog [(visible)]="productDialog" [style]="{width: '300px', height:'550px'}" header="This is the quiz summary">
+
+    <mat-card>
+<mat-card-content>
+    <mat-form-field>
+                <mat-label>Username</mat-label>
+                <input 
+                required
+                name="username"
+                type="text"
+                 matInput placeholder="Username">
+            </mat-form-field>
+            <mat-form-field>
+                <mat-label>Email</mat-label>
+                <input 
+                name="email"
+                type="text"
+                 matInput placeholder="Email">
+            </mat-form-field>
+            <mat-form-field>
+                <mat-label>New Password</mat-label>
+                <input 
+                name="newpassword"
+                type="text"
+                 matInput placeholder="New Password">
+            </mat-form-field>
+            <mat-form-field>
+                <mat-label>Confirm Password</mat-label>
+                <input 
+                name="confirmPassword"
+                type="text"
+                 matInput placeholder="Confirm Password">
+            </mat-form-field>
+        </mat-card-content>
+
+    <mat-card-actions>
+    <button type="submit" mat-raised-button color="primary">Reset</button>
+    <button type="submit" mat-raised-button  color="warn">Cancel</button>
+    </mat-card-actions>
+
+</mat-card>
+</p-dialog>
+

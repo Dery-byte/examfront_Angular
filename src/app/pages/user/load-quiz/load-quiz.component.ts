@@ -5,6 +5,7 @@ import { QuizService } from 'src/app/services/quiz.service';
 import { PrintQuizComponent } from '../print-quiz/print-quiz.component';
 import {MatDialog, MAT_DIALOG_DATA, MatDialogRef, MatDialogModule} from '@angular/material/dialog';
 import { ResultSummaryComponent } from '../../result-summary/result-summary.component';
+import { ReportServiceService } from 'src/app/services/report-service.service';
 
 @Component({
   selector: 'app-load-quiz',
@@ -13,11 +14,16 @@ import { ResultSummaryComponent } from '../../result-summary/result-summary.comp
 })
 export class LoadQuizComponent  implements OnInit {
 
+  productDialog: boolean;
+
+
   catId;
   qId
   quizzes;
   currentQID
-  constructor( private _route:ActivatedRoute, private _quiz:QuizService,public dialog: MatDialog, private router:Router
+
+  reportData;
+  constructor( private _route:ActivatedRoute, private _quiz:QuizService,public dialog: MatDialog, private router:Router, private _report:ReportServiceService
     // private print_quiz:PrintQuizComponent,
     ){}
 
@@ -32,9 +38,12 @@ export class LoadQuizComponent  implements OnInit {
     }
 
     iSresultsSummary=false;
-
   ngOnInit(): void {
+    // this.loadReport();
     // this.qId = this.router.navigate(['qid']);
+    // this.qId = this._route.paramMap['qId']
+    this.qId = this._route.snapshot.params['qid'];
+
     console.log(this.qId)
    this._route.params.subscribe((params)=>{
     this.catId =params['catId'];
@@ -61,6 +70,26 @@ this._quiz.getActieQuizzesOfCategory(this.catId).subscribe((data:any)=>{
   });
     // console.log("Load all quizzes");
   }
+
+  hideDialog() {
+    this.productDialog = false;
+}
+openNew() {
+    this.productDialog  = true;
+}
+
+
+loadReport(){
+  const userDetails = localStorage.getItem('user');
+  const Object = JSON.parse(userDetails);
+this._report.getReport(Object.id,this.qId).subscribe((report)=>{
+  this.reportData = report;
+console.log(this.reportData);
+console.log(report);
+});
+}
+
+
   hola(){
     // this.print_quiz.printQuiz();
   }

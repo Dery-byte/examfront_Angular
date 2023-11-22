@@ -18,4 +18,11 @@ public loadResultsSummary(rId){
 public loadReportSummary(){
   return this._http.get(`${baseUrl}/getReport`);
 }
+
+//get Report by userId and QuizId
+public getReport(uId,qId){
+  return this._http.get(`${baseUrl}/getReportByUidAndQid/${uId}/${qId}`);
+}
+
+
 }
