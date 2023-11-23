@@ -7,6 +7,7 @@ import {MatDialog, MAT_DIALOG_DATA, MatDialogRef, MatDialogModule} from '@angula
 import { ResultSummaryComponent } from '../../result-summary/result-summary.component';
 import { ReportServiceService } from 'src/app/services/report-service.service';
 
+
 @Component({
   selector: 'app-load-quiz',
   templateUrl: './load-quiz.component.html',
@@ -19,6 +20,7 @@ export class LoadQuizComponent  implements OnInit {
 
   catId;
   qId
+  pqId
   quizzes;
   currentQID
 
@@ -73,23 +75,31 @@ this._quiz.getActieQuizzesOfCategory(this.catId).subscribe((data:any)=>{
 
   hideDialog() {
     this.productDialog = false;
+    this.qId=null;
 }
-openNew() {
+openNew(id:number) {
     this.productDialog  = true;
+    this.pqId = id;
+    console.log(id)
+    this.loadReport();
+    this.pqId=null;
 }
-
 
 loadReport(){
   const userDetails = localStorage.getItem('user');
   const Object = JSON.parse(userDetails);
-this._report.getReport(Object.id,this.qId).subscribe((report)=>{
+this._report.getReport(Object.id,this.pqId).subscribe((report)=>{
   this.reportData = report;
-console.log(this.reportData);
+console.log(this.reportData[0].marks);
+console.log(this.reportData[0].progress);
+console.log(this.reportData[0].quiz.title);
+console.log(this.reportData[0].user.lastname);
+
+
+
 console.log(report);
 });
 }
-
-
   hola(){
     // this.print_quiz.printQuiz();
   }

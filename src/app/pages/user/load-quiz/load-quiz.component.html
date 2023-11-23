@@ -21,11 +21,9 @@
                      <p class="truncate"> {{q.description}}</p>
                     </mat-card-content>
                     <mat-card-action>
-                        <button (click)="printPage()" mat-button color="primary" 
+                        <button  mat-button color="primary" 
                         matTooltip="Summary Results"
                         aria-label="Button that displays a tooltip when focused or hovered over"  (click)="openNew(q.qId)">View </button>
-                        <!-- <button mat-raised-button color="primary" (click)="OpenSummary()" class="" >pop</button> -->
-                        <!-- <button (click)="printPage()" mat-raised-button color="accent" id="homePrintbtn">Print</button> -->
                         <button mat-button color="accent" [routerLink]="'/user-dashboard/instructions/'+q.qId">Start</button>
                         <button mat-button color="accent"> {{q.numberOfQuestions}} Questions</button>
                         <button mat-button color="accent">{{q.maxMarks}} Marks</button>
@@ -49,76 +47,35 @@
     
 </div>
 
-<!-- {{quizzes | json}} -->
+<!-- Display the summary result in a dialog -->
+<p-dialog [(visible)]="productDialog" [style]="{width: '300px', height:'550px'}"  class=" container text-center" header="This is the quiz summary">
 
+    <mat-card *ngIf="reportData">
+<table *ngFor="let r of reportData">
+    <tr>
+        <th>Name </th>
+        <th>Quiz</th>
+        <th>Marks</th>
+        <th>Status</th>
 
-<!-- Summary details form -->
-<div class=" container text-center" *ngIf="iSresultsSummary">
-    <h1>Result Summary</h1>
-    <!-- {{all|json}} -->
-    <br>
-    Quiz Type: {{all[0].quiz.title}} <br>
-    Course: {{all[0].quiz.category.title}} <br>
-    Marks: {{all[0].marks}} <br>
-    Progress :{{all[0].progress}}
-   
-
-    <div mat-dialog-actions>
-        <button mat-raised-button (click)="closepoup()" color="warn">Close</button>
-        <!-- <button mat-raised-button (click)="printPage()" color="primary">Print</button> -->
-    </div>
-</div>
-<div class=" container text-center" *ngIf="!iSresultsSummary">
-    <h1>No Results Summary, Take quiz before!</h1>
-
-</div>
-
-
-
-
-<!-- Proper summary result show -->
-
-
-<p-dialog [(visible)]="productDialog" [style]="{width: '300px', height:'550px'}" header="This is the quiz summary">
-
-    <mat-card>
-<mat-card-content>
-    <mat-form-field>
-                <mat-label>Username</mat-label>
-                <input 
-                required
-                name="username"
-                type="text"
-                 matInput placeholder="Username">
-            </mat-form-field>
-            <mat-form-field>
-                <mat-label>Email</mat-label>
-                <input 
-                name="email"
-                type="text"
-                 matInput placeholder="Email">
-            </mat-form-field>
-            <mat-form-field>
-                <mat-label>New Password</mat-label>
-                <input 
-                name="newpassword"
-                type="text"
-                 matInput placeholder="New Password">
-            </mat-form-field>
-            <mat-form-field>
-                <mat-label>Confirm Password</mat-label>
-                <input 
-                name="confirmPassword"
-                type="text"
-                 matInput placeholder="Confirm Password">
-            </mat-form-field>
-        </mat-card-content>
-
-    <mat-card-actions>
+      </tr>
+      <tr>
+        <td>{{r.user.lastname}}  {{r.user.firstname}}</td>
+        <td>{{r.quiz.title}}</td>
+        <td>{{r.marks}}</td>
+        <td>{{r.progress}}</td>
+      </tr>
+</table>
+    <!-- <mat-card-actions>
     <button type="submit" mat-raised-button color="primary">Reset</button>
     <button type="submit" mat-raised-button  color="warn">Cancel</button>
-    </mat-card-actions>
+    </mat-card-actions> -->
 
+    <div class=" container text-center" *ngIf="reportData.length==0">
+        <h1>No Results Summary, Take quiz before!</h1>
+    
+    </div>
 </mat-card>
+
 </p-dialog>
 

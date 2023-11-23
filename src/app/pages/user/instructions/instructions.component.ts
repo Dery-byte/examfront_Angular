@@ -3,6 +3,8 @@ import { ActivatedRoute, Params, Router } from '@angular/router';
 import { QuizService } from 'src/app/services/quiz.service';
 import Swal from 'sweetalert2';
 import { QuestionService } from 'src/app/services/question.service';
+import { ReportServiceService } from 'src/app/services/report-service.service';
+
 
 
 @Component({
@@ -17,6 +19,7 @@ export class InstructionsComponent implements OnInit {
   userId;
   report: any;
   reportid: number;
+  reportData;
 
   currentQuizId;
   reportQuizId;
@@ -40,6 +43,7 @@ export class InstructionsComponent implements OnInit {
   }
 
   constructor(private _route: ActivatedRoute,
+    private _report:ReportServiceService,
     private _quiz: QuizService,
     private _questions: QuestionService,
     private _router: Router) { }
