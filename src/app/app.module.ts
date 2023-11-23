@@ -54,7 +54,6 @@ import { UpdateQuestionComponent } from './pages/admin/update-question/update-qu
 import {MatTooltipModule} from '@angular/material/tooltip';
 import {MatCheckboxModule} from '@angular/material/checkbox';
 import {MatDialog, MAT_DIALOG_DATA, MatDialogRef, MatDialogModule} from '@angular/material/dialog';
-import { ResultSummaryComponent } from './pages/result-summary/result-summary.component';
 
 
 // PRIMENG
@@ -93,7 +92,6 @@ import { ButtonModule } from 'primeng/button';
     UpdateCategoryComponent,
     PrintQuizComponent,
     UpdateQuestionComponent,
-    ResultSummaryComponent,
   ],
   imports: [
     BrowserModule, 
