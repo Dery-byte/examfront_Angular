@@ -137,17 +137,16 @@ else{
      this.allUsers.forEach((u)=>{
       console.log(u.username)
       console.log(this.resetData.username)
-      if(u.username == this.resetData.username.trim()){
+      if(u.username == this.resetData.username){
 
          this.login.resetPassword(this.resetData).subscribe((resetdata:any)=>
          {
-          // Swal.fire("Success ", "Quiz Updated Successfully","success").then((e)=>
-          // {
-          //   // this.router.navigate(["/"]);
-          //   // window.location.href="/"; 
+          Swal.fire("Success ", "Quiz Updated Successfully","success").then((e)=>
+          {
+            // this.router.navigate(["/"]);
+            // window.location.href="/"; 
 
-          // });
-        },
+          }); },
     (error)=>{
       this.resetPasswordForm();
       Swal.fire({

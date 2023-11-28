@@ -8,6 +8,8 @@ import { QuizService } from 'src/app/services/quiz.service';
 import { StartComponent } from '../start/start.component'; { }
 import { Router, NavigationStart, NavigationEnd, NavigationError, NavigationCancel } from '@angular/router';
 import Swal from 'sweetalert2';
+import { ReportServiceService } from 'src/app/services/report-service.service';
+
 
 
 
@@ -27,22 +29,26 @@ export class PrintQuizComponent implements OnInit {
   attempted = 0;
   timer: any;
   isNavigating = false;
+  showWatermark: boolean = false;
   second: number;
   minutes: number;
   count_timer: any;
   username: any;
   quiz
+  reportData;
   constructor(private _quiz: QuizService,
     private locationSt: LocationStrategy,
     private _route: ActivatedRoute,
     private _questions: QuestionService,
-    private router: Router) { }
+    private router: Router,
+    private _report:ReportServiceService
+    ) { }
 
   refreshUser = new BehaviorSubject<Boolean>(true)
 
   @HostListener('window:beforeunload', ['$event'])
   beforeUnloadHandler(event: Event): void {
-    this.loadResults();
+    // this.loadResults();
     event.preventDefault();
     event.returnValue = '' as any; // This is required for some older browsers
   }
@@ -56,14 +62,18 @@ export class PrintQuizComponent implements OnInit {
     const Object = JSON.parse(userDetails);
     this.username = Object.username;
     this.qid = this._route.snapshot.params['qid'];
-    this.loadResults();
+    // this.refreshPage();
+    this.refreshContent();
+    // this.loadResults();
     this.loadQuestionsWithAnswers();
     this.loadQuestions();
+    this.loadReport();
     this.saveDataInBrowser();
     this.loadQuestionsFromLocalStorage();
     this.evalQuiz();
     // this.printQuiz();
     this.preventBackButton();
+
 
 
     this.qid = this._route.snapshot.params['qid'];
@@ -78,6 +88,76 @@ export class PrintQuizComponent implements OnInit {
     );
   }
 
+  // load report()
+  loadReport(){
+    const userDetails = localStorage.getItem('user');
+    const Object = JSON.parse(userDetails);
+  this._report.getReport(Object.id,this.qid).subscribe((report)=>{
+    this.reportData = report;
+  console.log(this.reportData[0].marks);
+  console.log(this.reportData[0].progress);
+  console.log(this.reportData[0].quiz.title);
+  console.log(this.reportData[0].user.lastname);
+  console.log(report);
+  }); }
+
+
+
+
+
+
+  refreshContent() {
+    // Use HttpClient to fetch updated content
+    const userDetails = localStorage.getItem('user');
+    const Object = JSON.parse(userDetails);
+    this._report.getReport(Object.id,this.qid)
+      .subscribe(
+        (data: any) => {
+          // Update the content of the element with the new data
+          document.getElementById('marks').innerHTML = data;
+        },
+        error => console.error('Error fetching data:', error)
+      );
+  }
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
   removeResults() {
     localStorage.removeItem("MaxMarks");
@@ -85,6 +165,8 @@ export class PrintQuizComponent implements OnInit {
     localStorage.removeItem("CorrectAnswer");
     localStorage.removeItem("MarksGot");
   }
+
+
 
   loadQuestionsWithAnswers() {
     this._questions.getQuestionsOfQuiz(this.qid).subscribe((data: any) => {
@@ -95,7 +177,7 @@ export class PrintQuizComponent implements OnInit {
       console.log(data)
       console.log(this.questionWithAnswers);
       // this.attempted = JSON.parse(localStorage.getItem("Attempted"));
-      this.loadResults();
+      // this.loadResults();
 
     },
       (error) => {
@@ -139,18 +221,20 @@ export class PrintQuizComponent implements OnInit {
 
 
   printQuiz() {
-
-    this.loadResults();
+    // this.loadResults();
+    this.loadReport();
     this.router.navigate(['./print_quiz/' + this.qid]);
 
   }
 
-  loadResults() {
-    this.maxMarks = JSON.parse(localStorage.getItem("MaxMarks"));
-    this.attempted = JSON.parse(localStorage.getItem("Attempted"));
-    this.correctAnswers = JSON.parse(localStorage.getItem("CorrectAnswer"));
-    this.marksGot = JSON.parse(localStorage.getItem("MarksGot"));
-  }
+  // loadResults() {
+  //   this.maxMarks = JSON.parse(localStorage.getItem("MaxMarks"));
+  //   this.attempted = JSON.parse(localStorage.getItem("Attempted"));
+  //   this.correctAnswers = JSON.parse(localStorage.getItem("CorrectAnswer"));
+  //   this.marksGot = JSON.parse(localStorage.getItem("MarksGot"));
+  //   // this.page();
+
+  // }
 
   evalQuiz() {
     //Evaluate questions
@@ -162,6 +246,7 @@ export class PrintQuizComponent implements OnInit {
       this.attempted = data.attempted;
       this.maxMarks = data.maxMarks;
       // this.preventBackButton();
+
 
 
     },
@@ -184,14 +269,11 @@ export class PrintQuizComponent implements OnInit {
     //   }
     // });
 
+
   }
-
-
   printPage() {
     document.title = this.username;
     window.print();
-    this.removeResults();
-    // this.preventBackButton();
   }
 
   saveDataInBrowser(): void {

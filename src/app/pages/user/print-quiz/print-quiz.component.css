@@ -25,3 +25,15 @@
         text-decoration: underline;
         font-size: large;
     }
+
+
+    /* .watermark {
+        position: fixed;
+        top: 50%;
+        left: 50%;
+        transform: translate(-50%, -50%);
+        font-size: 24px;
+        color: rgba(0, 0, 0, 0.3); 
+        pointer-events: none; 
+      } */
+      
