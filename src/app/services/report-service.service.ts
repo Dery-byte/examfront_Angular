@@ -24,5 +24,10 @@ public getReport(uId,qId){
   return this._http.get(`${baseUrl}/getReportByUidAndQid/${uId}/${qId}`);
 }
 
+//get Report by  QuizId
+public getReportByQuizId(qId){
+  return this._http.get(`${baseUrl}/getReports/${qId}`);
+}
+
 
 }

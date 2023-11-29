@@ -124,8 +124,7 @@ import { ButtonModule } from 'primeng/button';
     MatCheckboxModule,
     NgxPaginationModule,
      MatDialogModule,
-
-     
+      
      DialogModule,
      InputTextModule,
   

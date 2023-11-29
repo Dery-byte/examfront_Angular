@@ -2,6 +2,8 @@ import { Component ,OnInit} from '@angular/core';
 import { CategoryService } from 'src/app/services/category.service';
 import { MatSnackBar } from '@angular/material/snack-bar';
 import Swal from 'sweetalert2';
+import { ReportServiceService } from 'src/app/services/report-service.service';
+import { QuizService } from 'src/app/services/quiz.service';
 
 @Component({
   selector: 'app-welcome',
@@ -11,23 +13,61 @@ import Swal from 'sweetalert2';
 
 })
 export class WelcomeComponent implements OnInit{
+	allQuizzes=[];
 	categories=[];
+	public reportsData: any=[];
+	qId;
+	quizTitles: string[] = [];
+	selectedTitle: string;
 
-	constructor(private _cat:CategoryService, private _snackbar:MatSnackBar){}
+	public displayColumn: string[]=['index','name','marks'];
+
+	changeCourse(e){
+		console.log(e.target.value)
+	}
+
+
+
+
+
+
+	constructor(private _cat:CategoryService, private _snackbar:MatSnackBar, private _report:ReportServiceService, private _quiz:QuizService){}
 
 ngOnInit(): void {
-this._cat.getCategories().subscribe(
-(data:any)=>{
-  this.categories=data;
-  // console.log(this.categories);
-},
-(error)=>{
-  console.log(error);
-  Swal.fire('Error !!', 'Server Error', 'error');
+this._quiz.loadQuizzes().subscribe(
+	(data:any)=>{
+	  this.allQuizzes=data;
+	  console.log(this.allQuizzes);
+	},
+	(error)=>{
+	  console.table(error);
+	  Swal.fire('Error !!', 'Server Error', 'error');
+	}
+	)
 }
-)
+
+
+onOptionSelected(){
+	this._report.getReportByQuizId(this.qId).subscribe((report:any)=>{
+		this.reportsData=report;
+
+		this.quizTitles=this.getUniqueTitles(report);
+		console.log(this.reportsData)
+		console.log(this.quizTitles)
+	})
 }
-	
+
+getUniqueTitles(data: any[]): string[] {
+    const uniqueTitles = [...new Set(data.map(item => item.quiz.title))];
+    return uniqueTitles;
+  }
+
+onOptionSelectedReport(){
+	this._report.getReportByQuizId(this.qId).subscribe((report:any)=>{
+		this.reportsData=report;
+		console.table(this.reportsData)
+	})
+}
 
 
 
