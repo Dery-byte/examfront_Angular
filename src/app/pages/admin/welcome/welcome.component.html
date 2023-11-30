@@ -151,100 +151,92 @@
             </div>
 
 <mat-divider></mat-divider>
-
-        <div class="row">
-            <div class="col-md-3">
-                <mat-card class="mt20">
-                    <mat-card-header>
-                        <!-- <mat-icon aria-hidden="false" aria-label="Example home icon" fontIcon="home"></mat-icon> -->
-                        <!-- <div mat-card-avatar class="example-header-image"></div> -->
-                        <mat-card-title>
-                            <mat-icon mat-list-icon  class="icon-position">people</mat-icon> 
-                           No. of Participants
-                            <p>  49087</p>
-                        </mat-card-title>
-                    </mat-card-header>
-                </mat-card>
-            </div>
-
-
-            <div class="col-md-3">
-                <mat-card class="mt20">
-                    <mat-card-header>
-                        <!-- <mat-icon aria-hidden="false" aria-label="Example home icon" fontIcon="home"></mat-icon> -->
-                        <!-- <div mat-card-avatar class="example-header-image"></div> -->
-                        <mat-card-title>
-                            <mat-icon mat-list-icon  class="icon-position">calculate</mat-icon> 
-                            Average Score
-                            <p>  498</p>
-                        </mat-card-title>
-                    </mat-card-header>
-                </mat-card>
-            </div>
-
-
-            <div class="col-md-3">
-                <mat-card class="mt20">
-                    <mat-card-header>
-                        <!-- <mat-icon aria-hidden="false" aria-label="Example home icon" fontIcon="home"></mat-icon> -->
-                        <!-- <div mat-card-avatar class="example-header-image"></div> -->
-                        <mat-card-title>
-                            <mat-icon mat-list-icon  class="icon-position">access_alarm</mat-icon> 
-                            Average Time
-                            <p>  49 min</p>
-                        </mat-card-title>
-                    </mat-card-header>
-                </mat-card>
-            </div>
-
-
-            <div class="col-md-3">
-                <mat-card class="mt20">
-                    <mat-card-header>
-                        <!-- <mat-icon aria-hidden="false" aria-label="Example home icon" fontIcon="home"></mat-icon> -->
-                        <!-- <div mat-card-avatar class="example-header-image"></div> -->
-                        <mat-card-title>
-                            <mat-icon mat-list-icon  class="icon-position">edit</mat-icon> 
-                           Quiz Name
-                            <p>  Basics of Java</p>
-                        </mat-card-title>
-                    </mat-card-header>
-                </mat-card>
-            </div>
-
-        </div>
-    </mat-card>
-
+<!-- Material Design Cards Section -->
 <div *ngIf="reportsData">
-    <table mat-table [dataSource]="reportsData" class="mat-elevation-z8">
+    <div class="row" *ngFor="let r of reportsData">
+      <div class="col-md-3">
+        <mat-card class="mt20">
+          <mat-card-header>
+            <mat-card-title>
+              <mat-icon mat-list-icon class="icon-position">people</mat-icon>
+              No. of Participants
+              <p>{{ totalQuizTakers }}</p>
+            </mat-card-title>
+          </mat-card-header>
+        </mat-card>
+      </div>
 
-        <ng-container matColumnDef="index">
-          <th mat-header-cell *matHeaderCellDef> Index Number</th>
-          <td mat-cell *matCellDef="let element"> {{element.user.username}} </td>
-        </ng-container>
+
       
-        <!-- Name Column -->
-        <ng-container matColumnDef="name">
-          <th mat-header-cell *matHeaderCellDef> Name </th>
-          <td mat-cell *matCellDef="let element"> {{element.user.firstname}} {{element.user.lastname}} </td>
-        </ng-container>
-
-        <ng-container matColumnDef="marks">
-            <th mat-header-cell *matHeaderCellDef> Marks </th>
-            <td mat-cell *matCellDef="let element"> {{element.marks}} </td>
-          </ng-container>
-      
-        <tr mat-header-row *matHeaderRowDef="displayColumn"></tr>
-        <tr mat-row *matRowDef="let row; columns: displayColumn;"></tr>
-
-        
-      </table>
-
-      <div class=" container text-center" *ngIf="reportsData.length==0">
-        <h1>No Results Summary, for this quiz</h1>
-    
-</div>
+  
+      <div class="col-md-3">
+        <mat-card class="mt20">
+          <mat-card-header>
+            <mat-card-title>
+              <mat-icon mat-list-icon class="icon-position">calculate</mat-icon>
+              Average Scores
+              <p>{{ totalMarks / totalQuizTakers }}</p>
+            </mat-card-title>
+          </mat-card-header>
+        </mat-card>
+      </div>
+  
+      <div class="col-md-3">
+        <mat-card class="mt20">
+          <mat-card-header>
+            <mat-card-title>
+              <mat-icon mat-list-icon class="icon-position">access_alarm</mat-icon>
+              Average Time
+              <p>49 min</p>
+            </mat-card-title>
+          </mat-card-header>
+        </mat-card>
+      </div>
+  
+      <div class="col-md-3">
+        <mat-card class="mt20">
+          <mat-card-header>
+            <mat-card-title>
+              <mat-icon mat-list-icon class="icon-position">edit</mat-icon>
+              Quiz Name
+              <p>{{ r.quiz.category.title }} {{ r.quiz.title }}</p>
+            </mat-card-title>
+          </mat-card-header>
+        </mat-card>
+      </div>
     </div>
+  </div>
+  
+  <!-- Table Section -->
+  <div *ngIf="reportsData">
+    <table mat-table [dataSource]="reportsData" class="mat-elevation-z8">
+  
+      <ng-container matColumnDef="index">
+        <th mat-header-cell *matHeaderCellDef> Index Number</th>
+        <td mat-cell *matCellDef="let element">{{ element.user.username }}</td>
+      </ng-container>
+  
+      <!-- Name Column -->
+      <ng-container matColumnDef="name">
+        <th mat-header-cell *matHeaderCellDef> Name </th>
+        <td mat-cell *matCellDef="let element">{{ element.user.firstname }} {{ element.user.lastname }}</td>
+      </ng-container>
+  
+      <ng-container matColumnDef="marks">
+        <th mat-header-cell *matHeaderCellDef> Marks </th>
+        <td mat-cell *matCellDef="let element">{{ element.marks }}</td>
+      </ng-container>
+  
+      <tr mat-header-row *matHeaderRowDef="displayColumn"></tr>
+      <tr mat-row *matRowDef="let row; columns: displayColumn;"></tr>
+  
+    </table>
+  
+    <div class="container text-center" *ngIf="reportsData.length == 0">
+      <h1>No Results Summary for this quiz</h1>
+    </div>
+  </div>
+  
 
    
       
@@ -390,5 +382,3 @@
 
 
 
-    </div>
-</div>

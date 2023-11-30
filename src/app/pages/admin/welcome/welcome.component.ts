@@ -19,6 +19,8 @@ export class WelcomeComponent implements OnInit{
 	qId;
 	quizTitles: string[] = [];
 	selectedTitle: string;
+	totalQuizTakers
+	 totalMarks = 0;
 
 	public displayColumn: string[]=['index','name','marks'];
 
@@ -44,16 +46,30 @@ this._quiz.loadQuizzes().subscribe(
 	  Swal.fire('Error !!', 'Server Error', 'error');
 	}
 	)
+	
 }
 
 
 onOptionSelected(){
+	this.totalMarks=0;
 	this._report.getReportByQuizId(this.qId).subscribe((report:any)=>{
 		this.reportsData=report;
-
 		this.quizTitles=this.getUniqueTitles(report);
+		// this.totalQuizTakers=this.report.length
+		// console.log(this.totalQuizTakers)
+		this.totalQuizTakers= this.reportsData.length;
+		console.log(this.totalQuizTakers);
 		console.log(this.reportsData)
-		console.log(this.quizTitles)
+		console.log(typeof(this.totalQuizTakers));
+
+
+// Loop through the array and add up the marks
+this.reportsData.forEach(item => {
+	this.totalMarks += parseFloat(item.marks);
+  });
+  // Output the total marks
+  console.log("Total Marks:", this.totalMarks);
+  console.log(typeof(this.totalMarks));
 	})
 }
 
@@ -66,6 +82,8 @@ onOptionSelectedReport(){
 	this._report.getReportByQuizId(this.qId).subscribe((report:any)=>{
 		this.reportsData=report;
 		console.table(this.reportsData)
+
+		
 	})
 }
 
