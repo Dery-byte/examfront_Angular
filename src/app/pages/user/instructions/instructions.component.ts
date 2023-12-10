@@ -220,6 +220,7 @@ export class InstructionsComponent implements OnInit {
       title: "Enter Quiz Password!",
       text: "",
       input: 'text',
+      // input: 'password',
       // icon: 'success',
       showCancelButton: true
 

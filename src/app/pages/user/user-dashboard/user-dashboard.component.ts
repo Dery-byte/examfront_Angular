@@ -16,16 +16,16 @@ export class UserDashboardComponent implements OnInit{
    ){}
 
 
-   @HostListener('window:beforeunload', ['$event'])
-   beforeUnloadHandler(event: Event): void {
-     event.preventDefault();
-     event.returnValue = '' as any; // This is required for some older browsers
-   }
-   @HostListener('window:unload', ['$event'])
-   unloadHandler(event: Event): void {
-     this.preventBackButton();
+  //  @HostListener('window:beforeunload', ['$event'])
+  //  beforeUnloadHandler(event: Event): void {
+  //    event.preventDefault();
+  //    event.returnValue = '' as any; // This is required for some older browsers
+  //  }
+  //  @HostListener('window:unload', ['$event'])
+  //  unloadHandler(event: Event): void {
+  //    this.preventBackButton();
  
-   }
+  //  }
 
   ngOnInit(): void {
     this.preventBackButton();

@@ -45,7 +45,7 @@ export class StartComponent implements OnInit {
   count_timer: any;
 
   quiz
-  private countdownKey = 'countdown_timer';
+  private countdownKey = 'expiration_timer';
   private intervalId: any;
 
   constructor(private _quiz: QuizService,
@@ -59,6 +59,7 @@ export class StartComponent implements OnInit {
   beforeUnloadHandler(event: Event): void {
     // Custom code to be executed before the page is unloaded
     localStorage.setItem(this.countdownKey, JSON.stringify(this.timer));
+
     event.preventDefault();
     // this.preventBackButton();
 

@@ -1,10 +1,17 @@
-import { Component ,OnInit} from '@angular/core';
+import { Component ,OnInit, HostListener} from '@angular/core';
 import { CategoryService } from 'src/app/services/category.service';
 import { MatSnackBar } from '@angular/material/snack-bar';
 import Swal from 'sweetalert2';
 import { ReportServiceService } from 'src/app/services/report-service.service';
 import { QuizService } from 'src/app/services/quiz.service';
+import { TokenExpirationService } from 'src/app/services/token-expiration.service';
 
+
+import { LocationStrategy } from '@angular/common';
+import { ActivatedRoute } from '@angular/router';
+import { QuestionService } from 'src/app/services/question.service';
+import { Router, } from '@angular/router';
+import { LoginService } from 'src/app/services/login.service';
 @Component({
   selector: 'app-welcome',
   templateUrl: './welcome.component.html',
@@ -13,79 +20,303 @@ import { QuizService } from 'src/app/services/quiz.service';
 
 })
 export class WelcomeComponent implements OnInit{
-	allQuizzes=[];
+	allQuizzes: any=[];
 	categories=[];
 	public reportsData: any=[];
-	qId;
-	quizTitles: string[] = [];
-	selectedTitle: string;
-	totalQuizTakers
-	 totalMarks = 0;
+	allReportData: any=[];
+	public quizReportsData: any=[];
 
+	uniqueItems: any=[];
+	uniqueCategories
+	qId;
+	cid;
+	totalQuizTakers=0;
+	 totalMarks = 0;
+	 averageScore=0;
+	 courseName:string;
+	 expirationSeconds: any;
+	 timeDifferenceInSeconds:any;
+	jwtToken:string;
+	 private tokenExpirationKey = 'tokenExpirationTime';
+	//  uniqueCategories: any[];
 	public displayColumn: string[]=['index','name','marks'];
 
-	changeCourse(e){
-		console.log(e.target.value)
-	}
 
 
+	constructor(private _cat:CategoryService, private _snackbar:MatSnackBar, private _report:ReportServiceService, private _quiz:QuizService,
+		private tokenExpirationService:TokenExpirationService, private _login:LoginService){}
 
 
+		
+		@HostListener('window:beforeunload', ['$event'])
+		beforeUnloadHandler(event: Event): void {
+		  // Custom code to be executed before the page is unloaded
+		  localStorage.setItem(this.tokenExpirationKey, JSON.stringify(this.expirationSeconds));
+		  console.log(this.expirationSeconds);
+		  event.preventDefault();
+		  // this.preventBackButton();
+		  event.returnValue = '' as any; // This is required for some older browsers
+		}
+		@HostListener('window:unload', ['$event'])
+		unloadHandler(event: Event): void {
+		  // this.preventBackButton();
+		}
 
 
-	constructor(private _cat:CategoryService, private _snackbar:MatSnackBar, private _report:ReportServiceService, private _quiz:QuizService){}
 
 ngOnInit(): void {
-this._quiz.loadQuizzes().subscribe(
+	this._quiz.loadQuizzes().subscribe(
 	(data:any)=>{
 	  this.allQuizzes=data;
 	  console.log(this.allQuizzes);
+	  console.log(this.allQuizzes[0].category.title)
 	},
 	(error)=>{
 	  console.table(error);
 	  Swal.fire('Error !!', 'Server Error', 'error');
-	}
-	)
-	
+	});
+	this.allReports();
+	this.extractUniqueCategories();
+
+	this.expirationFromServer();
+	this.startTimer();
+	this.formattedExpirationTime();
+}
+
+ formattedExpirationTime() {
+
+	this.jwtToken = localStorage.getItem('token')
+    const tokenParts = this.jwtToken.split('.');
+	console.log(this.jwtToken);
+
+    if (tokenParts.length !== 3) {
+      console.error('Invalid JWT format');
+      return null;
+    }
+
+    const payload = JSON.parse(atob(tokenParts[1]));
+
+    if (!payload || !payload.exp) {
+      console.error('Expiration time not found in JWT');
+      return null;
+    }
+
+    const expirationTimeInSeconds = payload.exp;
+    const expirationDate = new Date(expirationTimeInSeconds * 1000); // Convert to milliseconds
+	const currentTime = new Date();
+	 const timeDifferenceInSeconds = Math.floor((expirationDate.getTime() - currentTime.getTime()) / 1000);
+	console.log(timeDifferenceInSeconds);
+	console.log(typeof(timeDifferenceInSeconds));
+
+	console.log(expirationDate.toLocaleString());
+
+    return timeDifferenceInSeconds; // Adjust the format as needed
+  }
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+// THIS JWT EXPIRATION NOT OPTIMIZED
+
+expirationFromServer(){
+	// const expirationTimeFromServer = 120; // 15 minutes in seconds
+const expirationTimeFromServers= this.formattedExpirationTime();
+
+	console.log(expirationTimeFromServers);
+
+    this.tokenExpirationService.startCountdown(expirationTimeFromServers);
+
+	this.startTimer();
+
+    this.tokenExpirationService.expiration$.subscribe(seconds => {
+      this.expirationSeconds = seconds;
+	//   const remainingTime = this.tokenExpirationService.getRemainingTime();
+	  let timerString = localStorage.getItem(this.tokenExpirationKey);
+	  const timerNumber = parseInt(timerString, 10);
+
+	if (timerNumber) {
+		this.expirationSeconds = timerNumber;
+		this.tokenExpirationService.startCountdown(this.expirationSeconds);
+
+      console.log(timerNumber)
+	  console.log(typeof (timerNumber));
+     localStorage.removeItem(this.tokenExpirationKey);
+
+		// Start the countdown again with the remaining time
+		// this.tokenExpirationService.startCountdown(this.expirationSeconds);
+		// this.startTimer();
+	  } else {
+		// Handle the case when there is no remaining time (e.g., user refreshed after expiration)
+		// this.tokenExpirationService.startCountdown(this.expirationSeconds);
+		// console.log('Token has expired.');
+	  }
+    });
 }
 
 
-onOptionSelected(){
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+startTimer() {
+    let t = window.setInterval(() => {
+      //Code
+      if (this.expirationSeconds <= 0) {
+       	this._login.logout();
+		// window.location('/login')
+		window.location.href="/login"; 
+        clearInterval(t);
+       
+      }
+      else {
+        this.expirationSeconds--;
+      }
+    }, 1000);
+  }
+  getFormmatedTime() {
+    let mm = Math.floor(this.expirationSeconds / 60);
+    let ss = this.expirationSeconds - mm * 60;
+    return `${mm} min : ${ss} sec`
+  }
+
+
+
+
+
+allReports(){
+	this._report.loadReportSummary().subscribe((data=>{
+		this.allReportData=data; /// you can fetch the results based on the category ID to get only one of the category titles. (Those with same cid have the same title.)
+		
+		console.log(this.allReportData);
+	}));
+}
+
+
+// 
+onCategorySelectedReport(){
+	this.totalMarks=0;
+	this._report.getReportByQuizId(this.qId).subscribe((reports:any)=>{
+		this.quizReportsData=reports;
+		console.table(this.reportsData)
+		this.totalQuizTakers= this.quizReportsData.length;
+		console.log(this.totalQuizTakers);
+		console.log(this.quizReportsData)
+		console.log(typeof(this.totalQuizTakers));
+		console.log(this.quizReportsData[0].quiz.category.title)
+		console.log(this.quizReportsData[0].quiz.title)
+	    this.courseName=this.quizReportsData[0].quiz.category.title;
+		this.quizReportsData.forEach(item => {
+			this.totalMarks += parseFloat(item.marks);
+		  });
+		  // Output the total marks
+		  console.log("Total Marks:", this.totalMarks);
+		  console.log(typeof(this.totalMarks));
+	})
+}
+
+//SELECTING A QUIZ DISPLAY RESULTS FOR EACH STUDENT
+onQuizOptionSelected(){
 	this.totalMarks=0;
 	this._report.getReportByQuizId(this.qId).subscribe((report:any)=>{
 		this.reportsData=report;
-		this.quizTitles=this.getUniqueTitles(report);
-		// this.totalQuizTakers=this.report.length
-		// console.log(this.totalQuizTakers)
 		this.totalQuizTakers= this.reportsData.length;
-		console.log(this.totalQuizTakers);
-		console.log(this.reportsData)
-		console.log(typeof(this.totalQuizTakers));
-
-
-// Loop through the array and add up the marks
+this.courseName=this.reportsData[0].quiz.category.title;
 this.reportsData.forEach(item => {
 	this.totalMarks += parseFloat(item.marks);
   });
   // Output the total marks
   console.log("Total Marks:", this.totalMarks);
-  console.log(typeof(this.totalMarks));
+  this.averageScore=this.totalMarks/this.totalQuizTakers;
 	})
 }
 
-getUniqueTitles(data: any[]): string[] {
-    const uniqueTitles = [...new Set(data.map(item => item.quiz.title))];
-    return uniqueTitles;
+
+
+
+
+extractUniqueCategories(): void {
+    const uniqueCategorySet = new Set<number>();
+
+    this.allReportData.forEach(item => {
+      uniqueCategorySet.add(item.quiz.category.cid);
+    });
+
+    // Convert the Set to an array of unique categories
+    this.uniqueCategories = Array.from(uniqueCategorySet).map(cid => {
+      const categoryItem = this.allReportData.find(item => item.quiz.category.cid === cid);
+      return { cid, title: categoryItem?.quiz.category.title || 'Unknown Title' };
+    });
+
+    console.log('Unique Categories:', this.uniqueCategories);
   }
 
-onOptionSelectedReport(){
-	this._report.getReportByQuizId(this.qId).subscribe((report:any)=>{
-		this.reportsData=report;
-		console.table(this.reportsData)
 
-		
-	})
-}
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 
 

@@ -76,6 +76,38 @@
 
 
 
+
+        <div *ngIf="expirationSeconds">
+          Token will expire in {{ expirationSeconds }} seconds.
+        </div>
+
+        <h1 class="text-center"><i>{{ getFormmatedTime() }} </i></h1>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
         <!-- QUIZ STATISTICS -->
         <mat-card class="mt20">
             <div class="row">
@@ -94,11 +126,9 @@
                         <mat-form-field>
                             <mat-label>Select  Course</mat-label>
                             <!-- <mat-select name="category" [(ngModel)] = "quizData.category.cid"> -->
-                            <mat-select name="category" [(ngModel)]="qId"
-                            (selectionChange)="onOptionSelected()"
-                            >
-                                <mat-option *ngFor="let c of allQuizzes" [value]="c.qId">
-                                    {{c.category.title}}
+                            <mat-select name="category" [(ngModel)]="qId">
+                                <mat-option *ngFor="let c of allReportData" [value]="c.quiz.qId">
+                                    {{c.quiz.category.title}}
                                 </mat-option>
                             </mat-select>
                             <!-- <mat-select>
@@ -118,11 +148,9 @@
                                 <mat-label>Select  Quiz</mat-label>
 
                                 <!-- <mat-select name="category" [(ngModel)] = "quizData.category.cid"> -->
-
                                 <mat-select name="category" [(ngModel)]="qId"
-                                (selectionChange)="onOptionSelectedReport()" (change)="changeCourse($event)"
-                                >
-                                    <mat-option *ngFor="let r of reportsData" [value]="r.quiz.qId">
+                                (selectionChange)="onQuizOptionSelected()"  >
+                                    <mat-option *ngFor="let r of allReportData" [value]="r.quiz.qId">
                                         {{r.quiz.title}}
                                     </mat-option>
                                 </mat-select>
@@ -153,7 +181,8 @@
 <mat-divider></mat-divider>
 <!-- Material Design Cards Section -->
 <div *ngIf="reportsData">
-    <div class="row" *ngFor="let r of reportsData">
+    <!-- <div class="row" *ngFor="let r of reportsData"> -->
+        <div class="row">
       <div class="col-md-3">
         <mat-card class="mt20">
           <mat-card-header>
@@ -165,9 +194,6 @@
           </mat-card-header>
         </mat-card>
       </div>
-
-
-      
   
       <div class="col-md-3">
         <mat-card class="mt20">
@@ -175,7 +201,9 @@
             <mat-card-title>
               <mat-icon mat-list-icon class="icon-position">calculate</mat-icon>
               Average Scores
-              <p>{{ totalMarks / totalQuizTakers }}</p>
+              <p>
+              {{averageScore}}
+              </p>
             </mat-card-title>
           </mat-card-header>
         </mat-card>
@@ -199,7 +227,7 @@
             <mat-card-title>
               <mat-icon mat-list-icon class="icon-position">edit</mat-icon>
               Course Name <br>
-              <label>{{ r.quiz.category.title }}</label>
+              <label>{{ courseName }}</label>
             </mat-card-title>
           </mat-card-header>
         </mat-card>

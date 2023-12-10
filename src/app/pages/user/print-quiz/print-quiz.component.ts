@@ -64,7 +64,7 @@ export class PrintQuizComponent implements OnInit {
     this.qid = this._route.snapshot.params['qid'];
     // this.refreshPage();
     this.refreshContent();
-    // this.loadResults();
+    this.loadResults();
     this.loadQuestionsWithAnswers();
     this.loadQuestions();
     this.loadReport();
@@ -120,46 +120,7 @@ export class PrintQuizComponent implements OnInit {
       );
   }
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-  removeResults() {
+removeResults() {
     localStorage.removeItem("MaxMarks");
     localStorage.removeItem("Attempted");
     localStorage.removeItem("CorrectAnswer");
@@ -227,14 +188,14 @@ export class PrintQuizComponent implements OnInit {
 
   }
 
-  // loadResults() {
-  //   this.maxMarks = JSON.parse(localStorage.getItem("MaxMarks"));
-  //   this.attempted = JSON.parse(localStorage.getItem("Attempted"));
-  //   this.correctAnswers = JSON.parse(localStorage.getItem("CorrectAnswer"));
-  //   this.marksGot = JSON.parse(localStorage.getItem("MarksGot"));
-  //   // this.page();
+  loadResults() {
+    this.maxMarks = JSON.parse(localStorage.getItem("MaxMarks"));
+    this.attempted = JSON.parse(localStorage.getItem("Attempted"));
+    this.correctAnswers = JSON.parse(localStorage.getItem("CorrectAnswer"));
+    this.marksGot = JSON.parse(localStorage.getItem("MarksGot"));
+    // this.page();
 
-  // }
+  }
 
   evalQuiz() {
     //Evaluate questions

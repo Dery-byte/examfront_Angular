@@ -53,6 +53,8 @@ export class LoginService {
     localStorage.removeItem("token");
     localStorage.removeItem("user");
     localStorage.removeItem("exam");
+    localStorage.removeItem("tokenExpiratioTime");
+
 
     return true;
   }
