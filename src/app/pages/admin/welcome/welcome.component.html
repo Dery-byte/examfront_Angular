@@ -74,7 +74,9 @@
 
         </div>
 
+{{categories|json}}
 
+{{quizzes|json}}
 
 
         <div *ngIf="expirationSeconds">
@@ -126,11 +128,16 @@
                         <mat-form-field>
                             <mat-label>Select  Course</mat-label>
                             <!-- <mat-select name="category" [(ngModel)] = "quizData.category.cid"> -->
-                            <mat-select name="category" [(ngModel)]="qId">
+                            <!-- <mat-select name="category" [(ngModel)]="qId">
                                 <mat-option *ngFor="let c of allReportData" [value]="c.quiz.qId">
                                     {{c.quiz.category.title}}
                                 </mat-option>
-                            </mat-select>
+                            </mat-select> -->
+                            <mat-select name="category" [(ngModel)]="qId">
+                              <mat-option *ngFor="let c of categories" [value]="c.id">
+                                  {{c.title}}
+                              </mat-option>
+                          </mat-select>
                             <!-- <mat-select>
                               <mat-option value="option">Data Science</mat-option>
                               <mat-option value="option">AI</mat-option>
@@ -148,10 +155,12 @@
                                 <mat-label>Select  Quiz</mat-label>
 
                                 <!-- <mat-select name="category" [(ngModel)] = "quizData.category.cid"> -->
-                                <mat-select name="category" [(ngModel)]="qId"
-                                (selectionChange)="onQuizOptionSelected()"  >
-                                    <mat-option *ngFor="let r of allReportData" [value]="r.quiz.qId">
-                                        {{r.quiz.title}}
+                                <mat-select name="category" [(ngModel)]="qId" (selectionChange)="onQuizOptionSelected()"  >
+                                    <!-- <mat-option *ngFor="let r of allReportData" [value]="r.quiz.qId">
+                                        {{r.quiz.title}}</mat-option> -->
+
+                                    <mat-option *ngFor="let r of quizzes" [value]="r.Qid">
+                                        {{r.qTitle}}
                                     </mat-option>
                                 </mat-select>
 

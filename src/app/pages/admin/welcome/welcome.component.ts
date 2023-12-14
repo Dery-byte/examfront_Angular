@@ -21,7 +21,9 @@ import { LoginService } from 'src/app/services/login.service';
 })
 export class WelcomeComponent implements OnInit{
 	allQuizzes: any=[];
-	categories=[];
+	categories :{ id: number, title: string }[] = [];
+	quizzes :{ Qid: number, qTitle: string }[] = [];
+
 	public reportsData: any=[];
 	allReportData: any=[];
 	public quizReportsData: any=[];
@@ -76,15 +78,84 @@ ngOnInit(): void {
 	  Swal.fire('Error !!', 'Server Error', 'error');
 	});
 	this.allReports();
-	this.extractUniqueCategories();
-
+	// this.extractUniqueCategories();
 	this.expirationFromServer();
 	this.startTimer();
 	this.formattedExpirationTime();
 }
 
- formattedExpirationTime() {
 
+
+
+allReports(){
+	this._report.loadReportSummary().subscribe((data=>{
+		this.allReportData=data; /// you can fetch the results based on the category ID to get only one of the category titles. (Those with same cid have the same title.)
+		console.log(this.allReportData);
+		const categoryMap = new Map<number, string>();
+		const quizMap = new Map<number, string>();
+
+		// Iterate over the response and extract unique categories
+		this.allReportData.forEach(item => {
+		  const category = item.quiz.category;
+		  categoryMap.set(category.cid, category.title);
+
+		  const quiz = item.quiz;
+		  quizMap.set(quiz.qId, quiz.title);
+		});
+	
+		// Convert the map to an array of categories
+		this.categories = Array.from(categoryMap).map(([id, title]) => ({ id, title }));
+		console.log(this.categories[0].title)
+		console.log(this.categories)
+
+		// Convert the map to an array of categories
+		this.quizzes = Array.from(quizMap).map(([Qid, qTitle]) => ({ Qid, qTitle }));
+		console.log(this.quizzes[0].qTitle)
+		console.log(this.quizzes)
+
+
+
+		// console.log(this.allReportData);
+		// const quizMap = new Map<number, string>();
+		// // Iterate over the response and extract unique categories
+		// this.allReportData.forEach(item => {
+		//   const quiz = item.quiz;
+		//   quizMap.set(quiz.cid, quiz.title);
+		// });
+	
+		// // Convert the map to an array of categories
+		// this.quizzes = Array.from(quizMap).map(([id, title]) => ({ id, title }));
+		// console.log(this.quizzes[0].title)
+		// console.log(this.quizzes)
+
+	}));
+}
+
+  
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+ formattedExpirationTime() {
 	this.jwtToken = localStorage.getItem('token')
     const tokenParts = this.jwtToken.split('.');
 	console.log(this.jwtToken);
@@ -223,13 +294,6 @@ startTimer() {
 
 
 
-allReports(){
-	this._report.loadReportSummary().subscribe((data=>{
-		this.allReportData=data; /// you can fetch the results based on the category ID to get only one of the category titles. (Those with same cid have the same title.)
-		
-		console.log(this.allReportData);
-	}));
-}
 
 
 // 
@@ -274,21 +338,21 @@ this.reportsData.forEach(item => {
 
 
 
-extractUniqueCategories(): void {
-    const uniqueCategorySet = new Set<number>();
+// extractUniqueCategories(): void {
+//     const uniqueCategorySet = new Set<number>();
 
-    this.allReportData.forEach(item => {
-      uniqueCategorySet.add(item.quiz.category.cid);
-    });
+//     this.allReportData.forEach(item => {
+//       uniqueCategorySet.add(item.quiz.category.cid);
+//     });
 
-    // Convert the Set to an array of unique categories
-    this.uniqueCategories = Array.from(uniqueCategorySet).map(cid => {
-      const categoryItem = this.allReportData.find(item => item.quiz.category.cid === cid);
-      return { cid, title: categoryItem?.quiz.category.title || 'Unknown Title' };
-    });
+//     // Convert the Set to an array of unique categories
+//     this.uniqueCategories = Array.from(uniqueCategorySet).map(cid => {
+//       const categoryItem = this.allReportData.find(item => item.quiz.category.cid === cid);
+//       return { cid, title: categoryItem?.quiz.category.title || 'Unknown Title' };
+//     });
 
-    console.log('Unique Categories:', this.uniqueCategories);
-  }
+//     console.log('Unique Categories:', this.uniqueCategories);
+//   }
 
 
 

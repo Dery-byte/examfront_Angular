@@ -182,7 +182,7 @@ removeResults() {
 
 
   printQuiz() {
-    // this.loadResults();
+    this.loadResults();
     this.loadReport();
     this.router.navigate(['./print_quiz/' + this.qid]);
 
