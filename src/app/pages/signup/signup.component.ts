@@ -43,7 +43,7 @@ this.userService.addUser(this.user).subscribe( (data:any)=>{
   //success
   console.log(data);
   // alert("Success");
-  swal.fire('Succesful', 'User id is ' + data.id, 'success');
+  swal.fire('Succesful', 'Registration Successful', 'success');
 
   window.location.href="/login"; 
 

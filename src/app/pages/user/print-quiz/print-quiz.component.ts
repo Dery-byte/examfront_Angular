@@ -64,10 +64,10 @@ export class PrintQuizComponent implements OnInit {
     this.qid = this._route.snapshot.params['qid'];
     // this.refreshPage();
     this.refreshContent();
+    this.loadReport();
     this.loadResults();
     this.loadQuestionsWithAnswers();
     this.loadQuestions();
-    this.loadReport();
     this.saveDataInBrowser();
     this.loadQuestionsFromLocalStorage();
     this.evalQuiz();
@@ -134,6 +134,7 @@ removeResults() {
       // this._questions.getQuestionsOfQuizForText(this.qid).subscribe((data:any)=>{ // this does the question shuffle on print
 
       // console.log(data[0].answer);
+      this.loadResults();
       this.questionWithAnswers = data;
       console.log(data)
       console.log(this.questionWithAnswers);
@@ -150,6 +151,7 @@ removeResults() {
     // this.refreshOnload();
   }
   loadQuestions(): void {
+    this.loadReport();
     this._questions.getQuestionsOfQuizForText(this.qid).subscribe((data: any) => {
       console.log(data[0].answer);
       console.log(data);
@@ -255,6 +257,8 @@ removeResults() {
   }
 
   loadQuestionsFromLocalStorage() {
+    this.loadReport();
+    this.loadResults();
     this.questionss = JSON.parse(localStorage.getItem("exam"));
     this.timer = this.questionss.length * 2 * 60;
     this.questions.forEach(q => {

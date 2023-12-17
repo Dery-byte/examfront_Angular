@@ -93,12 +93,10 @@ allReports(){
 		console.log(this.allReportData);
 		const categoryMap = new Map<number, string>();
 		const quizMap = new Map<number, string>();
-
 		// Iterate over the response and extract unique categories
 		this.allReportData.forEach(item => {
 		  const category = item.quiz.category;
 		  categoryMap.set(category.cid, category.title);
-
 		  const quiz = item.quiz;
 		  quizMap.set(quiz.qId, quiz.title);
 		});
@@ -112,6 +110,33 @@ allReports(){
 		this.quizzes = Array.from(quizMap).map(([Qid, qTitle]) => ({ Qid, qTitle }));
 		console.log(this.quizzes[0].qTitle)
 		console.log(this.quizzes)
+
+
+
+		// MODIFED FROM CHAT
+// this.allReportData.forEach(item => {
+//   const category = item.quiz.category;
+//   const quiz = item.quiz;
+
+//   // Update categories array
+//   const existingCategory = this.categories.find(c => c.id === category.cid);
+//   if (!existingCategory) {
+//     this.categories.push({ id: category.cid, title: category.title });
+//   }
+
+//   // Update quizzesByCategory object
+//   if (!this.quizzesByCategory[category.title]) {
+//     this.quizzesByCategory[category.title] = [];
+//   }
+//   this.quizzesByCategory[category.title].push({ Qid: quiz.qId, qTitle: quiz.title });
+// });
+
+// console.log(this.categories);
+// console.log(this.quizzesByCategory);
+		
+
+		// MODIFED FROM CHATEND
+
 
 
 
@@ -227,6 +252,7 @@ const expirationTimeFromServers= this.formattedExpirationTime();
 
     this.tokenExpirationService.expiration$.subscribe(seconds => {
       this.expirationSeconds = seconds;
+
 	//   const remainingTime = this.tokenExpirationService.getRemainingTime();
 	  let timerString = localStorage.getItem(this.tokenExpirationKey);
 	  const timerNumber = parseInt(timerString, 10);

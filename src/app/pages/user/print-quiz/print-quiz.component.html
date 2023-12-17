@@ -42,6 +42,8 @@
             <span id="marks" *ngFor="let r of reportData">
                 <p>Marks : <span id="marksU">{{r.marks}}/{{ r.quiz.maxMarks}}</span></p>
                 <p> Correct Answers : {{r.marks}}</p>
+                <p>Attempted questions : {{attempted}}</p>
+
                     
 
                 <!-- YOU MAY ADD THIS ATTEMPTED OPTION IN THE BACKEND REPORT CLASS THEN FETCH REPORT AND SHOW ON THE INTERFACE -->
