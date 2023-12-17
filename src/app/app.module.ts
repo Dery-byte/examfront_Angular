@@ -54,7 +54,7 @@ import { UpdateQuestionComponent } from './pages/admin/update-question/update-qu
 import {MatTooltipModule} from '@angular/material/tooltip';
 import {MatCheckboxModule} from '@angular/material/checkbox';
 import {MatDialog, MAT_DIALOG_DATA, MatDialogRef, MatDialogModule} from '@angular/material/dialog';
-
+import { MatTableExporterModule } from 'mat-table-exporter';
 
 // PRIMENG
 import { DialogModule } from 'primeng/dialog';
@@ -118,11 +118,13 @@ import { ButtonModule } from 'primeng/button';
     ReactiveFormsModule,
     MatDatepickerModule,
     MatNativeDateModule,
+    // MatTableExporterModule ,
     MatTabsModule,
     CanvasJSAngularChartsModule,
     MatTooltipModule,
     MatCheckboxModule,
     NgxPaginationModule,
+    // MatTableExporterModule,
      MatDialogModule,
       
      DialogModule,
