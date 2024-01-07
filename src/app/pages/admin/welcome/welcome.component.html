@@ -76,6 +76,8 @@
 
 {{cateGory|json}}
 
+{{associatedQuizzes| json}}
+
 
 
         <div *ngIf="expirationSeconds">
@@ -132,17 +134,26 @@
                                     {{c.quiz.category.title}}
                                 </mat-option>
                             </mat-select> -->
-                            <mat-select name="category" [(ngModel)]="qId">
+
+
+
+                            <!-- <mat-select name="category" [(ngModel)]="qId">
                               <mat-option *ngFor="let c of categories" [value]="c.id">
                                   {{c.title}}
                               </mat-option>
-                          </mat-select>
+                          </mat-select> -->
+
                             <!-- <mat-select>
                               <mat-option value="option">Data Science</mat-option>
                               <mat-option value="option">AI</mat-option>
                               <mat-option value="option">Cybersecurity</mat-option>
-
                             </mat-select> -->
+
+                             <mat-select name="category" [(ngModel)]="selectedCategoryId" (selectionChange)="selectCategory(selectedCategoryId)">
+                              <mat-option *ngFor="let c of cateGory" [value]="c.cid">
+                                  {{c.title}}
+                              </mat-option>
+                          </mat-select>
                           </mat-form-field>
                     </mat-card-content>
             </div>
@@ -153,34 +164,27 @@
                             <mat-form-field>
                                 <mat-label>Select  Quiz</mat-label>
 
-                                <!-- <mat-select name="category" [(ngModel)] = "quizData.category.cid"> -->
-                                <mat-select name="category" [(ngModel)]="qId" (selectionChange)="onQuizOptionSelected()"  >
-                                    <!-- <mat-option *ngFor="let r of allReportData" [value]="r.quiz.qId">
-                                        {{r.quiz.title}}</mat-option> -->
-
+                                <!-- <mat-select name="category" [(ngModel)]="qId" (selectionChange)="onQuizOptionSelected()"  >
                                     <mat-option *ngFor="let r of quizzes" [value]="r.Qid">
                                         {{r.qTitle}}
                                     </mat-option>
-                                </mat-select>
-
-                                <!-- <mat-select name="category" [(ngModel)]="selectedTitle"
-                                (change)="changeCourse($event)"
-                                >
-                                    <mat-option *ngFor="let r of quizTitles" [value]="r">
-                                        {{r}}
-                                    </mat-option>
                                 </mat-select> -->
 
 
+                                <mat-select name="category" [(ngModel)]="qId" (selectionChange)="onQuizOptionSelected()"  >
+                                  <mat-option *ngFor="let q of associatedQuizzes" [value]="q.qId">
+                                      {{q.title}}
+                                  </mat-option>
+                              </mat-select>
+
+                                
 
 
 
 
-                                <!-- <mat-select>
-                                  <mat-option value="option">Data Science</mat-option>
-                                  <mat-option value="option">AI</mat-option>
-                                  <mat-option value="option">Cybersecurity</mat-option>
-                                </mat-select> -->
+
+
+                                
                               </mat-form-field>
                         </mat-card-content>
                 </div>

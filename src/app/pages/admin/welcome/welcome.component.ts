@@ -41,6 +41,10 @@ export class WelcomeComponent implements OnInit {
 	timeDifferenceInSeconds: any;
 	jwtToken: string;
 
+
+	selectedCategoryId;
+  associatedQuizzes: any[];
+    selectedCategory;
 	cateGory;
 
 
@@ -89,45 +93,6 @@ export class WelcomeComponent implements OnInit {
 		this.formattedExpirationTime();
 	}
 
-
-	// this._report.getUniqueCategoriesAndQuizzes().subscribe((data) => {
-	// 	this.categories = data;
-	// 	console.log(this.categories);
-	// 	console.log(this.categories[1].title);
-	// 	console.log(this.categories[1].cid);
-	// 	console.log(this.categories[1].quizTitles[0].title);
-
-	//   });
-
-
-	// allReports() {
-	// 	this._report.loadReportSummary().subscribe((data => {
-	// 		this.allReportData = data; /// you can fetch the results based on the category ID to get only one of the category titles. (Those with same cid have the same title.)
-	// 		console.log(this.allReportData);
-	// 		const categoryMap = new Map<number, string>();
-	// 		const quizMap = new Map<number, string>();
-	// 		// Iterate over the response and extract unique categories
-	// 		this.allReportData.forEach(item => {
-	// 			const category = item.quiz.category;
-	// 			categoryMap.set(category.cid, category.title);
-	// 			const quiz = item.quiz;
-	// 			quizMap.set(quiz.qId, quiz.title);
-	// 		});
-
-	// 		// Convert the map to an array of categories
-	// 		this.categories = Array.from(categoryMap).map(([id, title]) => ({ id, title }));
-	// 		console.log(this.categories[0].title)
-	// 		console.log(this.categories)
-
-	// 		// Convert the map to an array of categories
-	// 		this.quizzes = Array.from(quizMap).map(([Qid, qTitle]) => ({ Qid, qTitle }));
-	// 		console.log(this.quizzes[0].qTitle)
-	// 		console.log(this.quizzes)
-	// 	}));
-	// }
-
-
-
 	// =========================
 	allReports() {
 		this._report.loadReportSummary().subscribe((data => {
@@ -155,6 +120,40 @@ export class WelcomeComponent implements OnInit {
 
 	}
 	// =========================
+	getQuizTitlesByCategory(categoryId: number) {
+		const category = this.cateGory.find((c) => c.cid === categoryId);
+		return category ? category.quizTitles : [];
+	  }
+
+
+
+
+	  selectCategory(categoryId: number) {
+		this.selectedCategoryId = categoryId;
+		this.associatedQuizzes = this.getQuizTitlesByCategory(categoryId);
+	  }
+
+
+
+// onSelectCategory(categoryId: number): void {
+//     this.selectedCategoryId = categoryId;
+//     const selectedCategory = this.cateGory.find(category => category.cid === categoryId);
+//     this.selectedQuizzes = selectedCategory ? selectedCategory.quizTitles : [];
+
+// 	console.log(this.selectedQuizzes)
+//   }
+
+
+
+
+
+
+
+
+
+
+
+	
 
 	exportexcel() {
 		let data = document.getElementById('reportdata');
