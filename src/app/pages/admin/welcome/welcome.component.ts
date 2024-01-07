@@ -22,29 +22,23 @@ import { LoginService } from 'src/app/services/login.service';
 })
 export class WelcomeComponent implements OnInit {
 	allQuizzes: any = [];
-	categories: { id: number, title: string }[] = [];
-	quizzes: { Qid: number, qTitle: string }[] = [];
-
 	public reportsData: any = [];
 	allReportData: any = [];
 	public quizReportsData: any = [];
-
-	uniqueItems: any = [];
-	uniqueCategories
 	qId;
 	cid;
 	totalQuizTakers = 0;
 	totalMarks = 0;
 	averageScore = 0;
-	courseName= 'Course Name';
+	courseName = 'Course Name';
 	expirationSeconds: any;
 	timeDifferenceInSeconds: any;
 	jwtToken: string;
 
 
 	selectedCategoryId;
-  associatedQuizzes: any[];
-    selectedCategory;
+	associatedQuizzes: any[];
+	selectedCategory;
 	cateGory;
 
 
@@ -95,65 +89,25 @@ export class WelcomeComponent implements OnInit {
 
 	// =========================
 	allReports() {
-		this._report.loadReportSummary().subscribe((data => {
-			this.allReportData = data; /// you can fetch the results based on the category ID to get only one of the category titles. (Those with same cid have the same title.)
-			console.log(this.allReportData);
-			
+		this._report.getUniqueCategoriesAndQuizzes().subscribe((data) => {
+			this.cateGory = data;
+			// console.log(this.cateGory);
+			// console.log(this.cateGory[1].title);
+			// console.log(this.cateGory[1].cid);
+			// console.log(this.cateGory[1].quizTitles[1].title);
 
-			this._report.getUniqueCategoriesAndQuizzes().subscribe((data) => {
-				this.cateGory = data;
-				console.log(this.cateGory);
-				console.log(this.cateGory[1].title);
-				console.log(this.cateGory[1].cid);
-				console.log(this.cateGory[1].quizTitles[1].title);
-	
-	
-	
-	
-			  });
-
-
-		}));
-
-
-
-
+		});
 	}
 	// =========================
 	getQuizTitlesByCategory(categoryId: number) {
 		const category = this.cateGory.find((c) => c.cid === categoryId);
 		return category ? category.quizTitles : [];
-	  }
+	}
 
-
-
-
-	  selectCategory(categoryId: number) {
+	selectCategory(categoryId: number) {
 		this.selectedCategoryId = categoryId;
 		this.associatedQuizzes = this.getQuizTitlesByCategory(categoryId);
-	  }
-
-
-
-// onSelectCategory(categoryId: number): void {
-//     this.selectedCategoryId = categoryId;
-//     const selectedCategory = this.cateGory.find(category => category.cid === categoryId);
-//     this.selectedQuizzes = selectedCategory ? selectedCategory.quizTitles : [];
-
-// 	console.log(this.selectedQuizzes)
-//   }
-
-
-
-
-
-
-
-
-
-
-
-	
+	}
 
 	exportexcel() {
 		let data = document.getElementById('reportdata');
@@ -162,30 +116,6 @@ export class WelcomeComponent implements OnInit {
 		XLSX.utils.book_append_sheet(wb, ws, 'sheet1')
 		XLSX.writeFile(wb, `${this.courseName}.xlsx`)
 	}
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 
 	formattedExpirationTime() {
 		this.jwtToken = localStorage.getItem('token')
@@ -215,34 +145,6 @@ export class WelcomeComponent implements OnInit {
 
 		return timeDifferenceInSeconds; // Adjust the format as needed
 	}
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 
 
 	// THIS JWT EXPIRATION NOT OPTIMIZED
@@ -282,22 +184,6 @@ export class WelcomeComponent implements OnInit {
 			}
 		});
 	}
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 
 
 
@@ -366,50 +252,6 @@ export class WelcomeComponent implements OnInit {
 			this.averageScore = this.totalMarks / this.totalQuizTakers;
 		})
 	}
-
-
-
-
-
-	// extractUniqueCategories(): void {
-	//     const uniqueCategorySet = new Set<number>();
-
-	//     this.allReportData.forEach(item => {
-	//       uniqueCategorySet.add(item.quiz.category.cid);
-	//     });
-
-	//     // Convert the Set to an array of unique categories
-	//     this.uniqueCategories = Array.from(uniqueCategorySet).map(cid => {
-	//       const categoryItem = this.allReportData.find(item => item.quiz.category.cid === cid);
-	//       return { cid, title: categoryItem?.quiz.category.title || 'Unknown Title' };
-	//     });
-
-	//     console.log('Unique Categories:', this.uniqueCategories);
-	//   }
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 
 
 
