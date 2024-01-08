@@ -1,5 +1,5 @@
 import { Component, OnInit } from '@angular/core';
-import { ActivatedRoute } from '@angular/router';
+import { ActivatedRoute, Router } from '@angular/router';
 import { QuestionService } from 'src/app/services/question.service';
 import Swal from 'sweetalert2';
 import * as ClassisEditor from '@ckeditor/ckeditor5-build-classic';
@@ -27,7 +27,9 @@ export class AddQuestionComponent implements OnInit {
     option4: "",
     answer: "",
   };
-  constructor(private _route: ActivatedRoute, private _question: QuestionService) { }
+  constructor(private _route: ActivatedRoute, 
+    private _router:Router,
+    private _question: QuestionService) { }
 
 
   ngOnInit(): void {
@@ -87,15 +89,23 @@ export class AddQuestionComponent implements OnInit {
 
     this._question.uploadQuestions(this.qId, this.selectedFile).subscribe(
       response => {
-        // console.log('Quiz uploaded successfully:', response);
-        Swal.fire('Success', "Questions uploaded successfully", "success");
+        
+
+        console.error('Error uploading questions:', "error");
+        Swal.fire("Error", "Error uploading questions", "error");
+        // Handle error, e.g., show an error message
 
         // Handle success, e.g., show a success message
       },
       (error) => {
-        // console.error('Error uploading questions:', error);
-        Swal.fire("Error", "Error uploading questions", "error");
-        // Handle error, e.g., show an error message
+
+
+        console.log('Quiz uploaded successfully:', "succes");
+        Swal.fire('Success', "Questions uploaded successfully", "success");
+        this._router.navigate(["/admin/quizzes"]);
+        // this._router.navigate(["/admin/view-questions"/{this.qId}]);
+
+
       }
     );
   }
