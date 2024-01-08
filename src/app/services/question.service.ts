@@ -1,7 +1,9 @@
 import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import baseUrl from './helper';
-import { tap ,Subject} from 'rxjs';
+import { tap ,Subject,Observable} from 'rxjs';
+import { HttpHeaders } from '@angular/common/http';
+
 
 @Injectable({
   providedIn: 'root'
@@ -76,6 +78,21 @@ public getReport(){
         this.refreshNeeded.next();
       })
     )};
+
+
+    private jwtToken = localStorage.getItem('token')
+
+    
+    // upload questions
+    uploadQuestions(qid: number, questions): Observable<any> {
+      const headers = new HttpHeaders({
+        'Content-Type': 'application/json',
+        // 'Content-Type': 'multipart/form-data',
+      });
+        return this._http.post(`${baseUrl}/upload/${qid}`, questions, {headers})
+  }
+
+
 }
 
 

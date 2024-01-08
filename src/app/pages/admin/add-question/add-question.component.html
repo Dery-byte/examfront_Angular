@@ -95,6 +95,14 @@
                                     <button mat-raised-button color="accent">Add</button>
                                    </div>
                     </form>
+
+
+                    <!-- <form> -->
+                    <input type="file" (change)="onFileSelected($event)">
+                    <button mat-raised-button color="accent" (click)="uploadQuiz()">Upload Questions</button>
+
+                <!-- </form> -->
+
                 </mat-card-content>
 
                
