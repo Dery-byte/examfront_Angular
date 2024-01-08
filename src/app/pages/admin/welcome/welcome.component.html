@@ -1,6 +1,12 @@
    
 <div class="bootstrap-wrapper">
     <div class="container-fluid">
+      <!-- <div *ngIf="expirationSeconds">
+        Token will expire in {{ expirationSeconds }} seconds.
+      </div> -->
+
+      <!-- <h3 class="text-center"><i>{{ getFormmatedTime() }} </i></h3> -->
+
         <div class="row">
             <div class="col-md-4">
 
@@ -78,13 +84,7 @@
 
 <!-- {{associatedQuizzes| json}} -->
 
-
-
-        <div *ngIf="expirationSeconds">
-          Token will expire in {{ expirationSeconds }} seconds.
-        </div>
-
-        <h1 class="text-center"><i>{{ getFormmatedTime() }} </i></h1>
+<!-- {{selectedCategoryId}} -->
 
         <!-- QUIZ STATISTICS -->
         <mat-card class="mt20">
@@ -110,6 +110,12 @@
                                   {{c.title}}
                               </mat-option>
                           </mat-select>
+
+
+                          
+
+
+
                           </mat-form-field>
                     </mat-card-content>
             </div>

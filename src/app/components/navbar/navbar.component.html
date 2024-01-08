@@ -1,9 +1,17 @@
 <div class="navbar">
 
 <mat-toolbar color="accent">
-    <a
+    <!-- <a
     
     [routerLink]="'/'" mat-icon-button 
+    class="example-icon" 
+    aria-label="Example icon-button with menu icon">
+      <mat-icon>menu_book</mat-icon>
+    </a> -->
+
+    <a
+    
+    mat-icon-button 
     class="example-icon" 
     aria-label="Example icon-button with menu icon">
       <mat-icon>menu_book</mat-icon>
@@ -36,6 +44,12 @@
     </a> -->
 
    
+ <!-- <div *ngIf="expirationSeconds">
+        Token will expire in {{ expirationSeconds }} seconds.
+      </div> -->
+<div  *ngIf="isloggedIn && user">
+  <h3 class="text-center">Token will expire in <i>{{ getFormmatedTime() }} </i></h3>
+</div>
 
 
 

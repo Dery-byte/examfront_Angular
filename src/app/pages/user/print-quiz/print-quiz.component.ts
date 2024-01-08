@@ -49,8 +49,8 @@ export class PrintQuizComponent implements OnInit {
   @HostListener('window:beforeunload', ['$event'])
   beforeUnloadHandler(event: Event): void {
     // this.loadResults();
-    event.preventDefault();
-    event.returnValue = '' as any; // This is required for some older browsers
+    // event.preventDefault();
+    // event.returnValue = '' as any; // This is required for some older browsers
   }
   @HostListener('window:unload', ['$event'])
   unloadHandler(event: Event): void {

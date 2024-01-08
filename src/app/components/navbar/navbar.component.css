@@ -14,3 +14,11 @@
 .profile-imag{
     border-radius: 50px;
 }
+
+.text-center{
+    color: black;
+    font-family: 'Times New Roman', Times, serif;
+    font-size: 25px;
+    margin-right:50px;
+    margin-bottom: auto;
+}

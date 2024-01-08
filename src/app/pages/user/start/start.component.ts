@@ -60,10 +60,10 @@ export class StartComponent implements OnInit {
     // Custom code to be executed before the page is unloaded
     localStorage.setItem(this.countdownKey, JSON.stringify(this.timer));
 
-    event.preventDefault();
+    // event.preventDefault();
     // this.preventBackButton();
 
-    event.returnValue = '' as any; // This is required for some older browsers
+    // event.returnValue = '' as any; // This is required for some older browsers
   }
 
   @HostListener('window:unload', ['$event'])
