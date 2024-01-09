@@ -1,3 +1,46 @@
 .w100{
     width:100%
 }
+
+
+.file-input-label {
+    display: inline-block;
+    position: relative;
+    overflow: hidden;
+    cursor: pointer;
+    border: 2px solid #7476bf;
+    border-radius: 6px;
+    padding: 8px 12px;
+    background-color: #354e5e;
+    color: #fff;
+    font-size: 16px;
+    margin: 7px 0px 0px 0px;
+
+width: 200px;
+height: 40px;
+  }
+  
+  .file-input {
+    position: absolute;
+    /* top: 0;
+    right: 0;
+    bottom: 0;
+    left: 0;
+    opacity: 0; */
+    cursor: pointer;
+  }
+  
+  .file-input-text {
+    display:none;
+    margin-left: 8px;
+
+  }
+
+  .upload-btn{
+    /* display: inline-block; */
+    /* position: relative; */
+    /* overflow: hidden; */
+    margin: -25px 0px 0px 20px;
+    cursor: pointer;
+  }
+  

@@ -81,6 +81,8 @@ export class AddQuestionComponent implements OnInit {
   }
   uploadQuiz(): void {
     if (!this.selectedFile) {
+      Swal.fire("Error", "No file selected.", "error");
+
       console.error('No file selected.');
       return;
     }
