@@ -43,8 +43,31 @@ export class LoginComponent implements OnInit {
  
     ngOnInit(): void{
       this.allusers();
+      this.preventLoginForm();
     }
     
+
+    preventLoginForm(){
+      
+if(this.login.getUserRole()=="ADMIN"){
+  //Admin Dasboard
+  window.location.href="/admin"; 
+  // this.router.navigate(["admin"])
+  this.login.loginStatusSubject.next(true);
+  }
+  else if(this.login.getUserRole()=="NORMAL"){
+    // NORMAL User-dashboard
+    window.location.href="/user-dashboard/0";
+    // this.router.navigate(["user-dashboard"]);
+    this.login.loginStatusSubject.next(true);
+  }
+  else{
+    this.login.logout();
+  }
+
+
+
+    }
     allusers(){
       this.login.getAllUsers().subscribe((users:any)=>{
         this.allUsers=users;
