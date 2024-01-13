@@ -45,7 +45,7 @@ export class StartComponent implements OnInit {
   count_timer: any;
 
   quiz
-  private countdownKey = 'expiration_timer';
+  private countdownKey = 'countdown_timer';
   private intervalId: any;
 
   constructor(private _quiz: QuizService,
@@ -61,14 +61,14 @@ export class StartComponent implements OnInit {
     localStorage.setItem(this.countdownKey, JSON.stringify(this.timer));
 
     // event.preventDefault();
-    // this.preventBackButton();
+    this.preventBackButton();
 
     // event.returnValue = '' as any; // This is required for some older browsers
   }
 
   @HostListener('window:unload', ['$event'])
   unloadHandler(event: Event): void {
-    // this.preventBackButton();
+    this.preventBackButton();
   }
 
 
