@@ -26,14 +26,14 @@
     }
     .cards{
 position: relative;
-height: 50%;
+height: auto;
 width: auto;
 font-size: 15px;
     }
     .spin{
-        height: 10px;
-        width: 10px;
-    }
+height: 1px;   
+width: 1px;
+}
 
 
     .book{

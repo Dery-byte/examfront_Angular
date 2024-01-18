@@ -17,6 +17,8 @@ export class LoginComponent implements OnInit {
 
   productDialog: boolean;
 
+  isLogingIn=false;
+
   firstFormGroup = this._formBuilder.group({
     firstCtrl: ['', Validators.required],
   });
@@ -93,6 +95,7 @@ console.log(this.allUsers)
     deleteSelectedProducts(){}
 
   formSubmit(){
+    // this.isLogingIn=true;
 this.hideDialog();
     if(this.loginData.username.trim()==' ' || this.loginData.password ==null){
   this.snack.open('Username is required !! ', '',{
@@ -101,19 +104,28 @@ this.hideDialog();
     }
 
     if(this.loginData.username.trim()== ' ' || this.loginData.password ==null){
+      this.isLogingIn=true;
+
       this.snack.open('Password is required !! ', '',{
       duration:3000,});
       return;
         }
-
         // Requesting server to generate token
 this.login.generateToken(this.loginData).subscribe(
+  
   (data:any)=>{
+
+
+
+
+
     console.log("Success");
     console.log(data);
 
     //Login...
  this.login.loginUser(data.token);
+ this.isLogingIn=true;
+
  this.login.getCurrentUser().subscribe(
   (user:any)=>{
     this.login.setUser(user);

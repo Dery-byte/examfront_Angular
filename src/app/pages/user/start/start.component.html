@@ -36,12 +36,13 @@
                             </mat-card-subtitle>
                         </mat-card-header>
                         <mat-card-content>
-                            <h1 class="text-center"><i>{{ getFormmatedTime() }} </i></h1>
-                            <!-- <mat-spinner [value]="(this.time/(this.questions.length * 2 * 60)) * 100"  -->
-                            <mat-spinner class="spin" [value]="(timer/(this.questions.length  * 60)) * 100 " mode="determinate"
-                                color="accent" style="margin: auto;"></mat-spinner>
+                            <mat-spinner diameter="70" class="spin" [value]="(timer/(this.questions.length  * 60)) * 100 " mode="determinate"
+                                color="warn" style="margin: auto;"></mat-spinner>
+                            <h1 class="text-center"><i>{{ getFormmatedTime() }} </i></h1>                            
                         </mat-card-content>
                     </mat-card>
+
+
                 </div>
 
 

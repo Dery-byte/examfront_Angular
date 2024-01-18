@@ -19,7 +19,21 @@
   .button-flex{
     display: inline-block;
     width: 100%;
+    justify-content: flex-end;
+   
+  }
+
+  .spinner{
+    /* display: inline-flex; */
+    position: absolute;
+    /* width: 100%; */
     /* justify-content: flex-end; */
+    border-radius: 50%; 
+  width: 30px; 
+  height: 30px; 
+  margin-top:-5px ; 
+  margin-left: -33px;
+  
   }
 
 
@@ -37,6 +51,8 @@
     margin: 1%;
 }
 
-button{
+img, button{
     margin: 2px;
 }
+
+

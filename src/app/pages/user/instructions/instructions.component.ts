@@ -91,6 +91,12 @@ export class InstructionsComponent implements OnInit {
 
       this.isLegible = (this.idNumberReport[0] == this.currentUserId && this.reportQuizId == this.currentQuizId);
 
+    console.log(this.idNumberReport[0] == this.currentUserId);
+
+    console.log(this.reportQuizId == this.currentQuizId);
+
+
+    
       console.log(this.isLegible);
       if (this.isLegible) {
         // this.isLegible; // True

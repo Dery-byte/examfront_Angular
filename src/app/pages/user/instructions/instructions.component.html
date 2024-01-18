@@ -1,3 +1,13 @@
+<ngx-ui-loader
+fgsColor="#ff4081"
+pbColor="#ff4081"
+textColor="#ff4081"
+pbThickness="6"
+text="Loading instructions"
+></ngx-ui-loader>
+
+
+<div ngxUiLoaderBlurred (blur)="10">
 <div class="bootstrap-wrapper">
     <div class="contianer">
         <div class="row">
@@ -42,6 +52,8 @@
                         </ul>
                     </mat-card-content>
 
+
+
                     <mat-card-actions>
                         <!-- Action -->
                         <div class=" container text-center" *ngIf="!isLegible">
@@ -53,8 +65,10 @@
                         </div>
                         <!-- Action -->
                     </mat-card-actions>
-                </mat-card>
 
+
+                </mat-card>
+<!-- ON THE PRINT PAGE ADD THE LOADER -->
 
             </div>
         </div>
