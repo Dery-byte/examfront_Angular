@@ -102,6 +102,7 @@ this.hideDialog();
   duration:3000,});
   return;
     }
+    this.isLogingIn=false;
 
     if(this.loginData.username.trim()== ' ' || this.loginData.password ==null){
       this.isLogingIn=true;
@@ -111,9 +112,11 @@ this.hideDialog();
       return;
         }
         // Requesting server to generate token
+        this.isLogingIn=false;
 this.login.generateToken(this.loginData).subscribe(
   
   (data:any)=>{
+    this.isLogingIn=true;
 
 
 
@@ -124,8 +127,6 @@ this.login.generateToken(this.loginData).subscribe(
 
     //Login...
  this.login.loginUser(data.token);
- this.isLogingIn=true;
-
  this.login.getCurrentUser().subscribe(
   (user:any)=>{
     this.login.setUser(user);
