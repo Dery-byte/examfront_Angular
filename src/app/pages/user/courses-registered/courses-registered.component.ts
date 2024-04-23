@@ -42,7 +42,6 @@ export class CoursesRegisteredComponent implements OnInit {
   //delete
   this.regCourse.deleteRegCourse(rid).subscribe(
    (data)=>{
-
 this.userRecords = this.userRecords.filter((userRecord)=>userRecord.rid ! = rid);
      Swal.fire("Success", "Course Removed", "success");
    },

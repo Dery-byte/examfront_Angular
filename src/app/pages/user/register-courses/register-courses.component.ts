@@ -77,6 +77,7 @@ ngOnInit(): void {
 						  cid:""
 						},
 					}
+					event.target.checked = false;
 					Swal.fire('Success', "Registration done", "success");
 				}), error=>{
 					Swal.fire("Error", "Registration Unsuccessful", "error");
