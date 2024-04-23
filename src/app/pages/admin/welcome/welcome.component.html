@@ -1,321 +1,316 @@
-   
 <div class="bootstrap-wrapper">
-    <div class="container-fluid">
-      <!-- <div *ngIf="expirationSeconds">
+  <div class="container-fluid">
+    <!-- <div *ngIf="expirationSeconds">
         Token will expire in {{ expirationSeconds }} seconds.
       </div> -->
 
-      <!-- <h3 class="text-center"><i>{{ getFormmatedTime() }} </i></h3> -->
-
-        <div class="row">
-            <div class="col-md-4">
-
-                <mat-card class="mt20">
-
-                    <mat-card-header>
-                        <!-- <div mat-card-avatar class="example-header-image"></div> -->
-                        <mat-card-title>
-                           Sept. 16, 2023
-                        </mat-card-title>
-                
-                        <mat-card-subtitle>
-                            233677
-                        </mat-card-subtitle>
-                    </mat-card-header>
-                    <mat-card-content>
-                        <p>Quiz attemps today</p>
-                    </mat-card-content>
-                   <mat-card-actions>
-                    <button 
-                     mat-flat-button color="accent"  >Questions</button>           
-                
-                   </mat-card-actions>
-                </mat-card>
-            </div>
-
-
-            <div class="col-md-4">
-                <mat-card class="mt20">
-                    <mat-card-header>
-                        <!-- <div mat-card-avatar class="example-header-image"></div> -->
-                        <mat-card-title>
-                            Sept. 18, 2022
-                        </mat-card-title>
-                        <mat-card-subtitle>
-                            6746454
-                        </mat-card-subtitle>
-                    </mat-card-header>
-                    <mat-card-content>
-                        <p>New Participants today</p>
-                    </mat-card-content>
-                   <mat-card-actions>
-                    <button 
-                     mat-flat-button color="accent"  >Questions</button>           
-                   </mat-card-actions>
-                </mat-card>
-            </div>
-
-
-            <div class="col-md-4">
-
-                <mat-card class="mt20">
-                    <mat-card-header>
-                        <mat-card-title>
-                            Aug. 17, 2020
-                        </mat-card-title>
-                        <mat-card-subtitle>
-                            6635634
-                        </mat-card-subtitle>
-                    </mat-card-header>
-                    <mat-card-content>
-                        <p>Total Participants</p>
-                    </mat-card-content>
-                   <mat-card-actions>
-                    <button 
-                     mat-flat-button color="accent"  >Questions</button>           
-                   </mat-card-actions>
-                </mat-card>
-
-            </div>
-
-        </div>
-
- <!-- {{cateGory|json}}  -->
-
-<!-- {{associatedQuizzes| json}} -->
-
-<!-- {{selectedCategoryId}} -->
-
-        <!-- QUIZ STATISTICS -->
-        <mat-card class="mt20">
-            <div class="row">
-                <div class="col-md-4">     
-                    
-                    <mat-card-title class="stat">
-                        Statistics
-                    </mat-card-title>
-                            
-                </div>
-
-
-
-                <div class="col-md-4">
-                    <mat-card-content align="right">
-                        <mat-form-field>
-                            <mat-label>Select  Course</mat-label>
-                         
-
-                             <mat-select name="category" [(ngModel)]="selectedCategoryId" (selectionChange)="selectCategory(selectedCategoryId)">
-                              <mat-option *ngFor="let c of cateGory" [value]="c.cid">
-                                  {{c.title}}
-                              </mat-option>
-                          </mat-select>
-
-
-                          
-
-
-
-                          </mat-form-field>
-                    </mat-card-content>
-            </div>
-            
-            
-                <div class="col-md-4">
-                        <mat-card-content align="right">
-                            <mat-form-field>
-                                <mat-label>Select  Quiz</mat-label>
-
-
-
-                                <mat-select name="category" [(ngModel)]="qId" (selectionChange)="onQuizOptionSelected()"  >
-                                  <mat-option *ngFor="let q of associatedQuizzes" [value]="q.qId">
-                                      {{q.title}}
-                                  </mat-option>
-                              </mat-select>
-
-                                
-
-
-
-
-
-
-                                
-                              </mat-form-field>
-                        </mat-card-content>
-                </div>
-            </div>
-
-<mat-divider></mat-divider>
-<!-- Material Design Cards Section -->
-<div *ngIf="reportsData">
-    <!-- <div class="row" *ngFor="let r of reportsData"> -->
-        <div class="row">
-      <div class="col-md-3">
-        <mat-card class="mt20">
-          <mat-card-header>
-            <mat-card-title>
-              <mat-icon mat-list-icon class="icon-position">people</mat-icon>
-              No. of Participants
-              <p>{{ totalQuizTakers }}</p>
-            </mat-card-title>
-          </mat-card-header>
-        </mat-card>
-      </div>
-  
-      <div class="col-md-3">
-        <mat-card class="mt20">
-          <mat-card-header>
-            <mat-card-title>
-              <mat-icon mat-list-icon class="icon-position">calculate</mat-icon>
-              Average Scores
-              <p>
-              {{averageScore}}
-              </p>
-            </mat-card-title>
-          </mat-card-header>
-        </mat-card>
-      </div>
-  
-      <div class="col-md-3">
-        <mat-card class="mt20">
-          <mat-card-header>
-            <mat-card-title>
-              <mat-icon mat-list-icon class="icon-position">access_alarm</mat-icon>
-              Average Time
-              <p>49 min</p>
-            </mat-card-title>
-          </mat-card-header>
-        </mat-card>
-      </div>
-  
-      <div class="col-md-3">
-        <mat-card class="mt20">
-          <mat-card-header>
-            <mat-card-title>
-              <mat-icon mat-list-icon class="icon-position">edit</mat-icon>
-              Course Name <br>
-              <label>{{ courseName }}</label>
-            </mat-card-title>
-          </mat-card-header>
-        </mat-card>
-      </div>
-    </div>
-  </div>
-  
-  <!-- Table Section -->
-
-  
-  <div *ngIf="reportsData.length>0">
-    <div>
-      &nbsp;&nbsp;<button  mat-flat-button color="accent"   (click)="exportexcel()">Export as Excel </button>
-      
-        </div>
-    <table mat-table  [dataSource]="reportsData"  class="mat-elevation-z8" id="reportdata">
-  
-      <ng-container matColumnDef="index">
-        <th mat-header-cell *matHeaderCellDef> Index Number</th>
-        <td mat-cell *matCellDef="let element">{{ element.user.username }}</td>
-      </ng-container>
-  
-      <!-- Name Column -->
-      <ng-container matColumnDef="name">
-        <th mat-header-cell *matHeaderCellDef> Name </th>
-        <td mat-cell *matCellDef="let element">{{ element.user.firstname }} {{ element.user.lastname }}</td>
-      </ng-container>
-  
-      <ng-container matColumnDef="marks">
-        <th mat-header-cell *matHeaderCellDef> Marks </th>
-        <td mat-cell *matCellDef="let element">{{ element.marks }}</td>
-      </ng-container>
-
-     
-  
-      <tr mat-header-row *matHeaderRowDef="displayColumn"></tr>
-      <tr mat-row *matRowDef="let row; columns: displayColumn;"></tr>
-  
-    </table>
-  </div>
-
-  <div class="container text-center" *ngIf="reportsData.length == 0">
-    <h1>Select Course and quiz to load results here</h1>
-  </div>
+    <!-- <h3 class="text-center"><i>{{ getFormmatedTime() }} </i></h3> -->
 
     <div class="row">
+      <div class="col-md-4">
+
+        <mat-card class="mt20">
+
+          <mat-card-header>
+            <!-- <div mat-card-avatar class="example-header-image"></div> -->
+            <mat-card-title>
+              Sept. 16, 2023
+            </mat-card-title>
+
+            <mat-card-subtitle>
+              233677
+            </mat-card-subtitle>
+          </mat-card-header>
+          <mat-card-content>
+            <p>Quiz attemps today</p>
+          </mat-card-content>
+          <mat-card-actions>
+            <button mat-flat-button color="accent">Questions</button>
+
+          </mat-card-actions>
+        </mat-card>
+      </div>
+
+
+      <div class="col-md-4">
+        <mat-card class="mt20">
+          <mat-card-header>
+            <!-- <div mat-card-avatar class="example-header-image"></div> -->
+            <mat-card-title>
+              Sept. 18, 2022
+            </mat-card-title>
+            <mat-card-subtitle>
+              6746454
+            </mat-card-subtitle>
+          </mat-card-header>
+          <mat-card-content>
+            <p>New Participants today</p>
+          </mat-card-content>
+          <mat-card-actions>
+            <button mat-flat-button color="accent">Questions</button>
+          </mat-card-actions>
+        </mat-card>
+      </div>
+
+
+      <div class="col-md-4">
+
+        <mat-card class="mt20">
+          <mat-card-header>
+            <mat-card-title>
+              Aug. 17, 2020
+            </mat-card-title>
+            <mat-card-subtitle>
+              6635634
+            </mat-card-subtitle>
+          </mat-card-header>
+          <mat-card-content>
+            <p>Total Participants</p>
+          </mat-card-content>
+          <mat-card-actions>
+            <button mat-flat-button color="accent">Questions</button>
+          </mat-card-actions>
+        </mat-card>
+
+      </div>
+
+    </div>
+
+    <!-- {{cateGory|json}}  -->
+
+    <!-- {{associatedQuizzes| json}} -->
+
+    <!-- {{selectedCategoryId}} -->
+
+    <!-- QUIZ STATISTICS -->
+    <mat-card class="mt20">
+      <div class="row">
         <div class="col-md-4">
 
+          <mat-card-title class="stat">
+            Statistics
+          </mat-card-title>
+
+        </div>
+
+
+
+        <div class="col-md-4">
+          <mat-card-content align="right">
+            <mat-form-field>
+              <mat-label>Select Course</mat-label>
+
+
+              <mat-select name="category" [(ngModel)]="selectedCategoryId"
+                (selectionChange)="selectCategory(selectedCategoryId)">
+                <mat-option *ngFor="let c of cateGory" [value]="c.cid">
+                  {{c.title}}
+                </mat-option>
+              </mat-select>
+
+
+
+
+
+
+            </mat-form-field>
+          </mat-card-content>
+        </div>
+
+
+        <div class="col-md-4">
+          <mat-card-content align="right">
+            <mat-form-field>
+              <mat-label>Select Quiz</mat-label>
+              <mat-select name="category" [(ngModel)]="qId" (selectionChange)="onQuizOptionSelected()">
+                <mat-option *ngFor="let q of associatedQuizzes" [value]="q.qId">
+                  {{q.title}}
+                </mat-option>
+              </mat-select>
+            </mat-form-field>
+          </mat-card-content>
+        </div>
+      </div>
+
+      <mat-divider></mat-divider>
+      <!-- Material Design Cards Section -->
+      <div *ngIf="reportsData">
+        <!-- <div class="row" *ngFor="let r of reportsData"> -->
+        <div class="row">
+          <div class="col-md-3">
             <mat-card class="mt20">
-
-                <mat-card-header>
-                    <!-- <div mat-card-avatar class="example-header-image"></div> -->
-                    <mat-card-title>
-                       Unique Participants
-                    </mat-card-title>
-            
-                    <mat-card-subtitle>
-                        Number of participants over time.
-                    </mat-card-subtitle>
-                </mat-card-header>
-                <mat-card-content>
-
-
-                    
-                    <mat-form-field class="example-form-field">
-                        <mat-label>Start Date</mat-label>
-                        <input matInput [matDatepicker]="datepicker">
-                        <mat-datepicker-toggle matIconSuffix [for]="datepicker"></mat-datepicker-toggle>
-                        <mat-datepicker #datepicker>
-                          <mat-datepicker-actions>
-                            <button mat-button matDatepickerCancel>Cancel</button>
-                            <button mat-raised-button color="primary" matDatepickerApply>Apply</button>
-                          </mat-datepicker-actions>
-                        </mat-datepicker>
-                      </mat-form-field>
-                      
-                      <mat-form-field class="example-form-field">
-                        <mat-label>End Date</mat-label>
-                        <input matInput [matDatepicker]="picker">
-                        <mat-datepicker-toggle matIconSuffix [for]="picker"></mat-datepicker-toggle>
-                        <mat-datepicker #picker></mat-datepicker>
-                        <mat-date-range-picker #rangePicker>
-                          <mat-date-range-picker-actions>
-                            <button mat-button matDateRangePickerCancel>Cancel</button>
-                            <button mat-raised-button color="primary" matDateRangePickerApply>Apply</button>
-                          </mat-date-range-picker-actions>
-                        </mat-date-range-picker>
-                      </mat-form-field>          
-
-                </mat-card-content>
-               <mat-card-actions>
-                <button mat-flat-button color="accent">Load Data</button>           
-            
-               </mat-card-actions>
+              <mat-card-header>
+                <mat-card-title>
+                  <mat-icon mat-list-icon class="icon-position">people</mat-icon>
+                  No. of Participants
+                  <p>{{ totalQuizTakers }}</p>
+                </mat-card-title>
+              </mat-card-header>
             </mat-card>
+          </div>
+
+          <div class="col-md-3">
+            <mat-card class="mt20">
+              <mat-card-header>
+                <mat-card-title>
+                  <mat-icon mat-list-icon class="icon-position">calculate</mat-icon>
+                  Average Scores
+                  <p>
+                    {{averageScore}}
+                  </p>
+                </mat-card-title>
+              </mat-card-header>
+            </mat-card>
+          </div>
+
+          <div class="col-md-3">
+            <mat-card class="mt20">
+              <mat-card-header>
+                <mat-card-title>
+                  <mat-icon mat-list-icon class="icon-position">access_alarm</mat-icon>
+                  Average Time
+                  <p>49 min</p>
+                </mat-card-title>
+              </mat-card-header>
+            </mat-card>
+          </div>
+
+          <div class="col-md-3">
+            <mat-card class="mt20">
+              <mat-card-header>
+                <mat-card-title>
+                  <mat-icon mat-list-icon class="icon-position">edit</mat-icon>
+                  Course Name <br>
+                  <label>{{ courseName }}</label>
+                </mat-card-title>
+              </mat-card-header>
+            </mat-card>
+          </div>
+        </div>
+      </div>
+
+      <!-- Table Section -->
+
+
+
+
+      <div *ngIf="reportsData.length>0">
+        <div>
+          &nbsp;&nbsp;<button mat-flat-button color="accent" (click)="exportexcel()">Export as Excel </button>
+
+        </div>
+        <table mat-table [dataSource]="reportsData" class="mat-elevation-z8" id="reportdata">
+
+          <ng-container matColumnDef="index">
+            <th mat-header-cell *matHeaderCellDef> Index Number</th>
+            <td mat-cell *matCellDef="let element">{{ element.user.username }}</td>
+          </ng-container>
+
+          <!-- Name Column -->
+          <ng-container matColumnDef="name">
+            <th mat-header-cell *matHeaderCellDef> Name </th>
+            <td mat-cell *matCellDef="let element">{{ element.user.firstname }} {{ element.user.lastname }}</td>
+          </ng-container>
+
+          <ng-container matColumnDef="marks">
+            <th mat-header-cell *matHeaderCellDef> Marks </th>
+            <td mat-cell *matCellDef="let element">{{ element.marks }}</td>
+          </ng-container>
+          <tr mat-header-row *matHeaderRowDef="displayColumn"></tr>
+          <tr mat-row *matRowDef="let row; columns: displayColumn;"></tr>
+        </table>
+      </div>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+      <div class="container text-center" *ngIf="reportsData.length == 0">
+        <h1>Select Course and quiz to load results here</h1>
+      </div>
+
+      <div class="row">
+        <div class="col-md-4">
+
+          <mat-card class="mt20">
+
+            <mat-card-header>
+              <!-- <div mat-card-avatar class="example-header-image"></div> -->
+              <mat-card-title>
+                Unique Participants
+              </mat-card-title>
+
+              <mat-card-subtitle>
+                Number of participants over time.
+              </mat-card-subtitle>
+            </mat-card-header>
+            <mat-card-content>
+
+
+
+              <mat-form-field class="example-form-field">
+                <mat-label>Start Date</mat-label>
+                <input matInput [matDatepicker]="datepicker">
+                <mat-datepicker-toggle matIconSuffix [for]="datepicker"></mat-datepicker-toggle>
+                <mat-datepicker #datepicker>
+                  <mat-datepicker-actions>
+                    <button mat-button matDatepickerCancel>Cancel</button>
+                    <button mat-raised-button color="primary" matDatepickerApply>Apply</button>
+                  </mat-datepicker-actions>
+                </mat-datepicker>
+              </mat-form-field>
+
+              <mat-form-field class="example-form-field">
+                <mat-label>End Date</mat-label>
+                <input matInput [matDatepicker]="picker">
+                <mat-datepicker-toggle matIconSuffix [for]="picker"></mat-datepicker-toggle>
+                <mat-datepicker #picker></mat-datepicker>
+                <mat-date-range-picker #rangePicker>
+                  <mat-date-range-picker-actions>
+                    <button mat-button matDateRangePickerCancel>Cancel</button>
+                    <button mat-raised-button color="primary" matDateRangePickerApply>Apply</button>
+                  </mat-date-range-picker-actions>
+                </mat-date-range-picker>
+              </mat-form-field>
+
+            </mat-card-content>
+            <mat-card-actions>
+              <button mat-flat-button color="accent">Load Data</button>
+
+            </mat-card-actions>
+          </mat-card>
         </div>
 
 
         <div class="col-md-8">
-            <mat-card class="mt20">
-              
-                <mat-card-content>
-                
-               <div>
-                <canvasjs-chart [options]="chartOptions" [styles]="{width: '100%', height:'360px'}"></canvasjs-chart>    
-            </div> 
+          <mat-card class="mt20">
+
+            <mat-card-content>
+
+              <div>
+                <canvasjs-chart [options]="chartOptions" [styles]="{width: '100%', height:'360px'}"></canvasjs-chart>
+              </div>
             </mat-card-content>
 
 
 
-            </mat-card>
+          </mat-card>
         </div>
 
-    </div>
+      </div>
 
 
 
-
-
-
-
-
+      {{cateGory | json}}

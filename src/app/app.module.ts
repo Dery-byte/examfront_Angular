@@ -61,6 +61,9 @@ import { DialogModule } from 'primeng/dialog';
 import { InputTextModule } from 'primeng/inputtext';
 import { InputTextareaModule } from 'primeng/inputtextarea';
 import { ButtonModule } from 'primeng/button';
+import { RegisterCoursesComponent } from './pages/user/register-courses/register-courses.component';
+import { CoursesRegisteredComponent } from './pages/user/courses-registered/courses-registered.component';
+import { AvailableQuizzesComponent } from './pages/user/available-quizzes/available-quizzes.component';
 
 
 
@@ -92,6 +95,9 @@ import { ButtonModule } from 'primeng/button';
     UpdateCategoryComponent,
     PrintQuizComponent,
     UpdateQuestionComponent,
+    RegisterCoursesComponent,
+    CoursesRegisteredComponent,
+    AvailableQuizzesComponent,
   ],
   imports: [
     BrowserModule, 
@@ -126,12 +132,9 @@ import { ButtonModule } from 'primeng/button';
     NgxPaginationModule,
     // MatTableExporterModule,
      MatDialogModule,
-      
      DialogModule,
      InputTextModule,
-  
     InputTextareaModule,
-    
     ButtonModule,
     NgxUiLoaderHttpModule.forRoot({
       showForeground:true,
@@ -142,5 +145,4 @@ import { ButtonModule } from 'primeng/button';
 })
 export class AppModule { 
 
-  
 }

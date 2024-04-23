@@ -215,7 +215,7 @@ export class StartComponent implements OnInit {
     let t = window.setInterval(() => {
       //Code
       if (this.timer <= 0) {
-        // this.submitQuiz();
+        this.submitQuiz();
         this.printQuiz();
         this.evalQuiz();
         clearInterval(t);

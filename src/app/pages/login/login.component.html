@@ -37,29 +37,15 @@
 
 
                     <button type="submit"  [disabled]="isLogingIn" class="button-flex" mat-raised-button color="primary">
-                      <img *ngIf="isLogingIn" class="spinner" src="../../../assets/images/spinningCircle.gif">
-                      
+                      <!-- <img *ngIf="isLogingIn" class="spinner" src="../../../assets/images/spinningCircle.gif"> -->
+
+                      <img *ngIf="isLogingIn" class="spinner" src="../../../assets/images/spinner.gif">                    
                       Login</button>
               </form>
-
-
-
-
-
-
-
-
-
-
-
-
-
-
              <mat-card-actions>
               <div class="button-flex-container"> 
                 <!-- <button mat-button color="primary" (click)="Openpopup()" class="" >Forgotten Password?</button> -->
                 <button mat-button color="primary"  (click)="openNew()">Forgotten Password?</button>
-            
               </div>
           </mat-card-actions>
           </mat-card>
@@ -67,6 +53,7 @@
             </mat-card>
             </div>
         </div>
+        <div>
 
 
 
@@ -74,13 +61,14 @@
 
         
 <!-- DIALOG BOX STARTS FROM HERE -->
-<p-dialog [(visible)]="productDialog" [style]="{width: '300px', height:'550px'}" header="Provide your Details to reset password">
+<div class="">
+<p-dialog class="resetcontainer" [(visible)]="productDialog" [style]="{width: '60%', height:'1400px'}" header="">
     <mat-card>
-                          <!-- {{resetData |json}} -->
-
+    <!-- {{resetData |json}} -->
     <form (ngSubmit)="passwordChange()">
         <!-- <h1>Fill this form to reset Password</h1> -->
     <mat-card-content>
+      <h3>Provide theses details to reset Password</h3>
     <mat-form-field>
                 <mat-label>Username</mat-label>
                 <input 
@@ -118,13 +106,13 @@
 
     <mat-card-actions>
     <button type="submit" mat-raised-button color="primary">Reset</button>
-    <button type="submit" mat-raised-button  color="warn">Cancel</button>
     </mat-card-actions>
 
 
     </form>
 </mat-card>
 </p-dialog>
+</div>
 <!-- DIALOG BOX ENDS HERE -->
     </div>
 

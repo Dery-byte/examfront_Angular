@@ -93,7 +93,7 @@ export class AddQuestionComponent implements OnInit {
       response => {
         
 
-        console.error('Error uploading questions:', "error");
+        // console.error('Error uploading questions:', "error");
         Swal.fire("Error", "Error uploading questions", "error");
         // Handle error, e.g., show an error message
 
@@ -102,7 +102,7 @@ export class AddQuestionComponent implements OnInit {
       (error) => {
 
 
-        console.log('Quiz uploaded successfully:', "succes");
+        // console.log('Quiz uploaded successfully:', "succes");
         Swal.fire('Success', "Questions uploaded successfully", "success");
         this._router.navigate(["/admin/quizzes"]);
         // this._router.navigate(["/admin/view-questions"/{this.qId}]);

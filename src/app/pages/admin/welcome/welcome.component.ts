@@ -33,24 +33,14 @@ export class WelcomeComponent implements OnInit {
 	// expirationSeconds: any;
 	// timeDifferenceInSeconds: any;
 	// jwtToken: string;
-
-
 	selectedCategoryId;
 	associatedQuizzes: any[];
 	cateGory;
 
 
-	// private tokenExpirationKey = 'tokenExpirationTime';
-	//  uniqueCategories: any[];
 	public displayColumn: string[] = ['index', 'name', 'marks'];
-
-
-
 	constructor(private _cat: CategoryService, private _snackbar: MatSnackBar, private _report: ReportServiceService, private _quiz: QuizService,
 		private tokenExpirationService: TokenExpirationService, private _login: LoginService) { }
-
-
-
 	// @HostListener('window:beforeunload', ['$event'])
 	// beforeUnloadHandler(event: Event): void {
 	// 	// Custom code to be executed before the page is unloaded
@@ -64,9 +54,6 @@ export class WelcomeComponent implements OnInit {
 	// unloadHandler(event: Event): void {
 	// 	// this.preventBackButton();
 	// }
-
-
-
 	ngOnInit(): void {
 		this._quiz.loadQuizzes().subscribe(
 			(data: any) => {
@@ -105,7 +92,7 @@ export class WelcomeComponent implements OnInit {
 	selectCategory(categoryId: any) {
 		this.selectedCategoryId = categoryId;
 		this.cateGory.forEach(item => {
-			if(categoryId===item.cid){
+			if (categoryId === item.cid) {
 				this.courseName = item.title;
 			}
 		});

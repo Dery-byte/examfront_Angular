@@ -51,11 +51,7 @@ this.quizzes = this.quizzes.filter((quiz)=> quiz.qId != qId);
   }
 );
 
-
-
     }
-   
-
    })
   }
 }

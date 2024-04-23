@@ -26,6 +26,12 @@ public loadReportSummary(): Observable<any> {
 public getReport(uId,qId){
   return this._http.get(`${baseUrl}/getReportByUidAndQid/${uId}/${qId}`);
 }
+
+
+
+
+
+
 getUniqueCategoriesAndQuizzes(): Observable<any[]> {
   return this.loadReportSummary().pipe(
     map(quizzes => this.extractCategoriesAndQuizzes(quizzes))
@@ -34,13 +40,10 @@ getUniqueCategoriesAndQuizzes(): Observable<any[]> {
 
 private extractCategoriesAndQuizzes(quizzes: any[]): any[] {
   const result = [];
-
   quizzes.forEach((quiz) => {
     const categoryId = quiz.quiz.category.cid;
-
     // Find the category index in the result array
     const categoryIndex = result.findIndex((c) => c.cid === categoryId);
-
     if (categoryIndex === -1) {
       // Category not found, add a new category
       const category = {
@@ -53,14 +56,12 @@ private extractCategoriesAndQuizzes(quizzes: any[]): any[] {
           },
         ],
       };
-
       result.push(category);
     } else {
       // Category found, check if the quiz title is unique
       const existingQuizIndex = result[categoryIndex].quizTitles.findIndex(
         (q) => q.qId === quiz.quiz.qId
       );
-
       if (existingQuizIndex === -1) {
         // Quiz title is unique, add it to the existing category
         result[categoryIndex].quizTitles.push({

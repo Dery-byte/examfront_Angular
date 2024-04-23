@@ -40,7 +40,10 @@
                   <input [(ngModel)]="user.phone" name="phone" matInput placeholder="Phone Number">
                 </mat-form-field>
 
-                <button type="submit" class="example-full-width" mat-raised-button color="primary" class="btn-block">Register</button>
+                <button type="submit" class="example-full-width" mat-raised-button color="primary" class="btn-block">
+                  <img *ngIf="isLogingIn" class="spinner" src="../../../assets/images/spinningCircle.gif">
+
+                  Register</button>
                 <!-- <button type="submit" mat-raised-button color="accent" style="margin-left: 20px;">Clear</button> -->
   
               </mat-card-content>

@@ -4,6 +4,8 @@ import { QuizService } from 'src/app/services/quiz.service';
 import Swal from 'sweetalert2';
 import { QuestionService } from 'src/app/services/question.service';
 import { ReportServiceService } from 'src/app/services/report-service.service';
+import { UserEligibilityService } from 'src/app/services/user-eligibility.service';
+
 
 
 
@@ -26,6 +28,8 @@ export class InstructionsComponent implements OnInit {
   currentUserId;
   isLegible = false;
   idNumberReport: number[] = [];
+  // idNumberReport: string[] = [];
+
 
 
   quizData = {
@@ -46,11 +50,15 @@ export class InstructionsComponent implements OnInit {
     private _report:ReportServiceService,
     private _quiz: QuizService,
     private _questions: QuestionService,
+    private _userEligibilityService: UserEligibilityService,
     private _router: Router) { }
 
   ngOnInit(): void {
 
     this.qid = this._route.snapshot.params['qid'];
+
+    this.fectchReport();
+
     this._quiz.getQuiz(this.qid).subscribe((data: any) => {
       console.log(data.title);
       this.quiz = data;
@@ -62,7 +70,6 @@ export class InstructionsComponent implements OnInit {
     );
 
 
-    this.fectchReport();
   }
 
   fectchReport() {
@@ -79,7 +86,7 @@ export class InstructionsComponent implements OnInit {
         this.currentQuizId = this.qid;
         this.currentUserId = Object.id;
 
-        if (q.user.id === this.currentUserId) {
+        if (q.user.id == this.currentUserId) {
           this.idNumberReport.push(q.user.id);
         }
         console.log(this.idNumberReport[0]);
@@ -90,6 +97,8 @@ export class InstructionsComponent implements OnInit {
       });
 
       this.isLegible = (this.idNumberReport[0] == this.currentUserId && this.reportQuizId == this.currentQuizId);
+      // this.isLegible = this._userEligibilityService.isUserEligible(this.idNumberReport, this.currentUserId, this.reportQuizId, this.currentQuizId);
+
 
     console.log(this.idNumberReport[0] == this.currentUserId);
 
@@ -271,7 +280,7 @@ export class InstructionsComponent implements OnInit {
         //  this.addQuiz();
         this._router.navigate(['./start/' + this.qid]);
         // this.refreshPrevent();
-      }
+      }  
       else if (result.value != this.quiz.quizpassword) {
         Swal.fire("Incorrect Password", '', 'info');
         //     }

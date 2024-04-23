@@ -10,9 +10,8 @@ import swal from 'sweetalert2'
 export class SignupComponent implements OnInit {
 
   constructor(private userService: UserService, private snack:MatSnackBar){}
-
+  isLogingIn=false;
   public user={
-
     username:'',
     password:'',
     firstname:'',
@@ -22,7 +21,6 @@ export class SignupComponent implements OnInit {
 
   };
   ngOnInit():void{} 
-
   formSubmit(){ 
     console.log(this.user);
 
@@ -34,6 +32,7 @@ export class SignupComponent implements OnInit {
         verticalPosition:'top',
         horizontalPosition:'right'
       });
+      this.isLogingIn=false;
 
       return;
     }
@@ -41,10 +40,10 @@ export class SignupComponent implements OnInit {
       //addUser: userservice
 this.userService.addUser(this.user).subscribe( (data:any)=>{
   //success
+  this.isLogingIn=true;
   console.log(data);
   // alert("Success");
   swal.fire('Succesful', 'Registration Successful', 'success');
-
   window.location.href="/login"; 
 
 },
@@ -52,6 +51,7 @@ this.userService.addUser(this.user).subscribe( (data:any)=>{
 //Error mesage here
 console.log(error);
 // alert("Error");
+this.isLogingIn=false;
 
 this.snack.open('Something went wrong ! ! ','',{
   duration:1000,

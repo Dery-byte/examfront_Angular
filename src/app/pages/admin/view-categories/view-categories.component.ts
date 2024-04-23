@@ -47,12 +47,7 @@ this._category.getCategories().subscribe((data: any)=>{
  
    }
  );
- 
- 
- 
-     }
-    
- 
+      }
     })
    }
 

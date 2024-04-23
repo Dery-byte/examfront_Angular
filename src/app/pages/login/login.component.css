@@ -25,17 +25,15 @@
 
   .spinner{
     /* display: inline-flex; */
-    position: absolute;
+  position: absolute;
     /* width: 100%; */
     /* justify-content: flex-end; */
-    border-radius: 50%; 
+  border-radius: 50%; 
   width: 30px; 
   height: 30px; 
   margin-top:-5px ; 
   margin-left: -33px;
-  
   }
-
 
   mat-card{
     margin: 1px;
@@ -54,5 +52,15 @@
 img, button{
     margin: 2px;
 }
+
+
+/* Responsive styles for smaller screens */
+@media (max-width: 600px) {
+  .resetcontainer{
+    width: 100%;
+    margin-bottom: 90px;
+  }
+}
+
 
 

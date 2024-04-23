@@ -22,6 +22,9 @@ import { StartComponent } from './pages/user/start/start.component';
 import { UpdateCategoryComponent } from './pages/admin/update-category/update-category.component';
 import { PrintQuizComponent } from './pages/user/print-quiz/print-quiz.component';
 import { UpdateQuestionComponent } from './pages/admin/update-question/update-question.component';
+import { RegisterCoursesComponent } from './pages/user/register-courses/register-courses.component';
+import { CoursesRegisteredComponent } from './pages/user/courses-registered/courses-registered.component';
+import { AvailableQuizzesComponent } from './pages/user/available-quizzes/available-quizzes.component';
 // import { StartQuizComponent } from './pages/user/start-quiz/start-quiz.component';
 
 const routes: Routes = [
@@ -96,11 +99,29 @@ const routes: Routes = [
       },
     ]
   },
+
+  
   {
     path:'user-dashboard',
+    // path:'user',
     component:UserDashboardComponent,
     canActivate: [NormalGuard],
     children:[
+      {
+        path:'register-courses',
+        component:RegisterCoursesComponent,
+      }, 
+
+      {
+        path:'courses-registered',
+        component:CoursesRegisteredComponent,
+      }, 
+
+      {
+        path:'quizzes',
+        component:AvailableQuizzesComponent,
+      }, 
+
       {
         path:':catId',
         component:LoadQuizComponent,
@@ -108,16 +129,20 @@ const routes: Routes = [
       {
         path:'instructions/:qid',
         component:InstructionsComponent,
-      },
-     
+      },  
+       
     ],
   }
   ,
   {
     path:'start/:qid',
     component:StartComponent,
-    canActivate: [NormalGuard],
+    // canActivate: [NormalGuard],
   },
+
+ 
+
+ 
 
   // {
   //   path:'start-quiz/:qid',
