@@ -12,20 +12,26 @@ import { error, event } from 'jquery';
 })
 export class RegisterCoursesComponent implements OnInit {
 
-	categories;
+	categories:any[] =[];
 	public displayColumn: string[] = ['courseCode', 'courseTitle'];
 	displayedColumns: string[] = ['checkboxes', 'courseCode', 'courseTitle'];
 	selectAllCategories: boolean = false;
+
 	courses: any[] = [];
 	uniqueLevels: string[] = [];
 	selectedLevel: string = '';
 	filteredCourses: any[] = [];
-
 	SelectedItems: string[] = [];
     selectedCid: string | null = null;
 	selectedCategories: any[] = [];
 
+	uniqueItems;
+	filteredData;
 
+
+	userRecords=[];  
+  u_id
+  RegCourse: any[] = [];
 	// REGISTER course
 	regCourdetails={
 		regDate:"",
@@ -34,6 +40,9 @@ export class RegisterCoursesComponent implements OnInit {
 		  cid:""
 		},
 	}
+
+	transformedData:any[] =[];
+	unRegisteredCourses:any[]=[];
 
 	  
 	constructor(private _cat: CategoryService, private _regCourse: RegCoursesService,private _snack : MatSnackBar) { }
@@ -49,13 +58,68 @@ export class RegisterCoursesComponent implements OnInit {
 		}
 	}
 
+	getUniqueItems(data: any[]): any[] {
+		const uniqueItems = {};
+		data.forEach(item => {
+		  if (!uniqueItems[item.cid]) {
+			uniqueItems[item.cid] = item;
+		  }
+		});
+		return Object.values(uniqueItems);
+	  }
+	
+
 ngOnInit(): void {
+	// Notice this
+	this._regCourse.getRegCourses().subscribe((data=>{
+		this.RegCourse = data;
+		this.userRecords = this.checkUserId();
+
+		this.transformedData = this.userRecords.map(item => {
+    return {
+        cid: item.category.cid,
+        level: item.category.level,
+        title: item.category.title,
+        description: item.category.description,
+        courseCode: item.category.courseCode
+    };
+});
+
+// console.log(this.transformedData);
+	  }))
 		this._cat.getCategories().subscribe((courses: any) => {
 			this.categories = courses;
 			console.log(this.categories);
+			const mergedArray = [...this.categories, ...this.transformedData];
+// Create a map to keep track of the count of each cid
+           const cidCountMap = new Map();
+          mergedArray.forEach(course => {
+			const cid = course.cid;
+			if (!cidCountMap.has(cid)) {
+				cidCountMap.set(cid, 1);
+			} else {
+				const count = cidCountMap.get(cid);
+				cidCountMap.set(cid, count + 1);
+			}
+		});
+
+this.unRegisteredCourses = courses.filter(course => cidCountMap.get(course.cid) === 1);
+console.log(this.unRegisteredCourses);
+
 		})
-		this.getCourses();
+
+		this.getCourses();	
 	}
+
+
+
+	
+	checkUserId(): any[] {
+		const userDetails = localStorage.getItem('user');
+		const Object = JSON.parse(userDetails);
+		this.u_id = Object.id;
+		return this.RegCourse.filter(item => item.user.id === this.u_id);
+	  } 
 
 	showCid(event: any, cid: any) {
 		if (event.target.checked) {
@@ -84,11 +148,6 @@ ngOnInit(): void {
 				}			
 			};
 		  });
-
-
-
-
-		
 		//   this.formSubmit();
 		}
 	  }
@@ -110,8 +169,12 @@ ngOnInit(): void {
 		});
 	}
 	filterCourses() {
-		this.filteredCourses = this.courses.filter(course => course.level === this.selectedLevel);
+		this.filteredCourses = this.unRegisteredCourses.filter(course => course.level === this.selectedLevel);
 	}
+
+
+
+
 	checkAllCheckBox(ev: any) { // Angular 13
 		this.categories.forEach(x => x.checked = ev.target.checked)
 	}
@@ -119,21 +182,12 @@ ngOnInit(): void {
 		return this.categories.every(c => c.checked);
 	}
 
-
-	// DAMMY DATA TO DEMOSTRATION MULTOPLY SELECTIONS AND INSERT INTO DATABASE
-
-
-	// COURSES INSTANCES
-	
-	
-
-	// USER/STUDENT INSTANCES
+	  }
 
 
 
 
 
 
-}
 
 

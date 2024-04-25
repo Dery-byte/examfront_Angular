@@ -1,13 +1,13 @@
 <!-- {{filteredCourses | json}} -->
 
-<!-- {{category | json}} -->
+<!-- {{unRegisteredCourses | json}} -->
 
-<!-- {{ SelectedItems | json}} -->
+<!-- {{ userRecords | json}} -->
 
 
-<!-- {{selectedCid | json}} -->
 
 <!-- {{selectedCategories | json}} -->
+
 <mat-card>
 	<h1>Register Course(s)</h1>
 	<mat-card-content>
@@ -40,7 +40,7 @@
 											((selectionchange))="checkAllCheckBox($event)"></th>
 									<th>Course Code</th>
 									<th>Course Name</th>
-									<th>C ID</th>
+									<!-- <th>C ID</th> -->
 
 								</tr>
 							</thead>
@@ -63,7 +63,7 @@
 									<!-- <td><input type="checkbox" 	(change)="onchangeSelection()" [(ngModel)]="c.cid" [value]="c.cid"></td> -->
 									<td>{{ c.courseCode}}</td>
 									<td>{{ c.title }}</td>
-									<td>{{ c.cid }}</td>
+									<!-- <td>{{ c.cid }}</td> -->
 								</tr>
 							</tbody>
 						</table>
@@ -77,7 +77,9 @@
 		</div>
 	</mat-card-content>
 </mat-card>
-<!-- {{categories | json}} -->
+<!-- {{courses | json}} -->
 <!-- {{filteredCourses | json}} -->
+
+
 
 

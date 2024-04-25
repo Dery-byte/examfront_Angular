@@ -6,6 +6,7 @@ import { ChangeDetectorRef } from '@angular/core';
 
 
 
+
 @Component({
   selector: 'app-courses-registered',
   templateUrl: './courses-registered.component.html',
@@ -13,8 +14,9 @@ import { ChangeDetectorRef } from '@angular/core';
 })
 export class CoursesRegisteredComponent implements OnInit {
 
-  constructor (private regCourse: RegCoursesService, private cdr: ChangeDetectorRef){}
-  userRecords=[];
+  constructor (private regCourse: RegCoursesService, private changeDetectorRef: ChangeDetectorRef){}
+  userRecords=[];  
+
   u_id
   RegCourse: any[] = [];
   ngOnInit(): void {
@@ -28,7 +30,6 @@ export class CoursesRegisteredComponent implements OnInit {
     const Object = JSON.parse(userDetails);
     this.u_id = Object.id;
     return this.RegCourse.filter(item => item.user.id === this.u_id);
-
   }                           
 
   deleteRegCourse(rid){
@@ -43,6 +44,9 @@ export class CoursesRegisteredComponent implements OnInit {
   this.regCourse.deleteRegCourse(rid).subscribe(
    (data)=>{
 this.userRecords = this.userRecords.filter((userRecord)=>userRecord.rid ! = rid);
+
+this.changeDetectorRef.detectChanges();
+
      Swal.fire("Success", "Course Removed", "success");
    },
    (error)=>
