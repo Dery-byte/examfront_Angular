@@ -103,17 +103,19 @@ const routes: Routes = [
   
   {
     path:'user-dashboard',
-    // path:'user',
+      // path:'user',
     component:UserDashboardComponent,
+    // path:'register-courses',
+    // component:RegisterCoursesComponent,
     canActivate: [NormalGuard],
     children:[
       {
-        path:'register-courses',
+        path:'register',
         component:RegisterCoursesComponent,
       }, 
 
       {
-        path:'courses-registered',
+        path:'courses',
         component:CoursesRegisteredComponent,
       }, 
 

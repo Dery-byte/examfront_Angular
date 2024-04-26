@@ -1,64 +1,59 @@
+<mat-card>
+
+  <mat-list>
+    <div mat-subheader>
+      <h1> All Course</h1>
+    </div>
+
+    <div *ngIf="categories.length > 0; else elseBlock">
+      <table class="datatable">
+        <thead>
+          <tr>
+            <th>Course Code</th>
+            <th>Course Name</th>
+            <th>Action</th>
+
+          </tr>
+        </thead>
+        <tbody>
+          <tr *ngFor="let c of categories; let i=index; let odd = odd" [ngClass]="odd ? 'odd_col' : 'even_col'">
+            <td>{{ c.courseCode}}</td>
+            <td>{{ c.title }}</td>
+
+            <td>
 
 
-
-
-<mat-card >
-    
-    <mat-list>
-        <div mat-subheader>
-           <h1> All Course</h1>
-        </div>
-
-
-          
-          
-
-        <mat-list-item *ngFor="let c of categories">
-            
-            <div class="row">
-
-           <div class="col-md-1">
-
-            <!-- Three dots -->
-
-            <button mat-icon-button [matMenuTriggerFor]="menu" aria-label="Example icon-button with a menu">
+              <button mat-icon-button [matMenuTriggerFor]="menu" aria-label="Example icon-button with a menu">
                 <mat-icon>more_vert</mat-icon>
               </button>
+
               <mat-menu #menu="matMenu">
 
 
 
-                <button mat-menu-item  [routerLink]="'/admin/update-category/'+ c.cid">
+                <button mat-menu-item [routerLink]="'/admin/update-category/'+ c.cid">
                   <mat-icon color="accent">update</mat-icon>
                   <span> Update
                   </span>
-                </button>   
-                
-                
+                </button>
 
-                <button mat-menu-item  (click)="deleteCategor(c.cid)">
-                  <mat-icon color="accent" >delete</mat-icon>
+                <button mat-menu-item (click)="deleteCategor(c.cid)">
+                  <mat-icon color="accent">delete</mat-icon>
                   <span> Delete
                   </span>
                 </button>
               </mat-menu>
 
-              <!-- Three dots -->
+            </td>
 
-            </div>
-                <div class="col-md-5">
-                    <div mat-line> <h3>{{c.title}}</h3></div>
-                </div>
-
-                <div class="col-md-6">
-                    <div>{{c.description}}</div>
-                </div>
-            </div>
-
-        </mat-list-item>
-    </mat-list>
-    <div class="container text-center">
-        <button  mat-raised-button color="accent" routerLink="/admin/add-category"> Add New Course</button>
+          </tr>
+        </tbody>
+      </table>
     </div>
-</mat-card> 
+    <ng-template #elseBlock>No Course Available</ng-template>
 
+  </mat-list>
+  <div class="container text-center">
+    <button mat-raised-button color="accent" routerLink="/admin/add-category"> Add New Course</button>
+  </div>
+</mat-card>

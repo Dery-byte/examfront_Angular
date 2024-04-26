@@ -3,30 +3,33 @@
 
     <!-- {{category | json}} -->
     <mat-card-content>
-    <div class="bootstrap-wrapper">
-        <div class="row">
-            <div class="col-md-8 offset-md-2">
-                <form (ngSubmit)="formSubmit()">
-                    <mat-label>Title</mat-label>
+        <div class="bootstrap-wrapper">
+            <div class="row">
+                <div class="col-md-8 offset-md-2">
+                    <form (ngSubmit)="formSubmit()">
+                        <mat-label> Course Title:</mat-label>
 
-                    <mat-form-field class ="w100" appearance="outline">
-
-                    <input type="text" name="title" matInput placeholder="Enter Title" [(ngModel)] = "category.title">
-                    </mat-form-field>
-                    <mat-label>Description</mat-label>
-
-                    <mat-form-field class ="w100" appearance="outline">
-                    
-                        <textarea rows="10" name="descript" matInput placeholder="Enter Description" [(ngModel)] = "category.description">
-
+                        <mat-form-field class="w100" appearance="outline">
+                            <input type="text" name="title" matInput placeholder="Course Name"
+                                [(ngModel)]="category.title">
+                        </mat-form-field>
+                        <mat-label>Course Code:</mat-label>
+                        <mat-form-field class="w100" appearance="outline">
+                            <input type="text" name="courseCode" matInput placeholder="Course Code"
+                                [(ngModel)]="category.courseCode">
+                        </mat-form-field>
+                        <mat-label>Description</mat-label>
+                        <mat-form-field class="w100" appearance="outline">
+                            <textarea rows="10" name="descript" matInput placeholder="Enter Description"
+                                [(ngModel)]="category.description">
                         </textarea>
                         </mat-form-field>
-<div class="container text-center mt15">
-    <button mat-raised-button color="accent">Add</button>
-</div>
+                        <div class="container text-center mt15">
+                            <button mat-raised-button color="accent">Add</button>
+                        </div>
                     </form>
+                </div>
             </div>
         </div>
-    </div>
     </mat-card-content>
 </mat-card>

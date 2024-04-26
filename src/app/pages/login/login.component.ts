@@ -59,7 +59,9 @@ if(this.login.getUserRole()=="ADMIN"){
   }
   else if(this.login.getUserRole()=="NORMAL"){
     // NORMAL User-dashboard
-    window.location.href="/user-dashboard/0";
+    window.location.href="/user-dashboard";
+
+    // window.location.href="/register-courses/";
     // this.router.navigate(["user-dashboard"]);
     this.login.loginStatusSubject.next(true);
   }

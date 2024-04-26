@@ -14,45 +14,12 @@ text="Loading information!"
 
 <div class="bootstrap">
     <div class="container-fluid">
-        <h1 class="mt20">Quizzes Available</h1>
+        <!-- <h1 class="mt20">Quizzes Available</h1> -->
 
-        <div class="row mt20" *ngIf="quizzes">
-            <div class="col-md-4 mt20" *ngFor="let q of quizzes">
+        <div class="row mt20">
+            <div class="col-md-4 mt20">
 
-                <mat-card mb20>
-                    <mat-card-header>
-                        <div mat-card-avatar class="exmple-header-image">
-
-                        </div>
-                        <mat-card-title>
-                          {{q.title}}
-                        </mat-card-title>
-                        <mat-card-subtitle>
-                        {{q.category.title}}
-                        </mat-card-subtitle>
-                    </mat-card-header>
-                    <mat-card-content>
-                     <p class="truncate"> {{q.description}}</p>
-                    </mat-card-content>
-                    <mat-card-action>
-                        <button  mat-button color="primary" 
-                        matTooltip="Summary Results"
-                        aria-label="Button that displays a tooltip when focused or hovered over"  (click)="openNew(q.qId)">View </button>
-                        <button mat-button color="accent" [routerLink]="'/user-dashboard/instructions/'+q.qId">Start</button>
-                        <button mat-button color="accent"> {{q.numberOfQuestions}} Questions</button>
-                        <button mat-button color="accent">{{q.maxMarks}} Marks</button>
-                    </mat-card-action>
-                </mat-card>
-                
-            </div>
-
-            <div class="col-md-12" *ngIf="quizzes.length==0">
-                <mat-card>
-                    <mat-card-content>
-                     <h1>No quiz available for this Course</h1>
-                    </mat-card-content>
-                </mat-card>
-            </div>
+                <h1>Welcome to User dashboard</h1>
 
 
 
@@ -68,38 +35,6 @@ text="Loading information!"
 
 
 
-
-<!-- Display the summary result in a dialog -->
-<p-dialog [(visible)]="productDialog" [style]="{width: '300px', height:'550px'}"  class=" container text-center" header="This is the quiz summary">
-
-    <mat-card *ngIf="reportData">
-<table *ngFor="let r of reportData">
-    <tr>
-        <th>Name </th>
-        <th>Quiz</th>
-        <th>Marks</th>
-        <th>Status</th>
-
-      </tr>
-      <tr>
-        <td>{{r.user.lastname}}  {{r.user.firstname}}</td>
-        <td>{{r.quiz.title}}</td>
-        <td>{{r.marks}}</td>
-        <td>{{r.progress}}</td>
-      </tr>
-</table>
-    <!-- <mat-card-actions>
-    <button type="submit" mat-raised-button color="primary">Reset</button>
-    <button type="submit" mat-raised-button  color="warn">Cancel</button>
-    </mat-card-actions> -->
-
-    <div class=" container text-center" *ngIf="reportData.length==0">
-        <h1>No Results Summary, Take quiz before!</h1>
-    
-    </div>
-</mat-card>
-
-</p-dialog>
 
 </div>
 
