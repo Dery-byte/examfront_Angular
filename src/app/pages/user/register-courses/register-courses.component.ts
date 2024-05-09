@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, } from '@angular/core';
 import { CategoryService } from 'src/app/services/category.service';
 import { MatSnackBar } from '@angular/material/snack-bar';
 import Swal from 'sweetalert2';
@@ -142,6 +142,9 @@ console.log(this.unRegisteredCourses);
 						},
 					}
 					event.target.checked = false;
+
+					// REMOVE THE COURSE FROM THE LIST IF REGISTRATION SUCCESSFUL
+					this.deleteRecord(cid);
 					Swal.fire('Success', "Registration done", "success");
 				}), error=>{
 					Swal.fire("Error", "Registration Unsuccessful", "error");
@@ -151,6 +154,11 @@ console.log(this.unRegisteredCourses);
 		//   this.formSubmit();
 		}
 	  }
+	  deleteRecord(cid: number) {
+		this.filteredCourses = this.filteredCourses.filter(record => record.cid !== cid);
+	  }
+
+	
 	
 	getCourses() {
 		this._cat.getCategories().subscribe(data => {

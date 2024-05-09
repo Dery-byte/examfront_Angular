@@ -43,16 +43,14 @@ export class CoursesRegisteredComponent implements OnInit {
   //delete
   this.regCourse.deleteRegCourse(rid).subscribe(
    (data)=>{
-this.userRecords = this.userRecords.filter((userRecord)=>userRecord.rid ! = rid);
-
-this.changeDetectorRef.detectChanges();
-
+// this.userRecords = this.userRecords.filter((userRecord)=>userRecord.rid ! = rid);
+this.deleteRecord(rid)
      Swal.fire("Success", "Course Removed", "success");
    },
    (error)=>
    {
      Swal.fire("Error", "Course could not be removed", "error");
- 
+
    }
  );
       }
@@ -60,6 +58,9 @@ this.changeDetectorRef.detectChanges();
    }
 
 
+   deleteRecord(rid: number) {
+    this.userRecords = this.userRecords.filter(record => record.rid !== rid);
+  }
   
 
   
