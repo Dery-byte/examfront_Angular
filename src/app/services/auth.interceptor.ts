@@ -23,6 +23,11 @@ if(token!=null){
 authReq = authReq.clone({setHeaders:{ Authorization: `Bearer ${token}` }, });
 }
 
+
+
+
+///Log user out on token expiration
+
 return next.handle(authReq);
     }
 }

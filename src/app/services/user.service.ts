@@ -14,4 +14,8 @@ export class UserService {
   public addUser(user:any){
 return this.http.post(`${baseUrl}/register`, user);
   }
+
+  public alluser(){
+    return this.http.get(`${baseUrl}/users`)
+  }
 }

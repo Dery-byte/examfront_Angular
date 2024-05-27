@@ -58,10 +58,11 @@
         <mat-card class="mt20">
           <mat-card-header>
             <mat-card-title>
-              Aug. 17, 2020
+              {{ currentDate | date:'fullDate' }},
+               <!-- {{ currentDate | date:'shortTime' }} -->
             </mat-card-title>
             <mat-card-subtitle>
-              6635634
+              {{allUsers}}
             </mat-card-subtitle>
           </mat-card-header>
           <mat-card-content>
@@ -294,23 +295,29 @@
         </div>
 
 
+
+
+
         <div class="col-md-8">
           <mat-card class="mt20">
-
             <mat-card-content>
+              <!-- <div> -->
+                   <div id="chartContainer" style="height: 360px; width: 100%;"></div>
 
-              <div>
-                <canvasjs-chart [options]="chartOptions" [styles]="{width: '100%', height:'360px'}"></canvasjs-chart>
-              </div>
+                <!-- <canvasjs-chart [options]="chartOptions" [styles]="{width: '100%', height:'360px'}"></canvasjs-chart> -->
+              <!-- </div> -->
             </mat-card-content>
-
-
-
           </mat-card>
         </div>
+
+
+
 
       </div>
 
 
 
       <!-- {{cateGory | json}} -->
+
+      {{chartDataPoints | json}}
+      {{allUsers | json}}
