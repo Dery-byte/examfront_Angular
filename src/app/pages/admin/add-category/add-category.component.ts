@@ -10,12 +10,16 @@ import Swal from 'sweetalert2';
 })
 export class AddCategoryComponent implements OnInit {
 
+  selectedLevel: string;
+
   category = {
     title: "",
     courseCode: "",
-    description: ""
+    description: "",
+    level:"",
   }
   constructor(private categorys: CategoryService, private _snack: MatSnackBar) {
+    this.selectedLevel = 'Level 100'; // Initial value
 
   }
   ngOnInit(): void {
@@ -36,6 +40,7 @@ export class AddCategoryComponent implements OnInit {
         this.category.title = '',
           this.category.courseCode = '',
           this.category.description = '',
+          this.category.level='',
           Swal.fire("Success !! ", "Course added sucessfully", "success")
       },
       (error) => {

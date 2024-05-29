@@ -2,6 +2,11 @@ import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import baseUrl from './helper';
 import { Subject } from 'rxjs';
+// import jwt_decode from 'jwt-decode';
+import { Router } from '@angular/router';
+
+import { jwtDecode } from 'jwt-decode';
+
 
 @Injectable({
   providedIn: 'root'
@@ -10,7 +15,7 @@ export class LoginService {
 
   public loginStatusSubject = new Subject<boolean>();
 
-  constructor(private http:HttpClient) { }
+  constructor(private http:HttpClient, private router: Router) { }
 
 
 //get all Users
@@ -48,16 +53,7 @@ export class LoginService {
   }
  
 
-  // Logout: remove  token from local storage
-  public logout(){
-    localStorage.removeItem("token");
-    localStorage.removeItem("user");
-    localStorage.removeItem("exam");
-    localStorage.removeItem("tokenExpiratioTime");
 
-
-    return true;
-  }
 
   // get token
   public getToken(){
@@ -93,4 +89,31 @@ export class LoginService {
     return this.http.put(`${baseUrl}/changePassword`, resetData);
 
   }
+
+
+    //  TOKEN EXPIRATION
+     isTokenExpired(): boolean {
+      const token = this.getToken();
+      if (!token) return true;
+      const decoded: any = jwtDecode(token);
+      const expirationDate = decoded.exp * 1000; // Convert to milliseconds
+  console.log(expirationDate);
+      return new Date() > new Date(expirationDate);
+    }
+
+
+  // Logout: remove  token from local storage
+  public logout(){
+    localStorage.removeItem("token");
+    localStorage.removeItem("user");
+    localStorage.removeItem("exam");
+    localStorage.removeItem("tokenExpiratioTime");
+    // window.location.href="/login/";
+    // this.router.navigate(["/login"]);
+    // this.router.navigate(["user-dashboard"]);
+
+
+    return true;
+  }
+ 
 }

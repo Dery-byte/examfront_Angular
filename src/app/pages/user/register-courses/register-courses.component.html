@@ -1,9 +1,36 @@
-<!-- {{filteredCourses | json}} -->
 
-<!-- {{unRegisteredCourses | json}} -->
 
-<!-- {{ userRecords | json}} -->
+<ngx-ui-loader
+fgsColor="#ff4081"
+pbColor="#ff4081"
+textColor="#ff4081"
+pbThickness="6"
+text="Loading information!"
+></ngx-ui-loader>
 
+
+<div ngxUiLoaderBlurred (blur)="50">
+	<!-- <h4>Yet To register</h4>
+<hr>
+{{unRegCourse | json}} -->
+
+<!-- {{categories | json}} -->
+
+
+<!-- {{filteredCourses | json}}
+<hr>
+<h6>Unregistered Courses</h6>
+{{unRegisteredCourses | json}}
+<hr>
+<h5> Course Associated to a User</h5>
+{{ userRecords | json}} -->
+
+<!-- <hr>
+<h5> Registered Courses for user</h5>
+{{transformedData | json}}
+
+<h5>Unregitered Courese</h5>
+{{unRegCourse|json }} -->
 
 
 <!-- {{selectedCategories | json}} -->
@@ -12,7 +39,6 @@
 	<h1>Register Course(s)</h1>
 	<mat-card-content>
 		<div class="bootstrap-wrapper">
-
 
 			<div class="row">
 				<div class="col-md-2">
@@ -77,8 +103,27 @@
 		</div>
 	</mat-card-content>
 </mat-card>
-<!-- {{courses | json}} -->
+
 <!-- {{filteredCourses | json}} -->
+
+<!-- <hr>
+<h4>All Courses!</h4>
+<hr>-->
+
+<!-- {{categories | json}}
+<hr>
+
+<h4> Transformed Courses Registered</h4>
+<hr>
+{{transformedData | json}}
+
+<hr> -->
+
+
+<!-- {{ userRecords | json}} -->
+
+<!-- {{ RegCourse | json}} -->
+
 
 
 

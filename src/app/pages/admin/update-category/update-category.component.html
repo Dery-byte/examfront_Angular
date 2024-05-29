@@ -18,6 +18,23 @@
                             <input [(ngModel)]="category.courseCode" type="text" name="courseCode" matInput>
                         </mat-form-field>
 
+
+                        <mat-label>Level:</mat-label>
+                        <mat-form-field class="w100" appearance="outline">
+                            <mat-label>Select Level:</mat-label>
+
+                            <mat-select name="level" [(ngModel)]="category.level">
+                                <mat-option [value]="'Level 100'">Level 100</mat-option>
+                                <mat-option [value]="'Level 200'">Level 200</mat-option>         
+                                <mat-option [value]="'Level 300'">Level 300</mat-option>
+                                <mat-option [value]="'Level 400'">Level 400</mat-option>
+                                
+                            </mat-select>
+                        </mat-form-field>
+
+
+
+
                         <mat-label>Description</mat-label>
                         <mat-form-field class="w100" appearance="outline">
                             <textarea [(ngModel)]="category.description" rows="10" name="description" matInput>

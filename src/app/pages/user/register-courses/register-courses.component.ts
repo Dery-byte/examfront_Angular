@@ -25,8 +25,10 @@ export class RegisterCoursesComponent implements OnInit {
     selectedCid: string | null = null;
 	selectedCategories: any[] = [];
 
+	unRegCourse: any[]=[];
+
 	uniqueItems;
-	filteredData;
+	// filteredData;
 
 
 	userRecords=[];  
@@ -74,7 +76,6 @@ ngOnInit(): void {
 	this._regCourse.getRegCourses().subscribe((data=>{
 		this.RegCourse = data;
 		this.userRecords = this.checkUserId();
-
 		this.transformedData = this.userRecords.map(item => {
     return {
         cid: item.category.cid,
@@ -85,30 +86,24 @@ ngOnInit(): void {
     };
 });
 
-// console.log(this.transformedData);
+console.log(this.transformedData);
+console.log(this.courses);
+
 	  }))
 		this._cat.getCategories().subscribe((courses: any) => {
 			this.categories = courses;
 			console.log(this.categories);
-			const mergedArray = [...this.categories, ...this.transformedData];
-// Create a map to keep track of the count of each cid
-           const cidCountMap = new Map();
-          mergedArray.forEach(course => {
-			const cid = course.cid;
-			if (!cidCountMap.has(cid)) {
-				cidCountMap.set(cid, 1);
-			} else {
-				const count = cidCountMap.get(cid);
-				cidCountMap.set(cid, count + 1);
-			}
-		});
+		
+		this.filterCourses();
+		this.unRegCourse=this._regCourse.combineAndRemoveDuplicates(this.categories,this.transformedData);
 
-this.unRegisteredCourses = courses.filter(course => cidCountMap.get(course.cid) === 1);
-console.log(this.unRegisteredCourses);
+		console.log(this.transformedData);
+		console.log(this.courses);
 
 		})
-
+		
 		this.getCourses();	
+		
 	}
 
 
@@ -134,8 +129,10 @@ console.log(this.unRegisteredCourses);
 			if (e.isConfirmed) {
 				this._regCourse.regCourses(this.regCourdetails).subscribe(
 					(data)=>{
+						const currentDate = new Date();
+
 					this.regCourdetails={
-						regDate:"",
+						regDate:currentDate.toISOString().split("T")[0],
 						category:
 						{
 						  cid:""
@@ -155,7 +152,17 @@ console.log(this.unRegisteredCourses);
 		}
 	  }
 	  deleteRecord(cid: number) {
-		this.filteredCourses = this.filteredCourses.filter(record => record.cid !== cid);
+			this.filteredCourses = this.filteredCourses.filter(record => record.cid !== cid);
+	  }
+
+
+	delRecord(cid: number) {
+		const mergeRegUnreg = [...this.filteredCourses, ...this.transformedData];
+		mergeRegUnreg.forEach(item => {
+			if (item.cid) {
+				this.unRegCourse = mergeRegUnreg.filter(record => record.cid !== cid);
+			}
+		  });
 	  }
 
 	
@@ -164,6 +171,7 @@ console.log(this.unRegisteredCourses);
 		this._cat.getCategories().subscribe(data => {
 			this.courses = data;
 			this.getUniqueLevels();
+			// this.filterCourses();
 		});
 	}
 	getUniqueLevels() {
@@ -177,7 +185,9 @@ console.log(this.unRegisteredCourses);
 		});
 	}
 	filterCourses() {
-		this.filteredCourses = this.unRegisteredCourses.filter(course => course.level === this.selectedLevel);
+		// this.filteredCourses = this.unRegisteredCourses.filter(course => course.level === this.selectedLevel);
+		this.filteredCourses = this.unRegCourse.filter(course => course.level === this.selectedLevel);
+
 	}
 
 
