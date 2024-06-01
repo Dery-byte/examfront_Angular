@@ -7,6 +7,15 @@ text="Loading instructions"
 ></ngx-ui-loader>
 
 
+
+
+
+
+<!-- {{currentQuizId | json}}
+{{idNumberReport[0]| json}}
+{{currentUserId | json}}
+{{reportQuizId | json}} -->
+
 <div ngxUiLoaderBlurred (blur)="10">
 <div class="bootstrap-wrapper">
     <div class="contianer">
@@ -60,12 +69,50 @@ text="Loading instructions"
                             <button mat-raised-button color="primary" class="" (click)="startQuiz()">Start Quiz</button>
                         </div>
 
-                        <div class=" container text-center" *ngIf="!isLegible">
+                        <div class=" container text-center" *ngIf="isLegible">
                             <button mat-raised-button color="accent" class="">Quiz Completed</button>
                         </div>
-
                         <!-- Action -->
                     </mat-card-actions>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 
                 </mat-card>

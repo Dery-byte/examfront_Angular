@@ -35,7 +35,7 @@ export class StartComponent implements OnInit {
   questionWithAnswers;
   marksGot = 0;
   maxMarks = 0;
-  correctAnswers = 0;
+  correct_answer = 0;
   attempted: any;
   isSubmit = false;
   timer: any;
@@ -89,28 +89,32 @@ export class StartComponent implements OnInit {
         alert("Error loading quiz data")
       }
     );
-    // this.printQuiz();
     this.loadQuestions();
     this.startTimer();
     this.loadQuestionsFromLocalStorage();
+    this.printQuiz();
+
     // this.preventBackButton();
   }
 
 
   loadQuestions(): void {
-    // this._questions.getQuestionsOfQuiz(this.qid).subscribe((data:any)=>{
-    this._questions.getQuestionsOfQuizForText(this.qid).subscribe((data: any) => {  // this does the question shuffle on start of quiz
-
+    this._questions.getQuestionsOfQuiz(this.qid).subscribe((data:any)=>{
+      // this._questions.getQuestionsOfQuizForText(this.qid).subscribe((data: any) => {  // this does the question shuffle on start of quiz
+    // this._questions.getQuestionsOfQuizForText(1).subscribe((data: any) => {  // this does the question shuffle on start of quiz
       // console.log(data[0].answer);
-      // console.log(data);
+      console.log(data);
       // localStorage.setItem('GivenAndAnswers', JSON.stringify(data));
       //save to local storage
       this.questions = data.map((q, index) => {
         q.count = index + 1;
+        q['givenAnswer'] = [];
+        // q.option1Selected = false;
+        // q.option2Selected = false;
+        // q.option3Selected = false;
+        // q.option4Selected = false;
         return q;
       });
-
-
       // console.log(data[0])  
       // BECAREFULL ABOUT HERE
       let timerString = localStorage.getItem('countdown_timer');
@@ -125,9 +129,9 @@ export class StartComponent implements OnInit {
         // this.timer = this.questions.length * 2 * 60;
         this.timer = this.quiz.quizTime * 60;
       }
-      this.questions.forEach(q => {
-        q['givenAnswer'] = "";
-      });
+      // this.questions.forEach(q => {
+      //   q['givenAnswer'] = []; //Initialize as empty array
+      // });
     },
       (error) => {
         console.log("Error Loading questions");
@@ -137,6 +141,32 @@ export class StartComponent implements OnInit {
     this.preventBackButton();
   }
 
+  //UPON SELECTIONS AND DESECLECTION, ADD AND REMOVE OPTIONS RESPECTIVELY
+  // updateSelectedAnswers(q: any, option: string) {
+  //   q.givenAnswer = [option];
+  // }
+
+  updateSelectedAnswers(q: any, option: string, isChecked: boolean) {
+    if (isChecked) {
+      // Add the option to the givenAnswer array if it's checked
+      q.givenAnswer.push(option);
+    } else { 
+      // Remove the option from the givenAnswer array if it's unchecked
+      const index = q.givenAnswer.indexOf(option);
+      if (index !== -1) {
+        q.givenAnswer.splice(index, 1);
+      }
+    }
+
+
+
+  }
+
+
+
+
+
+
   loadQuestionsWithAnswers() {
     this._questions.getQuestionsOfQuiz(this.qid).subscribe((data: any) => {
       this.questionWithAnswers = data;
@@ -145,7 +175,7 @@ export class StartComponent implements OnInit {
     },
       (error) => {
         console.log("Error Loading questions");
-        Swal.fire("Error", "Error loading questions", "error");
+        Swal.fire("Error", "Error loading questions with answers", "error");
       }
     );
     this.preventBackButton();
@@ -240,11 +270,11 @@ export class StartComponent implements OnInit {
       console.log(this.questions);
       console.log(data);
       this.marksGot = parseFloat(Number(data.marksGot).toFixed(2));
-      this.correctAnswers = data.correctAnswers;
+      this.correct_answer = data.correct_answer;
       this.attempted = data.attempted;
 
       this.maxMarks = data.maxMarks;
-      localStorage.setItem('CorrectAnswer', JSON.stringify(this.correctAnswers));
+      localStorage.setItem('CorrectAnswer', JSON.stringify(this.correct_answer));
       localStorage.setItem('MarksGot', JSON.stringify(this.marksGot));
       localStorage.setItem('Attempted', JSON.stringify(this.attempted));
       localStorage.setItem('MaxMarks', JSON.stringify(this.maxMarks))

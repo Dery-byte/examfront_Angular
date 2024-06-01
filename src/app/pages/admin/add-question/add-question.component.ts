@@ -25,7 +25,7 @@ export class AddQuestionComponent implements OnInit {
     option2: "",
     option3: "",
     option4: "",
-    answer: "",
+    correct_answer:[],
   };
   constructor(private _route: ActivatedRoute, 
     private _router:Router,
@@ -49,7 +49,7 @@ export class AddQuestionComponent implements OnInit {
       return;
     }
 
-    if (this.question.answer.trim() == '' || this.question.answer == null) {
+    if (this.question.correct_answer == null) {
       return;
     }
 
@@ -65,7 +65,7 @@ export class AddQuestionComponent implements OnInit {
         this.question.option2 = ""
         this.question.option3 = ""
         this.question.option4 = ""
-        this.question.answer = ""
+        this.question.correct_answer = [];
 
       },
       (error) => {

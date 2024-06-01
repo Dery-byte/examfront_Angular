@@ -23,7 +23,7 @@ export class InstructionsComponent implements OnInit {
   reportid: number;
   reportData;
 
-  currentQuizId;
+  currentQuizId:number;
   reportQuizId;
   currentUserId;
   isLegible = false;
@@ -80,6 +80,9 @@ export class InstructionsComponent implements OnInit {
 
       const userDetails = localStorage.getItem('user');
       const Object = JSON.parse(userDetails);
+      let foundMatchingUser = false; // Flag to track if a matching user is found
+      this.idNumberReport = [];
+
       this.report.forEach((q) => {
         this.userId = q.user.id;
         this.reportQuizId = q.quiz.qId;
@@ -88,6 +91,7 @@ export class InstructionsComponent implements OnInit {
 
         if (q.user.id == this.currentUserId) {
           this.idNumberReport.push(q.user.id);
+          foundMatchingUser = true; // Set the flag if a matching user is found
         }
         console.log(this.idNumberReport[0]);
         console.log(this.currentUserId);
@@ -96,16 +100,25 @@ export class InstructionsComponent implements OnInit {
 
       });
 
-      this.isLegible = (this.idNumberReport[0] == this.currentUserId && this.reportQuizId == this.currentQuizId);
+      // Check if a matching user is found before comparing IDs
+      if (foundMatchingUser) {
+        // Compare IDs here
+        this.isLegible = (this.idNumberReport[0] == this.currentUserId && this.currentQuizId == this.reportQuizId.toString());
+      } else {
+        // If no matching user is found, set isLegible to false
+        this.isLegible = false;
+      }
+
+      // this.isLegible = (this.idNumberReport[0] == this.currentUserId &&  this.currentQuizId==this.reportQuizId.toString());
       // this.isLegible = this._userEligibilityService.isUserEligible(this.idNumberReport, this.currentUserId, this.reportQuizId, this.currentQuizId);
 
 
     console.log(this.idNumberReport[0] == this.currentUserId);
 
-    console.log(this.reportQuizId == this.currentQuizId);
+    console.log( this.currentQuizId==this.reportQuizId.toString());
 
 
-    
+      
       console.log(this.isLegible);
       if (this.isLegible) {
         // this.isLegible; // True

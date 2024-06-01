@@ -25,7 +25,7 @@ export class PrintQuizComponent implements OnInit {
   questionWithAnswers;
   marksGot = 0;
   maxMarks = 0;
-  correctAnswers = 0;
+  correct_answer = 0;
   attempted = 0;
   timer: any;
   isNavigating = false;
@@ -64,9 +64,9 @@ export class PrintQuizComponent implements OnInit {
     this.qid = this._route.snapshot.params['qid'];
     // this.refreshPage();
     this.refreshContent();
-    this.loadReport();
-    this.loadResults();
     this.loadQuestionsWithAnswers();
+    this.loadReport();
+    // this.loadResults();
     this.loadQuestions();
     this.saveDataInBrowser();
     this.loadQuestionsFromLocalStorage();
@@ -132,9 +132,8 @@ removeResults() {
   loadQuestionsWithAnswers() {
     this._questions.getQuestionsOfQuiz(this.qid).subscribe((data: any) => {
       // this._questions.getQuestionsOfQuizForText(this.qid).subscribe((data:any)=>{ // this does the question shuffle on print
-
       // console.log(data[0].answer);
-      this.loadResults();
+      // this.loadResults();
       this.questionWithAnswers = data;
       console.log(data)
       console.log(this.questionWithAnswers);
@@ -193,7 +192,7 @@ removeResults() {
   loadResults() {
     this.maxMarks = JSON.parse(localStorage.getItem("MaxMarks"));
     this.attempted = JSON.parse(localStorage.getItem("Attempted"));
-    this.correctAnswers = JSON.parse(localStorage.getItem("CorrectAnswer"));
+    this.correct_answer = JSON.parse(localStorage.getItem("CorrectAnswer"));
     this.marksGot = JSON.parse(localStorage.getItem("MarksGot"));
     // this.page();
 
@@ -205,7 +204,7 @@ removeResults() {
       console.log(data);
       // this.result=data;
       this.marksGot = parseFloat(Number(data.marksGot).toFixed(2));
-      this.correctAnswers = data.correctAnswers;
+      this.correct_answer = data.correct_answer;
       this.attempted = data.attempted;
       this.maxMarks = data.maxMarks;
       // this.preventBackButton();

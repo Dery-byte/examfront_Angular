@@ -89,7 +89,7 @@
                             <!-- answer -->
                             <mat-form-field class="w100">
                                 <mat-label>Select answer</mat-label>
-                                <mat-select [(ngModel)]="questions.answer" name="answer" required>
+                                <mat-select [(ngModel)]="questions.correct_answer" name="correct_answer" multiple required>
                                    <mat-option *ngIf="questions.option1" [value]="questions.option1">{{questions.option1}}</mat-option>
                                    <mat-option *ngIf="questions.option2" [value]="questions.option2">{{questions.option2}}</mat-option>
                                    <mat-option *ngIf="questions.option3" [value]="questions.option3">{{questions.option3}}</mat-option>

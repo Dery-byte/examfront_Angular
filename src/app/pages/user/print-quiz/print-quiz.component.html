@@ -1,6 +1,10 @@
 <!-- {{questions[0].quiz|json}} -->
 <!-- {{questions[0].quiz.category.title |json}}
 {{questions[0].quiz.maxMarks |json}} -->
+
+<!-- {{questions | json}} -->
+
+<!-- {{questionWithAnswers | json}} -->
 <ngx-ui-loader
 fgsColor="#ff4081"
 pbColor="#ff4081"
@@ -49,7 +53,7 @@ text="Preparing results please wait...!"
 
 
             <!-- <div *ngIf="reportData"> -->
-            <span id="marks" *ngFor="let r of reportData">
+            <div id="marks" *ngFor="let r of reportData">
                 <p>Marks : <span id="marksU">{{r.marks}}/{{ r.quiz.maxMarks}}</span></p>
                 <p> Correct Answers : {{r.marks}}</p>
                 <p>Attempted questions : {{attempted}}</p>
@@ -58,7 +62,7 @@ text="Preparing results please wait...!"
 
                 <!-- YOU MAY ADD THIS ATTEMPTED OPTION IN THE BACKEND REPORT CLASS THEN FETCH REPORT AND SHOW ON THE INTERFACE -->
                 <!-- <p>Attempted questions : {{attempted}}</p> -->
-            </span>
+            </div>
             <!-- </div> -->
 
 
@@ -75,21 +79,21 @@ text="Preparing results please wait...!"
 
                     <div class="row mt20">
                         <div class="col-md-6">
-                            <input type="checkbox" [checked]="qA.option1 == qA.answer" disabled />
+                            <input type="checkbox" [checked]="qA.correct_answer.includes(qA.option1)" disabled />
                             {{qA.option1}}
                         </div>
 
                         <div class="col-md-6">
-                            <input type="checkbox" [name]="i" [checked]="qA.option2 == qA.answer" disabled />
+                            <input type="checkbox" [name]="i" [checked]="qA.correct_answer.includes(qA.option2)" disabled />
                             {{qA.option2}}
                         </div>
                         <div class="col-md-6">
-                            <input type="checkbox" [checked]="qA.option3 == qA.answer" disabled />
+                            <input type="checkbox" [checked]="qA.correct_answer.includes(qA.option3)" disabled />
                             {{qA.option3}}
                         </div>
 
                         <div class="col-md-6">
-                            <input type="checkbox" [checked]="qA.option4 == qA.answer" disabled />
+                            <input type="checkbox" [checked]="qA.correct_answer.includes(qA.option4)" disabled />
                             {{qA.option4}}
 
                         </div>

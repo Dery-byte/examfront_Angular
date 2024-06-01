@@ -81,7 +81,7 @@
                             <!-- answer -->
                             <mat-form-field class="w100">
                                 <mat-label>Select answer</mat-label>
-                                <mat-select [(ngModel)]="question.answer" name="answer" required>
+                                <mat-select [(ngModel)]="question.correct_answer" name="correct_answer" multiple required>
                                    <mat-option *ngIf="question.option1" [value]="question.option1">{{question.option1}}</mat-option>
                                    <mat-option *ngIf="question.option2" [value]="question.option2">{{question.option2}}</mat-option>
                                    <mat-option *ngIf="question.option3" [value]="question.option3">{{question.option3}}</mat-option>
@@ -122,5 +122,5 @@
         </div>
     </div>
 </div>
-{{question | json}}
+<!-- {{question | json}} -->
 
