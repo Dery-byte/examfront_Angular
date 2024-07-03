@@ -1,10 +1,12 @@
 import { Component, OnInit , Inject} from '@angular/core';
 import { MatSnackBar } from '@angular/material/snack-bar';
-import { Router } from '@angular/router';
+import { Router,ActivatedRoute  } from '@angular/router';
 import Swal from 'sweetalert2';
 import { LoginService } from 'src/app/services/login.service';
-import {FormBuilder, Validators} from '@angular/forms';
+import {FormBuilder, Validators, FormGroup} from '@angular/forms';
 import {MatDialog, MAT_DIALOG_DATA, MatDialogRef, MatDialogModule} from '@angular/material/dialog';
+
+import { Question } from 'src/model testing/model';
 @Component({
   selector: 'app-login',
   templateUrl: './login.component.html',
@@ -14,6 +16,33 @@ import {MatDialog, MAT_DIALOG_DATA, MatDialogRef, MatDialogModule} from '@angula
 
 
 export class LoginComponent implements OnInit {
+
+
+  //  ============================SUBJECTIVE QUESTIONS=======================================
+
+  //  ============================SUBJECTIVE QUESTIONS=======================================
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  quizForm: FormGroup;
+
 
   productDialog: boolean;
 
@@ -41,13 +70,61 @@ export class LoginComponent implements OnInit {
 
   allUsers=[];
   
-  constructor(private snack:MatSnackBar, private login:LoginService, private router:Router, private _formBuilder: FormBuilder, public dialog: MatDialog){}
+  constructor( private fb: FormBuilder,private snack:MatSnackBar, private route:ActivatedRoute, private login:LoginService, private router:Router, private _formBuilder: FormBuilder, public dialog: MatDialog){}
+  
+  
+
+  //  ============================SUBJECTIVE QUESTIONS=======================================
+  
+  //  ============================SUBJECTIVE QUESTIONS=======================================
+
  
+//  ============================SUBJECTIVE QUESTIONS=======================================
+
+
     ngOnInit(): void{
+
+//  ============================SUBJECTIVE QUESTIONS=======================================
+  
+//  ============================SUBJECTIVE QUESTIONS=======================================
+
+
+      this.route.queryParams.subscribe(params => {
+        const token = params['token'];
+        if (token) {
+          console.log('Received token:', token);
+          // Here you should store the token securely and handle the authentication
+          // For this example, we're just navigating to the dashboard
+          this.router.navigate(['/dashboard']);
+        }
+      });
+
       this.allusers();
       this.preventLoginForm();
     }
-    
+
+
+
+
+
+
+
+
+//  ============================SUBJECTIVE QUESTIONS=======================================
+
+   
+//  ============================SUBJECTIVE QUESTIONS=======================================
+
+
+
+
+
+
+
+
+
+
+
 
     preventLoginForm(){
       
@@ -217,9 +294,47 @@ else{
     }
   
 saveProduct() {
-    
-    
 }
   
+
+// signInWithGoogle() {
+//   // console.log('Navigating to Google OAuth');
+//   this.router.navigate(['/oauth2/authorization/google']).then(success => {
+//     if (success) {
+//       console.log('Navigation successful');
+//     } else {
+//       console.log('Navigation failed');
+//     }
+//   });
+// }
+
+// signInWithGoogle() {
+//   const googleOAuthUrl = 'https://accounts.google.com/o/oauth2/authorization'; // Replace with your actual Google OAuth URL
+//   window.location.href = googleOAuthUrl;
+// }
+
+ generateState(): string {
+  const characters = 'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789';
+  let state = '';
+  for (let i = 0; i < 16; i++) {
+    state += characters.charAt(Math.floor(Math.random() * characters.length));
+  }
+  return state;
+}
+
+// const stateValue = generateState();
+
+signInWithGoogle() {
+  // const clientId = '1006167054424-vgf13e2d85q918umpdku10un40613m1v.apps.googleusercontent.com'; // Replace with your actual Google client ID
+  // const responseType = 'code'; // Use 'code' if you are using server-side authorization
+  // const scope = 'email profile'; // Define the scopes you need
+  // // const state = this.generateState(); // Optional: State parameter to protect against cross-site request forgery
+  // const redirectUri='/login'
+
+  const googleOAuthUrl = `https://accounts.google.com/o/oauth2/authorization`;
+  window.location.href = googleOAuthUrl;
+}
+
+
 
 }

@@ -6,12 +6,64 @@ import { Subject } from 'rxjs';
 import { Router } from '@angular/router';
 
 import { jwtDecode } from 'jwt-decode';
+import { Question } from 'src/model testing/model';
 
 
 @Injectable({
   providedIn: 'root'
 })
 export class LoginService {
+
+
+  private questions: Question[] = [
+    { id: 'Q1a', text: 'What is Photosynthesis?',marks:'3 marks' , givenAnswer:[]},
+    { id: 'Q1b', text: 'Explain computer.', marks:'4 marks' , givenAnswer:[] },
+    { id: 'Q1c', text: 'Distinguish between Solid State Drive and Hard Disk Drive.',marks:'3 marks'  , givenAnswer:[]},
+    { id: 'Q2ai', text: 'What is a peripheral device?',marks:'5 marks'  , givenAnswer:[]},
+    { id: 'Q2aii', text: 'Mention two components of the motherboard.' ,marks:'2 marks' , givenAnswer:[]},
+    { id: 'Q2b', text: 'What is an Input device?' ,marks:'1 marks' , givenAnswer:[]},
+    { id: 'Q2c', text: 'What is an output device?',marks:'1 marks' , givenAnswer:[] },
+    { id: 'Q3a', text: 'Explain Information Processing System.',marks:'3 marks' , givenAnswer:[] },
+    { id: 'Q3bi', text: 'What is a storage device?',marks:'2 marks' , givenAnswer:[] },
+    { id: 'Q3bii', text: 'What is a processing device?',marks:'4 marks'  , givenAnswer:[]},
+    { id: 'Q3biii', text: 'Briefly explain the computer CPU.',marks:'3 marks'  , givenAnswer:[]},
+    { id: 'Q3c', text: 'Give 2 examples of processor manufacturing companies.',marks:'4 marks'  , givenAnswer:[]},
+    { id: 'Q4a', text: 'What is an output device?' ,marks:'3 mark' , givenAnswer:[]},
+    { id: 'Q4ai', text: 'Explain Information Processing System.',marks:'5 marks' , givenAnswer:[] },
+    { id: 'Q4bi', text: 'What is a storage device?' ,marks:'2 marks' , givenAnswer:[]},
+    { id: 'Q4bii', text: 'What is a processing device?',marks:'2 marks' , givenAnswer:[] },
+    { id: 'Q4biii', text: 'Briefly explain the computer CPU.' ,marks:'2 marks' , givenAnswer:[]},
+    { id: 'Q4c', text: 'Give 2 examples of processor manufacturing companies.' ,marks:'4 marks' , givenAnswer:[]}
+  ];
+
+  getQuestionsGroupedByPrefix(): { [key: string]: Question[] } {
+    return this.questions.reduce((acc, question) => {
+      const prefix = question.id.match(/^[A-Za-z]+[0-9]+/)[0];
+      if (!acc[prefix]) {
+        acc[prefix] = [];
+      }
+      acc[prefix].push(question);
+      return acc;
+    }, {});
+
+    // givenAnswer:[] THIS HAS THE ANSWERS FROM THE STUDENTS
+  }
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  // ===============================================
 
   public loginStatusSubject = new Subject<boolean>();
 

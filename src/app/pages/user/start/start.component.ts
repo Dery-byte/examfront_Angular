@@ -4,6 +4,12 @@ import { ActivatedRoute } from '@angular/router';
 import { QuestionService } from 'src/app/services/question.service';
 import { QuizService } from 'src/app/services/quiz.service';
 import { Router, } from '@angular/router';
+import { Question } from 'src/model testing/model';
+import {FormBuilder, Validators, FormGroup} from '@angular/forms';
+import { LoginService } from 'src/app/services/login.service';
+
+
+
 
 import Swal from 'sweetalert2';
 
@@ -48,7 +54,43 @@ export class StartComponent implements OnInit {
   private countdownKey = 'countdown_timer';
   private intervalId: any;
 
+
+ //  ============================SUBJECTIVE QUESTIONS=======================================
+ questionT: Question[] = [];
+ filteredQuestions: Question[] = [];
+ itemsPerPage: number = 5;
+ groupedQuestions: { [key: string]: Question[] } = {};
+ prefixes: string[] = [];
+ currentPage: number = 0;
+ selectedQuestions: { [key: string]: boolean } = {}; // To track selected prefixes
+ selectedPrefix: string;
+ selectedQuestionsCount: number = 0;
+ numberOfQuestionsToAnswer: number = 3;
+ quizForm: FormGroup;
+ //  ============================SUBJECTIVE QUESTIONS=======================================
+
+  //  ============================SUBJECTIVE QUESTIONS=======================================
+  initForm(): void {
+    const formGroupConfig = {};
+    this.questionT.forEach(question => {
+      formGroupConfig[question.id] = ['', Validators.required];
+    });
+    this.quizForm = this.fb.group(formGroupConfig);
+  }
+  
+  get isSubmitDisabled(): boolean {
+    return Object.keys(this.selectedQuestions).length !== this.numberOfQuestionsToAnswer;
+  }
+  //  ============================SUBJECTIVE QUESTIONS=======================================
+
+
+
+
+
+
   constructor(private _quiz: QuizService,
+    private fb: FormBuilder,
+    private login:LoginService,
     private locationSt: LocationStrategy,
     private _route: ActivatedRoute,
     private _questions: QuestionService,
@@ -71,7 +113,30 @@ export class StartComponent implements OnInit {
     this.preventBackButton();
   }
 
+ //  ============================SUBJECTIVE QUESTIONS=======================================
 
+ onSubmitt() {
+  Swal.fire({
+    title: "Do you want to submit the questions answered?",
+    showCancelButton: true,
+    confirmButtonText: "Submit",
+    icon: "info",
+  }).then((e) => {
+    if (e.isConfirmed) {
+      const selectedQuestions = [];
+      for (const prefix in this.selectedQuestions) {
+        selectedQuestions.push(...this.groupedQuestions[prefix]);
+      }
+      if (Object.keys(this.selectedQuestions).length === this.numberOfQuestionsToAnswer) {
+        // Handle the submission logic here
+        console.log('Submitted Questions:', selectedQuestions);
+      } else {
+        alert('Please select exactly 2 sets of questions to submit.');
+      }
+    };
+  });  
+}
+//  ============================SUBJECTIVE QUESTIONS=======================================
 
 
   ngOnInit(): void {
@@ -89,13 +154,106 @@ export class StartComponent implements OnInit {
         alert("Error loading quiz data")
       }
     );
+
+    this.loadSubjective();
     this.loadQuestions();
     this.startTimer();
     this.loadQuestionsFromLocalStorage();
     this.printQuiz();
-
+    this.initForm();
+   
     // this.preventBackButton();
   }
+
+      //  ============================SUBJECTIVE QUESTIONS=======================================
+
+
+      
+  // loadSubjective(){
+  //  this.groupedQuestions = this.login.getQuestionsGroupedByPrefix();
+  //  this.prefixes = Object.keys(this.groupedQuestions);
+  // }
+
+
+
+      // givenAnswer:[] THIS HAS THE ANSWERS FROM THE STUDENTS
+
+
+
+      
+  //  ============================SUBJECTIVE QUESTIONS=======================================
+  loadSubjective() {
+    this.groupedQuestions = this.login.getQuestionsGroupedByPrefix();
+    this.prefixes = Object.keys(this.groupedQuestions);
+
+    // this.questionT = this.groupedQuestions.map((que, index) => {
+    //   // q.count = index + 1;
+    //   que['givenAnswer'] = [];
+    //   // q.option1Selected = false;
+    //   // q.option2Selected = false;
+    //   // q.option3Selected = false;
+    //   // q.option4Selected = false;
+    //   console.log(this.questions)
+    //   return que;
+    // });
+
+
+    console.log(this.groupedQuestions);
+   }
+
+
+
+   
+
+//  ============================SUBJECTIVE QUESTIONS=======================================
+
+get currentQuestions(): Question[] {
+  return this.groupedQuestions[this.prefixes[this.currentPage]];
+}
+
+
+
+togglePrefixSelection(prefix: string) {
+  if (this.selectedQuestions[prefix]) {
+    // Deselect all sub-questions
+    this.groupedQuestions[prefix].forEach(question => question.selected = false);
+    delete this.selectedQuestions[prefix];
+  } else {
+    if (Object.keys(this.selectedQuestions).length < this.numberOfQuestionsToAnswer) {
+      // Select all sub-questions
+      this.groupedQuestions[prefix].forEach(question => question.selected = true);
+      this.selectedQuestions[prefix] = true;
+    } else {
+      alert('You can only select 2 sets of questions.');
+    }
+  }}
+onPrefixChange(prefix: string) {
+  this.selectedPrefix = prefix;
+}
+nextPage() {
+  if (this.currentPage < this.prefixes.length - 1) {
+    this.currentPage++;
+  }
+}
+prevPage() {
+  if (this.currentPage > 0) {
+    this.currentPage--;
+  }
+}
+onQuestionSelect(question: Question) {
+  if (question.selected) {
+    question.selected = false;
+    this.selectedQuestionsCount--;
+  } else {
+    if (this.selectedQuestionsCount < 2) {
+      question.selected = true;
+      this.selectedQuestionsCount++;
+    } else {
+      alert('You can only select 2 questions.');
+    }
+  }}
+//  ============================SUBJECTIVE QUESTIONS=======================================
+
 
 
   loadQuestions(): void {
@@ -113,7 +271,9 @@ export class StartComponent implements OnInit {
         // q.option2Selected = false;
         // q.option3Selected = false;
         // q.option4Selected = false;
+        console.log(this.questions)
         return q;
+
       });
       // console.log(data[0])  
       // BECAREFULL ABOUT HERE
@@ -245,9 +405,10 @@ export class StartComponent implements OnInit {
     let t = window.setInterval(() => {
       //Code
       if (this.timer <= 0) {
-        this.submitQuiz();
+        // this.submitQuiz();
         this.printQuiz();
         this.evalQuiz();
+        this.loadQuestionsWithAnswers();
         clearInterval(t);
         // localStorage.removeItem("exam");
         // this.preventBackButton();

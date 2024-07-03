@@ -54,11 +54,8 @@ export class InstructionsComponent implements OnInit {
     private _router: Router) { }
 
   ngOnInit(): void {
-
     this.qid = this._route.snapshot.params['qid'];
-
     this.fectchReport();
-
     this._quiz.getQuiz(this.qid).subscribe((data: any) => {
       console.log(data.title);
       this.quiz = data;
@@ -68,8 +65,6 @@ export class InstructionsComponent implements OnInit {
         alert("Error loading quiz data")
       }
     );
-
-
   }
 
   fectchReport() {

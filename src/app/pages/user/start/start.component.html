@@ -1,14 +1,12 @@
-
 <!-- {{questionWithAnswers | json}} -->
 <!-- {{questionss | json}} -->
+
 
 <ngx-ui-loader fgsColor="#ff4081" pbColor="#ff4081" textColor="#ff4081" pbThickness="6"
     text="Loading information!"></ngx-ui-loader>
 
 
 <div ngxUiLoaderBlurred (blur)="10">
-
-
     <div class="bootstrap-wrapper" *ngIf="!isSubmit">
         <div class="container-fluid">
             <div class="row">
@@ -18,9 +16,12 @@
                         <mat-card-content>
                             <h1><b>Instructions</b></h1>
                             <ul>
+                                <li style="color: brown;">Answers all questions in Section A and
+                                    <b>{{numberOfQuestionsToAnswer}}</b> questions from section B.
+                                </li>
                                 <li>Do not refresh the page. You might get new questions</li>
                                 <li>Do not switch tabs</li>
-                                <li>Also do not minimize the windows</li>
+                                <li>Also do not minimize the window</li>
                             </ul>
                         </mat-card-content>
                     </mat-card>
@@ -38,9 +39,10 @@
                             </mat-card-subtitle>
                         </mat-card-header>
                         <mat-card-content>
-                            <mat-spinner diameter="70" class="spin" [value]="(timer/(this.questions.length  * 60)) * 100 " mode="determinate"
-                                color="warn" style="margin: auto;"></mat-spinner>
-                            <h1 class="text-center"><i>{{ getFormmatedTime() }} </i></h1>                            
+                            <mat-spinner diameter="70" class="spin"
+                                [value]="(timer/(this.questions.length  * 60)) * 100 " mode="determinate" color="warn"
+                                style="margin: auto;"></mat-spinner>
+                            <h1 class="text-center"><i>{{ getFormmatedTime() }} </i></h1>
                         </mat-card-content>
                     </mat-card>
 
@@ -52,6 +54,12 @@
                     <ng-container>
                         <h1 class="mt20">On going quiz <b>{{questions[0].quiz.title}}</b></h1>
                     </ng-container>
+
+                    <mat-card class="cards"
+                        style=" font-size:20px; color: white;text-align: center; background-color: purple;">
+                        SECTION A
+
+                    </mat-card>
 
 
                     <mat-card
@@ -100,46 +108,47 @@
 
 
 
-                    <!-- MULTIPLE SELECTIONS STARTS -->
+                        <!-- MULTIPLE SELECTIONS STARTS -->
 
-                    <mat-card-content>
-                        <div class="row">
-                            <div class="col-md-11" >
-                                <p> <b> Q {{q.count}} </b> <span class="ml10" [innerHTML]="q.content"></span> </p>
+                        <mat-card-content>
+                            <div class="row">
+                                <div class="col-md-12">
+                                    <p> <b> Q {{q.count}} </b> <span class="ml10" [innerHTML]="q.content"></span> </p>
+                                </div>
+
+                                <!-- <div class="col-md-1" *ngIf="q.givenAnswer">
+                                <mat-checkbox class="example-margin" checked disabled></mat-checkbox>-->
+                                <!-- </div> -->
                             </div>
-                    
-                            <!-- <div class="col-md-1" *ngIf="q.givenAnswer">
-                                <mat-checkbox class="example-margin" checked disabled></mat-checkbox>
-                            </div> -->
-                        </div>
-                    
-                        <mat-divider></mat-divider>
-                        <br />
+
+                            <mat-divider></mat-divider>
+                            <br />
 
 
-                        <div class="row mt20">
-                            <div class="col-md-6">
-                                <mat-checkbox 
-                                [checked]="q.givenAnswer.includes(q.option1)" 
-                                (change)="updateSelectedAnswers(q, q.option1, $event.checked)"> {{q.option1}} </mat-checkbox>
+                            <div class="row mt20">
+                                <div class="col-md-6">
+                                    <mat-checkbox [checked]="q.givenAnswer.includes(q.option1)"
+                                        (change)="updateSelectedAnswers(q, q.option1, $event.checked)"> {{q.option1}}
+                                    </mat-checkbox>
+                                </div>
+                                <div class="col-md-6">
+                                    <mat-checkbox [checked]="q.givenAnswer.includes(q.option2)"
+                                        (change)="updateSelectedAnswers(q, q.option2, $event.checked)"> {{q.option2}}
+                                    </mat-checkbox>
+                                </div>
+                                <div class="col-md-6">
+                                    <mat-checkbox [checked]="q.givenAnswer.includes(q.option3)"
+                                        (change)="updateSelectedAnswers(q, q.option3, $event.checked)"> {{q.option3}}
+                                    </mat-checkbox>
+                                </div>
+                                <div class="col-md-6">
+                                    <mat-checkbox [checked]="q.givenAnswer.includes(q.option4)"
+                                        (change)="updateSelectedAnswers(q, q.option4, $event.checked)"> {{q.option4}}
+                                    </mat-checkbox>
+                                </div>
                             </div>
-                            <div class="col-md-6">
-                                <mat-checkbox 
-                                [checked]="q.givenAnswer.includes(q.option2)"
-                                (change)="updateSelectedAnswers(q, q.option2, $event.checked)"> {{q.option2}} </mat-checkbox>
-                            </div>
-                            <div class="col-md-6">
-                                <mat-checkbox 
-                                [checked]="q.givenAnswer.includes(q.option3)"
-                                (change)="updateSelectedAnswers(q, q.option3, $event.checked)"> {{q.option3}} </mat-checkbox>
-                            </div>
-                            <div class="col-md-6">
-                                <mat-checkbox [checked]="q.givenAnswer.includes(q.option4)"
-                                (change)="updateSelectedAnswers(q, q.option4, $event.checked)"> {{q.option4}} </mat-checkbox>
-                            </div>
-                        </div>
-                    </mat-card-content>
-                    <!-- MULTIPLE SELECTIONS ENDS -->
+                        </mat-card-content>
+                        <!-- MULTIPLE SELECTIONS ENDS -->
 
 
 
@@ -156,8 +165,102 @@
                     </div>
 
 
+
+                    <!-- subjective questions here -->
+
+                    <mat-card>
+                        <!-- {{resetData |json}} -->
+
+                        <mat-card class="cards"
+                            style=" font-size:20px; color: white;text-align: center; background-color: purple;">
+                            SECTION B
+                        </mat-card>
+                        <!-- <mat-divider style="margin: 20px;"></mat-divider> -->
+                        <!--                         
+                        <mat-card>
+                          <div class="container">
+                            <div class="row">
+                              <mat-label>Select set of questions answered!</mat-label>
+                              <div class="col-md-12">
+                                <div *ngIf="prefixes.length > 0" class="prefix-container">
+                                  <div *ngFor="let prefix of prefixes" class="prefix-item">
+                                    <mat-checkbox [checked]="selectedQuestions[prefix]" color="primary"
+                                      (change)="togglePrefixSelection(prefix)">
+                                      {{ prefix }}
+                                    </mat-checkbox>
+                                  </div>
+                                </div>
+                              </div>
+                            </div>
+                          </div>
+                        </mat-card> -->
+
+
+                        <form>
+                            <mat-card class="cards"
+                                style=" margin: 20px;font-size:18px; color: white;text-align: center; background-color: rgb(86, 82, 82);">
+                                Question {{ currentPage + 1 }}
+                            </mat-card>
+
+                            <div *ngIf="currentQuestions">
+                                <div *ngFor="let question of currentQuestions">
+                                    <mat-card-content class="mat-card-content">
+                                        <input type="checkbox" [checked]="question.selected"
+                                            (change)="onQuestionSelect(question)" disabled hidden>
+                                        <mat-form-field class="mat-form-field">
+                                            <mat-label> 
+                                                {{question.id}} {{ question.text }} {{question.marks}}
+                                            </mat-label>
+                                            <input class="input"  name="givenAnswer"  [(ngModel)]="question.givenAnswer" required type="text"
+                                                matInput>
+
+                                        </mat-form-field>
+                                    </mat-card-content>
+                                    <!-- {{question | json}} -->
+
+                                </div>
+                            </div>
+                        </form>
+                        <mat-card-actions>
+                            <mat-card>
+                                <div class="pagination-controls">
+                                    <button type="submit" mat-raised-button color="primary" (click)="prevPage()"
+                                        [disabled]="currentPage === 0">Previous</button>
+                                    <span style="color: blueviolet; font-size: large; border: 2px solid red;"> Ques...
+                                        {{ currentPage + 1 }} of {{ prefixes.length }} </span>
+                                    <button type="submit" mat-raised-button color="primary" (click)="nextPage()"
+                                        [disabled]="currentPage === prefixes.length - 1">Next</button>
+                                </div>
+                                <!-- <button type="submit" (click)="onSubmit()" mat-raised-button [disabled]="isSubmitDisabled"
+                            color="primary">Submit</button> -->
+                            </mat-card>
+
+                            <mat-card>
+                                <div class="container">
+                                    <div class="row">
+                                        <div class="col-md-12">
+                                            <!-- <mat-label>Select set of questions answered!</mat-label> -->
+                                            <mat-card-title>Select set of questions answered!</mat-card-title>
+                                            <div *ngIf="prefixes.length > 0" class="prefix-container">
+                                                <div *ngFor="let prefix of prefixes" class="prefix-item">
+                                                    <mat-checkbox [checked]="selectedQuestions[prefix]"
+                                                        (change)="togglePrefixSelection(prefix)">
+                                                        {{ prefix }}
+                                                    </mat-checkbox>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </mat-card>
+                        </mat-card-actions>
+                    </mat-card>
+
+                    <!-- subjective questions here -->
+
                     <div class="contianer text-center mt20 mb20">
-                        <button mat-raised-button color="primary" (click)="submitQuiz()">Submit Quiz</button>
+                        <button mat-raised-button color="primary" (click)="submitQuiz()"
+                            [disabled]="isSubmitDisabled">Submit Quiz</button>
 
                     </div>
                 </div>
@@ -183,6 +286,10 @@
                 </div>
             </div>
         </div>
+
+
+
+
     </div>
 
 
@@ -245,7 +352,7 @@
 
                     </mat-card-content>
                 </mat-card> -->
-                
+
             </div>
         </div>
     </div>
