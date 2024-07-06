@@ -350,6 +350,8 @@ onQuestionSelect(question: Question) {
 
 
   submitQuiz() {
+
+this.evalSubjective();
     Swal.fire({
       title: "Do you want to submit the quiz ?",
       showCancelButton: true,
@@ -461,6 +463,24 @@ onQuestionSelect(question: Question) {
     //   }
     // });
   }
+
+
+evalSubjective(){
+  const selectedQuestions = [];
+  for (const prefix in this.selectedQuestions) {
+    selectedQuestions.push(...this.groupedQuestions[prefix]);
+  }
+  if (Object.keys(this.selectedQuestions).length === this.numberOfQuestionsToAnswer) {
+    // Handle the submission logic here
+    console.log('Submitted Questions:', selectedQuestions);
+  } else {
+    alert('Please select exactly 2 sets of questions to submit.');
+  }
+
+}
+
+
+
   printPage() {
     window.print();
     // this.preventBackButton();  

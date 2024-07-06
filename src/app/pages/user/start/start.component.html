@@ -55,11 +55,15 @@
                         <h1 class="mt20">On going quiz <b>{{questions[0].quiz.title}}</b></h1>
                     </ng-container>
 
+
+               <div *ngIf="questions">
+
                     <mat-card class="cards"
                         style=" font-size:20px; color: white;text-align: center; background-color: purple;">
                         SECTION A
 
                     </mat-card>
+                </div>
 
 
                     <mat-card
@@ -167,16 +171,16 @@
 
 
                     <!-- subjective questions here -->
+                    <div *ngIf="currentQuestions; else elseBlock">
+                        <mat-card>
+                            <!-- {{resetData |json}} -->
 
-                    <mat-card>
-                        <!-- {{resetData |json}} -->
-
-                        <mat-card class="cards"
-                            style=" font-size:20px; color: white;text-align: center; background-color: purple;">
-                            SECTION B
-                        </mat-card>
-                        <!-- <mat-divider style="margin: 20px;"></mat-divider> -->
-                        <!--                         
+                            <mat-card class="cards"
+                                style=" font-size:20px; color: white;text-align: center; background-color: purple;">
+                                SECTION B
+                            </mat-card>
+                            <!-- <mat-divider style="margin: 20px;"></mat-divider> -->
+                            <!--                         
                         <mat-card>
                           <div class="container">
                             <div class="row">
@@ -196,73 +200,86 @@
                         </mat-card> -->
 
 
-                        <form>
-                            <mat-card class="cards"
-                                style=" margin: 20px;font-size:18px; color: white;text-align: center; background-color: rgb(86, 82, 82);">
-                                Question {{ currentPage + 1 }}
-                            </mat-card>
+                            <form>
+                                <mat-card class="cards"
+                                    style=" margin: 20px;font-size:18px; color: white;text-align: center; background-color: rgb(86, 82, 82);">
+                                    Question {{ currentPage + 1 }}
+                                </mat-card>
 
-                            <div *ngIf="currentQuestions">
+                                <!-- <div *ngIf="currentQuestions"> -->
                                 <div *ngFor="let question of currentQuestions">
                                     <mat-card-content class="mat-card-content">
                                         <input type="checkbox" [checked]="question.selected"
                                             (change)="onQuestionSelect(question)" disabled hidden>
                                         <mat-form-field class="mat-form-field">
-                                            <mat-label> 
+                                            <mat-label>
                                                 {{question.id}} {{ question.text }} {{question.marks}}
                                             </mat-label>
-                                            <input class="input"  name="givenAnswer"  [(ngModel)]="question.givenAnswer" required type="text"
-                                                matInput>
+                                            <input class="input" name="givenAnswer" [(ngModel)]="question.givenAnswer"
+                                                required type="text" matInput>
 
                                         </mat-form-field>
                                     </mat-card-content>
                                     <!-- {{question | json}} -->
 
                                 </div>
-                            </div>
-                        </form>
-                        <mat-card-actions>
-                            <mat-card>
-                                <div class="pagination-controls">
-                                    <button type="submit" mat-raised-button color="primary" (click)="prevPage()"
-                                        [disabled]="currentPage === 0">Previous</button>
-                                    <span style="color: blueviolet; font-size: large; border: 2px solid red;"> Ques...
-                                        {{ currentPage + 1 }} of {{ prefixes.length }} </span>
-                                    <button type="submit" mat-raised-button color="primary" (click)="nextPage()"
-                                        [disabled]="currentPage === prefixes.length - 1">Next</button>
-                                </div>
-                                <!-- <button type="submit" (click)="onSubmit()" mat-raised-button [disabled]="isSubmitDisabled"
+                                <!-- </div> -->
+                            </form>
+                            <mat-card-actions>
+                                <mat-card>
+                                    <div class="pagination-controls">
+                                        <button type="submit" mat-raised-button color="primary" (click)="prevPage()"
+                                            [disabled]="currentPage === 0">Previous</button>
+                                        <span style="color: blueviolet; font-size: large; border: 2px solid red;">
+                                            Ques...
+                                            {{ currentPage + 1 }} of {{ prefixes.length }} </span>
+                                        <button type="submit" mat-raised-button color="primary" (click)="nextPage()"
+                                            [disabled]="currentPage === prefixes.length - 1">Next</button>
+                                    </div>
+                                    <!-- <button type="submit" (click)="onSubmit()" mat-raised-button [disabled]="isSubmitDisabled"
                             color="primary">Submit</button> -->
-                            </mat-card>
+                                </mat-card>
 
-                            <mat-card>
-                                <div class="container">
-                                    <div class="row">
-                                        <div class="col-md-12">
-                                            <!-- <mat-label>Select set of questions answered!</mat-label> -->
-                                            <mat-card-title>Select set of questions answered!</mat-card-title>
-                                            <div *ngIf="prefixes.length > 0" class="prefix-container">
-                                                <div *ngFor="let prefix of prefixes" class="prefix-item">
-                                                    <mat-checkbox [checked]="selectedQuestions[prefix]"
-                                                        (change)="togglePrefixSelection(prefix)">
-                                                        {{ prefix }}
-                                                    </mat-checkbox>
+                                <mat-card>
+                                    <div class="container">
+                                        <div class="row">
+                                            <div class="col-md-12">
+                                                <!-- <mat-label>Select set of questions answered!</mat-label> -->
+                                                <mat-card-title>Select set of questions answered!</mat-card-title>
+                                                <div *ngIf="prefixes.length > 0" class="prefix-container">
+                                                    <div *ngFor="let prefix of prefixes" class="prefix-item">
+                                                        <mat-checkbox [checked]="selectedQuestions[prefix]"
+                                                            (change)="togglePrefixSelection(prefix)">
+                                                            {{ prefix }}
+                                                        </mat-checkbox>
+                                                    </div>
                                                 </div>
                                             </div>
                                         </div>
                                     </div>
-                                </div>
-                            </mat-card>
-                        </mat-card-actions>
-                    </mat-card>
+                                </mat-card>
+                            </mat-card-actions>
+                        </mat-card>
 
-                    <!-- subjective questions here -->
-
-                    <div class="contianer text-center mt20 mb20">
-                        <button mat-raised-button color="primary" (click)="submitQuiz()"
-                            [disabled]="isSubmitDisabled">Submit Quiz</button>
+                        <!-- BUTTON IF SUBJECTIVE IS INCLUSIVE -->
+                        <div class="contianer text-center mt20 mb20">
+                            <button mat-raised-button color="primary" (click)="submitQuiz()"
+                                [disabled]="isSubmitDisabled">Submit Quiz</button>
+                        </div>
 
                     </div>
+                    <!-- BUTTON TO SHOW IS SUBJECTIVE IS NOT INCLUDED -->
+                    <ng-template #elseBlock>
+                        <div class="contianer text-center mt20 mb20">
+                            <button mat-raised-button color="primary" (click)="submitQuiz()">Submit Quiz</button>
+                        </div>
+                    </ng-template>
+
+
+                    <!-- <div #elseBlock>-->
+
+                    <!-- </div> -->
+
                 </div>
 
 
