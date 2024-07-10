@@ -5,7 +5,7 @@ import { QuestionService } from 'src/app/services/question.service';
 import { QuizService } from 'src/app/services/quiz.service';
 import { Router, } from '@angular/router';
 import { Question } from 'src/model testing/model';
-import {FormBuilder, Validators, FormGroup} from '@angular/forms';
+import { FormBuilder, Validators, FormGroup } from '@angular/forms';
 import { LoginService } from 'src/app/services/login.service';
 
 
@@ -55,19 +55,25 @@ export class StartComponent implements OnInit {
   private intervalId: any;
 
 
- //  ============================SUBJECTIVE QUESTIONS=======================================
- questionT: Question[] = [];
- filteredQuestions: Question[] = [];
- itemsPerPage: number = 5;
- groupedQuestions: { [key: string]: Question[] } = {};
- prefixes: string[] = [];
- currentPage: number = 0;
- selectedQuestions: { [key: string]: boolean } = {}; // To track selected prefixes
- selectedPrefix: string;
- selectedQuestionsCount: number = 0;
- numberOfQuestionsToAnswer: number = 3;
- quizForm: FormGroup;
- //  ============================SUBJECTIVE QUESTIONS=======================================
+  //  ============================SUBJECTIVE QUESTIONS=======================================
+  questionT: Question[] = [];
+  filteredQuestions: Question[] = [];
+  itemsPerPage: number = 5;
+  groupedQuestions: { [key: string]: Question[] } = {};
+  prefixes: string[] = [];
+  currentPage: number = 0;
+  selectedQuestions: { [key: string]: boolean } = {}; // To track selected prefixes
+  selectedPrefix: string;
+  selectedQuestionsCount: number = 0;
+  numberOfQuestionsToAnswer: number = 3;
+  quizForm: FormGroup;
+
+  //  sectionB;
+
+  sectionB: any[] = [];
+
+  question: Question[] = []
+  //  ============================SUBJECTIVE QUESTIONS=======================================
 
   //  ============================SUBJECTIVE QUESTIONS=======================================
   initForm(): void {
@@ -77,7 +83,7 @@ export class StartComponent implements OnInit {
     });
     this.quizForm = this.fb.group(formGroupConfig);
   }
-  
+
   get isSubmitDisabled(): boolean {
     return Object.keys(this.selectedQuestions).length !== this.numberOfQuestionsToAnswer;
   }
@@ -90,7 +96,7 @@ export class StartComponent implements OnInit {
 
   constructor(private _quiz: QuizService,
     private fb: FormBuilder,
-    private login:LoginService,
+    private login: LoginService,
     private locationSt: LocationStrategy,
     private _route: ActivatedRoute,
     private _questions: QuestionService,
@@ -113,30 +119,30 @@ export class StartComponent implements OnInit {
     this.preventBackButton();
   }
 
- //  ============================SUBJECTIVE QUESTIONS=======================================
+  //  ============================SUBJECTIVE QUESTIONS=======================================
 
- onSubmitt() {
-  Swal.fire({
-    title: "Do you want to submit the questions answered?",
-    showCancelButton: true,
-    confirmButtonText: "Submit",
-    icon: "info",
-  }).then((e) => {
-    if (e.isConfirmed) {
-      const selectedQuestions = [];
-      for (const prefix in this.selectedQuestions) {
-        selectedQuestions.push(...this.groupedQuestions[prefix]);
-      }
-      if (Object.keys(this.selectedQuestions).length === this.numberOfQuestionsToAnswer) {
-        // Handle the submission logic here
-        console.log('Submitted Questions:', selectedQuestions);
-      } else {
-        alert('Please select exactly 2 sets of questions to submit.');
-      }
-    };
-  });  
-}
-//  ============================SUBJECTIVE QUESTIONS=======================================
+  onSubmitt() {
+    Swal.fire({
+      title: "Do you want to submit the questions answered?",
+      showCancelButton: true,
+      confirmButtonText: "Submit",
+      icon: "info",
+    }).then((e) => {
+      if (e.isConfirmed) {
+        const selectedQuestions = [];
+        for (const prefix in this.selectedQuestions) {
+          selectedQuestions.push(...this.groupedQuestions[prefix]);
+        }
+        if (Object.keys(this.selectedQuestions).length === this.numberOfQuestionsToAnswer) {
+          // Handle the submission logic here
+          console.log('Submitted Questions:', selectedQuestions);
+        } else {
+          alert('Please select exactly 2 sets of questions to submit.');
+        }
+      };
+    });
+  }
+  //  ============================SUBJECTIVE QUESTIONS=======================================
 
 
   ngOnInit(): void {
@@ -154,131 +160,114 @@ export class StartComponent implements OnInit {
         alert("Error loading quiz data")
       }
     );
-
-    this.loadSubjective();
+    this.loadTheory();
+    // this.loadSubjective();
     this.loadQuestions();
     this.startTimer();
     this.loadQuestionsFromLocalStorage();
     this.printQuiz();
     this.initForm();
-   
     // this.preventBackButton();
   }
 
-      //  ============================SUBJECTIVE QUESTIONS=======================================
 
-
-      
-  // loadSubjective(){
-  //  this.groupedQuestions = this.login.getQuestionsGroupedByPrefix();
-  //  this.prefixes = Object.keys(this.groupedQuestions);
-  // }
-
-
-
-      // givenAnswer:[] THIS HAS THE ANSWERS FROM THE STUDENTS
-
-
-
-      
   //  ============================SUBJECTIVE QUESTIONS=======================================
-  loadSubjective() {
-    this.groupedQuestions = this.login.getQuestionsGroupedByPrefix();
-    this.prefixes = Object.keys(this.groupedQuestions);
+  loadTheory() {
+    this._questions.getSubjective(this.qid).subscribe((theory: any) => {
+      console.log(theory);
+      // this.sectionB = theory;
+      this.groupedQuestions = this.getQuestionsGroupedByPrefix(theory);
+      this.prefixes = Object.keys(this.groupedQuestions);
 
-    // this.questionT = this.groupedQuestions.map((que, index) => {
-    //   // q.count = index + 1;
-    //   que['givenAnswer'] = [];
-    //   // q.option1Selected = false;
-    //   // q.option2Selected = false;
-    //   // q.option3Selected = false;
-    //   // q.option4Selected = false;
-    //   console.log(this.questions)
-    //   return que;
-    // });
-
-
-    console.log(this.groupedQuestions);
-   }
-
-
-
-   
-
-//  ============================SUBJECTIVE QUESTIONS=======================================
-
-get currentQuestions(): Question[] {
-  return this.groupedQuestions[this.prefixes[this.currentPage]];
-}
-
-
-
-togglePrefixSelection(prefix: string) {
-  if (this.selectedQuestions[prefix]) {
-    // Deselect all sub-questions
-    this.groupedQuestions[prefix].forEach(question => question.selected = false);
-    delete this.selectedQuestions[prefix];
-  } else {
-    if (Object.keys(this.selectedQuestions).length < this.numberOfQuestionsToAnswer) {
-      // Select all sub-questions
-      this.groupedQuestions[prefix].forEach(question => question.selected = true);
-      this.selectedQuestions[prefix] = true;
-    } else {
-      alert('You can only select 2 sets of questions.');
-    }
-  }}
-onPrefixChange(prefix: string) {
-  this.selectedPrefix = prefix;
-}
-nextPage() {
-  if (this.currentPage < this.prefixes.length - 1) {
-    this.currentPage++;
+      console.log(this.groupedQuestions);
+    },
+      (error) => {
+        console.log("Could not load data from server");
+      });
   }
-}
-prevPage() {
-  if (this.currentPage > 0) {
-    this.currentPage--;
+  getQuestionsGroupedByPrefix(questions) {
+    return questions.reduce((acc, question) => {
+      const prefix = question.quesNo.match(/^[A-Za-z]+[0-9]+/)[0];
+      if (!acc[prefix]) {
+        acc[prefix] = [];
+      }
+      acc[prefix].push(question);
+      return acc;
+    }, {});
   }
-}
-onQuestionSelect(question: Question) {
-  if (question.selected) {
-    question.selected = false;
-    this.selectedQuestionsCount--;
-  } else {
-    if (this.selectedQuestionsCount < 2) {
-      question.selected = true;
-      this.selectedQuestionsCount++;
+
+
+
+
+
+  //  ============================SUBJECTIVE QUESTIONS=======================================
+
+  get currentQuestions(): Question[] {
+    return this.groupedQuestions[this.prefixes[this.currentPage]];
+  }
+
+
+  togglePrefixSelection(prefix: string) {
+    if (this.selectedQuestions[prefix]) {
+      // Deselect all sub-questions
+      this.groupedQuestions[prefix].forEach(question => question.selected = false);
+      delete this.selectedQuestions[prefix];
     } else {
-      alert('You can only select 2 questions.');
+      if (Object.keys(this.selectedQuestions).length < this.numberOfQuestionsToAnswer) {
+        // Select all sub-questions
+        this.groupedQuestions[prefix].forEach(question => question.selected = true);
+        this.selectedQuestions[prefix] = true;
+      } else {
+        alert('You can only select 2 sets of questions.');
+      }
     }
-  }}
-//  ============================SUBJECTIVE QUESTIONS=======================================
+  }
+  onPrefixChange(prefix: string) {
+    this.selectedPrefix = prefix;
+  }
+  nextPage() {
+    if (this.currentPage < this.prefixes.length - 1) {
+      this.currentPage++;
+    }
+  }
+  prevPage() {
+    if (this.currentPage > 0) {
+      this.currentPage--;
+    }
+  }
+  onQuestionSelect(question: Question) {
+    if (question.selected) {
+      question.selected = false;
+      this.selectedQuestionsCount--;
+    } else {
+      if (this.selectedQuestionsCount < 2) {
+        question.selected = true;
+        this.selectedQuestionsCount++;
+      } else {
+        alert('You can only select 2 questions.');
+      }
+    }
+  }
+  //  ============================SUBJECTIVE QUESTIONS=======================================
+
+
 
 
 
   loadQuestions(): void {
-    this._questions.getQuestionsOfQuiz(this.qid).subscribe((data:any)=>{
+    this._questions.getQuestionsOfQuiz(this.qid).subscribe((data: any) => {
       // this._questions.getQuestionsOfQuizForText(this.qid).subscribe((data: any) => {  // this does the question shuffle on start of quiz
-    // this._questions.getQuestionsOfQuizForText(1).subscribe((data: any) => {  // this does the question shuffle on start of quiz
+      // this._questions.getQuestionsOfQuizForText(1).subscribe((data: any) => {  // this does the question shuffle on start of quiz
       // console.log(data[0].answer);
       console.log(data);
-      // localStorage.setItem('GivenAndAnswers', JSON.stringify(data));
-      //save to local storage
       this.questions = data.map((q, index) => {
         q.count = index + 1;
         q['givenAnswer'] = [];
-        // q.option1Selected = false;
-        // q.option2Selected = false;
-        // q.option3Selected = false;
-        // q.option4Selected = false;
         console.log(this.questions)
         return q;
 
       });
-      // console.log(data[0])  
-      // BECAREFULL ABOUT HERE
       let timerString = localStorage.getItem('countdown_timer');
-      // Converting the string to a number using parseInt()
       const timerNumber = parseInt(timerString, 10);
       console.log(typeof (timerNumber));
       if (timerNumber) {
@@ -301,16 +290,13 @@ onQuestionSelect(question: Question) {
     this.preventBackButton();
   }
 
-  //UPON SELECTIONS AND DESECLECTION, ADD AND REMOVE OPTIONS RESPECTIVELY
-  // updateSelectedAnswers(q: any, option: string) {
-  //   q.givenAnswer = [option];
-  // }
+ 
 
   updateSelectedAnswers(q: any, option: string, isChecked: boolean) {
     if (isChecked) {
       // Add the option to the givenAnswer array if it's checked
       q.givenAnswer.push(option);
-    } else { 
+    } else {
       // Remove the option from the givenAnswer array if it's unchecked
       const index = q.givenAnswer.indexOf(option);
       if (index !== -1) {
@@ -351,7 +337,7 @@ onQuestionSelect(question: Question) {
 
   submitQuiz() {
 
-this.evalSubjective();
+    this.evalSubjective();
     Swal.fire({
       title: "Do you want to submit the quiz ?",
       showCancelButton: true,
@@ -359,11 +345,16 @@ this.evalSubjective();
       icon: "info",
     }).then((e) => {
       if (e.isConfirmed) {
+
+
+// EVALUATE THE SUBJECTIVE
+this.evalTheory();
+
+
+
+        // EVALUATIING THE OBJECTIVES
         this.evalQuiz();
-        //Make calculation
-        // this.saveGivenAndAnswer();
         this.printQuiz();
-        //  this.evalQuiz();
         this.loadQuestionsWithAnswers();
         this.preventBackButton();
       };
@@ -410,6 +401,7 @@ this.evalSubjective();
         // this.submitQuiz();
         this.printQuiz();
         this.evalQuiz();
+        this.evalTheory();
         this.loadQuestionsWithAnswers();
         clearInterval(t);
         // localStorage.removeItem("exam");
@@ -426,6 +418,10 @@ this.evalSubjective();
     return `${mm} min : ${ss} sec`
   }
 
+
+  evalTheory(){
+    // Logic goes here
+  }
 
   evalQuiz() {
     //Evaluate questions
@@ -465,19 +461,19 @@ this.evalSubjective();
   }
 
 
-evalSubjective(){
-  const selectedQuestions = [];
-  for (const prefix in this.selectedQuestions) {
-    selectedQuestions.push(...this.groupedQuestions[prefix]);
-  }
-  if (Object.keys(this.selectedQuestions).length === this.numberOfQuestionsToAnswer) {
-    // Handle the submission logic here
-    console.log('Submitted Questions:', selectedQuestions);
-  } else {
-    alert('Please select exactly 2 sets of questions to submit.');
-  }
+  evalSubjective() {
+    const selectedQuestions = [];
+    for (const prefix in this.selectedQuestions) {
+      selectedQuestions.push(...this.groupedQuestions[prefix]);
+    }
+    if (Object.keys(this.selectedQuestions).length === this.numberOfQuestionsToAnswer) {
+      // Handle the submission logic here
+      console.log('Submitted Questions:', selectedQuestions);
+    } else {
+      alert('Please select exactly 2 sets of questions to submit.');
+    }
 
-}
+  }
 
 
 

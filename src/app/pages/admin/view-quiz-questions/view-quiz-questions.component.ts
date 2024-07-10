@@ -1,7 +1,9 @@
-import { Component, OnInit } from '@angular/core';
+import { Component,TemplateRef, OnInit } from '@angular/core';
 import { MatSnackBar } from '@angular/material/snack-bar';
 import { ActivatedRoute } from '@angular/router';
 import { QuestionService } from 'src/app/services/question.service';
+import { MatDialog, MatDialogRef } from '@angular/material/dialog';
+
 import Swal from 'sweetalert2';
 
 @Component({
@@ -14,10 +16,11 @@ export class ViewQuizQuestionsComponent  implements OnInit{
   qId;
  qTitle;
  questions=[];
+ sectionB: any[] = [];
 
   constructor(private _route:ActivatedRoute, 
               private _question:QuestionService,
-              private _snack:MatSnackBar,){  }
+              private _snack:MatSnackBar,public dialog: MatDialog){  }
 
   ngOnInit(): void {
     this.qId =this._route.snapshot.params['qId'];
@@ -33,8 +36,54 @@ export class ViewQuizQuestionsComponent  implements OnInit{
    }
    );
 
-
+   this._question.getSubjective(this.qId).subscribe((theory:any)=>{
+console.log(theory);
+this.sectionB = theory;
+   },
+  (error)=>{
+    console.log("Could not load data from server");
+  });
   }
+
+  dialogRef!: MatDialogRef<any>;
+
+
+
+  getPrefixes(): string[] {
+    const prefixes = new Set<string>();
+    this.sectionB.forEach(question => {
+      const prefix = question.quesNo.match(/^Q\d+/)?.[0];
+      if (prefix) {
+        prefixes.add(prefix);
+      }
+    });
+    return Array.from(prefixes);
+  }
+
+  getGroupedQuestions(prefix: string) {
+    return this.sectionB.filter(q => q.quesNo.startsWith(prefix));
+  }
+
+
+  openUpdateDialog(question:any, templateRef: TemplateRef<any>): void {
+    this.dialogRef = this.dialog.open(templateRef, {
+      width: '250px',
+      data: { question: question.question }
+    });
+
+    this.dialogRef.afterClosed().subscribe(result => {
+      if (result) {
+        question.question = result.question;
+        // Handle the update logic here (e.g., make a request to the server)
+      }
+    });
+  }
+
+
+
+
+
+
 
   //Delete question
   deleteQuestion(qId){

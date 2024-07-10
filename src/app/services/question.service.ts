@@ -15,6 +15,12 @@ export class QuestionService {
   public getQuestionsOfQuiz(qid){
     return this._http.get(`${baseUrl}/question/quiz/all/${qid}`);
   }
+
+
+  public getSubjective(qid){
+    return this._http.get(`${baseUrl}/theoryquestion/quiz/all/${qid}`);
+  }
+
   //// HOPE it works
   private refreshNeeded= new Subject<void>();
   
@@ -59,6 +65,7 @@ public getReportIdUserId(rid){
 public getReport(){
   return this._http.get(`${baseUrl}/getReport`);
 }
+
 
   //eval-quiz ORIGINAL
 // public evalQuiz(question){

@@ -1,53 +1,124 @@
 <!-- {{questions |json}} -->
 
 <h1 class="mt20">{{qTitle}} Questions </h1>
-
-
 <div class="bootstrap-wrapper">
     <div class="row">
         <div class="col-md-12">
-
             <!-- {{questions | json}} -->
             <div class="container text-center">
-                <button mat-raised-button color="accent" [routerLink]="'/admin/add-question/' + qId +'/' + qTitle">Add Question</button>
+                <button mat-raised-button color="accent" [routerLink]="'/admin/add-question/' + qId +'/' + qTitle">Add
+                    Question</button>
             </div>
-            <mat-card *ngFor="let q of questions; let i= index" class="mt20">
-                <mat-card-content>
+            <div *ngIf="questions.length>0">
+                <h1 style="text-align: center;">Section A</h1>
+                <mat-card *ngFor="let q of questions; let i= index" class="mt20">
+                    <mat-card-content>
 
-<p>
-    <b>Q {{i+1}}.</b> <span class="ml20" [innerHTML]="q.content"></span> 
-</p>
+                        <p>
+                            <b>Q {{i+1}}.</b> <span class="ml20" [innerHTML]="q.content"></span>
+                        </p>
 
-<div class="container-fluid">
-    <div class="row">
-        <div class="col-md-6">
-            <p> <b>1)</b> {{ q.option1}}</p>
+                        <div class="container-fluid">
+                            <div class="row">
+                                <div class="col-md-6">
+                                    <p> <b>1)</b> {{ q.option1}}</p>
+                                </div>
+
+                                <div class="col-md-6">
+                                    <p> <b>2)</b>{{ q.option2}}</p>
+                                </div>
+                                <div class="col-md-6">
+                                    <p> <b>3)</b> {{ q.option3}}</p>
+                                </div>
+
+                                <div class="col-md-6">
+                                    <p> <b>4)</b>{{ q.option4}}</p>
+                                </div>
+                            </div>
+                            <mat-divider></mat-divider>
+                            <p class="mt10">
+                                <b>Correct Answer(s):</b> {{q.correct_answer}}
+                            </p>
+                        </div>
+                    </mat-card-content>
+                    <mat-card-actions style="margin-top: -20px;">
+                        <button mat-button color="warn" (click)="deleteQuestion(q.quesId)">Delete</button>
+                        <button mat-button color="primary"
+                            [routerLink]="'/admin/update-question/'+ q.quesId">Update</button>
+                    </mat-card-actions>
+                </mat-card>
+            </div>
+
+
+            <!-- POP UP DIALOG BOX -->
+
+            <ng-template #updateDialog let-data="data">
+                <h1 mat-dialog-title>Update Question</h1>
+                <div mat-dialog-content>
+                  <mat-form-field appearance="fill">
+                    <mat-label>Question</mat-label>
+                    <input matInput [(ngModel)]="data.question">
+                  </mat-form-field>
+                </div>
+                <div mat-dialog-actions>
+                  <button mat-button (click)="dialogRef.close()">Cancel</button>
+                  <button mat-button (click)="dialogRef.close(data)">Update</button>
+                </div>
+              </ng-template>
+            <!-- SECTION B -->
+             
+            <div *ngIf="getPrefixes().length>0">
+                <h1 style="text-align: center;">Section B</h1>
+                <div *ngFor="let prefix of getPrefixes()">
+                    <mat-card *ngIf="getGroupedQuestions(prefix).length > 0">
+                        <mat-card-header>
+                            <mat-card-title>{{ prefix }}</mat-card-title>
+                        </mat-card-header>
+                        <mat-card-content>
+                            <div *ngFor="let question of getGroupedQuestions(prefix)">
+                                <p><strong>{{ question.quesNo }}:</strong> {{ question.question }} ({{ question.marks
+                                    }})
+                                    <button mat-icon-button [matMenuTriggerFor]="menu"
+                                        aria-label="Example icon-button with a menu">
+                                        <mat-icon>more_vert</mat-icon>
+                                    </button>
+                                </p>
+                                <mat-card-actions style="margin-top: -75px;">
+                                    <mat-menu #menu="matMenu">
+                                        <button mat-menu-item (click)="openUpdateDialog(question, updateDialog)">
+                                            <mat-icon color="accent">update</mat-icon>
+                                            <span> Update
+                                            </span>
+                                        </button>
+
+                                        <!-- <button mat-menu-item [routerLink]="'/admin/update-question/'+ question.quesId">
+                                            <mat-icon color="accent">update</mat-icon>
+                                            <span> Update
+                                            </span>
+                                        </button> -->
+                                        <button mat-menu-item (click)="deleteQuestion(question.quesId)">
+                                            <mat-icon color="accent">delete</mat-icon>
+                                            <span> Delete
+                                            </span>
+                                        </button>
+                                    </mat-menu>
+                                </mat-card-actions>
+                            </div>
+                        </mat-card-content>
+                    </mat-card>
+                    <mat-divider></mat-divider>
+                </div>
+            </div>
+            </div>
+
+
+
+
+            <!-- {{sectionB | json}} -->
+
+
+
+
         </div>
 
-        <div class="col-md-6">
-            <p> <b>2)</b>{{ q.option2}}</p>
-        </div>
-        <div class="col-md-6">
-            <p> <b>3)</b> {{ q.option3}}</p>
-        </div>
-
-        <div class="col-md-6">
-            <p> <b>4)</b>{{ q.option4}}</p>
-        </div>
     </div>
-    <mat-divider></mat-divider>
-    <p class="mt10">
-        <b>Correct Answer(s):</b> {{q.correct_answer}}
-    </p>
-</div>      
-</mat-card-content>
-
-                <mat-card-actions style="margin-top: -20px;">
-                    <button mat-button color="warn"  (click)="deleteQuestion(q.quesId)">Delete</button>
-                    <button mat-button color="primary" [routerLink]="'/admin/update-question/'+ q.quesId">Update</button>
-                   </mat-card-actions>
-            </mat-card>
-        </div>
-    </div>
-
-</div>
