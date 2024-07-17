@@ -239,19 +239,22 @@
                             color="primary">Submit</button> -->
                                 </mat-card>
 
+
+                                 
                                 <mat-card>
                                     <div class="container">
                                         <div class="row">
                                             <div class="col-md-12">
                                                 <!-- <mat-label>Select set of questions answered!</mat-label> -->
-                                                <mat-card-title>Select set of questions answered!</mat-card-title>
+                                                <mat-card-title>Select {{numberOfQuestionsToAnswer}} set(s) of questions answered!</mat-card-title>
                                                 <div *ngIf="prefixes.length > 0" class="prefix-container">
                                                     <div *ngFor="let prefix of prefixes" class="prefix-item">
                                                         <mat-checkbox [checked]="selectedQuestions[prefix]"
                                                             (change)="togglePrefixSelection(prefix)">
-                                                            {{ prefix }}
+                                                            {{ prefix }} 
                                                         </mat-checkbox>
                                                     </div>
+
                                                 </div>
                                             </div>
                                         </div>
@@ -262,7 +265,7 @@
 
                         <!-- BUTTON IF SUBJECTIVE IS INCLUSIVE -->
                         <div class="contianer text-center mt20 mb20">
-                            <button mat-raised-button color="primary" (click)="submitQuiz()"
+                            <button mat-raised-button color="primary" (click)="submitAllQuiz()"
                                 [disabled]="isSubmitDisabled">Submit Quiz</button>
                         </div>
 

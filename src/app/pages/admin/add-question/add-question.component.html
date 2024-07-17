@@ -93,14 +93,14 @@
                                     <button mat-raised-button color="accent">Add</button>
                                    </div>
                     </form>
-                    <label>Upload Questions Instead!   <button  mat-button color="primary" 
-                        matTooltip='The acccepted quiz format is JSON'
-                        >
+
+                    <div class="row">
+                        <div class="col-md-6">
+                    <label>Upload Objective Questions Instead!   <button  mat-button color="primary" 
+                        matTooltip='The acccepted quiz format is JSON'>
         See Acccepted Format
                         </button>
             </label>
-              
-
                     <mat-divider></mat-divider>
 
                     <!-- <form> -->
@@ -113,6 +113,30 @@
 
                     <button class="upload-btn" mat-raised-button color="accent" (click)="uploadQuiz()">Upload </button>
 
+                    </div>
+                    <div class="col-md-6">
+                        <label>Upload Theory Questions!   <button  mat-button color="primary" 
+                            matTooltip='The acccepted quiz format is JSON'>
+                                 See Acccepted Format
+                            </button>
+                             </label>
+                        <mat-divider></mat-divider>
+    
+                        <!-- <form> -->
+                        <!-- <input type="file" (change)="onFileSelected($event)"> -->
+                        <label class="file-input-label">
+                            <input type="file" (change)="onFileSelected($event)" class="file-input">
+                            <span class="file-input-text">Select questions</span>
+                          </label>
+                          
+    
+                        <button class="upload-btn" mat-raised-button color="accent" (click)="uploadTheoryQuestions()">Upload </button>
+
+                    </div>
+
+
+
+                </div>
                 <!-- </form> -->
 
                 </mat-card-content>

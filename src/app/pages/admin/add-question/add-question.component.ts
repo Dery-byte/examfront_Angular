@@ -92,25 +92,48 @@ export class AddQuestionComponent implements OnInit {
     this._question.uploadQuestions(this.qId, this.selectedFile).subscribe(
       response => {
         
-
         // console.error('Error uploading questions:', "error");
-        Swal.fire("Error", "Error uploading questions", "error");
         // Handle error, e.g., show an error message
-
+        Swal.fire('Success', "Questions uploaded successfully", "success");
+        this._router.navigate(["/admin/quizzes"]);
         // Handle success, e.g., show a success message
       },
       (error) => {
 
+        Swal.fire("Error", "Error uploading questions", "error");
 
         // console.log('Quiz uploaded successfully:', "succes");
-        Swal.fire('Success', "Questions uploaded successfully", "success");
-        this._router.navigate(["/admin/quizzes"]);
+       
         // this._router.navigate(["/admin/view-questions"/{this.qId}]);
 
 
       }
     );
   }
+
+
+
+  
+  uploadTheoryQuestions(): void {
+    if (!this.selectedFile) {
+      Swal.fire("Error", "No file selected.", "error");
+
+      console.error('No file selected.');
+      return;
+    }
+       this._question.uploadTheoryQuestions(this.qId, this.selectedFile).subscribe(
+      response => {
+        Swal.fire("Error", "Error uploading questions", "error");
+      },
+      (error) => {
+        Swal.fire('Success', "Theory Questions uploaded successfully", "success");
+        this._router.navigate(["/admin/quizzes"]);
+      }
+    );
+  }
+
+
+
 
 
 }

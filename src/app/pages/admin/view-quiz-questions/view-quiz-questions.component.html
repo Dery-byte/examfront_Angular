@@ -51,22 +51,39 @@
 
 
             <!-- POP UP DIALOG BOX -->
-
+            
             <ng-template #updateDialog let-data="data">
                 <h1 mat-dialog-title>Update Question</h1>
                 <div mat-dialog-content>
-                  <mat-form-field appearance="fill">
-                    <mat-label>Question</mat-label>
-                    <input matInput [(ngModel)]="data.question">
+
+                    <!-- <form> -->
+                  <mat-form-field class="w100" appearance="fill">
+                    <mat-label>Question No</mat-label>
+                    <input matInput [(ngModel)]="theory.quesNo">
                   </mat-form-field>
+                  <mat-form-field class="w100" appearance="fill">
+                    <mat-label>Question</mat-label>
+                    <input matInput [(ngModel)]="theory.question">
+                  </mat-form-field>
+                  <mat-form-field class="w100" appearance="fill">
+                    <mat-label>Marks</mat-label>
+                    <input matInput [(ngModel)]="theory.marks">
+                  </mat-form-field>
+                <!-- </form> -->
+
                 </div>
                 <div mat-dialog-actions>
                   <button mat-button (click)="dialogRef.close()">Cancel</button>
-                  <button mat-button (click)="dialogRef.close(data)">Update</button>
+                  <button mat-button (click)="dialogRef.close(data.question)">Update</button>
                 </div>
               </ng-template>
+            
+
+              
+
+
+
             <!-- SECTION B -->
-             
             <div *ngIf="getPrefixes().length>0">
                 <h1 style="text-align: center;">Section B</h1>
                 <div *ngFor="let prefix of getPrefixes()">
@@ -80,29 +97,30 @@
                                     }})
                                     <button mat-icon-button [matMenuTriggerFor]="menu"
                                         aria-label="Example icon-button with a menu">
-                                        <mat-icon>more_vert</mat-icon>
+                                        <mat-icon class="more_verti">more_vert</mat-icon>
                                     </button>
                                 </p>
+
+
+
+                                <!-- BUTTON TO OPEN MODEL -->
                                 <mat-card-actions style="margin-top: -75px;">
                                     <mat-menu #menu="matMenu">
-                                        <button mat-menu-item (click)="openUpdateDialog(question, updateDialog)">
-                                            <mat-icon color="accent">update</mat-icon>
-                                            <span> Update
-                                            </span>
+                                        <button mat-menu-item (click)="openUpdateDialog(question.tqId, updateDialog)">
+                                          <mat-icon color="accent">update</mat-icon>
+                                          <span>Update</span>
                                         </button>
 
-                                        <!-- <button mat-menu-item [routerLink]="'/admin/update-question/'+ question.quesId">
-                                            <mat-icon color="accent">update</mat-icon>
-                                            <span> Update
-                                            </span>
-                                        </button> -->
-                                        <button mat-menu-item (click)="deleteQuestion(question.quesId)">
+
+                                        <button mat-menu-item (click)="deleteTheoryQuestion(question.tqId)">
                                             <mat-icon color="accent">delete</mat-icon>
                                             <span> Delete
                                             </span>
                                         </button>
                                     </mat-menu>
                                 </mat-card-actions>
+
+
                             </div>
                         </mat-card-content>
                     </mat-card>

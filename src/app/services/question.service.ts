@@ -21,6 +21,11 @@ export class QuestionService {
     return this._http.get(`${baseUrl}/theoryquestion/quiz/all/${qid}`);
   }
 
+  public getSpecificSubjective(tqId){
+    return this._http.get(`${baseUrl}/theoryquestion/${tqId}`);
+  }
+
+
   //// HOPE it works
   private refreshNeeded= new Subject<void>();
   
@@ -46,9 +51,20 @@ export class QuestionService {
     return this._http.delete(`${baseUrl}/question/${questionId}`);
   }
 
+  //Delete Theory Question
+  public deleteTheoryQuestion(questionId){
+    return this._http.delete(`${baseUrl}/theoryquestion/${questionId}`);
+  }
+
   //Update Question
   public updateQuestion(question){
     return this._http.put(`${baseUrl}/question/updateQuestions`, question);
+  }
+
+
+ //update Theory
+public updateTheoryQuestions(theory){
+  return this._http.put(`${baseUrl}/theoryquestion/updateQuestions`, theory);
   }
 
 
@@ -98,6 +114,15 @@ public getReport(){
       });
         return this._http.post(`${baseUrl}/upload/${qid}`, questions, {headers})
   }
+
+
+  uploadTheoryQuestions(qid: number, questions): Observable<any> {
+    const headers = new HttpHeaders({
+      'Content-Type': 'application/json',
+      // 'Content-Type': 'multipart/form-data',
+    });
+      return this._http.post(`${baseUrl}/theoryupload/${qid}`, questions, {headers})
+}
 
 
 }
