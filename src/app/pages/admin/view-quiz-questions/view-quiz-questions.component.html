@@ -51,11 +51,9 @@
 
 
             <!-- POP UP DIALOG BOX -->
-            
             <ng-template #updateDialog let-data="data">
                 <h1 mat-dialog-title>Update Question</h1>
                 <div mat-dialog-content>
-
                     <!-- <form> -->
                   <mat-form-field class="w100" appearance="fill">
                     <mat-label>Question No</mat-label>
@@ -70,11 +68,11 @@
                     <input matInput [(ngModel)]="theory.marks">
                   </mat-form-field>
                 <!-- </form> -->
-
                 </div>
                 <div mat-dialog-actions>
                   <button mat-button (click)="dialogRef.close()">Cancel</button>
-                  <button mat-button (click)="dialogRef.close(data.question)">Update</button>
+                  <!-- <button mat-button (click)="dialogRef.close(data.question)" onclick="updateTheoryQuestion()">Update</button> -->
+                  <button mat-button  (click)="updateTheoryQuestion()">Update</button>
                 </div>
               </ng-template>
             
@@ -100,8 +98,6 @@
                                         <mat-icon class="more_verti">more_vert</mat-icon>
                                     </button>
                                 </p>
-
-
 
                                 <!-- BUTTON TO OPEN MODEL -->
                                 <mat-card-actions style="margin-top: -75px;">

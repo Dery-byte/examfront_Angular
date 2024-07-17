@@ -4,6 +4,8 @@ import { ActivatedRoute, Router } from '@angular/router';
 import { QuestionService } from 'src/app/services/question.service';
 import { MatDialog, MatDialogRef } from '@angular/material/dialog';
 
+
+
 import Swal from 'sweetalert2';
 
 @Component({
@@ -20,7 +22,7 @@ export class ViewQuizQuestionsComponent  implements OnInit{
  sectionB: any[] = [];
  theory;
  specificSectionB;
-
+ 
   constructor(private _route:ActivatedRoute, 
               private _question:QuestionService,
               private _snack:MatSnackBar,
@@ -78,36 +80,35 @@ this.sectionB = theory;
       console.log(this.theory);
     this.dialogRef = this.dialog.open(templateRef, {
       width: '350px',
-      data: this.specificSectionB,
+      data: this.theory,
     });
-    this.dialogRef.afterClosed().subscribe(result => {
+
+      this.dialogRef.afterClosed().subscribe(result => {
       if (result) {
-        // this.specificSectionB.quesNo = result.quesNo;
-        // this.specificSectionB.question = result.question;
-        // this.specificSectionB.marks = result.marks;
-        // Handle the update logic here (e.g., make a request to the server)
+        this.theory=result;
       }
     });
     });
   }
-
   getQuestionById(questionId: any): any {
    return this._question.getSpecificSubjective(questionId);
   }
-
 
   // Update Theory Question WORK ON THIS LATER
   updateTheoryQuestion(){
     this._question.updateTheoryQuestions(this.theory).subscribe((data)=>
       {
-        Swal.fire("Success ", "Question Updated Succesfully","success").then((e)=>
-        {
-          this._router.navigate(["/admin/view-quetions"]);
+        this._snack.open("Question Updated Successfully! ", "",{
+          duration:3000,
         });
+        this.dialogRef.close(this.theory);
+        // this._router.navigate(["/admin/view-quetions/:qId/:qTitle"]);
       },
       (error)=>{
-        Swal.fire("Error", "Question Could not be updated", "error");
-      });
+        this._snack.open("Couldn't update Question", "", {
+          duration:3000,
+        });     
+       });
   }
 
 
