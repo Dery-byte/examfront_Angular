@@ -4,47 +4,44 @@
 
 <!-- {{questions | json}} -->
 
+<!-- {{sectionB | json}} -->
 <!-- {{questionWithAnswers | json}} -->
-<ngx-ui-loader
-fgsColor="#ff4081"
-pbColor="#ff4081"
-textColor="#ff4081"
-pbThickness="6"
-text="Preparing results please wait...!"
-></ngx-ui-loader>
+<ngx-ui-loader fgsColor="#ff4081" pbColor="#ff4081" textColor="#ff4081" pbThickness="6"
+    text="Preparing results please wait...!"></ngx-ui-loader>
 
 
 <div ngxUiLoaderBlurred (blur)="10">
 
 
 
-<!-- QUESTIONS LOAD AFTER SUBMIT -->
-<!-- questions -->
-<div class="bootstrap-wrapper">
-    <div class="row mt20">
-        <div class="col-md-6 offset-md-3">
-            <ng-container>
-                <!-- <h1 class="mt20" id="quiztitle">Quiz <b>{{questions[0].quiz.title}}</b></h1> -->
-            </ng-container>
-            <!-- <div class="row"> -->
+    <!-- QUESTIONS LOAD AFTER SUBMIT -->
+    <!-- questions -->
+    <div class="bootstrap-wrapper">
+        <div class="row mt20">
+            <div class="col-md-6 offset-md-3">
+                <ng-container>
+                    <!-- <h1 class="mt20" id="quiztitle">Quiz <b>{{questions[0].quiz.title}}</b></h1> -->
+                </ng-container>
+                <!-- <div class="row"> -->
 
                 <div class="watermark">
-            <div class="caption">
-                <p id="cape">University of Cape Coast.<br>
+                    <div class="caption">
+                        <p id="cape">University of Cape Coast.<br>
 
-                    School of Physical Sciences. <br>Department of Computer Science and Information Technology<br>
-                    <b>{{questions[0].quiz.category.title}}</b>
-                    {{questions[0].quiz.title}}. Time Allowed:
-                    <i>
-                        <b> {{questions[0].quiz.quizTime * 1}} minutes</b>
+                            School of Physical Sciences. <br>Department of Computer Science and Information
+                            Technology<br>
+                            <b>{{questions[0].quiz.category.title}}</b>
+                            {{questions[0].quiz.title}}. Time Allowed:
+                            <i>
+                                <b> {{questions[0].quiz.quizTime * 1}} minutes</b>
 
-                    </i>
-                </p>
-                <label> Index Number:{{username | uppercase}}</label>
-            </div>
+                            </i>
+                        </p>
+                        <label> Index Number:{{username | uppercase}}</label>
+                    </div>
 
 
-            <!-- <span id="marks">
+                    <!-- <span id="marks">
                 <p>Marks : <span id="marksU">{{correctAnswers}}/{{ questions[0].quiz.maxMarks}}</span></p>
                 <p> Correct Answers : {{correctAnswers}}</p>
                 <p> Correct Answers: {{reportData[0].marks}}</p>
@@ -52,89 +49,107 @@ text="Preparing results please wait...!"
             </span> -->
 
 
-            <!-- <div *ngIf="reportData"> -->
-            <div id="marks" *ngFor="let r of reportData">
-                <p>Marks : <span id="marksU">{{r.marks}}/{{ r.quiz.maxMarks}}</span></p>
-                <p> Correct Answers : {{r.marks}}</p>
-                <p>Attempted questions : {{attempted}}</p>
+                    <!-- <div *ngIf="reportData"> -->
+                    <div id="marks" *ngFor="let r of reportData">
+                        <p>Total Marks A & B : <span id="marksU">25</span></p>
 
-                    
-
-                <!-- YOU MAY ADD THIS ATTEMPTED OPTION IN THE BACKEND REPORT CLASS THEN FETCH REPORT AND SHOW ON THE INTERFACE -->
-                <!-- <p>Attempted questions : {{attempted}}</p> -->
-            </div>
-            <!-- </div> -->
-
-
-            <!-- </div> -->
-
-            <mat-card *ngFor="let qA of questionWithAnswers; let i = index" class="mt10">
-
-                <mat-card-content>
-                    <p> <b> Q {{ i + 1}} </b> <span class="ml10" [innerHTML]="qA.content"></span></p>
-                    <mat-divider></mat-divider>
-                    <br />
-
-                    <!-- Worked like magic -->
-
-                    <div class="row mt20">
-                        <div class="col-md-6">
-                            <input type="checkbox" [checked]="qA.correct_answer.includes(qA.option1)" disabled />
-                            {{qA.option1}}
-                        </div>
-
-                        <div class="col-md-6">
-                            <input type="checkbox" [name]="i" [checked]="qA.correct_answer.includes(qA.option2)" disabled />
-                            {{qA.option2}}
-                        </div>
-                        <div class="col-md-6">
-                            <input type="checkbox" [checked]="qA.correct_answer.includes(qA.option3)" disabled />
-                            {{qA.option3}}
-                        </div>
-
-                        <div class="col-md-6">
-                            <input type="checkbox" [checked]="qA.correct_answer.includes(qA.option4)" disabled />
-                            {{qA.option4}}
-
-                        </div>
+                        <p>Marks : <span id="marksU">{{r.marks}}/{{ r.quiz.maxMarks}}</span></p>
+                        <p> Correct Answers : {{r.marks}}</p>
+                        <p>Attempted questions : {{attempted}}</p>
 
 
 
-
-                        <!-- 
-        <div class="col-md-6"  *ngIf="qA.answer==qA.option1">
-        <input type="checkbox" checked disabled>
-            {{qA.option1}}
-        </div> 
-        
-        <div class="col-md-6" *ngIf="qA.answer==qA.option2">
-         <input type="checkbox" checked disabled>
-             {{qA.option2}}
-         </div> 
-         
-         <div class="col-md-6"  *ngIf="qA.answer==qA.option3">
-         <input type="checkbox" checked disabled>
-             {{qA.option3}}
-         </div> 
-         
-         <div class="col-md-6"  *ngIf="qA.answer==qA.option4">
-         <input type="checkbox" checked disabled>
-             {{qA.option4}}
-         </div>  -->
-
+                        <!-- YOU MAY ADD THIS ATTEMPTED OPTION IN THE BACKEND REPORT CLASS THEN FETCH REPORT AND SHOW ON THE INTERFACE -->
+                        <!-- <p>Attempted questions : {{attempted}}</p> -->
                     </div>
-                </mat-card-content>
-            </mat-card>
-            </div>
-            
-            <mat-card-actions>
-                <div class="container text-center">
-                    <button (click)="printPage()" mat-raised-button color="accent" id="homePrintbtn">Print</button>
+                    <!-- </div> -->
 
-                    <button mat-raised-button color="primary" class="ml10" id="homePrintbtn"
-                        routerLink="/user-dashboard/0">Home</button>
+
+                    <!-- </div> -->
+                    <!-- BEGIN SECTION A -->
+                     <div *ngIf="questionWithAnswers">
+                        <h1 style="text-align: center;">Section A</h1>
+                    <mat-card *ngFor="let qA of questionWithAnswers; let i = index" class="mt10">
+
+                        <mat-card-content>
+                            <p> <b> Q {{ i + 1}} </b> <span class="ml10" [innerHTML]="qA.content"></span></p>
+                            <mat-divider></mat-divider>
+                            <br />
+
+                            <!-- Worked like magic -->
+
+                            <div class="row mt20">
+                                <div class="col-md-6">
+                                    <input type="checkbox" [checked]="qA.correct_answer.includes(qA.option1)"
+                                        disabled />
+                                    {{qA.option1}}
+                                </div>
+
+                                <div class="col-md-6">
+                                    <input type="checkbox" [name]="i" [checked]="qA.correct_answer.includes(qA.option2)"
+                                        disabled />
+                                    {{qA.option2}}
+                                </div>
+                                <div class="col-md-6">
+                                    <input type="checkbox" [checked]="qA.correct_answer.includes(qA.option3)"
+                                        disabled />
+                                    {{qA.option3}}
+                                </div>
+
+                                <div class="col-md-6">
+                                    <input type="checkbox" [checked]="qA.correct_answer.includes(qA.option4)"
+                                        disabled />
+                                    {{qA.option4}}
+
+                                </div>
+                            </div>
+                        </mat-card-content>
+                    </mat-card>
+
                 </div>
-            </mat-card-actions>
+
+                    <!-- END OF SECTION A -->
+
+                    <!-- LOAD SECTION B HERE -->
+
+                    <div *ngIf="getPrefixes().length>0">
+                        <h1 style="text-align: center;">Section B</h1>
+                        <div *ngFor="let prefix of getPrefixes()">
+                            <mat-card *ngIf="getGroupedQuestions(prefix).length > 0">
+                                <mat-card-header>
+                                    <mat-card-title>{{ prefix }}</mat-card-title>
+                                </mat-card-header>
+                                <mat-card-content>
+                                    <div *ngFor="let question of getGroupedQuestions(prefix)">
+                                        <p><strong>{{ question.quesNo }}:</strong> {{ question.question }} (2 out of {{  question.marks
+                                            }})</p>
+                                            
+        
+                                    </div>
+                                </mat-card-content>
+                            </mat-card>
+                            <mat-divider></mat-divider>
+                        </div>
+                    </div> 
+         
+
+
+                    <!-- END OF SECTION B -->
+
+
+
+
+
+                </div>
+
+                <mat-card-actions>
+                    <div class="container text-center">
+                        <button (click)="printPage()" mat-raised-button color="accent" id="homePrintbtn">Print</button>
+
+                        <button mat-raised-button color="primary" class="ml10" id="homePrintbtn"
+                            routerLink="/user-dashboard/0">Home</button>
+                    </div>
+                </mat-card-actions>
+            </div>
         </div>
     </div>
-</div>

@@ -65,7 +65,11 @@
             <mat-card-actions>
               <div class="button-flex-container">
                 <!-- <button mat-button color="primary" (click)="Openpopup()" class="" >Forgotten Password?</button> -->
-                <button mat-button color="primary" (click)="openNew()">Forgotten Password?</button>
+                <button mat-button color="primary" (click)="openUpdateDialog(updateDialog)">Forgotten Password?</button>
+                <!-- <button mat-menu-item (click)="openUpdateDialog(updateDialog)">
+                   <mat-icon color="accent">update</mat-icon> 
+                  <span>Forgotten Password?</span>
+                </button> -->
               </div>
             </mat-card-actions>
           </mat-card>
@@ -77,16 +81,51 @@
 
 
 
+    <!-- fancy dialog box STARTS -->
+ <!-- POP UP DIALOG BOX -->
+ <ng-template #updateDialog let-data="data">
+  <h1 mat-dialog-title>Reset Password</h1>
+  <div mat-dialog-content>
+      <!-- <form> -->
+        <mat-form-field>
+          <mat-label>Username</mat-label>
+          <input [(ngModel)]="resetData.username" required name="username" type="text" matInput
+            placeholder="Username">
+        </mat-form-field>
+        <mat-form-field>
+          <mat-label>Email</mat-label>
+          <input [(ngModel)]="resetData.email" name="email" type="text" matInput placeholder="Email">
+        </mat-form-field>
+        <mat-form-field>
+          <mat-label>New Password</mat-label>
+          <input [(ngModel)]="resetData.password" name="newpassword" type="text" matInput
+            placeholder="New Password">
+        </mat-form-field>
+        <mat-form-field>
+          <mat-label>Confirm Password</mat-label>
+          <input [(ngModel)]="resetData.confirmPassword" name="confirmPassword" type="text" matInput
+            placeholder="Confirm Password">
+        </mat-form-field>
+  <!-- </form> -->
+  </div>
+  <div mat-dialog-actions>
+    <button mat-button (click)="dialogRef.close()">Cancel</button>
+    <!-- <button mat-button (click)="dialogRef.close(data.question)" onclick="updateTheoryQuestion()">Update</button> -->
+    <button mat-button  (click)="passwordChange()">Update</button>
+  </div>
+</ng-template>
+
+    <!-- fancy dialog ends here -->
+
+
 
 
 
     <!-- DIALOG BOX STARTS FROM HERE -->
-    <div class="">
+    <!-- <div class="">
       <p-dialog class="resetcontainer" [(visible)]="productDialog" [style]="{width: '60%', height:'1400px'}" header="">
         <mat-card>
-          <!-- {{resetData |json}} -->
           <form (ngSubmit)="passwordChange()">
-            <!-- <h1>Fill this form to reset Password</h1> -->
             <mat-card-content>
               <h3>Provide theses details to reset Password</h3>
               <mat-form-field>
@@ -118,8 +157,11 @@
           </form>
         </mat-card>
       </p-dialog>
-    </div>
+    </div> -->
     <!-- DIALOG BOX ENDS HERE -->
+
+
+
   </div>
 
 </div>

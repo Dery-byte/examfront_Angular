@@ -1,10 +1,11 @@
-import { Component, OnInit , Inject} from '@angular/core';
+import { Component, OnInit ,TemplateRef, Inject} from '@angular/core';
 import { MatSnackBar } from '@angular/material/snack-bar';
 import { Router,ActivatedRoute  } from '@angular/router';
 import Swal from 'sweetalert2';
 import { LoginService } from 'src/app/services/login.service';
 import {FormBuilder, Validators, FormGroup} from '@angular/forms';
 import {MatDialog, MAT_DIALOG_DATA, MatDialogRef, MatDialogModule} from '@angular/material/dialog';
+
 
 import { Question } from 'src/model testing/model';
 @Component({
@@ -70,12 +71,32 @@ export class LoginComponent implements OnInit {
 
   allUsers=[];
   
-  constructor( private fb: FormBuilder,private snack:MatSnackBar, private route:ActivatedRoute, private login:LoginService, private router:Router, private _formBuilder: FormBuilder, public dialog: MatDialog){}
+  constructor( private fb: FormBuilder,
+    private snack:MatSnackBar, 
+    private route:ActivatedRoute, 
+    private login:LoginService, 
+    private router:Router, 
+    private _formBuilder: FormBuilder, 
+    public dialog: MatDialog){}
   
-  
+  dialogRef!: MatDialogRef<any>;
 
-  //  ============================SUBJECTIVE QUESTIONS=======================================
+
+  //  ============================OPEN DIALOGY FANCY=======================================
+  openUpdateDialog(templateRef: TemplateRef<any>): void {
+    // Fetch question details based on ID
+    this.dialogRef = this.dialog.open(templateRef, {
+      width: '350px',
+    });
+
+      this.dialogRef.afterClosed().subscribe(result => {
+      if (result) {
+        
+      }
   
+    });
+   
+  }
   //  ============================SUBJECTIVE QUESTIONS=======================================
 
  
@@ -256,12 +277,9 @@ else{
 
          this.login.resetPassword(this.resetData).subscribe((resetdata:any)=>
          {
-          Swal.fire("Success ", "Quiz Updated Successfully","success").then((e)=>
-          {
-            // this.router.navigate(["/"]);
-            // window.location.href="/"; 
-
-          }); },
+          Swal.fire("Success ", "Quiz Updated Successfully","success")
+        
+        },
     (error)=>{
       this.resetPasswordForm();
       Swal.fire({

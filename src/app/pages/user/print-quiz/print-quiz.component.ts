@@ -36,6 +36,10 @@ export class PrintQuizComponent implements OnInit {
   username: any;
   quiz
   reportData;
+  sectionB: any[] = [];
+
+  qId
+
   constructor(private _quiz: QuizService,
     private locationSt: LocationStrategy,
     private _route: ActivatedRoute,
@@ -62,6 +66,10 @@ export class PrintQuizComponent implements OnInit {
     const Object = JSON.parse(userDetails);
     this.username = Object.username;
     this.qid = this._route.snapshot.params['qid'];
+    // this.qId =this._route.snapshot.params['qId'];
+
+
+    console.log(this.qid);
     // this.refreshPage();
     this.refreshContent();
     this.loadQuestionsWithAnswers();
@@ -69,14 +77,13 @@ export class PrintQuizComponent implements OnInit {
     // this.loadResults();
     this.loadQuestions();
     this.saveDataInBrowser();
+    this.loadSubjective();
     this.loadQuestionsFromLocalStorage();
     this.evalQuiz();
     // this.printQuiz();
     this.preventBackButton();
 
-
-
-    this.qid = this._route.snapshot.params['qid'];
+    // this.qid = this._route.snapshot.params['qid'];
     this._quiz.getQuiz(this.qid).subscribe((data: any) => {
       console.log(data.title);
       this.quiz = data;
@@ -86,7 +93,49 @@ export class PrintQuizComponent implements OnInit {
         alert("Error loading quiz data")
       }
     );
+
   }
+
+  loadSubjective(){
+    this._questions.getSubjective(this.qid).subscribe((theory:any)=>{
+      console.log(theory);
+      this.sectionB = theory;
+         },
+        (error)=>{
+          console.log("Could not loading subjective from server");
+        });
+  }
+
+
+
+
+
+  // SECTION B
+  getPrefixes(): string[] {
+    const prefixes = new Set<string>();
+    this.sectionB.forEach(question => {
+      const prefix = question.quesNo.match(/^Q\d+/)?.[0];
+      if (prefix) {
+        prefixes.add(prefix);
+      }
+    });
+    return Array.from(prefixes);
+  }
+  getGroupedQuestions(prefix: string) {
+    return this.sectionB.filter(q => q.quesNo.startsWith(prefix));
+  }
+
+  deleteTheoryQuestion(){
+
+  }
+
+
+  
+  // SECTION B
+
+
+
+
 
   // load report()
   loadReport(){
@@ -143,7 +192,7 @@ removeResults() {
     },
       (error) => {
         console.log("Error Loading questions");
-        Swal.fire("Error", "Error loading questions", "error");
+        Swal.fire("Error", "Error loading questionsssssaaa", "error");
       }
     );
     this.preventBackButton();
@@ -169,10 +218,13 @@ removeResults() {
     },
       (error) => {
         console.log("Error Loading questions");
-        Swal.fire("Error", "Error loading question", "error");
+        Swal.fire("Error", "Error loading questionwwwww", "error");
       }
     );
   }
+
+
+
   ///Custom Functions
   preventBackButton() {
     history.pushState(null, null, location.href);

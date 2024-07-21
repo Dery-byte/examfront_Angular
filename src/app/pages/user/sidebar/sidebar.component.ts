@@ -1,6 +1,8 @@
 import { Component, OnInit } from '@angular/core';
 import { MatSnackBar } from '@angular/material/snack-bar';
 import { CategoryService } from 'src/app/services/category.service';
+import { LoginService } from 'src/app/services/login.service';
+
 
 @Component({
   selector: 'app-sidebar-user',
@@ -10,7 +12,10 @@ import { CategoryService } from 'src/app/services/category.service';
 export class SidebarComponent  implements OnInit{
 
   categories;
-  constructor(private _cat: CategoryService, private _snack:MatSnackBar){}
+  constructor(private _cat: CategoryService, 
+    private _snack:MatSnackBar,
+    private login: LoginService,
+  ){}
   
   ngOnInit(): void {
     this._cat.getCategories().subscribe((data:any)=>{
@@ -22,6 +27,14 @@ this._snack.open("Couldn't load Categories from Server","",{
 })
     });
     
+  }
+
+
+  public logout(){
+    this.login.logout();
+    // this.isloggedIn=false;
+    // this.user = null;
+    window.location.reload();
   }
 
 

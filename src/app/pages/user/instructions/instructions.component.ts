@@ -23,12 +23,12 @@ export class InstructionsComponent implements OnInit {
   reportid: number;
   reportData;
 
-  currentQuizId:number;
+  currentQuizId: number;
   reportQuizId;
   currentUserId;
   isLegible = false;
   idNumberReport: number[] = [];
-  // idNumberReport: string[] = [];
+  QuizIdsInReport: number[] = [];
 
 
 
@@ -47,7 +47,7 @@ export class InstructionsComponent implements OnInit {
   }
 
   constructor(private _route: ActivatedRoute,
-    private _report:ReportServiceService,
+    private _report: ReportServiceService,
     private _quiz: QuizService,
     private _questions: QuestionService,
     private _userEligibilityService: UserEligibilityService,
@@ -65,6 +65,7 @@ export class InstructionsComponent implements OnInit {
         alert("Error loading quiz data")
       }
     );
+
   }
 
   fectchReport() {
@@ -83,38 +84,46 @@ export class InstructionsComponent implements OnInit {
         this.reportQuizId = q.quiz.qId;
         this.currentQuizId = this.qid;
         this.currentUserId = Object.id;
+        this.QuizIdsInReport = this.report.map(item => item.quiz.qId); // Fetch ALLthe quizIDs in the report and store them in an array
 
-        if (q.user.id == this.currentUserId) {
+        console.log(this.QuizIdsInReport);
+
+        if (q.user.id === this.currentUserId) {
           this.idNumberReport.push(q.user.id);
           foundMatchingUser = true; // Set the flag if a matching user is found
         }
-        console.log(this.idNumberReport[0]);
-        console.log(this.currentUserId);
-        console.log(this.reportQuizId);
-        console.log(this.currentQuizId);
+        // console.log(this.idNumberReport[0]);
+        // console.log(this.currentUserId);
+        // console.log(this.reportQuizId); // 2=> Check this if it is actually in the array ReportQuizId array
+        // console.log(this.currentQuizId); // 1=> Software Enginerring
+        // console.log(this.idNumberReport);
+
+        const isPresent = this.isQIPresent(parseInt(this.qid));
+        console.log("current quiz ID : ",typeof(parseInt(this.qid)));
+
+        console.log(isPresent);
 
       });
 
-      // Check if a matching user is found before comparing IDs
       if (foundMatchingUser) {
         // Compare IDs here
-        this.isLegible = (this.idNumberReport[0] == this.currentUserId && this.currentQuizId == this.reportQuizId.toString());
+        this.isLegible = ((this.idNumberReport[0] == this.currentUserId) && (this.isQIPresent(parseInt(this.qid))));
+
       } else {
-        // If no matching user is found, set isLegible to false
         this.isLegible = false;
       }
+      console.log(this.idNumberReport[0] == this.currentUserId);
 
-      // this.isLegible = (this.idNumberReport[0] == this.currentUserId &&  this.currentQuizId==this.reportQuizId.toString());
-      // this.isLegible = this._userEligibilityService.isUserEligible(this.idNumberReport, this.currentUserId, this.reportQuizId, this.currentQuizId);
-
-
-    console.log(this.idNumberReport[0] == this.currentUserId);
-
-    console.log( this.currentQuizId==this.reportQuizId.toString());
-
-
-      
+      // console.log( this.currentQuizId===this.reportQuizId.toString()); // 1 != 2: False
+      console.log(this.isQIPresent(parseInt(this.qid)));
       console.log(this.isLegible);
+
+      console.log("current quiz ID",this.currentQuizId);
+      console.log("Quiz IDs in the report",this.QuizIdsInReport);
+      console.log("current user ID",this.currentUserId);
+      console.log("User ID in report",this.idNumberReport);
+
+
       if (this.isLegible) {
         // this.isLegible; // True
         console.log("Quiz Taken Already!!!!!!!");
@@ -125,10 +134,12 @@ export class InstructionsComponent implements OnInit {
       }
 
       console.log(data);
-      // console.log(this.isLegible);
-
-
+      console.log(this.report);
     });
+  }
+
+  isQIPresent(qId: number): boolean {
+    return this.QuizIdsInReport.includes(qId);
   }
 
 
@@ -182,20 +193,6 @@ export class InstructionsComponent implements OnInit {
     //Evaluate questions
     // this._questions.evalQuiz(this.qid,this.questions).subscribe((data:any)=>{
     this._questions.addUserIdQuizId(this.qid, this.user).subscribe((data: any) => {
-
-      // console.log(this.questions);
-      // console.log(data);
-      // this.marksGot=parseFloat(Number(data.marksGot).toFixed(2));
-      // this.correctAnswers = data.correctAnswers;
-      // this.attempted = data.attempted;
-      // this.maxMarks=data.maxMarks;
-      // localStorage.setItem('CorrectAnswer', JSON.stringify(this.correctAnswers));
-      // localStorage.setItem('MarksGot', JSON.stringify(this.marksGot));
-      // localStorage.setItem('Attempted', JSON.stringify(this.attempted));
-      // localStorage.setItem('MaxMarks', JSON.stringify(this.maxMarks))
-      // this.preventBackButton();
-
-
       // this.isSubmit = true;
     },
       (error) => {
@@ -219,26 +216,6 @@ export class InstructionsComponent implements OnInit {
 
 
   startQuiz() {
-
-    // this.checkUserLegibility();
-    // Swal.fire({
-    //   title:"Are you Ready to start ?",
-    //   showCancelButton:true,
-    //   confirmButtonText:"Start",
-    //   denyButtonText:"Not Ready",
-    //   icon:"info",
-    // }).then((results)=>{
-    //     if(results.isConfirmed){
-    //       // const url= './start/' + this.qid;
-    //       // this._router.navigate(['./start-quiz/' + this.qid]);
-    //       this._router.navigate(['./start/' + this.qid]);
-    //       // this.refreshPrevent();
-    //     }
-    //     else if (results.isDenied){
-    //       Swal.fire("Changes are not Saved",'', 'info');
-    //     }
-    //   });
-
     Swal.fire({
       title: "Enter Quiz Password!",
       text: "",
@@ -250,45 +227,10 @@ export class InstructionsComponent implements OnInit {
     }).then((result) => {
       if (result.value == this.quiz.quizpassword) {
         this.AddUserIDAndUserID();
-        // this.checkUserLegibility();
 
-        // const userDetails =localStorage.getItem('user');
-        // const Object = JSON.parse(userDetails);
-
-        // this.report.forEach((q)=>{
-        //   this.userId = q.user.id;
-        //   this.reportQuizId=q.quiz.qId;
-        //   this.currentQuizId =this.qid;
-        //   this.currentUserId = Object.id;
-        //   console.log(this.userId);
-        //   console.log(this.reportQuizId);
-        //   console.log(this.currentQuizId);
-        //   console.log(this.currentUserId);
-        // });
-        // if(this.userId==this.currentUserId && this.reportQuizId== this.currentQuizId){
-        //   this.isLegible;
-        //   console.log("Quiz Taken Already!!!!!!!");
-        // }
-        // else{
-        //   this.isLegible;
-        //   console.log("You have not taken the quiz yet!!!!");
-        // }
-
-
-        //   this.report.forEach(q => {
-        //     // q.forEach(r=>{
-        //     //   console.log(r);
-        //     // });
-        //     console.log(q[0]);
-        //   });
-
-        //  console.log(this.report);
-        // console.log("Result: " + this.quiz.quizpassword);
-        //  const url= './start/' + this.qid;
-        //  this.addQuiz();
         this._router.navigate(['./start/' + this.qid]);
         // this.refreshPrevent();
-      }  
+      }
       else if (result.value != this.quiz.quizpassword) {
         Swal.fire("Incorrect Password", '', 'info');
         //     }

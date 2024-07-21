@@ -93,9 +93,8 @@ console.log(this.courses);
 		this._cat.getCategories().subscribe((courses: any) => {
 			this.categories = courses;
 			console.log(this.categories);
-		
 		this.filterCourses();
-		this.unRegCourse=this._regCourse.combineAndRemoveDuplicates(this.categories,this.transformedData);
+		this.unRegCourse=this.combineAndRemoveDuplicates(this.categories,this.transformedData);
 
 		console.log(this.transformedData);
 		console.log(this.courses);
@@ -106,6 +105,20 @@ console.log(this.courses);
 		
 	}
 
+
+// Method to combine and remove duplicates based on cid
+combineAndRemoveDuplicates(jsonArray1: any[], jsonArray2: any[]): any[] {
+	// Combine the two arrays
+	const combinedArray = [...jsonArray1, ...jsonArray2];
+	// Use a Map to track occurrences of each cid
+	const cidCount = new Map<number, number>();
+	for (const item of combinedArray) {
+	  cidCount.set(item.cid, (cidCount.get(item.cid) || 0) + 1);
+	}
+	// Filter out items that have duplicates
+	return combinedArray.filter(item => cidCount.get(item.cid) === 1);
+  }
+  
 
 
 	
@@ -187,7 +200,7 @@ console.log(this.courses);
 	filterCourses() {
 		// this.filteredCourses = this.unRegisteredCourses.filter(course => course.level === this.selectedLevel);
 		this.filteredCourses = this.unRegCourse.filter(course => course.level === this.selectedLevel);
-
+// this.ngOnInit();
 	}
 
 

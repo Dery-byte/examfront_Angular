@@ -6,6 +6,8 @@ import { MatDialog, MatDialogRef } from '@angular/material/dialog';
 
 
 
+
+
 import Swal from 'sweetalert2';
 
 @Component({
@@ -14,6 +16,7 @@ import Swal from 'sweetalert2';
   styleUrls: ['./view-quiz-questions.component.css']
 })
 export class ViewQuizQuestionsComponent  implements OnInit{
+
 
   qId;
  qTitle;
@@ -52,10 +55,10 @@ this.sectionB = theory;
   (error)=>{
     console.log("Could not load data from server");
   });
+
+  
   }
   dialogRef!: MatDialogRef<any>;
-
-
 
   getPrefixes(): string[] {
     const prefixes = new Set<string>();
@@ -90,10 +93,11 @@ this.sectionB = theory;
     });
     });
   }
+
+  
   getQuestionById(questionId: any): any {
    return this._question.getSpecificSubjective(questionId);
   }
-
   // Update Theory Question WORK ON THIS LATER
   updateTheoryQuestion(){
     this._question.updateTheoryQuestions(this.theory).subscribe((data)=>
@@ -102,7 +106,7 @@ this.sectionB = theory;
           duration:3000,
         });
         this.dialogRef.close(this.theory);
-        // this._router.navigate(["/admin/view-quetions/:qId/:qTitle"]);
+        this.ngOnInit();
       },
       (error)=>{
         this._snack.open("Couldn't update Question", "", {

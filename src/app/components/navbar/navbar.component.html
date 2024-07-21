@@ -1,6 +1,29 @@
-<div class="navbar">
+<!-- <div class="navbar"> -->
 
-<mat-toolbar color="accent">
+
+  <div class="navbar">
+
+
+  <header class="header" @fadeIn *ngIf="!isloggedIn">
+      <div class="logo">
+        <!-- <a mat-icon-button class="example-icon" aria-label="Example icon-button with menu icon">
+          <mat-icon>menu_book</mat-icon>
+        </a> -->
+        EduApp</div>
+      <nav>
+        <a mat-button routerLink="/features">Features</a>
+        <a mat-button routerLink="/about">About</a>
+        <a mat-button routerLink="/contact">Contact</a>
+        <!-- <a mat-button routerLink="/courses">Courses</a> -->
+        <a *ngIf="!isloggedIn" [routerLink]="'/signup'" mat-button aria-label="Example icon-button with heart icon">
+        Register </a>
+        <button *ngIf="!isloggedIn" mat-raised-button color="primary" routerLink="/login">Login</button>
+      </nav>
+    </header>
+
+  </div>
+
+  <!-- <mat-toolbar color="accent"> -->
     <!-- <a
     
     [routerLink]="'/'" mat-icon-button 
@@ -9,11 +32,7 @@
       <mat-icon>menu_book</mat-icon>
     </a> -->
 
-    <a
-    
-    mat-icon-button 
-    class="example-icon" 
-    aria-label="Example icon-button with menu icon">
+    <!-- <a mat-icon-button class="example-icon" aria-label="Example icon-button with menu icon">
       <mat-icon>menu_book</mat-icon>
     </a>
 
@@ -21,21 +40,15 @@
     <span class="example-spacer"></span>
 
 
-    <a  
-    *ngIf="!isloggedIn"
-
-    [routerLink]="'/login'"
-    mat-icon-button class="example-icon favorite-icon mrl" aria-label="Example icon-button with heart icon">
-     login
+    <a *ngIf="!isloggedIn" [routerLink]="'/login'" mat-icon-button class="example-icon favorite-icon mrl"
+      aria-label="Example icon-button with heart icon">
+      login
     </a>
 
-    <a 
-    *ngIf="!isloggedIn"
-
-    [routerLink]="'/signup'"
-    mat-icon-button class="example-icon favorite-icon mr ml " aria-label="Example icon-button with heart icon">
-        Register
-    </a>
+    <a *ngIf="!isloggedIn" [routerLink]="'/signup'" mat-icon-button class="example-icon favorite-icon mr ml "
+      aria-label="Example icon-button with heart icon">
+      Register
+    </a> -->
     <!-- <a 
     (click)="logout()"
     *ngIf="isloggedIn"
@@ -43,35 +56,33 @@
         Logout
     </a> -->
 
-   
- <!-- <div *ngIf="expirationSeconds">
+
+    <!-- <div *ngIf="expirationSeconds">
         Token will expire in {{ expirationSeconds }} seconds.
       </div> -->
-<!-- <div  *ngIf="isloggedIn && user">
+    <!-- <div  *ngIf="isloggedIn && user">
   <h3 class="text-center">Token will expire in <i>{{ getFormmatedTime() }} </i></h3>
 </div> -->
 
-
-
-    <div class="container " >
-        <img src="../../../assets/profile.jpg" alt="profile image" class="profile-imag mt20" width="40" height="40"/>        <!-- <h1 class="mt20">{{user.firstname}} {{user.lastname}}</h1> -->
+<div class="navbar" *ngIf="isloggedIn && user">
+  <mat-toolbar color="accent">
+    <div class="container" >
+      <img src="../../../assets/profile.jpg" alt="profile image" class="profile-imag mt20" width="40" height="40" />
+      <!-- <h1 class="mt20">{{user.firstname}} {{user.lastname}}</h1> -->
     </div>
-
-    <button 
-    *ngIf="isloggedIn && user"
-    routerLink="/admin/profile"
-    mat-icon-button class="example-icon favorite-icon mr ml " aria-label="Example icon-button with heart icon">
-        {{ user.username | uppercase}}
-  </button>
-
-
-  <a 
-    (click)="logout()"
-    *ngIf="isloggedIn"
-    mat-icon-button class="example-icon favorite-icon mr ml " aria-label="Example icon-button with heart icon">
-    <mat-icon mat-list-icon  class="icon-position" >logout</mat-icon>
-    </a>
-       
+    <!-- <button *ngIf="isloggedIn && user" routerLink="/admin/profile" mat-icon-button
+      class="example-icon favorite-icon mr ml " aria-label="Example icon-button with heart icon">
+      {{ user.username | uppercase}}
+    </button> -->
+    <!-- <span *ngIf="isloggedIn && user" mat-icon-button -->
+      <span  mat-icon-button
+    class="example-icon favorite-icon username " aria-label="Example icon-button with heart icon">
+    {{ user.username | uppercase}}
+  </span>
+    <!-- <a (click)="logout()" *ngIf="isloggedIn" mat-icon-button class="example-icon favorite-icon mr ml "
+      aria-label="Example icon-button with heart icon">
+      <mat-icon mat-list-icon class="icon-position">logout</mat-icon>
+    </a> -->
   </mat-toolbar>
-  
+
 </div>

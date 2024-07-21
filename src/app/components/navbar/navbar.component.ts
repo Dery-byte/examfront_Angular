@@ -11,13 +11,10 @@ export class NavbarComponent implements OnInit {
 
   isloggedIn = false;
    user=null;
-
    expirationSeconds: any;
 	timeDifferenceInSeconds: any;
 	jwtToken: string;
   private tokenExpirationKey = 'tokenExpirationTime';
-
-
   constructor(public login: LoginService, private tokenExpirationService: TokenExpirationService,){
   }
 
