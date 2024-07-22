@@ -8,6 +8,7 @@ import { MatDialog, MatDialogRef } from '@angular/material/dialog';
 
 
 
+
 import Swal from 'sweetalert2';
 
 @Component({
@@ -25,7 +26,18 @@ export class ViewQuizQuestionsComponent  implements OnInit{
  sectionB: any[] = [];
  theory;
  specificSectionB;
- 
+ numberOfquestionsToAnswer;
+
+
+ updateNumberOfquestionsToAnswer ={
+  totalQuestToAnswer:"",
+	quiz:
+  {
+    qId:""
+  }
+}
+numberOfquestionsToAnswers;
+
   constructor(private _route:ActivatedRoute, 
               private _question:QuestionService,
               private _snack:MatSnackBar,
@@ -56,8 +68,22 @@ this.sectionB = theory;
     console.log("Could not load data from server");
   });
 
+
+  this._question.getNumerOfQuesToAnswer(this.qId).subscribe((data:any)=>
+    {
+     console.log(data);
+     this.numberOfquestionsToAnswers=data;
+ 
+    },
+    (error)=>{
+     console.log('error');
+    }
+    );
   
   }
+
+
+
   dialogRef!: MatDialogRef<any>;
 
   getPrefixes(): string[] {
@@ -73,6 +99,33 @@ this.sectionB = theory;
   getGroupedQuestions(prefix: string) {
     return this.sectionB.filter(q => q.quesNo.startsWith(prefix));
   }
+
+  getQuesNumberById(questionId: any): any {
+    return  this._question.getNumerOfQuesToAnswer(questionId);
+   }
+   
+  openUpdateNumberDialog(qId: any, templateRef: TemplateRef<any>): void {
+    console.log(qId);
+    // Fetch question details based on ID
+    this._question.getNumerOfQuesToAnswerBy(this.qId).subscribe((data)=>{
+      this.numberOfquestionsToAnswer=data;
+      console.log(this.numberOfquestionsToAnswer);
+      console.log(this.numberOfquestionsToAnswer[0].totalQuestToAnswer)
+      this.dialogRef = this.dialog.open(templateRef, {
+        width: '350px',
+        data: this.numberOfquestionsToAnswer,
+      })
+    });
+       this.dialogRef.afterClosed().subscribe(result => {
+      if (result) {
+        this.numberOfquestionsToAnswer=result;
+      }
+    });
+  }
+
+
+
+
 
   openUpdateDialog(questionId: any, templateRef: TemplateRef<any>): void {
     console.log(questionId);
@@ -110,6 +163,24 @@ this.sectionB = theory;
       },
       (error)=>{
         this._snack.open("Couldn't update Question", "", {
+          duration:3000,
+        });     
+       });
+  }
+
+
+  updateTheoryNumberOfQuesToAnswer(){
+    console.log(this.numberOfquestionsToAnswer);
+    this._question.updateTheoryNumberOfQuestionsToAnswer(this.numberOfquestionsToAnswer[0]).subscribe((data)=>
+      {
+        this._snack.open(" Update was Successful! ", "",{
+          duration:3000,
+        });
+        this.dialogRef.close(this.numberOfquestionsToAnswer[0]);
+        this.ngOnInit();
+      },
+      (error)=>{
+        this._snack.open("Update was Unsuccesfull ", "", {
           duration:3000,
         });     
        });

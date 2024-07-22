@@ -61,6 +61,17 @@ public getActieQuizzesOfCategory(cid){
   return this._http.get(`${baseUrl}/category/active/${cid}`)
 }
 
+//get single quiz to facilitate update
+
+public getNumerOfQuesToAnswer(qId){
+  return this._http.get(`${baseUrl}/numberOfTheoryQuestion/${qId}`);
+}
+
+public addNumberOfTheoryQuestions(quizNumberOfQuestion){
+  return this._http.post(`${baseUrl}/numberOfTheoryQuestion/add`, quizNumberOfQuestion);
+}
+
+
 
 }
  

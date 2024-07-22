@@ -101,7 +101,7 @@ export class StartComponent implements OnInit {
     private login: LoginService,
     private locationSt: LocationStrategy,
     private _route: ActivatedRoute,
-    private _snack:MatSnackBar,
+    private _snack: MatSnackBar,
     private _questions: QuestionService,
     private router: Router) {
   }
@@ -163,6 +163,15 @@ export class StartComponent implements OnInit {
         alert("Error loading quiz data")
       }
     );
+    this._quiz.getNumerOfQuesToAnswer(this.qid).subscribe((data: any) => {
+      console.log(data);
+      console.log(data[0].totalQuestToAnswer);
+
+      this.numberOfQuestionsToAnswer = data[0].totalQuestToAnswer;
+    });
+
+
+
     this.loadTheory();
     // this.loadSubjective();
     this.loadQuestions();
@@ -171,6 +180,16 @@ export class StartComponent implements OnInit {
     this.printQuiz();
     this.initForm();
     // this.preventBackButton();
+
+
+  }
+
+
+  loadNumQuesToAnswer() {
+    this._quiz.getNumerOfQuesToAnswer(this.qid).subscribe((data: any) => {
+      console.log(data.totalQuestToAnswer);
+      this.numberOfQuestionsToAnswer = data;
+    });
   }
 
 
@@ -220,19 +239,19 @@ export class StartComponent implements OnInit {
       }
       else {
         alert('You can only select ' + this.numberOfQuestionsToAnswer + ' set(s) of questions.');
-         this._snack.open(`You can only select ${this.numberOfQuestionsToAnswer} sets of questions`, "",{
-          duration:3000,
-         });
-           }
+        this._snack.open(`You can only select ${this.numberOfQuestionsToAnswer} sets of questions`, "", {
+          duration: 3000,
+        });
+      }
     }
-     
+
   }
 
   // disableOtherSelection(){
   //   Object.keys(this.selectedQuestions).length = this.numberOfQuestionsToAnswer
   // }
 
-  
+
   onPrefixChange(prefix: string) {
     this.selectedPrefix = prefix;
   }
@@ -330,16 +349,6 @@ export class StartComponent implements OnInit {
     this.preventBackButton();
   }
 
-
-
-
-
-
-
-
-
-
-  
   ///Custom Functions
   preventBackButton() {
     history.pushState(null, null, location.href);
@@ -351,7 +360,7 @@ export class StartComponent implements OnInit {
 
   submitQuiz() {
     // this.evalSubjective();
- Swal.fire({
+    Swal.fire({
       title: "Do you want to submit the quiz ?",
       showCancelButton: true,
       confirmButtonText: "Submit",
@@ -368,10 +377,9 @@ export class StartComponent implements OnInit {
   }
 
 
-
   submitAllQuiz() {
     this.evalSubjective();
- Swal.fire({
+    Swal.fire({
       title: "Do you want to submit the quiz ?",
       showCancelButton: true,
       confirmButtonText: "Submit",
@@ -379,7 +387,7 @@ export class StartComponent implements OnInit {
     }).then((e) => {
       if (e.isConfirmed) {
         // EVALUATE THE SUBJECTIVE
-        this.evalTheory();
+        this.evalSubjective();
         // EVALUATIING THE OBJECTIVES
         this.evalQuiz();
         this.printQuiz();
@@ -433,7 +441,7 @@ export class StartComponent implements OnInit {
         // this.submitQuiz();
         this.printQuiz();
         this.evalQuiz();
-        this.evalTheory();
+        this.evalSubjective() ;
         this.loadQuestionsWithAnswers();
         clearInterval(t);
         // localStorage.removeItem("exam");
@@ -451,9 +459,7 @@ export class StartComponent implements OnInit {
   }
 
 
-  evalTheory() {
-    // Logic goes here
-  }
+  
 
   evalQuiz() {
     //Evaluate questions
@@ -463,7 +469,6 @@ export class StartComponent implements OnInit {
       this.marksGot = parseFloat(Number(data.marksGot).toFixed(2));
       this.correct_answer = data.correct_answer;
       this.attempted = data.attempted;
-
       this.maxMarks = data.maxMarks;
       localStorage.setItem('CorrectAnswer', JSON.stringify(this.correct_answer));
       localStorage.setItem('MarksGot', JSON.stringify(this.marksGot));
@@ -498,17 +503,17 @@ export class StartComponent implements OnInit {
     for (const prefix in this.selectedQuestions) {
       selectedQuestions.push(...this.groupedQuestions[prefix]);
     }
-      if (Object.keys(this.selectedQuestions).length === this.numberOfQuestionsToAnswer) {
+    if (Object.keys(this.selectedQuestions).length === this.numberOfQuestionsToAnswer) {
       // Handle the submission logic here
       console.log('Submitted Questions:', selectedQuestions);
-    } 
-    (error)=>{
+    }
+    (error) => {
       this._snack.open("Please select exactly 3 sets of questions to submit", "", {
-        duration:3000,
+        duration: 3000,
       });
-    
-    // else {
-    //   // alert('Please select exactly 2 sets of questions to submit.');
+
+      // else {
+      //   // alert('Please select exactly 2 sets of questions to submit.');
     }
   }
 

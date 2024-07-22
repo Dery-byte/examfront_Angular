@@ -115,11 +115,32 @@
 
                     </div>
                     <div class="col-md-6">
-                        <label>Upload Theory Questions!   <button  mat-button color="primary" 
-                            matTooltip='The acccepted quiz format is JSON'>
-                                 See Acccepted Format
-                            </button>
-                             </label>
+
+                        <div class="row">
+
+                            <div class="col-md-6">
+                                <!-- {{theoryQuesToAnswer| json}} -->
+                                <mat-form-field class="w100">
+                                    <mat-label>No. of theory Questions to Answer</mat-label>
+                                    <input required
+                                    [(ngModel)]= "theoryQuesToAnswer.totalQuestToAnswer"
+                                    name="totalQuestToAnswer"
+                                    type="text" matInput/>
+                                </mat-form-field>
+                            </div>
+
+
+                            <div class="col-md-6">
+                                <label>Upload Theory Questions!   <button  mat-button color="primary" 
+                                    matTooltip='The acccepted quiz format is JSON'>
+                                         See Acccepted Format
+                                    </button>
+                                     </label>
+                                    </div>
+
+                            </div>
+
+
                         <mat-divider></mat-divider>
     
                         <!-- <form> -->
@@ -129,9 +150,7 @@
                             <span class="file-input-text">Select questions</span>
                           </label>
                           
-    
                         <button class="upload-btn" mat-raised-button color="accent" (click)="uploadTheoryQuestions()">Upload </button>
-
                     </div>
 
 

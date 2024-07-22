@@ -69,8 +69,6 @@ this._quiz.addQuiz(this.quizData).subscribe(
         cid:""
       }
     },
-
-    
         Swal.fire("Success", "Quiz is added", "success");
    
   },

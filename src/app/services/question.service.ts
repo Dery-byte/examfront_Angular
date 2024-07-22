@@ -73,6 +73,25 @@ public updateTheoryQuestions(theory){
     return this._http.post(`${baseUrl}/question/add-quizUserId/${qid}`, user);
   }
 
+
+  //  public addNumberOfTheoryQuestions(quizNumberOfQuestion){
+  //   return this._http.post(`${baseUrl}/numberOfTheoryQuestion/add`, quizNumberOfQuestion);
+  // }
+
+
+
+  public getNumerOfQuesToAnswer(qId){
+    return this._http.get(`${baseUrl}/numberOfTheoryQuestion/${qId}`);
+  }
+
+ //update TheoryNumber of Questions to answer
+ public updateTheoryNumberOfQuestionsToAnswer(numberOfquestionsToAnswer){
+  return this._http.put(`${baseUrl}/numberOfTheoryQuestion/update`, numberOfquestionsToAnswer);
+  }
+
+
+
+  
 //get report with ID parameter
 public getReportIdUserId(rid){
   return this._http.get(`${baseUrl}/getReport/{rid}`);
@@ -122,6 +141,10 @@ public getReport(){
       // 'Content-Type': 'multipart/form-data',
     });
       return this._http.post(`${baseUrl}/theoryupload/${qid}`, questions, {headers})
+}
+
+public getNumerOfQuesToAnswerBy(qId){
+  return this._http.get(`${baseUrl}/numberOfTheoryQuestion/${qId}`);
 }
 
 
