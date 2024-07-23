@@ -52,13 +52,9 @@
                     <!-- <div *ngIf="reportData"> -->
                     <div id="marks" *ngFor="let r of reportData">
                         <p>Total Marks A & B : <span id="marksU">25</span></p>
-
                         <p>Marks : <span id="marksU">{{r.marks}}/{{ r.quiz.maxMarks}}</span></p>
                         <p> Correct Answers : {{r.marks}}</p>
                         <p>Attempted questions : {{attempted}}</p>
-
-
-
                         <!-- YOU MAY ADD THIS ATTEMPTED OPTION IN THE BACKEND REPORT CLASS THEN FETCH REPORT AND SHOW ON THE INTERFACE -->
                         <!-- <p>Attempted questions : {{attempted}}</p> -->
                     </div>
@@ -67,10 +63,9 @@
 
                     <!-- </div> -->
                     <!-- BEGIN SECTION A -->
-                     <div *ngIf="questionWithAnswers">
+                     <div *ngIf="questionWithAnswers.length>0">
                         <h1 style="text-align: center;">Section A</h1>
                     <mat-card *ngFor="let qA of questionWithAnswers; let i = index" class="mt10">
-
                         <mat-card-content>
                             <p> <b> Q {{ i + 1}} </b> <span class="ml10" [innerHTML]="qA.content"></span></p>
                             <mat-divider></mat-divider>
@@ -105,14 +100,14 @@
                             </div>
                         </mat-card-content>
                     </mat-card>
-
                 </div>
 
                     <!-- END OF SECTION A -->
 
                     <!-- LOAD SECTION B HERE -->
 
-                    <div *ngIf="getPrefixes().length>0">
+                    <div *ngIf="answeredQuestions !=null">
+                        <div *ngIf="getPrefixes().length>0">
                         <h1 style="text-align: center;">Section B</h1>
                         <div *ngFor="let prefix of getPrefixes()">
                             <mat-card *ngIf="getGroupedQuestions(prefix).length > 0">

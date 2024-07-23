@@ -37,6 +37,7 @@ export class PrintQuizComponent implements OnInit {
   quiz
   reportData;
   sectionB: any[] = [];
+  answeredQuestions:any[] = [];
 
   qId
 
@@ -62,11 +63,15 @@ export class PrintQuizComponent implements OnInit {
   }
 
   ngOnInit(): void {
+    this.loadSubjective();
+
     const userDetails = localStorage.getItem('user');
     const Object = JSON.parse(userDetails);
     this.username = Object.username;
     this.qid = this._route.snapshot.params['qid'];
     // this.qId =this._route.snapshot.params['qId'];
+    // this.loadSubjective();
+
 
 
     console.log(this.qid);
@@ -77,8 +82,8 @@ export class PrintQuizComponent implements OnInit {
     // this.loadResults();
     this.loadQuestions();
     this.saveDataInBrowser();
-    this.loadSubjective();
     this.loadQuestionsFromLocalStorage();
+
     this.evalQuiz();
     // this.printQuiz();
     this.preventBackButton();
@@ -96,24 +101,25 @@ export class PrintQuizComponent implements OnInit {
 
   }
 
+  // loadSubjective(){
+  //   this._questions.getSubjective(this.qid).subscribe((theory:any)=>{
+  //     console.log(theory);
+  //     this.sectionB = theory;
+  //        },
+  //       (error)=>{
+  //         console.log("Could not loading subjective from server");
+  //       });
+
   loadSubjective(){
-    this._questions.getSubjective(this.qid).subscribe((theory:any)=>{
-      console.log(theory);
-      this.sectionB = theory;
-         },
-        (error)=>{
-          console.log("Could not loading subjective from server");
-        });
+    const questions = localStorage.getItem('answeredQuestions');
+    this.answeredQuestions = JSON.parse(questions);
+    console.log(this.answeredQuestions);
   }
-
-
-
-
 
   // SECTION B
   getPrefixes(): string[] {
     const prefixes = new Set<string>();
-    this.sectionB.forEach(question => {
+    this.answeredQuestions.forEach(question => {
       const prefix = question.quesNo.match(/^Q\d+/)?.[0];
       if (prefix) {
         prefixes.add(prefix);
@@ -122,7 +128,7 @@ export class PrintQuizComponent implements OnInit {
     return Array.from(prefixes);
   }
   getGroupedQuestions(prefix: string) {
-    return this.sectionB.filter(q => q.quesNo.startsWith(prefix));
+    return this.answeredQuestions.filter(q => q.quesNo.startsWith(prefix));
   }
 
   deleteTheoryQuestion(){
@@ -148,6 +154,9 @@ export class PrintQuizComponent implements OnInit {
   console.log(this.reportData[0].quiz.title);
   console.log(this.reportData[0].user.lastname);
   console.log(report);
+
+
+  
   }); }
 
 
@@ -238,7 +247,7 @@ removeResults() {
     this.loadResults();
     this.loadReport();
     this.router.navigate(['./print_quiz/' + this.qid]);
-
+    // localStorage.removeItem("answeredQuestions");
   }
 
   loadResults() {
@@ -288,6 +297,8 @@ removeResults() {
   printPage() {
     document.title = this.username;
     window.print();
+    localStorage.removeItem("answeredQuestions");
+
   }
 
   saveDataInBrowser(): void {
@@ -318,5 +329,6 @@ removeResults() {
     // this.preventBackButton();
     // this.startTimer();
     console.log(this.questionss[0]);
+
   }
 };

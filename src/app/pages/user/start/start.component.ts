@@ -452,14 +452,21 @@ export class StartComponent implements OnInit {
       }
     }, 1000);
   }
+ 
+  
   getFormmatedTime() {
-    let mm = Math.floor(this.timer / 60);
-    let ss = this.timer - mm * 60;
-    return `${mm} min : ${ss} sec`
+    let hr = Math.floor(this.timer / 3600);
+    let mm = Math.floor((this.timer % 3600) / 60);
+    let ss = this.timer % 60;
+
+    let formattedTime = '';
+    if (hr > 0) {
+      formattedTime += `${hr} hr(s) : `;
+    }
+    formattedTime += `${mm} min : ${ss} sec`;
+    return formattedTime;
   }
 
-
-  
 
   evalQuiz() {
     //Evaluate questions
@@ -506,6 +513,10 @@ export class StartComponent implements OnInit {
     if (Object.keys(this.selectedQuestions).length === this.numberOfQuestionsToAnswer) {
       // Handle the submission logic here
       console.log('Submitted Questions:', selectedQuestions);
+
+      // SAVE THE SELECTED QUESTIONS IN LOCAL STOREAGE
+ localStorage.setItem("answeredQuestions", JSON.stringify(selectedQuestions));
+
     }
     (error) => {
       this._snack.open("Please select exactly 3 sets of questions to submit", "", {

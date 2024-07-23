@@ -36,12 +36,27 @@
 
     </div>
 </div>
-<!-- EDIT QUIZ PASSWORD -->
-<mat-form-field class="w100" appearance="fill">
-    <mat-label>Total questions</mat-label>
-    <input [(ngModel)] = "quiz.quizpassword"
-    type="quizpassword" name="quizpassword" matInput>
-</mat-form-field>
+<!-- EDIT QUIZ PASSWORD AND QUIZ TIME-->
+
+<div class="row">
+    <div class="col-md-6">
+        <mat-form-field class="w100" appearance="fill">
+            <mat-label>Quiz Password</mat-label>
+            <input [(ngModel)] = "quiz.quizpassword"  
+            type="quizPassword" name="quizpassword" matInput>
+        </mat-form-field>
+    </div>
+
+    <div class="col-md-6">
+        <!-- Number of questions to be displayed -->
+        <mat-form-field class="w100" appearance="fill">
+            <mat-label>Quiz Time</mat-label>
+            <input [(ngModel)] = "quiz.quizTime"  
+            type="quizTime" name="quizTime" matInput>
+        </mat-form-field>
+
+    </div>
+</div>
 
 
 

@@ -29,9 +29,10 @@
                 </div>
 
                 <!-- Timer couter on small devices -->
-                <div class=" small-devices col-md-2">
+                <div class="small-devices col-md-2 text-center">
                     <!-- progres -->
-                    <mat-card class="cards">
+                    <mat-card class="cards fixed-card"
+                        style="position: fixed; top: 10px; right: 10px; width: 200px; z-index: 1000;">
                         <mat-card-header>
                             <mat-card-title>Progress </mat-card-title>
                             <mat-card-subtitle>
@@ -42,12 +43,11 @@
                             <mat-spinner diameter="70" class="spin"
                                 [value]="(timer/(this.questions.length  * 60)) * 100 " mode="determinate" color="warn"
                                 style="margin: auto;"></mat-spinner>
-                            <h1 class="text-center"><i>{{ getFormmatedTime() }} </i></h1>
+                            <h1 class="tcenter"><i>{{ getFormmatedTime() }} </i></h1>
                         </mat-card-content>
                     </mat-card>
-
-
                 </div>
+
 
                 <div class="col-md-8">
 
@@ -210,12 +210,12 @@
                                     <mat-card-content class="mat-card-content">
                                         <input type="checkbox" [checked]="question.selected"
                                             (change)="onQuestionSelect(question)" disabled hidden>
-                                        <mat-form-field class="mat-form-field"  style="margin-top: -450px;">
+                                        <mat-form-field class="mat-form-field" style="margin-top: -450px;">
                                             <mat-label>
                                                 {{question.quesNo}} {{ question.question }} {{question.marks}}
                                             </mat-label>
                                             <input class="input" name="givenAnswer" [(ngModel)]="question.givenAnswer"
-                                                 type="text" matInput>
+                                                type="text" matInput>
 
                                         </mat-form-field>
                                     </mat-card-content>
@@ -240,18 +240,19 @@
                                 </mat-card>
 
 
-                                 
+
                                 <mat-card>
                                     <div class="container">
                                         <div class="row">
                                             <div class="col-md-12">
                                                 <!-- <mat-label>Select set of questions answered!</mat-label> -->
-                                                <mat-card-title>Select {{numberOfQuestionsToAnswer}} set(s) of questions answered!</mat-card-title>
+                                                <mat-card-title>Select {{numberOfQuestionsToAnswer}} set(s) of questions
+                                                    answered!</mat-card-title>
                                                 <div *ngIf="prefixes.length > 0" class="prefix-container">
                                                     <div *ngFor="let prefix of prefixes" class="prefix-item">
                                                         <mat-checkbox [checked]="selectedQuestions[prefix]"
                                                             (change)="togglePrefixSelection(prefix)">
-                                                            {{ prefix }} 
+                                                            {{ prefix }}
                                                         </mat-checkbox>
                                                     </div>
 
@@ -264,7 +265,7 @@
                         </mat-card>
 
                         <!-- BUTTON IF SUBJECTIVE IS INCLUSIVE -->
-                        <div class="contianer text-center mt20 mb20">
+                        <div class="contianer centerbtn mt20 mb20">
                             <button mat-raised-button color="primary" (click)="submitAllQuiz()"
                                 [disabled]="isSubmitDisabled">Submit Quiz</button>
                         </div>
@@ -272,7 +273,7 @@
                     </div>
                     <!-- BUTTON TO SHOW IS SUBJECTIVE IS NOT INCLUDED -->
                     <ng-template #elseBlock>
-                        <div class="contianer text-center mt20 mb20">
+                        <div class="contianer centerbtn mt20 mb20">
                             <button mat-raised-button color="primary" (click)="submitQuiz()">Submit Quiz</button>
                         </div>
                     </ng-template>
@@ -282,7 +283,7 @@
 
                     <!-- </div> -->
 
-<!-- YOU CAN USE THIS BUTTON TO TEST THE SUBMIT -->
+                    <!-- YOU CAN USE THIS BUTTON TO TEST THE SUBMIT -->
                     <!-- <div class="contianer text-center mt20 mb20">
                         <button mat-raised-button color="primary" (click)="evalSubjective()"
                             [disabled]="isSubmitDisabled">Test Submit Quiz</button>
@@ -291,7 +292,7 @@
 
 
 
-                <div class="large-devices col-md-2">
+                <div class="large-devices col-md-2 fixed-card">
                     <!-- progres -->
                     <mat-card class="cards">
                         <mat-card-header>

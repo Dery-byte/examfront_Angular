@@ -19,16 +19,6 @@
   /* subjective questions card */
 
 
-
-
-
-
-
-
-
-
-
-
 #quiztitle{
     text-decoration: underline;
 }
@@ -76,3 +66,24 @@ width: 1px;
     }
    
   }
+  .text-center{
+    font-size: 15px;
+    color: white;
+    background-color: purple;
+    box-shadow: 0 4px 8px rgba(0,0,0,0.1);
+        
+  }
+
+  .centerbtn{
+    text-align: center;
+  }
+  
+  .fixed-card {
+    position: fixed;
+    top: 65px;
+    right: -10px;
+    z-index: 100;
+  }
+  
+  
+

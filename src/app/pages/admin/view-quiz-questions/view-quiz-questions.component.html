@@ -55,43 +55,43 @@
                 <h1 mat-dialog-title>Update Question</h1>
                 <div mat-dialog-content>
                     <!-- <form> -->
-                  <mat-form-field class="w100" appearance="fill">
-                    <mat-label>Question No</mat-label>
-                    <input matInput [(ngModel)]="theory.quesNo">
-                  </mat-form-field>
-                  <mat-form-field class="w100" appearance="fill">
-                    <mat-label>Question</mat-label>
-                    <input matInput [(ngModel)]="theory.question">
-                  </mat-form-field>
-                  <mat-form-field class="w100" appearance="fill">
-                    <mat-label>Marks</mat-label>
-                    <input matInput [(ngModel)]="theory.marks">
-                  </mat-form-field>
-                <!-- </form> -->
+                    <mat-form-field class="w100" appearance="fill">
+                        <mat-label>Question No</mat-label>
+                        <input matInput [(ngModel)]="theory.quesNo">
+                    </mat-form-field>
+                    <mat-form-field class="w100" appearance="fill">
+                        <mat-label>Question</mat-label>
+                        <input matInput [(ngModel)]="theory.question">
+                    </mat-form-field>
+                    <mat-form-field class="w100" appearance="fill">
+                        <mat-label>Marks</mat-label>
+                        <input matInput [(ngModel)]="theory.marks">
+                    </mat-form-field>
+                    <!-- </form> -->
                 </div>
                 <div mat-dialog-actions>
-                  <button mat-button (click)="dialogRef.close()">Cancel</button>
-                  <button mat-button  (click)="updateTheoryQuestion()">Update</button>
+                    <button mat-button (click)="dialogRef.close()">Cancel</button>
+                    <button mat-button (click)="updateTheoryQuestion()">Update</button>
                 </div>
-              </ng-template>
-            
+            </ng-template>
 
-               <!-- POP UP DIALOG BOX FOR NUMBER OF QUESTIONS TO UPDATE -->
+
+            <!-- POP UP DIALOG BOX FOR NUMBER OF QUESTIONS TO UPDATE -->
             <ng-template #updateDialogNumQuestion let-data="data">
                 <h1 mat-dialog-title>Update Number of Questions</h1>
 
                 <div mat-dialog-content>
-                  <mat-form-field class="w100" appearance="fill">
-                    <mat-label>Number Theory to Answer</mat-label>
-                    <input matInput [(ngModel)]='numberOfquestionsToAnswer[0].totalQuestToAnswer'>
-                  </mat-form-field>
+                    <mat-form-field class="w100" appearance="fill">
+                        <mat-label>Number Theory to Answer</mat-label>
+                        <input matInput [(ngModel)]='numberOfquestionsToAnswer[0].totalQuestToAnswer'>
+                    </mat-form-field>
                 </div>
 
                 <div mat-dialog-actions>
-                  <button mat-button (click)="dialogRef.close()">Cancel</button>
-                  <button mat-button  (click)="updateTheoryNumberOfQuesToAnswer()">Update</button>
+                    <button mat-button (click)="dialogRef.close()">Cancel</button>
+                    <button mat-button (click)="updateTheoryNumberOfQuesToAnswer()">Update</button>
                 </div>
-              </ng-template>
+            </ng-template>
 
 
 
@@ -102,12 +102,12 @@
                 <h1 style="text-align: center;">Section B</h1>
                 <mat-card>
                     <!-- <div *ngFor="let qN of numberOfquestionsToAnswer"> -->
-                <h1 style="text-align: center;">Total Questions To Answer: <b>{{numberOfquestionsToAnswers[0].totalQuestToAnswer}}</b><button mat-button color="primary" 
-                    (click)="openUpdateNumberDialog(numberOfquestionsToAnswers[0].answerTheoryId, updateDialogNumQuestion)">Update</button>
-                </h1>
-            <!-- </div> -->
-            </mat-card>
-
+                    <h1 style="text-align: center;">Total Questions To Answer:
+                        <b>{{numberOfquestionsToAnswers[0].totalQuestToAnswer}}</b><button mat-button color="primary"
+                            (click)="openUpdateNumberDialog(numberOfquestionsToAnswers[0].answerTheoryId, updateDialogNumQuestion)">Update</button>
+                    </h1>
+                    <!-- </div> -->
+                </mat-card>
 
                 <div *ngFor="let prefix of getPrefixes()">
                     <mat-card *ngIf="getGroupedQuestions(prefix).length > 0">
@@ -128,8 +128,8 @@
                                 <mat-card-actions style="margin-top: -75px;">
                                     <mat-menu #menu="matMenu">
                                         <button mat-menu-item (click)="openUpdateDialog(question.tqId, updateDialog)">
-                                          <mat-icon color="accent">update</mat-icon>
-                                          <span>Update</span>
+                                            <mat-icon color="accent">update</mat-icon>
+                                            <span>Update</span>
                                         </button>
 
 
@@ -150,17 +150,17 @@
             </div>
 
 
-            
-            </div>
-
-
-
-
-            <!-- {{sectionB | json}} -->
-
-
-
 
         </div>
 
+
+
+
+        <!-- {{sectionB | json}} -->
+
+
+
+
     </div>
+
+</div>

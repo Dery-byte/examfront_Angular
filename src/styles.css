@@ -2,7 +2,7 @@
 @media print {
   
 
-    .navbar,#homePrintbtn{
+    .navbar,footer,#homePrintbtn{
 display: none !important;
     }
    
