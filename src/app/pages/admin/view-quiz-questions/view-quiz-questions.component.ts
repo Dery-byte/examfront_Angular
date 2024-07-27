@@ -31,6 +31,7 @@ export class ViewQuizQuestionsComponent  implements OnInit{
 
  updateNumberOfquestionsToAnswer ={
   totalQuestToAnswer:"",
+  timeAllowed:"",
 	quiz:
   {
     qId:""

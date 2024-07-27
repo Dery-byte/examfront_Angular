@@ -30,6 +30,11 @@ export class InstructionsComponent implements OnInit {
   idNumberReport: number[] = [];
   QuizIdsInReport: number[] = [];
 
+  timeT
+  timerAll
+  timeO
+  numberOfQuestionsToAnswer
+
 
 
   quizData = {
@@ -59,12 +64,36 @@ export class InstructionsComponent implements OnInit {
     this._quiz.getQuiz(this.qid).subscribe((data: any) => {
       console.log(data.title);
       this.quiz = data;
+
+      
+     this.timeO = this.quiz.quizTime * 1;
+     this.timerAll = this.quiz.quizTime * 1 * 60 ;
+
     },
       (error) => {
         console.log("error !!");
         alert("Error loading quiz data")
       }
     );
+
+
+    // Load number of questions to answer
+    this._quiz.getNumerOfQuesToAnswer(this.qid).subscribe((data: any) => {
+      console.log(data);
+      console.log(data[0].totalQuestToAnswer);
+      // this.quizTitle =data[0].quiz.title;
+      // this.courseTitle = data[0].quiz.category.title;
+
+      this.numberOfQuestionsToAnswer = data[0].totalQuestToAnswer;
+      this.timeT = data[0].timeAllowed;
+      this.timerAll = (this.timeT + this.timeO) * 60;
+
+      console.log(this.timeT);
+      console.log(this.timeO);
+console.log(this.timerAll)
+
+    });
+
 
   }
 
@@ -242,6 +271,25 @@ export class InstructionsComponent implements OnInit {
     });
 
   }
+  getFormmatedTime() {
+    // let timeToseconds = this.timerAll * 60
+    let hr = Math.floor(this.timerAll / 3600);
+    let mm = Math.floor((this.timerAll % 3600) / 60);
+    // let ss = this.timerAll % 60;
+
+    let formattedTime = '';
+    if (hr > 0) {
+      formattedTime += `${hr} hr(s) : `;
+    }
+    formattedTime += `${mm} min(s)`;
+    return formattedTime;
+  }
+
+
+
+
+
+
 
 
   // So nice all it

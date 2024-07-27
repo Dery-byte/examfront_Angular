@@ -46,12 +46,16 @@ export class StartComponent implements OnInit {
   correct_answer = 0;
   attempted: any;
   isSubmit = false;
-  timer: any;
+  // timer: any;
   isNavigating = false;
   second: number;
   minutes: number;
   count_timer: any;
-
+  timeT: number = 0;
+  timerAll : number = 0;
+  timeO: number = 0;
+  quizTitle
+courseTitle
   quiz
   private countdownKey = 'countdown_timer';
   private intervalId: any;
@@ -67,7 +71,7 @@ export class StartComponent implements OnInit {
   selectedQuestions: { [key: string]: boolean } = {}; // To track selected prefixes
   selectedPrefix: string;
   selectedQuestionsCount: number = 0;
-  numberOfQuestionsToAnswer: number = 2;
+  numberOfQuestionsToAnswer: number = 0;
   quizForm: FormGroup;
 
   //  sectionB;
@@ -109,8 +113,7 @@ export class StartComponent implements OnInit {
   @HostListener('window:beforeunload', ['$event'])
   beforeUnloadHandler(event: Event): void {
     // Custom code to be executed before the page is unloaded
-    localStorage.setItem(this.countdownKey, JSON.stringify(this.timer));
-
+    localStorage.setItem(this.countdownKey, JSON.stringify(this.timerAll));
     // event.preventDefault();
     this.preventBackButton();
 
@@ -150,13 +153,15 @@ export class StartComponent implements OnInit {
 
   ngOnInit(): void {
     this.qid = this._route.snapshot.params['qid'];
-    this.qid = this._route.snapshot.params['qid'];
+    // this.qid = this._route.snapshot.params['qid'];
+
     this._quiz.getQuiz(this.qid).subscribe((data: any) => {
       console.log(data.title);
       this.quiz = data;
 
       console.log(this.quiz);
       console.log(this.quiz.quizTime)
+    return  this.timeO = parseInt(this.quiz.quizTime) * 60;
     },
       (error) => {
         console.log("error !!");
@@ -166,10 +171,21 @@ export class StartComponent implements OnInit {
     this._quiz.getNumerOfQuesToAnswer(this.qid).subscribe((data: any) => {
       console.log(data);
       console.log(data[0].totalQuestToAnswer);
+      this.quizTitle =data[0].quiz.title;
+      this.courseTitle = data[0].quiz.category.title;
 
       this.numberOfQuestionsToAnswer = data[0].totalQuestToAnswer;
+      this.timeT = data[0].timeAllowed * 60;
+
+      this.timerAll = this.timeT + this.timeO;
+
+      console.log(this.timeT);
+      console.log(this.timeO);
+      console.log(this.timerAll)
+
     });
 
+    // console.log(this.timerAll);
 
 
     this.loadTheory();
@@ -294,19 +310,25 @@ export class StartComponent implements OnInit {
         q.count = index + 1;
         q['givenAnswer'] = [];
         console.log(this.questions)
+
         return q;
 
       });
+
+
+
       let timerString = localStorage.getItem('countdown_timer');
       const timerNumber = parseInt(timerString, 10);
       console.log(typeof (timerNumber));
       if (timerNumber) {
-        this.timer = timerNumber;
+        this.timerAll = timerNumber;
         //Remove value from local storage after accessing it.
         localStorage.removeItem("countdown_timer");
       } else {
         // this.timer = this.questions.length * 2 * 60;
-        this.timer = this.quiz.quizTime * 60;
+        this.timerAll = (this.quiz.quizTime * 60);
+        // this.timerAll = (this.questions.length * 2 * 60) + this.timeT;
+
       }
       // this.questions.forEach(q => {
       //   q['givenAnswer'] = []; //Initialize as empty array
@@ -369,6 +391,7 @@ export class StartComponent implements OnInit {
       if (e.isConfirmed) {
         // EVALUATIING THE OBJECTIVES
         this.evalQuiz();
+        // localStorage.removeItem("countdown_timer");
         this.printQuiz();
         this.loadQuestionsWithAnswers();
         this.preventBackButton();
@@ -378,7 +401,7 @@ export class StartComponent implements OnInit {
 
 
   submitAllQuiz() {
-    this.evalSubjective();
+    // this.evalSubjective();
     Swal.fire({
       title: "Do you want to submit the quiz ?",
       showCancelButton: true,
@@ -390,6 +413,7 @@ export class StartComponent implements OnInit {
         this.evalSubjective();
         // EVALUATIING THE OBJECTIVES
         this.evalQuiz();
+        // localStorage.removeItem("countdown_timer");
         this.printQuiz();
         this.loadQuestionsWithAnswers();
         this.preventBackButton();
@@ -437,7 +461,7 @@ export class StartComponent implements OnInit {
   startTimer() {
     let t = window.setInterval(() => {
       //Code
-      if (this.timer <= 0) {
+      if (this.timerAll <= 0) {
         // this.submitQuiz();
         this.printQuiz();
         this.evalQuiz();
@@ -448,16 +472,17 @@ export class StartComponent implements OnInit {
         // this.preventBackButton();
       }
       else {
-        this.timer--;
+        this.timerAll--;
       }
     }, 1000);
   }
  
   
   getFormmatedTime() {
-    let hr = Math.floor(this.timer / 3600);
-    let mm = Math.floor((this.timer % 3600) / 60);
-    let ss = this.timer % 60;
+    // let timeToseconds = this.timerAll * 60
+    let hr = Math.floor(this.timerAll / 3600);
+    let mm = Math.floor((this.timerAll % 3600) / 60);
+    let ss = this.timerAll % 60;
 
     let formattedTime = '';
     if (hr > 0) {
@@ -482,8 +507,6 @@ export class StartComponent implements OnInit {
       localStorage.setItem('Attempted', JSON.stringify(this.attempted));
       localStorage.setItem('MaxMarks', JSON.stringify(this.maxMarks))
       this.preventBackButton();
-
-
       this.isSubmit = true;
     },
       (error) => {
@@ -513,7 +536,6 @@ export class StartComponent implements OnInit {
     if (Object.keys(this.selectedQuestions).length === this.numberOfQuestionsToAnswer) {
       // Handle the submission logic here
       console.log('Submitted Questions:', selectedQuestions);
-
       // SAVE THE SELECTED QUESTIONS IN LOCAL STOREAGE
  localStorage.setItem("answeredQuestions", JSON.stringify(selectedQuestions));
 
@@ -542,9 +564,10 @@ export class StartComponent implements OnInit {
   }
   loadQuestionsFromLocalStorage() {
     // this.questionss = JSON.parse(localStorage.getItem("exam"));
-    this.timer = this.questionss.length * 2 * 60;
-    localStorage.setItem('time', JSON.stringify(this.timer));
-
+        // this.timeO = parseInt(this.quiz.quizTime) * 60;
+        this.timeO = parseInt(this.questionss[0].quiz.category.quizTime) * 1 * 60;
+    // this.timer = this.questionss.length * 2 * 60; // THIS WORKS FINE
+    localStorage.setItem('time', JSON.stringify(this.timeO));
     this.questions.forEach(q => {
       q['givenAnswer'] = "";
     });
@@ -565,7 +588,6 @@ export class StartComponent implements OnInit {
     this.page = 1;
     this.loadQuestionsFromLocalStorage();
   }
-
 
 
 

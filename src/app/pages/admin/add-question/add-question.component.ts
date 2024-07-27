@@ -19,6 +19,7 @@ export class AddQuestionComponent implements OnInit {
 
   theoryQuesToAnswer = {
     totalQuestToAnswer: "",
+    timeAllowed:"",
    quiz: {
       qId:""
     }

@@ -22,31 +22,45 @@
                 <ng-container>
                     <!-- <h1 class="mt20" id="quiztitle">Quiz <b>{{questions[0].quiz.title}}</b></h1> -->
                 </ng-container>
-                <!-- <div class="row"> -->
 
                 <div class="watermark">
                     <div class="caption">
-                        <p id="cape">University of Cape Coast.<br>
 
+                        <!-- WORK ON THIS BELOW -->
+
+                        <!-- <p *ngIf="answeredQuestions && questionWithAnswers" id="cape">University of Cape Coast.<br>
+                            School of Physical Sciences. <br>Department of Computer Science and Information
+                            Technology<br>
+                            <b>{{answeredQuestions[0].quiz.category.title}}</b>
+                            {{answeredQuestions[0].quiz.title}}. Time Allowed:
+                            <i>
+                                <b> {{answeredQuestions[0].quiz.quizTime * 1}} minutes</b>
+                            </i>                            
+                        </p> -->
+
+
+
+                        <!-- WORK ON THIS ABOVE -->
+
+
+
+                        <!-- DISPLAYS IF QUESTIONS ARE ONLY OBJ -->
+                        <p *ngIf="questionWithAnswers" id="cape">
+                            University of Cape Coast.<br>
                             School of Physical Sciences. <br>Department of Computer Science and Information
                             Technology<br>
                             <b>{{questions[0].quiz.category.title}}</b>
                             {{questions[0].quiz.title}}. Time Allowed:
                             <i>
                                 <b> {{questions[0].quiz.quizTime * 1}} minutes</b>
-
-                            </i>
+                            </i> <br>
+                            <label> Index Number:<b>{{username | uppercase}}</b></label>
                         </p>
-                        <label> Index Number:{{username | uppercase}}</label>
+
+
                     </div>
 
 
-                    <!-- <span id="marks">
-                <p>Marks : <span id="marksU">{{correctAnswers}}/{{ questions[0].quiz.maxMarks}}</span></p>
-                <p> Correct Answers : {{correctAnswers}}</p>
-                <p> Correct Answers: {{reportData[0].marks}}</p>
-                <p>Attempted questions : {{attempted}}</p>
-            </span> -->
 
 
                     <!-- <div *ngIf="reportData"> -->
@@ -63,44 +77,44 @@
 
                     <!-- </div> -->
                     <!-- BEGIN SECTION A -->
-                     <div *ngIf="questionWithAnswers.length>0">
+                    <div *ngIf="questionWithAnswers.length>0">
                         <h1 style="text-align: center;">Section A</h1>
-                    <mat-card *ngFor="let qA of questionWithAnswers; let i = index" class="mt10">
-                        <mat-card-content>
-                            <p> <b> Q {{ i + 1}} </b> <span class="ml10" [innerHTML]="qA.content"></span></p>
-                            <mat-divider></mat-divider>
-                            <br />
+                        <mat-card *ngFor="let qA of questionWithAnswers; let i = index" class="mt10">
+                            <mat-card-content>
+                                <p> <b> Q {{ i + 1}} </b> <span class="ml10" [innerHTML]="qA.content"></span></p>
+                                <mat-divider></mat-divider>
+                                <br />
 
-                            <!-- Worked like magic -->
+                                <!-- Worked like magic -->
 
-                            <div class="row mt20">
-                                <div class="col-md-6">
-                                    <input type="checkbox" [checked]="qA.correct_answer.includes(qA.option1)"
-                                        disabled />
-                                    {{qA.option1}}
+                                <div class="row mt20">
+                                    <div class="col-md-6">
+                                        <input type="checkbox" [checked]="qA.correct_answer.includes(qA.option1)"
+                                            disabled />
+                                        {{qA.option1}}
+                                    </div>
+
+                                    <div class="col-md-6">
+                                        <input type="checkbox" [name]="i"
+                                            [checked]="qA.correct_answer.includes(qA.option2)" disabled />
+                                        {{qA.option2}}
+                                    </div>
+                                    <div class="col-md-6">
+                                        <input type="checkbox" [checked]="qA.correct_answer.includes(qA.option3)"
+                                            disabled />
+                                        {{qA.option3}}
+                                    </div>
+
+                                    <div class="col-md-6">
+                                        <input type="checkbox" [checked]="qA.correct_answer.includes(qA.option4)"
+                                            disabled />
+                                        {{qA.option4}}
+
+                                    </div>
                                 </div>
-
-                                <div class="col-md-6">
-                                    <input type="checkbox" [name]="i" [checked]="qA.correct_answer.includes(qA.option2)"
-                                        disabled />
-                                    {{qA.option2}}
-                                </div>
-                                <div class="col-md-6">
-                                    <input type="checkbox" [checked]="qA.correct_answer.includes(qA.option3)"
-                                        disabled />
-                                    {{qA.option3}}
-                                </div>
-
-                                <div class="col-md-6">
-                                    <input type="checkbox" [checked]="qA.correct_answer.includes(qA.option4)"
-                                        disabled />
-                                    {{qA.option4}}
-
-                                </div>
-                            </div>
-                        </mat-card-content>
-                    </mat-card>
-                </div>
+                            </mat-card-content>
+                        </mat-card>
+                    </div>
 
                     <!-- END OF SECTION A -->
 
@@ -108,43 +122,45 @@
 
                     <div *ngIf="answeredQuestions !=null">
                         <div *ngIf="getPrefixes().length>0">
-                        <h1 style="text-align: center;">Section B</h1>
-                        <div *ngFor="let prefix of getPrefixes()">
-                            <mat-card *ngIf="getGroupedQuestions(prefix).length > 0">
-                                <mat-card-header>
-                                    <mat-card-title>{{ prefix }}</mat-card-title>
-                                </mat-card-header>
-                                <mat-card-content>
-                                    <div *ngFor="let question of getGroupedQuestions(prefix)">
-                                        <p><strong>{{ question.quesNo }}:</strong> {{ question.question }} (2 out of {{  question.marks
-                                            }})</p>
-                                            
-        
-                                    </div>
-                                </mat-card-content>
-                            </mat-card>
-                            <mat-divider></mat-divider>
+                            <h1 style="text-align: center;">Section B</h1>
+                            <div *ngFor="let prefix of getPrefixes()">
+                                <mat-card *ngIf="getGroupedQuestions(prefix).length > 0">
+                                    <mat-card-header>
+                                        <mat-card-title>{{ prefix }}</mat-card-title>
+                                    </mat-card-header>
+                                    <mat-card-content>
+                                        <div *ngFor="let question of getGroupedQuestions(prefix)">
+                                            <p><strong>{{ question.quesNo }}:</strong> {{ question.question }} (2 out of
+                                                {{ question.marks
+                                                }})</p>
+
+
+                                        </div>
+                                    </mat-card-content>
+                                </mat-card>
+                                <mat-divider></mat-divider>
+                            </div>
                         </div>
-                    </div> 
-         
-
-
-                    <!-- END OF SECTION B -->
 
 
 
+                        <!-- END OF SECTION B -->
 
 
-                </div>
 
-                <mat-card-actions>
-                    <div class="container text-center">
-                        <button (click)="printPage()" mat-raised-button color="accent" id="homePrintbtn">Print</button>
 
-                        <button mat-raised-button color="primary" class="ml10" id="homePrintbtn"
-                            routerLink="/user-dashboard/0">Home</button>
+
                     </div>
-                </mat-card-actions>
+
+                    <mat-card-actions>
+                        <div class="container text-center">
+                            <button (click)="printPage()" mat-raised-button color="accent"
+                                id="homePrintbtn">Print</button>
+
+                            <button mat-raised-button color="primary" class="ml10" id="homePrintbtn"
+                                routerLink="/user-dashboard/0">Home</button>
+                        </div>
+                    </mat-card-actions>
+                </div>
             </div>
         </div>
-    </div>

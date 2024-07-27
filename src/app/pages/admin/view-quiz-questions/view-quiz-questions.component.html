@@ -85,6 +85,10 @@
                         <mat-label>Number Theory to Answer</mat-label>
                         <input matInput [(ngModel)]='numberOfquestionsToAnswer[0].totalQuestToAnswer'>
                     </mat-form-field>
+                    <mat-form-field class="w100" appearance="fill">
+                        <mat-label>Time Allowed</mat-label>
+                        <input matInput [(ngModel)]='numberOfquestionsToAnswer[0].timeAllowed'>
+                    </mat-form-field>
                 </div>
 
                 <div mat-dialog-actions>
@@ -103,7 +107,11 @@
                 <mat-card>
                     <!-- <div *ngFor="let qN of numberOfquestionsToAnswer"> -->
                     <h1 style="text-align: center;">Total Questions To Answer:
-                        <b>{{numberOfquestionsToAnswers[0].totalQuestToAnswer}}</b><button mat-button color="primary"
+                        <b>{{numberOfquestionsToAnswers[0].totalQuestToAnswer}}</b>
+                        Time Allowed:
+                        <b>{{numberOfquestionsToAnswers[0].timeAllowed}}</b>
+
+                        <button mat-button color="primary"
                             (click)="openUpdateNumberDialog(numberOfquestionsToAnswers[0].answerTheoryId, updateDialogNumQuestion)">Update</button>
                     </h1>
                     <!-- </div> -->
@@ -131,8 +139,6 @@
                                             <mat-icon color="accent">update</mat-icon>
                                             <span>Update</span>
                                         </button>
-
-
                                         <button mat-menu-item (click)="deleteTheoryQuestion(question.tqId)">
                                             <mat-icon color="accent">delete</mat-icon>
                                             <span> Delete
@@ -140,17 +146,12 @@
                                         </button>
                                     </mat-menu>
                                 </mat-card-actions>
-
-
                             </div>
                         </mat-card-content>
                     </mat-card>
                     <mat-divider></mat-divider>
                 </div>
             </div>
-
-
-
         </div>
 
 

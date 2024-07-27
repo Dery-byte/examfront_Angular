@@ -39,11 +39,11 @@ this._category.getCategories().subscribe((data: any)=>{
    (data)=>{
  this.categories = this.categories.filter((category)=> category.cId != cId);
  
-     Swal.fire("Success", "Category Deleted", "success");
+     Swal.fire("Success", "Course Deleted", "success");
    },
    (error)=>
    {
-     Swal.fire("Error", "Category could not be deleted", "error");
+     Swal.fire("Error", "Course could not be deleted", "error");
  
    }
  );

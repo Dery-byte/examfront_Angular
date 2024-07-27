@@ -131,11 +131,20 @@
 
 
                             <div class="col-md-6">
-                                <label>Upload Theory Questions!   <button  mat-button color="primary" 
+
+
+                                <mat-form-field class="w100">
+                                    <mat-label>Time Allowed</mat-label>
+                                    <input required
+                                    [(ngModel)]= "theoryQuesToAnswer.timeAllowed"
+                                    name="timeAllowed"
+                                    type="text" matInput/>
+                                </mat-form-field>
+                                <!-- <label>Upload Theory Questions!   <button  mat-button color="primary" 
                                     matTooltip='The acccepted quiz format is JSON'>
                                          See Acccepted Format
                                     </button>
-                                     </label>
+                                     </label>-->
                                     </div>
 
                             </div>

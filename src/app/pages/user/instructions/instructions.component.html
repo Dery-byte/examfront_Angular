@@ -40,13 +40,18 @@ text="Loading instructions"
                         <br>
                         <h1>Important Notice</h1>
                         <ul>
+                            <!-- {{timeT}} -->
+
+                            <!-- {{timeO}}
+
+                            {{timerAll}} -->
                             <li>This quiz is for practice purposes</li>
-                            <li>This quiz is just for <b> {{quiz.quizTime}} minutes </b> </li>
+                            <li>This quiz is just for <b>   {{getFormmatedTime()}} </b> </li>
                             <li>You can attempt any number times</li>
-                            <li>There are <b>{{quiz.numberOfQuestions}} questions </b> in total</li>
+                            <li *ngIf="timeO > 0">There are <b>{{quiz.numberOfQuestions}} objectives questions </b> in total</li>
                             <li>Each question carries <b> {{quiz.maxMarks/quiz.numberOfQuestions}} mark(s)</b>. No
                                 negative marking for wrong ones.</li>
-                            <li>All questions are Multiple choice.</li>
+                            <li *ngIf="numberOfQuestionsToAnswer > 0">Answer all the Multiple choice, and any <b>{{numberOfQuestionsToAnswer}}</b> theory question(s)</li>
                         </ul>
                         <mat-divider></mat-divider>
                         <br>

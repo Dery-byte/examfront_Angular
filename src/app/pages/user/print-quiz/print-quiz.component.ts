@@ -323,6 +323,9 @@ removeResults() {
     this.loadResults();
     this.questionss = JSON.parse(localStorage.getItem("exam"));
     this.timer = this.questionss.length * 2 * 60;
+
+    // this.timer = this.questionss.length * 2 * 60;
+
     this.questions.forEach(q => {
       q['givenAnswer'] = "";
     });
