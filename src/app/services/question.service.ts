@@ -37,6 +37,10 @@ export class QuestionService {
     return this._http.get(`${baseUrl}/question/${quesId}`)
   }
 
+  public getSpecificObj(quesId){
+    return this._http.get(`${baseUrl}/question/${quesId}`)
+  }
+
   public getQuestionsOfQuizForText(qid){
     return this._http.get(`${baseUrl}/question/quiz/${qid}`);
   }

@@ -1,5 +1,9 @@
 {
   "projects": {
-    "default": "assessments-ca362"
-  }
+    "default": "assessmentapp-e1d04",
+    "staging": "assessmentapp-e1d04"
+  },
+  "targets": {},
+  "etags": {},
+  "dataconnectEmulatorConfig": {}
 }

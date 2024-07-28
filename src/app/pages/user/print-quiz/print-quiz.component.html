@@ -8,12 +8,7 @@
 <!-- {{questionWithAnswers | json}} -->
 <ngx-ui-loader fgsColor="#ff4081" pbColor="#ff4081" textColor="#ff4081" pbThickness="6"
     text="Preparing results please wait...!"></ngx-ui-loader>
-
-
 <div ngxUiLoaderBlurred (blur)="10">
-
-
-
     <!-- QUESTIONS LOAD AFTER SUBMIT -->
     <!-- questions -->
     <div class="bootstrap-wrapper">
@@ -25,37 +20,51 @@
 
                 <div class="watermark">
                     <div class="caption">
-
-                        <!-- WORK ON THIS BELOW -->
-
-                        <!-- <p *ngIf="answeredQuestions && questionWithAnswers" id="cape">University of Cape Coast.<br>
+                        <!--DISPLAY IF BOTH THERORY AND OBJ -->
+                        <!-- <p *ngIf="answeredQuestions.length > 0 && questionWithAnswers.length > 0" id="cape">University of Cape Coast.<br>
                             School of Physical Sciences. <br>Department of Computer Science and Information
                             Technology<br>
                             <b>{{answeredQuestions[0].quiz.category.title}}</b>
                             {{answeredQuestions[0].quiz.title}}. Time Allowed:
                             <i>
                                 <b> {{answeredQuestions[0].quiz.quizTime * 1}} minutes</b>
-                            </i>                            
+                            </i>  
+                            <br>
+                            <label> Index Number:<b>{{username | uppercase}}</b></label>
                         </p> -->
 
 
 
-                        <!-- WORK ON THIS ABOVE -->
+                        <!--DISPLAY IF ONLY THERORY -->
+                        <div *ngIf="answeredQuestions; else elseBlock">
+                            <p id="cape">
+                                University of Cape Coast.<br>
+                                School of Physical Sciences. <br>Department of Computer Science and Information
+                                Technology<br>
+                                <b>{{answeredQuestions[0].quiz.category.title}}</b>
+                                {{answeredQuestions[0].quiz.title}}. Time Allowed:
+                                <i>
+                                    <b> {{answeredQuestions[0].quiz.quizTime * 1}} minutes</b>
+                                </i> <br>
+                                <label> Index Number:<b>{{username | uppercase}}</b></label>
+                            </p>
+                        </div>
 
+                        <ng-template #elseBlock>
+                            <!-- DISPLAYS IF QUESTIONS ARE ONLY OBJ -->
+                            <p *ngIf="questionWithAnswers.length >0" id="cape">
+                                University of Cape Coast.<br>
+                                School of Physical Sciences. <br>Department of Computer Science and Information
+                                Technology<br>
+                                <b>{{questions[0].quiz.category.title}}</b>
+                                {{questions[0].quiz.title}}. Time Allowed:
+                                <i>
+                                    <b> {{questions[0].quiz.quizTime * 1}} minutes</b>
+                                </i> <br>
+                                <label> Index Number:<b>{{username | uppercase}}</b></label>
+                            </p>
+                        </ng-template>
 
-
-                        <!-- DISPLAYS IF QUESTIONS ARE ONLY OBJ -->
-                        <p *ngIf="questionWithAnswers" id="cape">
-                            University of Cape Coast.<br>
-                            School of Physical Sciences. <br>Department of Computer Science and Information
-                            Technology<br>
-                            <b>{{questions[0].quiz.category.title}}</b>
-                            {{questions[0].quiz.title}}. Time Allowed:
-                            <i>
-                                <b> {{questions[0].quiz.quizTime * 1}} minutes</b>
-                            </i> <br>
-                            <label> Index Number:<b>{{username | uppercase}}</b></label>
-                        </p>
 
 
                     </div>

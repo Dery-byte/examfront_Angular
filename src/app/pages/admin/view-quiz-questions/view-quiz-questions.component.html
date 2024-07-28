@@ -43,14 +43,90 @@
                     </mat-card-content>
                     <mat-card-actions style="margin-top: -20px;">
                         <button mat-button color="warn" (click)="deleteQuestion(q.quesId)">Delete</button>
+
                         <button mat-button color="primary"
-                            [routerLink]="'/admin/update-question/'+ q.quesId">Update</button>
+                            (click)="openUpdateObjDialog(q.quesId, updateObj)">Update</button>
                     </mat-card-actions>
                 </mat-card>
             </div>
+            <!-- POP UP DIALOG BOX TO EIDT OBJECTIVE QUESTIONS -->
+            <ng-template #updateObj let-data="data">
+                <h1 mat-dialog-title>Update Question</h1>
+                <div mat-dialog-content>
+
+                    <ckeditor [editor]="Editor" data="<h2>Type the Question here !</h2>" name="content"
+                        value="specificObjective.content" [(ngModel)]="specificObjective.content">
+                        {{specificObjective.content}}
+                    </ckeditor>
+
+                    <div class="row">
+                        <div class="col-md-6">
+                            <!-- option 1 -->
+                            <mat-form-field class="w100">
+                                <mat-label>Enter Option 1</mat-label>
+                                <input required [(ngModel)]="specificObjective.option1" name="option1" type="text"
+                                    matInput />
+
+                            </mat-form-field>
+                        </div>
+                        <div class="col-md-6">
+                            <!-- option 2 -->
+                            <mat-form-field class="w100">
+                                <mat-label>Enter Option 2</mat-label>
+                                <input required [(ngModel)]="specificObjective.option2" name="option2" type="text"
+                                    matInput />
+
+                            </mat-form-field>
+                        </div>
+                    </div>
+
+                    <div class="row">
+                        <div class="col-md-6">
+                            <!-- option 3 -->
+                            <mat-form-field class="w100">
+                                <mat-label>Enter Option 3</mat-label>
+                                <input [(ngModel)]="specificObjective.option3" name="option3" type="text" matInput />
+
+                            </mat-form-field>
+                        </div>
+                        <div class="col-md-6">
+                            <!-- option 4 -->
+                            <mat-form-field class="w100">
+                                <mat-label>Enter Option 4</mat-label>
+                                <input [(ngModel)]="specificObjective.option4" name="option4" type="text" matInput />
+
+                            </mat-form-field>
+                        </div>
+                    </div>
+
+                    <!-- answer -->
+                    <mat-form-field class="w100">
+                        <mat-label>Select answer</mat-label>
+                        <mat-select [(ngModel)]="specificObjective.correct_answer" name="correct_answer" multiple
+                            required>
+                            <mat-option *ngIf="specificObjective.option1"
+                                [value]="specificObjective.option1">{{specificObjective.option1}}</mat-option>
+                            <mat-option *ngIf="specificObjective.option2"
+                                [value]="specificObjective.option2">{{specificObjective.option2}}</mat-option>
+                            <mat-option *ngIf="specificObjective.option3"
+                                [value]="specificObjective.option3">{{specificObjective.option3}}</mat-option>
+                            <mat-option *ngIf="specificObjective.option4"
+                                [value]="specificObjective.option4">{{specificObjective.option4}}</mat-option>
+                        </mat-select>
+                    </mat-form-field>
+
+                </div>
+
+                <div mat-dialog-actions>
+                    <button mat-button (click)="dialogRef.close()">Cancel</button>
+                    <button mat-button (click)="updateQuestionData()">Update</button>
+                </div>
+            </ng-template>
 
 
-            <!-- POP UP DIALOG BOX -->
+
+
+            <!-- POP UP DIALOG BOX TO EDIT THEORY  -->
             <ng-template #updateDialog let-data="data">
                 <h1 mat-dialog-title>Update Question</h1>
                 <div mat-dialog-content>
@@ -76,7 +152,7 @@
             </ng-template>
 
 
-            <!-- POP UP DIALOG BOX FOR NUMBER OF QUESTIONS TO UPDATE -->
+            <!-- POP UP DIALOG BOX EIDT NUMBER OF QUESTIONS TO ANSWER -->
             <ng-template #updateDialogNumQuestion let-data="data">
                 <h1 mat-dialog-title>Update Number of Questions</h1>
 
