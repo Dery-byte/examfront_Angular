@@ -1,6 +1,11 @@
-import { Component, OnInit } from '@angular/core';
+import { Component,TemplateRef, OnInit } from '@angular/core';
 import { CategoryService } from 'src/app/services/category.service';
+import { MatDialog, MatDialogRef } from '@angular/material/dialog';
 import Swal from 'sweetalert2';
+import { MatSnackBar } from '@angular/material/snack-bar';
+
+import { LoginService } from 'src/app/services/login.service';
+
 
 
 @Component({
@@ -11,19 +16,83 @@ import Swal from 'sweetalert2';
 export class ViewCategoriesComponent implements OnInit {
 
   categories =[];
+  category;
+  categoryEdit;
 
-  constructor(private _category: CategoryService){ }
+
+
+
+  constructor(
+    private _category: CategoryService,
+    private _snack: MatSnackBar,
+    public dialog: MatDialog,
+    private login: LoginService,
+  ){ }
+
+  dialogRef!: MatDialogRef<any>;
+
   ngOnInit(): void{
 this._category.getCategories().subscribe((data: any)=>{
   this.categories = data;
   console.log(this.categories);
 },
 (error)=>{
-  console.log(error);
-  Swal.fire('Error !! ', 'Error in loading data', 'error');
+
+  this.login.logout();
+  // console.log(error);
+  // Swal.fire('Error !! ', 'Error in loading data', 'error');
 }  
 );
   }
+
+
+  // UPDATE THE CATEGORY
+  getQuesObj(categoryId: any): any {
+    return this._category.getCategory(categoryId);
+  }
+
+
+  openUpdateObjDialog(catId: any, templateRef: TemplateRef<any>): void {
+    console.log(catId);
+    // Fetch question details based on ID
+    this.category = this.getQuesObj(catId).subscribe((data) => {
+      // console.log(this.category);
+      this.categoryEdit = data;
+      console.log(this.categoryEdit);
+      this.dialogRef = this.dialog.open(templateRef, {
+        width: '650px',
+        data: this.categoryEdit,
+      })
+    });
+    this.dialogRef.afterClosed().subscribe(result => {
+      if (result) {
+        this.categoryEdit = result;
+      }
+    });
+  }
+
+
+
+  public updateCategoryData(){
+
+    this._category.updateCategory(this.categoryEdit).subscribe((data)=>
+    {
+      this._snack.open("This Course is Updated Successfully! ", "", {
+        duration: 3000,
+      });
+      this.dialogRef.close(this.categoryEdit);
+      this.ngOnInit();
+    },
+      (error) => {
+        this._snack.open("This question couldn't be updated", "", {
+          duration: 3000,
+        });
+      });
+
+
+  }
+
+  
 
   deleteCategor(cId){
     Swal.fire({ 

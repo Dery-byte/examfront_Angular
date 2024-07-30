@@ -13,19 +13,104 @@
     <mat-card-content>
         <p>{{q.description}}</p>
     </mat-card-content>
-   <mat-card-actions>
-    <button 
-    [routerLink]="'/admin/view-quetions/'+q.qId+'/'+q.title" mat-flat-button color="accent"  >Questions</button>
-    <button mat-stroked-button color="accent"class="ml20" >Max Marks: {{q.maxMarks}}</button>
-    <button mat-stroked-button color="accent"class="ml20" >Questions: {{q.numberOfQuestions}}</button>
-    <button mat-flat-button color="accent"class="ml20"  [routerLink]="'/admin/update-quiz/'+ q.qId " >Update</button>
-    <button mat-flat-button color="accent"class="ml20" >Attempts</button>
-    <button mat-flat-button color="warn"class="ml20" (click)="deleteQuiz(q.qId)" >Delete</button>
+    <mat-card-actions>
+        <button [routerLink]="'/admin/view-quetions/'+q.qId+'/'+q.title" mat-flat-button
+            color="accent">Questions</button>
+        <button mat-stroked-button color="accent" class="ml20">Max Marks: {{q.maxMarks}}</button>
+        <button mat-stroked-button color="accent" class="ml20">Questions: {{q.numberOfQuestions}}</button>
+        <!-- <button mat-flat-button color="accent" class="ml20" [routerLink]="'/admin/update-quiz/'+ q.qId ">Update</button> -->
 
+        <button mat-flat-button color="accent" (click)="openUpdateDialog(q.qId, updateObj)"> Update
+            2</button>
 
-   </mat-card-actions>
+        <button mat-flat-button color="accent" class="ml20">Attempts</button>
+        <button mat-flat-button color="warn" class="ml20" (click)="deleteQuiz(q.qId)">Delete</button>
+    </mat-card-actions>
 </mat-card>
 
+<!-- POP UP DIALOG BOX TO EIDT OBJECTIVE QUESTIONS -->
+<ng-template #updateObj let-data="data">
+    <h1 mat-dialog-title>Update Quiz</h1>
+    <div mat-dialog-content>
+
+        <!-- <mat-card> -->
+        <div class="container">
+            <div class="row">
+                <div class="col-md-6">
+                    <mat-form-field class="w100" appearance="fill">
+                        <mat-label>Enter Quiz Title</mat-label>
+                        <input [(ngModel)]="quizById.title" type="text" name="title" matInput required>
+                    </mat-form-field>
+                </div>
+                <div class="col-md-6">
+
+                    <mat-form-field class="w100" appearance="fill">
+                        <mat-label>Quiz Description</mat-label>
+                        <textarea [(ngModel)]="quizById.description" type="text" name="description" matInput
+                            rows="8"> </textarea>
+                    </mat-form-field>
+                </div>
+            </div>
+
+            <div class="row">
+                <div class="col-md-6">
+                    <mat-form-field class="w100" appearance="fill">
+                        <mat-label>Maximum Marks</mat-label>
+                        <input [(ngModel)]="quizById.maxMarks" type="maxMarks" name="maxMarks" matInput>
+                    </mat-form-field>
+                </div>
+
+                <div class="col-md-6">
+                    <!-- Number of questions to be displayed -->
+                    <mat-form-field class="w100" appearance="fill">
+                        <mat-label>Total questions</mat-label>
+                        <input [(ngModel)]="quizById.numberOfQuestions" type="numberOfQuestions"
+                            name="numberOfQuestions" matInput>
+                    </mat-form-field>
+
+                </div>
+            </div>
+            <!-- EDIT QUIZ PASSWORD AND QUIZ TIME-->
+
+            <div class="row">
+                <div class="col-md-6">
+                    <mat-form-field class="w100" appearance="fill">
+                        <mat-label>Quiz Password</mat-label>
+                        <input [(ngModel)]="quizById.quizpassword" type="quizPassword" name="quizpassword" matInput>
+                    </mat-form-field>
+                </div>
+
+                <div class="col-md-6">
+                    <!-- Number of questions to be displayed -->
+                    <mat-form-field class="w100" appearance="fill">
+                        <mat-label>Quiz Time</mat-label>
+                        <input [(ngModel)]="quizById.quizTime" type="quizTime" name="quizTime" matInput>
+                    </mat-form-field>
+
+                </div>
+            </div>
+
+            <mat-slide-toggle name="active" [(ngModel)]="quizById.active" class="mb20"> Publish
+                Status</mat-slide-toggle>
+            <br />
+            <mat-form-field appearance="fill" class="mt20 w100">
+                <mat-label>Select Category</mat-label>
+                <mat-select name="category" [(ngModel)]="quizById.category.cid">
+                    <mat-option *ngFor="let c of categories" [value]="c.cid">
+                        {{c.title}}
+                    </mat-option>
+                </mat-select>
+            </mat-form-field>
+        </div>
+        <!-- </mat-card> -->
+        <div mat-dialog-actions>
+            <button mat-button (click)="dialogRef.close()">Cancel</button>
+            <button mat-button (click)="updateData()">Update</button>
+        </div>
+    </div>
+</ng-template>
+
+
 <div class="container text-center mt20">
-    <button  mat-raised-button color="accent" routerLink="/admin/add-quiz">Add New Quiz</button>
+    <button mat-raised-button color="accent" routerLink="/admin/add-quiz">Add New Quiz</button>
 </div>

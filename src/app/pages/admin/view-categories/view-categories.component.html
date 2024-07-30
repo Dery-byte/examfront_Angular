@@ -31,17 +31,24 @@
 
 
 
-                <button mat-menu-item [routerLink]="'/admin/update-category/'+ c.cid">
+                <!-- <button mat-menu-item [routerLink]="'/admin/update-category/'+ c.cid">
                   <mat-icon color="accent">update</mat-icon>
                   <span> Update
                   </span>
-                </button>
+                </button> -->
+
+                <button mat-menu-item color="primary"
+                (click)="openUpdateObjDialog(c.cid, updateDialogCategory)">
+                <mat-icon color="accent">update</mat-icon>
+                <span> Update
+                </span>
+              </button>
 
 
 
 
 
-                
+
 
                 <button mat-menu-item (click)="deleteCategor(c.cid)">
                   <mat-icon color="accent">delete</mat-icon>
@@ -63,3 +70,58 @@
     <button mat-raised-button color="accent" routerLink="/admin/add-category"> Add New Course</button>
   </div>
 </mat-card>
+
+
+
+
+<!-- POP UP DIALOG BOX FOR EDIT -->
+<ng-template #updateDialogCategory let-data="data">
+  <h1 mat-dialog-title>Update Category</h1>
+
+  <div mat-dialog-content>  
+      <!-- {{category | json}} -->
+      <mat-card-content>
+          <div class="bootstrap-wrapper">
+              <div class="row">
+                  <div class="col-md-8 offset-md-2">
+                      <!-- <form *ngIf="category" (ngSubmit)="updateCategoryData()"> -->
+                          <mat-label>Course Title:</mat-label>
+                          <mat-form-field class="w100" appearance="outline">
+                              <input [(ngModel)]="categoryEdit.title" type="text" name="title" matInput>
+                          </mat-form-field>
+                          <mat-label>Course Code:</mat-label>
+                          <mat-form-field class="w100" appearance="outline">
+                              <input [(ngModel)]="categoryEdit.courseCode" type="text" name="courseCode" matInput>
+                          </mat-form-field>
+                            <mat-label>Level:</mat-label>
+                          <mat-form-field class="w100" appearance="outline">
+                              <mat-label>Select Level:</mat-label>
+  
+                              <mat-select name="level" [(ngModel)]="categoryEdit.level">
+                                  <mat-option [value]="'Level 100'">Level 100</mat-option>
+                                  <mat-option [value]="'Level 200'">Level 200</mat-option>         
+                                  <mat-option [value]="'Level 300'">Level 300</mat-option>
+                                  <mat-option [value]="'Level 400'">Level 400</mat-option>
+                                  
+                              </mat-select>
+                          </mat-form-field>
+                          <mat-label>Description</mat-label>
+                          <mat-form-field class="w100" appearance="outline">
+                              <textarea [(ngModel)]="categoryEdit.description" rows="10" name="description" matInput>
+                          </textarea>
+                          </mat-form-field>
+                          <!-- <div class="container text-center mt15">
+                              <button mat-raised-button color="accent" type="submit">Update</button>
+                          </div> -->
+                      <!-- </form> -->
+                  </div>
+              </div>
+          </div>
+      </mat-card-content>
+  </div>
+
+  <div mat-dialog-actions>
+    <button mat-button (click)="dialogRef.close()">Cancel</button>
+    <button mat-button (click)="updateCategoryData()">Update</button>
+  </div>
+</ng-template>

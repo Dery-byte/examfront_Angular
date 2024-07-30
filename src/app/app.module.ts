@@ -33,7 +33,7 @@ import { ViewQuizzesComponent } from './pages/admin/view-quizzes/view-quizzes.co
 import { AddQuizComponent } from './pages/admin/add-quiz/add-quiz.component';
 import {MatSlideToggleModule} from '@angular/material/slide-toggle';
 import {MatSelectModule} from '@angular/material/select';
-import { UpdateQuizComponent } from './pages/admin/update-quiz/update-quiz.component';
+// import { UpdateQuizComponent } from './pages/admin/update-quiz/update-quiz.component';
 import { ViewQuizQuestionsComponent } from './pages/admin/view-quiz-questions/view-quiz-questions.component';
 import { AddQuestionComponent } from './pages/admin/add-question/add-question.component';
 import { CKEditorModule } from '@ckeditor/ckeditor5-angular';
@@ -46,11 +46,10 @@ import { NgxUiLoaderModule, NgxUiLoaderHttpModule} from 'ngx-ui-loader';
 import {MatMenuModule} from '@angular/material/menu';
 import {MatTableModule} from '@angular/material/table';
 import {MatStepperModule} from '@angular/material/stepper';
-import { UpdateCategoryComponent } from './pages/admin/update-category/update-category.component';
+// import { UpdateCategoryComponent } from './pages/admin/update-category/update-category.component';
 import { MatTabsModule } from '@angular/material/tabs';
 import { CanvasJSAngularChartsModule } from '@canvasjs/angular-charts';
 import { PrintQuizComponent } from './pages/user/print-quiz/print-quiz.component';
-import { UpdateQuestionComponent } from './pages/admin/update-question/update-question.component';
 import {MatTooltipModule} from '@angular/material/tooltip';
 import {MatCheckboxModule} from '@angular/material/checkbox';
 import {MatDialog, MAT_DIALOG_DATA, MatDialogRef, MatDialogModule} from '@angular/material/dialog';
@@ -85,17 +84,16 @@ import { AvailableQuizzesComponent } from './pages/user/available-quizzes/availa
     AddCategoryComponent,
     ViewQuizzesComponent,
     AddQuizComponent,
-    UpdateQuizComponent,
+    // UpdateQuizComponent,
     ViewQuizQuestionsComponent,
     AddQuestionComponent,
     UserSideBar,
     LoadQuizComponent,
     InstructionsComponent,
     StartComponent,
-    UpdateCategoryComponent,
-    UpdateCategoryComponent,
+    // UpdateCategoryComponent,
+    // UpdateCategoryComponent,
     PrintQuizComponent,
-    UpdateQuestionComponent,
     RegisterCoursesComponent,
     CoursesRegisteredComponent,
     AvailableQuizzesComponent,

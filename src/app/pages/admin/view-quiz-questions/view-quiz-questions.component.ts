@@ -216,6 +216,10 @@ export class ViewQuizQuestionsComponent implements OnInit {
   getQuestionById(questionId: any): any {
     return this._question.getSpecificSubjective(questionId);
   }
+
+
+
+  
   // Update Theory Question WORK ON THIS LATER
   updateTheoryQuestion() {
     this._question.updateTheoryQuestions(this.theory).subscribe((data) => {

@@ -2,3 +2,8 @@
     background-image: url("../../../../assets/logo2.jpg");
     background-size: cover;
 }
+
+
+.w100{
+    width: 500px;
+}

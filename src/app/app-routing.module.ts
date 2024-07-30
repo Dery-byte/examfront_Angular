@@ -13,15 +13,15 @@ import { ViewCategoriesComponent } from './pages/admin/view-categories/view-cate
 import { AddCategoryComponent } from './pages/admin/add-category/add-category.component';
 import { ViewQuizzesComponent } from './pages/admin/view-quizzes/view-quizzes.component';
 import { AddQuizComponent } from './pages/admin/add-quiz/add-quiz.component';
-import { UpdateQuizComponent } from './pages/admin/update-quiz/update-quiz.component';
+// import { UpdateQuizComponent } from './pages/admin/update-quiz/update-quiz.component';
 import { ViewQuizQuestionsComponent } from './pages/admin/view-quiz-questions/view-quiz-questions.component';
 import { AddQuestionComponent } from './pages/admin/add-question/add-question.component';
 import { LoadQuizComponent } from './pages/user/load-quiz/load-quiz.component';
 import { InstructionsComponent } from './pages/user/instructions/instructions.component';
 import { StartComponent } from './pages/user/start/start.component';
-import { UpdateCategoryComponent } from './pages/admin/update-category/update-category.component';
+// import { UpdateCategoryComponent } from './pages/admin/update-category/update-category.component';
 import { PrintQuizComponent } from './pages/user/print-quiz/print-quiz.component';
-import { UpdateQuestionComponent } from './pages/admin/update-question/update-question.component';
+// import { UpdateQuestionComponent } from './pages/admin/update-question/update-question.component';
 import { RegisterCoursesComponent } from './pages/user/register-courses/register-courses.component';
 import { CoursesRegisteredComponent } from './pages/user/courses-registered/courses-registered.component';
 import { AvailableQuizzesComponent } from './pages/user/available-quizzes/available-quizzes.component';
@@ -70,10 +70,10 @@ const routes: Routes = [
         path:'add-category',
         component:AddCategoryComponent,
       },
-      {
-        path:'update-category/:cid',
-        component:UpdateCategoryComponent,
-      },
+      // {
+      //   path:'update-category/:cid',
+      //   component:UpdateCategoryComponent,
+      // },
        {
         path:'quizzes',
         component:ViewQuizzesComponent,
@@ -81,10 +81,10 @@ const routes: Routes = [
         path:'add-quiz',
         component:AddQuizComponent,
       },
-      {
-        path:'update-quiz/:qid',
-        component:UpdateQuizComponent,
-      },
+      // {
+      //   path:'update-quiz/:qid',
+      //   component:UpdateQuizComponent,
+      // },
       {
         path:'view-quetions/:qId/:qTitle',
         component:ViewQuizQuestionsComponent,
@@ -92,10 +92,6 @@ const routes: Routes = [
       {
         path:'add-question/:qId/:title',
         component:AddQuestionComponent,
-      },
-      {
-        path:'update-question/:quesId',
-        component:UpdateQuestionComponent,
       },
     ]
   },
