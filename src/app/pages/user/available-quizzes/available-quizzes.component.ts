@@ -5,6 +5,7 @@ import { CategoryService } from 'src/app/services/category.service';
 import { QuizService } from 'src/app/services/quiz.service';
 import { RegCoursesService } from 'src/app/services/reg-courses.service';
 import { ReportServiceService } from 'src/app/services/report-service.service';
+import { LoginService } from 'src/app/services/login.service';
 
 @Component({
   selector: 'app-available-quizzes',
@@ -21,7 +22,13 @@ export class AvailableQuizzesComponent  implements OnInit {
     reportData;
     pqId
     qId;
-  constructor(private _cat: CategoryService, private _couseReg:RegCoursesService ,private _snack:MatSnackBar, private _quiz: QuizService, private _route:ActivatedRoute, private _report: ReportServiceService){}
+  constructor(private _cat: CategoryService, 
+    private _couseReg:RegCoursesService,
+    private _snack:MatSnackBar, 
+    private _quiz: QuizService, 
+    private _route:ActivatedRoute, 
+    private _report: ReportServiceService,
+  private login: LoginService){}
   
   ngOnInit(): void {
 
@@ -38,9 +45,10 @@ export class AvailableQuizzesComponent  implements OnInit {
 
           },
           (error)=>{
-      this._snack.open("Couldn't load Categories from Server","",{
+      this._snack.open("You'er Session has expired","",{
         duration:3000
-      })
+      });
+      this.login
           });
 
 

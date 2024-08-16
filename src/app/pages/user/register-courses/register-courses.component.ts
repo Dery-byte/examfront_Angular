@@ -106,7 +106,7 @@ console.log(this.courses);
 	}
 
 
-// Method to combine and remove duplicates based on cid
+// Method to combine and remove duplicates based on cid: THIS LOGIC WORKS AND BREAKS SOMETIMES
 combineAndRemoveDuplicates(jsonArray1: any[], jsonArray2: any[]): any[] {
 	// Combine the two arrays
 	const combinedArray = [...jsonArray1, ...jsonArray2];
@@ -115,6 +115,7 @@ combineAndRemoveDuplicates(jsonArray1: any[], jsonArray2: any[]): any[] {
 	for (const item of combinedArray) {
 	  cidCount.set(item.cid, (cidCount.get(item.cid) || 0) + 1);
 	}
+	// this.ngOnInit();
 	// Filter out items that have duplicates
 	return combinedArray.filter(item => cidCount.get(item.cid) === 1);
   }

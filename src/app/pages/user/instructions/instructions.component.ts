@@ -5,6 +5,8 @@ import Swal from 'sweetalert2';
 import { QuestionService } from 'src/app/services/question.service';
 import { ReportServiceService } from 'src/app/services/report-service.service';
 import { UserEligibilityService } from 'src/app/services/user-eligibility.service';
+import { LoginService } from 'src/app/services/login.service';
+import { MatSnackBar } from '@angular/material/snack-bar';
 
 
 
@@ -56,6 +58,8 @@ export class InstructionsComponent implements OnInit {
     private _quiz: QuizService,
     private _questions: QuestionService,
     private _userEligibilityService: UserEligibilityService,
+    private login: LoginService,
+    private _snack:MatSnackBar,
     private _router: Router) { }
 
   ngOnInit(): void {
@@ -71,8 +75,14 @@ export class InstructionsComponent implements OnInit {
 
     },
       (error) => {
-        console.log("error !!");
-        alert("Error loading quiz data")
+
+        this._snack.open("You're Session has expired! ", "", {
+          duration: 3000,
+        });
+        this.login.logout();
+
+        // console.log("error !!");
+        // alert("Error loading quiz data")
       }
     );
 

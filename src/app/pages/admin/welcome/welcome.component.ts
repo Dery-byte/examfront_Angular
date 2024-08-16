@@ -6,14 +6,6 @@ import { ReportServiceService } from 'src/app/services/report-service.service';
 import { QuizService } from 'src/app/services/quiz.service';
 import { TokenExpirationService } from 'src/app/services/token-expiration.service';
 import * as XLSX from 'xlsx';
-// import * as CanvasJS from 'canvasjs';
-
-
-
-// import { LocationStrategy } from '@angular/common';
-// import { ActivatedRoute } from '@angular/router';
-// import { QuestionService } from 'src/app/services/question.service';
-// import { Router, } from '@angular/router';
 import { LoginService } from 'src/app/services/login.service';
 import { UserService } from 'src/app/services/user.service';
 @Component({
@@ -52,8 +44,12 @@ export class WelcomeComponent implements OnInit {
 
 	public displayColumn: string[] = ['index', 'name', 'marks'];
 	constructor(
-		private _cat: CategoryService, private _snackbar: MatSnackBar, private _report: ReportServiceService, private _quiz: QuizService,
-		private tokenExpirationService: TokenExpirationService, private _login: LoginService,
+		private _cat: CategoryService, 
+		private _snackbar: MatSnackBar, 
+		private _report: ReportServiceService, 
+		private _quiz: QuizService,
+		private tokenExpirationService: TokenExpirationService, 
+		private _login: LoginService,
 	private _user:UserService
 	) { 
 
@@ -88,7 +84,11 @@ export class WelcomeComponent implements OnInit {
 			},
 			(error) => {
 				console.table(error);
-				Swal.fire('Error !!', 'Server Error', 'error');
+				// Swal.fire('Error !!', 'Server Error', 'error');
+				this._snackbar.open("You're Session has expired! ", "", {
+					duration: 3000,
+				  });
+				this._login.logout();
 			});
 		this.allReports();
 		// this.extractUniqueCategories();

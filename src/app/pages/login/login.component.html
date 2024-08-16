@@ -89,21 +89,21 @@
       <!-- <form> -->
         <mat-form-field>
           <mat-label>Username</mat-label>
-          <input [(ngModel)]="resetData.username" required name="username" type="text" matInput
+          <input [(ngModel)]="resetData.username" required name="username" type="text" matInput required
             placeholder="Username">
         </mat-form-field>
         <mat-form-field>
           <mat-label>Email</mat-label>
-          <input [(ngModel)]="resetData.email" name="email" type="text" matInput placeholder="Email">
+          <input [(ngModel)]="resetData.email" name="email" type="text"  matInput placeholder="Email">
         </mat-form-field>
         <mat-form-field>
           <mat-label>New Password</mat-label>
-          <input [(ngModel)]="resetData.password" name="newpassword" type="text" matInput
+          <input [(ngModel)]="resetData.password" required name="newpassword" type="text" matInput
             placeholder="New Password">
         </mat-form-field>
         <mat-form-field>
           <mat-label>Confirm Password</mat-label>
-          <input [(ngModel)]="resetData.confirmPassword" name="confirmPassword" type="text" matInput
+          <input [(ngModel)]="resetData.confirmPassword" required name="confirmPassword" type="text" matInput
             placeholder="Confirm Password">
         </mat-form-field>
   <!-- </form> -->

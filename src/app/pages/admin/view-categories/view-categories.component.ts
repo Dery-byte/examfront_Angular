@@ -37,7 +37,9 @@ this._category.getCategories().subscribe((data: any)=>{
   console.log(this.categories);
 },
 (error)=>{
-
+  this._snack.open("You're Session has expired! ", "", {
+    duration: 3000,
+  });
   this.login.logout();
   // console.log(error);
   // Swal.fire('Error !! ', 'Error in loading data', 'error');

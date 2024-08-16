@@ -131,6 +131,78 @@
         </div>
     </div>
   </mat-card> -->
+
+
+
+
+
+  <div class="user-profile-container">
+    <mat-card class="profile-card">
+      <div class="profile-header">
+        <img mat-card-avatar src="/src/assets/logo1.jpg" alt="Profile Picture" class="profile-picture">
+        <mat-card-subtitle>{{user.firstname}} {{user.lastname}}</mat-card-subtitle>
+        <mat-card-title>{{user.name}}</mat-card-title>
+      </div>
+      <mat-divider></mat-divider>
+      <mat-card-content>
+        <div class="profile-info">
+          <div class="info-group">
+            <mat-icon>person</mat-icon>
+            <span>Username: {{user.username}}</span>
+          </div>
+          <div class="info-group">
+            <mat-icon>email</mat-icon>
+            <span>Email: {{user.email}}</span>
+          </div>
+          <div class="info-group">
+            <mat-icon>phone</mat-icon>
+            <span>Phone: {{user.phone}}</span>
+          </div>
+          <div class="info-group">
+            <mat-icon>check_circle</mat-icon>
+            <span>Account Active: {{user.enabled? "ACTIVE":"INACTIVE"}}</span>
+          </div>
+
+
+          <div class="info-group">
+            <mat-icon>warning</mat-icon>
+            <span>Credential Expired:{{user.credentialsNonExpired? "NO":"YES"}}</span>
+          </div>
+
+
+          <div class="info-group">
+            <mat-icon>warning</mat-icon>
+            <span>Account Locked:{{user.accountNonLocked? "NO":"YES"}}</span>
+          </div>
+
+
+          <div class="info-group">
+            <mat-icon>warning</mat-icon>
+            <span>Account Expired:{{user.accountNonExpired? "NO":"YES"}} </span>
+          </div>
+
+
+<div class="info-group">
+            <mat-icon>warning</mat-icon>
+            <span>User Role:  {{user.authorities[0].authority}}</span>
+          </div>
+
+
+         
+
+          <mat-form-field class="bio-field">
+            <mat-label>Bio</mat-label>
+            <textarea matInput [(ngModel)]="user.bio" rows="4" disabled></textarea>
+          </mat-form-field>
+        </div>
+      </mat-card-content>
+      <mat-divider></mat-divider>
+      <mat-card-actions align="end">
+        <button mat-raised-button color="primary" >Edit Profile</button>
+      </mat-card-actions>
+    </mat-card>
+  </div>
+  
   
   
 

@@ -14,7 +14,8 @@ import { ChangeDetectorRef } from '@angular/core';
 })
 export class CoursesRegisteredComponent implements OnInit {
 
-  constructor (private regCourse: RegCoursesService, private changeDetectorRef: ChangeDetectorRef){}
+  constructor (private regCourse: RegCoursesService, 
+    private changeDetectorRef: ChangeDetectorRef){}
   userRecords=[];  
 
   u_id

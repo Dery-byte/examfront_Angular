@@ -164,8 +164,12 @@ courseTitle
     return  this.timeO = parseInt(this.quiz.quizTime) * 60;
     },
       (error) => {
+        this._snack.open("You're Session has expired! ", "", {
+          duration: 3000,
+        });
+        this.login.logout();
         console.log("error !!");
-        alert("Error loading quiz data")
+        // alert("Error loading quiz data")
       }
     );
     this._quiz.getNumerOfQuesToAnswer(this.qid).subscribe((data: any) => {

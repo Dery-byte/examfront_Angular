@@ -5,7 +5,8 @@ import { QuizService } from 'src/app/services/quiz.service';
 import { PrintQuizComponent } from '../print-quiz/print-quiz.component';
 import {MatDialog, MAT_DIALOG_DATA, MatDialogRef, MatDialogModule} from '@angular/material/dialog';
 import { ReportServiceService } from 'src/app/services/report-service.service';
-
+import { LoginService } from 'src/app/services/login.service';
+import { MatSnackBar } from '@angular/material/snack-bar';
 
 @Component({
   selector: 'app-load-quiz',
@@ -24,7 +25,13 @@ export class LoadQuizComponent  implements OnInit {
   currentQID
 
   reportData;
-  constructor( private _route:ActivatedRoute, private _quiz:QuizService,public dialog: MatDialog, private router:Router, private _report:ReportServiceService
+  constructor( private _route:ActivatedRoute, 
+    private _quiz:QuizService,
+    public dialog: MatDialog, 
+    private router:Router, 
+    private _report:ReportServiceService,
+    private login:LoginService,
+    private snack:MatSnackBar,
     // private print_quiz:PrintQuizComponent,
     ){}
 
@@ -46,7 +53,12 @@ export class LoadQuizComponent  implements OnInit {
         this.quizzes=data;
       }, 
       (error)=>{
-        alert("Failed to load quizzes");
+
+        this.snack.open("You're Session has expired! ", "", {
+          duration: 3000,
+        });
+        this.login.logout();
+        // alert("Failed to load quizzes");
       }
       );
     }

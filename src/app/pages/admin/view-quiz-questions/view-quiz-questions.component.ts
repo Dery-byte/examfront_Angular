@@ -4,6 +4,7 @@ import { ActivatedRoute, Router } from '@angular/router';
 import { QuestionService } from 'src/app/services/question.service';
 import { MatDialog, MatDialogRef } from '@angular/material/dialog';
 import * as ClassisEditor from '@ckeditor/ckeditor5-build-classic';
+import { LoginService } from 'src/app/services/login.service';
 
 
 
@@ -60,6 +61,7 @@ export class ViewQuizQuestionsComponent implements OnInit {
     private _question: QuestionService,
     private _snack: MatSnackBar,
     private _router: Router,
+    private login: LoginService,
     public dialog: MatDialog) { }
 
   ngOnInit(): void {
@@ -82,6 +84,10 @@ export class ViewQuizQuestionsComponent implements OnInit {
       this.sectionB = theory;
     },
       (error) => {
+        this._snack.open("You're Session has expired! ", "", {
+          duration: 3000,
+        });
+        this.login.logout();
         console.log("Could not load data from server");
       });
 

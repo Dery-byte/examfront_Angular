@@ -39,7 +39,11 @@ categories;
      
      (error)=>{
       console.log(error);
-      Swal.fire("Error !!", "Failed to load data !", "error")
+      // Swal.fire("Error !!", "Failed to load data !", "error");
+      this._snack.open("You're Session has expired! ", "", {
+        duration: 3000,
+      });
+      this.login.logout();
      });
 
 
