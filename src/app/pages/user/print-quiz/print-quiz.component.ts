@@ -38,6 +38,10 @@ export class PrintQuizComponent implements OnInit {
   reportData;
   sectionB: any[] = [];
   answeredQuestions:any[] = [];
+  // geminiResponse:any[]=[];
+  geminiResponse
+  groupedQuestions
+  objectKeys = Object.keys;
 
   qId
 
@@ -78,10 +82,14 @@ export class PrintQuizComponent implements OnInit {
     // this.refreshPage();
     this.refreshContent();
     this.loadQuestionsWithAnswers();
+
     this.loadReport();
     // this.loadResults();
     this.loadQuestions();
+
     this.saveDataInBrowser();
+    this.loadSubjectiveAIEval();
+
     this.loadQuestionsFromLocalStorage();
 
     this.evalQuiz();
@@ -116,6 +124,56 @@ export class PrintQuizComponent implements OnInit {
     console.log(this.answeredQuestions);
   }
 
+
+  loadSubjectiveAIEval(){
+    const geminiResponse = localStorage.getItem('answeredAIQuestions');
+    const data = geminiResponse.trim();
+    // const data = geminiResponse.replace("json\n", "");
+    const data1 = JSON.parse(data);
+    this.geminiResponse= this.groupByPrefix(data1);
+  }
+
+  groupByPrefix(data: any): { prefix: string, questions: any[] }[] {
+    // Initialize a temporary map to collect grouped data
+    const tempMap: { [key: string]: any[] } = {};
+
+    Object.keys(data).forEach(key => {
+      // Extract the prefix (e.g., "Q1" from "Q1b" or "Q1c")
+      const prefixMatch = key.match(/Q\d+/);
+      const prefix = prefixMatch ? prefixMatch[0] : 'Unknown';
+      if (prefix) {
+        // Initialize the group if it doesn't exist
+        if (!tempMap[prefix]) {
+          tempMap[prefix] = [];
+        }
+        // Add the current key and its object to the corresponding prefix group
+        tempMap[prefix].push({ key, ...data[key] });
+      }
+    });
+
+    // Convert the tempMap to an array of grouped data
+    const groupedData: { prefix: string, questions: any[] }[] = [];
+    for (const [prefix, questions] of Object.entries(tempMap)) {
+      groupedData.push({ prefix, questions });
+    }
+    return groupedData;
+  }
+
+
+// Function to calculate total marks for a given prefix (group)
+getTotalMarksForPrefix(questions: any[]): number {
+  return questions.reduce((total, question) => total + question.marks, 0);
+}
+
+ // Function to calculate the grand total marks across all prefixes
+ getGrandTotalMarks(): number {
+  return this.geminiResponse.reduce((grandTotal, group) => {
+    return grandTotal + this.getTotalMarksForPrefix(group.questions);
+  }, 0);
+}
+
+
+
   // SECTION B
   getPrefixes(): string[] {
     const prefixes = new Set<string>();
@@ -131,9 +189,7 @@ export class PrintQuizComponent implements OnInit {
     return this.answeredQuestions.filter(q => q.quesNo.startsWith(prefix));
   }
 
-  deleteTheoryQuestion(){
-
-  }
+ 
 
 
   
@@ -154,9 +210,6 @@ export class PrintQuizComponent implements OnInit {
   console.log(this.reportData[0].quiz.title);
   console.log(this.reportData[0].user.lastname);
   console.log(report);
-
-
-  
   }); }
 
 
@@ -247,7 +300,9 @@ removeResults() {
     this.loadResults();
     this.loadReport();
     this.router.navigate(['./print_quiz/' + this.qid]);
-    // localStorage.removeItem("answeredQuestions");
+    localStorage.removeItem("answeredQuestions");
+    localStorage.removeItem("answeredAIQuestions");
+
   }
 
   loadResults() {
@@ -269,9 +324,6 @@ removeResults() {
       this.attempted = data.attempted;
       this.maxMarks = data.maxMarks;
       // this.preventBackButton();
-
-
-
     },
       (error) => {
         console.log("Error !")
@@ -297,7 +349,7 @@ removeResults() {
   printPage() {
     document.title = this.username;
     window.print();
-    localStorage.removeItem("answeredQuestions");
+    localStorage.removeItem("answeredAIQuestions");
 
   }
 

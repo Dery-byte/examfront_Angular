@@ -26,6 +26,26 @@
         font-size: large;
     }
 
+    .gemini{
+        /* color:rgb(221, 74, 177); */
+        line-height: 0.7;
+        /* font-family:'Franklin Gothic Medium', 'Arial Narrow', Arial, sans-serif; */
+    }
+
+
+   
+
+    em.prefixTotals{
+        color: rgb(133, 78, 78);
+        text-align: right;
+        position: relative;
+        margin-left: 10px;
+    }
+
+    em.grandTotals{
+        color: rgb(72, 13, 184);
+    }
+
 /* 
     .watermark {
         position: fixed;

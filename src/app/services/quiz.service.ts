@@ -3,6 +3,8 @@ import { Injectable } from '@angular/core';
 import baseUrlCategory from './categoryHelper';
 import baseUrl from './helper';
 import { BehaviorSubject, Observable } from 'rxjs';
+import baseUrlGemini from './helperGemini';
+
 
 @Injectable({
   providedIn: 'root'
@@ -77,6 +79,15 @@ public addNumberOfTheoryQuestions(quizNumberOfQuestion){
   return this._http.post(`${baseUrl}/numberOfTheoryQuestion/add`, quizNumberOfQuestion);
 }
 
+//BELOW IS FOR TESTING
+
+// public evalTheory(questions){
+//   return this._http.post(`${baseUrlGemini}/quiz/eval`, questions);
+// }
+
+public evalTheory(questions){
+  return this._http.post(`${baseUrl}/quizEval`, questions);
+}
 
 
 }

@@ -2,6 +2,11 @@
 <!-- {{questions[0].quiz.category.title |json}}
 {{questions[0].quiz.maxMarks |json}} -->
 
+<!-- {{geminiResponse | json}} -->
+<!-- <h6>==================================================================</h6> -->
+
+<!-- {{answeredQuestions | json}} -->
+
 <!-- {{questions | json}} -->
 
 <!-- {{sectionB | json}} -->
@@ -11,6 +16,8 @@
 <div ngxUiLoaderBlurred (blur)="10">
     <!-- QUESTIONS LOAD AFTER SUBMIT -->
     <!-- questions -->
+
+
     <div class="bootstrap-wrapper">
         <div class="row mt20">
             <div class="col-md-6 offset-md-3">
@@ -74,7 +81,7 @@
 
                     <!-- <div *ngIf="reportData"> -->
                     <div id="marks" *ngFor="let r of reportData">
-                        <p>Total Marks A & B : <span id="marksU">25</span></p>
+                        <p>Total Marks A & B : <span id="marksU">{{r.marks + getGrandTotalMarks()}}</span></p>
                         <p>Marks : <span id="marksU">{{r.marks}}/{{ r.quiz.maxMarks}}</span></p>
                         <p> Correct Answers : {{r.marks}}</p>
                         <p>Attempted questions : {{attempted}}</p>
@@ -129,7 +136,7 @@
 
                     <!-- LOAD SECTION B HERE -->
 
-                    <div *ngIf="answeredQuestions !=null">
+                    <!-- <div *ngIf="answeredQuestions !=null">
                         <div *ngIf="getPrefixes().length>0">
                             <h1 style="text-align: center;">Section B</h1>
                             <div *ngFor="let prefix of getPrefixes()">
@@ -143,33 +150,58 @@
                                                 {{ question.marks
                                                 }})</p>
 
-
                                         </div>
                                     </mat-card-content>
                                 </mat-card>
                                 <mat-divider></mat-divider>
                             </div>
                         </div>
+                    </div> -->
 
 
 
-                        <!-- END OF SECTION B -->
+                    <!-- END OF SECTION B -->
+                    <div *ngIf="geminiResponse !=null">
+                        <!-- <div *ngIf="getPrefixes().length>0"> -->
+                        <h1 style="text-align: center;">Section B <b> Total Marks:<em class="grandTotals"> {{
+                                    getGrandTotalMarks() }}</em></b></h1>
+                        <div class="gemini" *ngFor="let group of geminiResponse">
+                            <mat-card *ngIf="geminiResponse.length > 0">
+                                <mat-card-header>
+                                    <mat-card-title>{{ group.prefix }} <em class="prefixTotals">( Marks: {{
+                                            getTotalMarksForPrefix(group.questions) }}) </em></mat-card-title>
+                                </mat-card-header>
+                                <mat-card-content>
 
-
-
-
-
-                    </div>
-
-                    <mat-card-actions>
-                        <div class="container text-center">
-                            <button (click)="printPage()" mat-raised-button color="accent"
-                                id="homePrintbtn">Print</button>
-
-                            <button mat-raised-button color="primary" class="ml10" id="homePrintbtn"
-                                routerLink="/user-dashboard/0">Home</button>
+                                    <div *ngFor="let item of group.questions">
+                                        <p><strong>{{ item.key }}:</strong> {{ item.question }}</p>
+                                        <p><em>Your Answer:</em> {{ item.answer }}</p>
+                                        <p><em>Score:</em> {{item.marks}}</p>
+                                    </div>
+                                </mat-card-content>
+                            </mat-card>
+                            <mat-divider></mat-divider>
                         </div>
-                    </mat-card-actions>
+                        <!-- </div> -->
+                    </div>
+                    <!-- GEMINI GRADING ENDS -->
+
+
+
+
+
+
                 </div>
+
+                <mat-card-actions>
+                    <div class="container text-center">
+                        <button (click)="printPage()" mat-raised-button color="accent" id="homePrintbtn">Print</button>
+
+                        <button mat-raised-button color="primary" class="ml10" id="homePrintbtn"
+                            routerLink="/user-dashboard/0">Home</button>
+                    </div>
+                </mat-card-actions>
             </div>
         </div>
+    </div>
+</div>

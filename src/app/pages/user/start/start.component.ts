@@ -73,12 +73,17 @@ courseTitle
   selectedQuestionsCount: number = 0;
   numberOfQuestionsToAnswer: number = 0;
   quizForm: FormGroup;
+   selectedQuestionsAnswer = [];
+   convertedJsonAPIResponsebody: any;
+
+
 
   //  sectionB;
 
   sectionB: any[] = [];
 
-  question: Question[] = []
+  question: Question[] = [];
+  geminiResponse: any[]=[];
   //  ============================SUBJECTIVE QUESTIONS=======================================
 
   //  ============================SUBJECTIVE QUESTIONS=======================================
@@ -252,7 +257,7 @@ courseTitle
       this.groupedQuestions[prefix].forEach(question => question.selected = false);
       delete this.selectedQuestions[prefix];
     } else {
-      if (Object.keys(this.groupedQuestions).length > this.numberOfQuestionsToAnswer) {
+      if (Object.keys(this.groupedQuestions).length >= this.numberOfQuestionsToAnswer) {
         // Select all sub-questions
         this.groupedQuestions[prefix].forEach(question => question.selected = true);
         this.selectedQuestions[prefix] = true;
@@ -531,26 +536,55 @@ courseTitle
     // });
   }
 
+  parseApiResponse(apiResponse: string[]): any {
+    // Assuming apiResponse is an array with a single string element
+    let dataString = apiResponse[0];
+    // Remove the code block markers (```json and ```)
+    dataString = dataString.replace(/```json\n/, '').replace(/\n```/, '');
+    // Parse the remaining string into a JSON object
+    try {
+      const jsonData = JSON.parse(dataString);
+      return jsonData;
+    } catch (error) {
+      console.error('Failed to parse JSON:', error);
+      return null;
+    }
+  }
+  
 
+
+
+  
   evalSubjective() {
-    const selectedQuestions = [];
+    // const selectedQuestions = [];
     for (const prefix in this.selectedQuestions) {
-      selectedQuestions.push(...this.groupedQuestions[prefix]);
+      this.selectedQuestionsAnswer.push(...this.groupedQuestions[prefix]);
     }
     if (Object.keys(this.selectedQuestions).length === this.numberOfQuestionsToAnswer) {
       // Handle the submission logic here
-      console.log('Submitted Questions:', selectedQuestions);
+      this.convertJson();
+
+      this._quiz.evalTheory(this.convertedJsonAPIResponsebody).subscribe((data: any) => {
+        // this.geminiResponse=data.replace('json', "");
+        this.geminiResponse=this.parseApiResponse(data);
+        // this.geminiResponse= this.groupByPrefix(geminiResponse);
+        console.log(data);
+        console.log(this.geminiResponse);
+        localStorage.setItem("answeredAIQuestions", JSON.stringify(this.geminiResponse));
+
+
+
+      });
+      console.log('Submitted Questions:', this.selectedQuestionsAnswer);
+      console.log(this.convertedJsonAPIResponsebody)
       // SAVE THE SELECTED QUESTIONS IN LOCAL STOREAGE
- localStorage.setItem("answeredQuestions", JSON.stringify(selectedQuestions));
+ localStorage.setItem("answeredQuestions", JSON.stringify(this.selectedQuestionsAnswer));
 
     }
     (error) => {
       this._snack.open("Please select exactly 3 sets of questions to submit", "", {
         duration: 3000,
       });
-
-      // else {
-      //   // alert('Please select exactly 2 sets of questions to submit.');
     }
   }
 
@@ -592,6 +626,51 @@ courseTitle
     this.page = 1;
     this.loadQuestionsFromLocalStorage();
   }
+
+
+  //CONVERT TO API RESPONSE
+
+// Method to convert JSON data
+convertJson() {
+   this.convertedJsonAPIResponsebody = {
+    contents: [
+      {
+        parts: this.selectedQuestionsAnswer.map(item => {
+          // Extract fields from each item
+          const questionNo = item.quesNo;
+          const question = item.question;
+          const answer = item.givenAnswer ? item.givenAnswer : ''; // Assume empty if null
+          const marks = item.marks ? item.marks.split(' ')[0] : ''; // Extracting the numeric part
+          let criteri = '';
+          let criteria ='Evaluate the answer for each question, returning the question, answer, and marks. If no answer is found, set marks to 0. Return the result in JSON format.';
+          
+          // Define criteria based on the question
+          // if (question.includes('Distinguish between')) {
+          //   criteria = 'Evaluate based on the accuracy of the comparison.';
+          // } else if (question.includes('Explain computer')) {
+          //   criteria = 'Evaluate based on clarity, completeness, and accuracy.';
+          // } else if (question.includes('What is Photosynthesis')) {
+          //   criteria = 'Evaluate based on the accuracy of the scientific explanation.';
+          // } else if (question.includes('What is a peripheral device')) {
+          //   criteria = 'Evaluate based on clarity and completeness of the definition.';
+          // }
+
+          // Create the text format
+          const text = `${questionNo}: ${question}. Answer: ${answer}. Marks: ${marks}. Criteria: ${criteria}.`;
+          
+          return { text: text };
+        })
+      }
+    ]
+  };
+
+  console.log(this.convertedJsonAPIResponsebody);
+  // console.log(JSON.stringify(this.convertedJsonAPIResponsebody, null, 2));
+  return this.convertedJsonAPIResponsebody;
+}
+
+
+  //END OF CONVERT TO API RESPONSE
 
 
 
