@@ -35,10 +35,6 @@ export class AvailableQuizzesComponent  implements OnInit {
     // this.qId = this._route.snapshot.params['qid'];
     this.qId = this._route.paramMap['qId']
     console.log(this.qId)
-
-
-
-
     this._couseReg.getRegCourses().subscribe((data:any)=>{
       this.categories=data;
       this.userRecords = this.checkUserId();

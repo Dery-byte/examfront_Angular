@@ -436,36 +436,11 @@ courseTitle
 
 
   printQuiz() {
-    this.router.navigate(['./print_quiz/' + this.qid]);
+    this.router.navigate(['./user-dashboard/0']);
+    // this.router.navigate(['./print_quiz/' + this.qid]);
     // this.router.navigate(['./start/' + this.qid]);
   }
-  // startTimer(){
-  //   let t = window.setInterval(()=>{
-  //     if(localStorage.getItem("countdown_timer")){
-  //       // this.timer=122;
-  //       this.timer=this.questions.length * 2 * 60;
-
-  //       console.log(this.timer);
-  //       console.log(23);
-  //       }
-  //       else{
-  //         // this.timer=this.questions.length * 2 * 60;
-  //       }
-  //  //Code
-  //  if(this.timer<=0){
-  //    // this.submitQuiz();
-  //    this.printQuiz();
-  //    this.evalQuiz();
-  //    clearInterval(t);
-  //    // localStorage.removeItem("exam");
-  //    this.preventBackButton();
-  //  }
-  //  else{
-  //    this.timer--;
-  //  }
-  //    },1000);
-  //  }
-
+ 
 
   startTimer() {
     let t = window.setInterval(() => {
@@ -523,17 +498,7 @@ courseTitle
 
       }
     );
-    // this.questions.forEach((q)=>
-    // {
-    //   if(q.givenAnswer == q.answer){
-    //     this.correctAnswers++;
-    //     var marksSingle = this.questions[0].quiz.maxMarks/this.questions.length;
-    //     this.marksGot += marksSingle;
-    //   }
-    //   if(q.givenAnswer.trim() !=""){
-    //     this.attempted++;
-    //   }
-    // });
+
   }
 
   parseApiResponse(apiResponse: string[]): any {

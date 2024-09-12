@@ -7,6 +7,8 @@ import {MatDialog, MAT_DIALOG_DATA, MatDialogRef, MatDialogModule} from '@angula
 import { ReportServiceService } from 'src/app/services/report-service.service';
 import { LoginService } from 'src/app/services/login.service';
 import { MatSnackBar } from '@angular/material/snack-bar';
+import { RegCoursesService } from 'src/app/services/reg-courses.service';
+
 
 @Component({
   selector: 'app-load-quiz',
@@ -16,20 +18,34 @@ import { MatSnackBar } from '@angular/material/snack-bar';
 export class LoadQuizComponent  implements OnInit {
 
   productDialog: boolean;
-
-
+  userRecords: any[];
+  public availablequizzes: any = [];
   catId;
   qId
   pqId
   quizzes;
   currentQID
-
   reportData;
+  categories;
+  RegCourse
+  u_id
+
+  // AiAnsweredQuestions: any=[];
+  // reportData;
+  // pqId
+  // qId;
+
+
+
+
+
   constructor( private _route:ActivatedRoute, 
     private _quiz:QuizService,
     public dialog: MatDialog, 
     private router:Router, 
     private _report:ReportServiceService,
+    private _couseReg:RegCoursesService,
+
     private login:LoginService,
     private snack:MatSnackBar,
     // private print_quiz:PrintQuizComponent,
@@ -39,11 +55,12 @@ export class LoadQuizComponent  implements OnInit {
 
    
   ngOnInit(): void {
+
+    // this.getAIAnsweredQuestions();
     // this.loadReport();
     // this.qId = this.router.navigate(['qid']);
     // this.qId = this._route.paramMap['qId']
     this.qId = this._route.snapshot.params['qid'];
-
     console.log(this.qId)
    this._route.params.subscribe((params)=>{
     this.catId =params['catId'];
@@ -74,7 +91,57 @@ this._quiz.getActieQuizzesOfCategory(this.catId).subscribe((data:any)=>{
     }
   });
     // console.log("Load all quizzes");
+
+
+
+
+
+
+    this.qId = this._route.paramMap['qId']
+    console.log(this.qId)
+    this._couseReg.getRegCourses().subscribe((data:any)=>{
+      this.categories=data;
+      this.userRecords = this.checkUserId();
+
+          },
+          (error)=>{
+      this.snack.open("You'er Session has expired","",{
+        duration:3000
+      });
+      this.login
+          });
   }
+
+
+  // getAIAnsweredQuestions(){
+  //   const theory = localStorage.getItem('answeredQuestions');
+  //   this.AiAnsweredQuestions = JSON.parse(theory);
+  //   console.log(this.AiAnsweredQuestions);
+  // }
+
+
+
+  checkUserId(): any[] {
+    // Filter the records associated with user id 6
+    const userDetails = localStorage.getItem('user');
+    const Object = JSON.parse(userDetails);
+    this.u_id = Object.id;
+    return this.categories.filter(item => item.user.id === this.u_id);
+    // return this.RegCourse.filter(item => item.user.id === 6);
+
+  } 
+
+
+  onQuizOptionSelected() {
+		this._quiz.getActieQuizzesOfCategory(this.categories.cid).subscribe((quiz: any) => {
+			this.availablequizzes = quiz;
+			console.log(this.availablequizzes);
+		})
+	}
+
+
+
+
 
   hideDialog() {
     this.productDialog = false;
@@ -88,21 +155,26 @@ openNew(id:number) {
     this.pqId=null;
 }
 
-loadReport(){
-  const userDetails = localStorage.getItem('user');
-  const Object = JSON.parse(userDetails);
-this._report.getReport(Object.id,this.pqId).subscribe((report)=>{
-  this.reportData = report;
-console.log(this.reportData[0].marks);
-console.log(this.reportData[0].progress);
-console.log(this.reportData[0].quiz.title);
-console.log(this.reportData[0].user.lastname);
+  loadReport(){
+    const userDetails = localStorage.getItem('user');
+    const Object = JSON.parse(userDetails);
+  this._report.getReport(Object.id,this.pqId).subscribe((report)=>{
+    this.reportData = report;
+  console.log(this.reportData[0].marks);
+  console.log(this.reportData[0].progress);
+  console.log(this.reportData[0].quiz.title);
+  console.log(this.reportData[0].user.lastname);
+  
+  
+  
+  console.log(report);
+  });
+  }
 
 
 
-console.log(report);
-});
-}
+
+
   hola(){
     // this.print_quiz.printQuiz();
   }

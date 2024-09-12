@@ -39,7 +39,8 @@ export class PrintQuizComponent implements OnInit {
   sectionB: any[] = [];
   answeredQuestions:any[] = [];
   // geminiResponse:any[]=[];
-  geminiResponse
+  // geminiResponse:any[]=[];
+  geminiResponse;
   groupedQuestions
   objectKeys = Object.keys;
 
@@ -122,6 +123,7 @@ export class PrintQuizComponent implements OnInit {
     this.answeredQuestions = JSON.parse(questions);
     console.log(this.answeredQuestions);
   }
+
 
 
   loadSubjectiveAIEval(){

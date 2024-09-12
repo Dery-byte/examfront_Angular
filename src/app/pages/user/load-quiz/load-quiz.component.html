@@ -28,9 +28,130 @@ text="Loading information!"
 </div> -->
 
 
+<!-- {{categories |json}} -->
+<!-- {{userRecords | json}} -->
+
+<!-- {{AiAnsweredQuestions | json}} -->
+
+<mat-card>
+  <div *ngIf="userRecords.length > 0; else elseBlock">
+  <h4 class=" text-center">Quiz Taken Summary</h4>
+
+  <div class="container">
+      <div class="row">
+          <div class="col-md-2">
+              <form>
+                  <br />
+                  <mat-form-field appearance="fill" class="">
+                      <mat-label>Select Course</mat-label>
+                      <mat-select name="category" [(ngModel)]="categories.cid"
+                          (selectionChange)="onQuizOptionSelected()">
+                          <mat-option *ngFor="let c of userRecords" [value]="c.category.cid">
+                              {{c.category.title}}
+                          </mat-option>
+                      </mat-select>
+                  </mat-form-field>
+              </form>
+          </div>
+          <div class="col-md-9 offset-md-1">
+              <div class="row mt20" *ngIf="availablequizzes">
+                  <div class="col-md-6 mt20" *ngFor="let q of availablequizzes">
+                      <!-- <h1 class="mt20">Quizzes Available</h1> -->
+                      <mat-card mb20>
+                          <mat-card-header>
+                              <div mat-card-avatar class="exmple-header-image">
+                              </div>
+                              <mat-card-title>
+                                  {{q.title}}
+                              </mat-card-title>
+                              <mat-card-subtitle>
+                                  {{q.category.courseCode}} | {{q.category.title}}
+                              </mat-card-subtitle>
+                          </mat-card-header>
+                          <mat-card-content>
+                              <p class="truncate"> {{q.description}}</p>
+                          </mat-card-content>
+                          <mat-card-action>
+                              <button mat-button color="primary" matTooltip="Summary Results"
+                                  aria-label="Button that displays a tooltip when focused or hovered over"
+                                  (click)="openNew(q.qId)">View Summary</button>
+                              <button mat-button color="accent"
+                                  [routerLink]="'/print_quiz/'+q.qId">Print Results</button>
+                              <!-- <button mat-button color="accent"> {{q.numberOfQuestions}} Questions</button>
+                              <button mat-button color="accent">{{q.maxMarks}} Marks</button> -->
+                          </mat-card-action>
+                      </mat-card>
+                  </div>
+                  <div class="col-md-12" *ngIf="availablequizzes.length==0">
+                      <!-- <mat-card>
+                      <mat-card-content> -->
+                      <h1>No quizzes available for this course</h1>
+                      <!-- </mat-card-content>
+                  </mat-card> -->
+                  </div>
+              </div>
+          </div>
+      </div>
+  </div>
+</div>
+<ng-template #elseBlock> <h1>Go and Register for a course before</h1></ng-template>
+</mat-card>
+
+
+
+<!-- {{availablequizzes | json}} -->
+<!-- Display the summary result in a dialog -->
+<p-dialog [(visible)]="productDialog" [style]="{width: '300px', height:'550px'}" class=" container text-center"
+  header="This is the quiz summary">
+
+  <mat-card *ngIf="reportData">
+      <table *ngFor="let r of reportData">
+          <tr>
+              <th>Name </th>
+              <th>Quiz</th>
+              <th>Marks</th>
+              <th>Status</th>
+
+          </tr>
+          <tr>
+              <td>{{r.user.lastname}} {{r.user.firstname}}</td>
+              <td>{{r.quiz.title}}</td>
+              <td>{{r.marks}}</td>
+              <td>{{r.progress}}</td>
+          </tr>
+      </table>
+      <div class=" container text-center" *ngIf="reportData.length==0">
+          <h1>No Results Summary, Take quiz before!</h1>
+      </div>
+  </mat-card>
+</p-dialog>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 <!-- -------- START HEADER 2 w/ waves and typed text ------- -->
-<header class="position-relative">
+<!-- <header class="position-relative">
     <nav class="navbar navbar-expand-lg navbar-dark navbar-absolute bg-transparent shadow-none">
       <div class="container">
         <a class="navbar-brand text-white" href="javascript:;">Material Design</a>
@@ -96,7 +217,7 @@ text="Loading information!"
         </div>
       </div>
     </div>
-  </header>
+  </header> -->
   <!-- -------- END HEADER 2 w/ waves and typed text ------- -->
   
   <!-- Mandatory init script -->
