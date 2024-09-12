@@ -562,6 +562,9 @@ courseTitle
     }
     if (Object.keys(this.selectedQuestions).length === this.numberOfQuestionsToAnswer) {
       // Handle the submission logic here
+
+      localStorage.setItem("answeredQuestions", JSON.stringify(this.selectedQuestions));
+
       this.convertJson();
 
       this._quiz.evalTheory(this.convertedJsonAPIResponsebody).subscribe((data: any) => {

@@ -68,13 +68,13 @@ export class PrintQuizComponent implements OnInit {
 
   ngOnInit(): void {
     this.loadSubjective();
-
     const userDetails = localStorage.getItem('user');
     const Object = JSON.parse(userDetails);
     this.username = Object.username;
     this.qid = this._route.snapshot.params['qid'];
     // this.qId =this._route.snapshot.params['qId'];
     // this.loadSubjective();
+    this.loadReport();
 
 
 
@@ -83,7 +83,6 @@ export class PrintQuizComponent implements OnInit {
     this.refreshContent();
     this.loadQuestionsWithAnswers();
 
-    this.loadReport();
     // this.loadResults();
     this.loadQuestions();
 
@@ -160,17 +159,29 @@ export class PrintQuizComponent implements OnInit {
   }
 
 
-// Function to calculate total marks for a given prefix (group)
-getTotalMarksForPrefix(questions: any[]): number {
-  return questions.reduce((total, question) => total + question.marks, 0);
-}
-
- // Function to calculate the grand total marks across all prefixes
- getGrandTotalMarks(): number {
+// Function to calculate the grand total marks across all prefixes
+getGrandTotalMarks(): number {
+  if (!this.geminiResponse || this.geminiResponse.length === 0) {
+    return 0;
+  }
   return this.geminiResponse.reduce((grandTotal, group) => {
     return grandTotal + this.getTotalMarksForPrefix(group.questions);
   }, 0);
 }
+
+// Function to calculate total marks for a given prefix (group)
+getTotalMarksForPrefix(questions: any[]): number {
+  if (!questions || questions.length === 0) {
+    return 0;
+  }
+  return questions.reduce((total, question) => total + question.marks, 0);
+}
+
+
+
+
+
+
 
 
 
