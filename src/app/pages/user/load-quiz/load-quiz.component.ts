@@ -3,7 +3,7 @@ import { ActivatedRoute, Route, Router } from '@angular/router';
 import { QuestionService } from 'src/app/services/question.service';
 import { QuizService } from 'src/app/services/quiz.service';
 import { PrintQuizComponent } from '../print-quiz/print-quiz.component';
-import {MatDialog, MAT_DIALOG_DATA, MatDialogRef, MatDialogModule} from '@angular/material/dialog';
+import { MatDialog, MAT_DIALOG_DATA, MatDialogRef, MatDialogModule } from '@angular/material/dialog';
 import { ReportServiceService } from 'src/app/services/report-service.service';
 import { LoginService } from 'src/app/services/login.service';
 import { MatSnackBar } from '@angular/material/snack-bar';
@@ -15,7 +15,7 @@ import { RegCoursesService } from 'src/app/services/reg-courses.service';
   templateUrl: './load-quiz.component.html',
   styleUrls: ['./load-quiz.component.css']
 })
-export class LoadQuizComponent  implements OnInit {
+export class LoadQuizComponent implements OnInit {
 
   productDialog: boolean;
   userRecords: any[];
@@ -29,6 +29,8 @@ export class LoadQuizComponent  implements OnInit {
   categories;
   RegCourse
   u_id
+  disabledButtons: { [key: number]: boolean } = {};  // Track the disabled state by unique ID
+
 
   // AiAnsweredQuestions: any=[];
   // reportData;
@@ -39,57 +41,57 @@ export class LoadQuizComponent  implements OnInit {
 
 
 
-  constructor( private _route:ActivatedRoute, 
-    private _quiz:QuizService,
-    public dialog: MatDialog, 
-    private router:Router, 
-    private _report:ReportServiceService,
-    private _couseReg:RegCoursesService,
+  constructor(private _route: ActivatedRoute,
+    private _quiz: QuizService,
+    public dialog: MatDialog,
+    private router: Router,
+    private _report: ReportServiceService,
+    private _couseReg: RegCoursesService,
 
-    private login:LoginService,
-    private snack:MatSnackBar,
+    private login: LoginService,
+    private snack: MatSnackBar,
     // private print_quiz:PrintQuizComponent,
-    ){}
+  ) { }
 
 
 
-   
+
   ngOnInit(): void {
-
+    this.getButtonState();
     // this.getAIAnsweredQuestions();
     // this.loadReport();
     // this.qId = this.router.navigate(['qid']);
     // this.qId = this._route.paramMap['qId']
     this.qId = this._route.snapshot.params['qid'];
     console.log(this.qId)
-   this._route.params.subscribe((params)=>{
-    this.catId =params['catId'];
-    console.log(this.catId);
-    if(this.catId==0){
-      this._quiz.actieQuizzes().subscribe((data:any)=>{
-        this.quizzes=data;
-      }, 
-      (error)=>{
+    this._route.params.subscribe((params) => {
+      this.catId = params['catId'];
+      console.log(this.catId);
+      if (this.catId == 0) {
+        this._quiz.actieQuizzes().subscribe((data: any) => {
+          this.quizzes = data;
+        },
+          (error) => {
 
-        this.snack.open("You're Session has expired! ", "", {
-          duration: 3000,
-        });
-        this.login.logout();
-        // alert("Failed to load quizzes");
+            this.snack.open("You're Session has expired! ", "", {
+              duration: 3000,
+            });
+            this.login.logout();
+            // alert("Failed to load quizzes");
+          }
+        );
       }
-      );
-    }
-    else{
-// console.log("Load specific questions");
-this._quiz.getActieQuizzesOfCategory(this.catId).subscribe((data:any)=>{
-  this.quizzes=data;
-  console.log(data);
-},
-(error)=>{
-  alert("Server error");
-});
-    }
-  });
+      else {
+        // console.log("Load specific questions");
+        this._quiz.getActieQuizzesOfCategory(this.catId).subscribe((data: any) => {
+          this.quizzes = data;
+          console.log(data);
+        },
+          (error) => {
+            alert("Server error");
+          });
+      }
+    });
     // console.log("Load all quizzes");
 
 
@@ -99,17 +101,17 @@ this._quiz.getActieQuizzesOfCategory(this.catId).subscribe((data:any)=>{
 
     this.qId = this._route.paramMap['qId']
     console.log(this.qId)
-    this._couseReg.getRegCourses().subscribe((data:any)=>{
-      this.categories=data;
+    this._couseReg.getRegCourses().subscribe((data: any) => {
+      this.categories = data;
       this.userRecords = this.checkUserId();
 
-          },
-          (error)=>{
-      this.snack.open("You'er Session has expired","",{
-        duration:3000
+    },
+      (error) => {
+        this.snack.open("You'er Session has expired", "", {
+          duration: 3000
+        });
+        this.login
       });
-      this.login
-          });
   }
 
 
@@ -129,15 +131,15 @@ this._quiz.getActieQuizzesOfCategory(this.catId).subscribe((data:any)=>{
     return this.categories.filter(item => item.user.id === this.u_id);
     // return this.RegCourse.filter(item => item.user.id === 6);
 
-  } 
+  }
 
 
   onQuizOptionSelected() {
-		this._quiz.getActieQuizzesOfCategory(this.categories.cid).subscribe((quiz: any) => {
-			this.availablequizzes = quiz;
-			console.log(this.availablequizzes);
-		})
-	}
+    this._quiz.getActieQuizzesOfCategory(this.categories.cid).subscribe((quiz: any) => {
+      this.availablequizzes = quiz;
+      console.log(this.availablequizzes);
+    })
+  }
 
 
 
@@ -145,37 +147,64 @@ this._quiz.getActieQuizzesOfCategory(this.catId).subscribe((data:any)=>{
 
   hideDialog() {
     this.productDialog = false;
-    this.qId=null;
-}
-openNew(id:number) {
-    this.productDialog  = true;
+    this.qId = null;
+  }
+  openNew(id: number) {
+    this.productDialog = true;
     this.pqId = id;
     console.log(id)
     this.loadReport();
-    this.pqId=null;
-}
+    this.pqId = null;
+  }
 
-  loadReport(){
+
+  getButtonState() {
+    const storedDisabledButtons = localStorage.getItem('disabledButtons');
+    if (storedDisabledButtons) {
+      this.disabledButtons = JSON.parse(storedDisabledButtons);
+    }
+  }
+
+
+
+  onPrintClick(event: MouseEvent, qId: number) {
+    console.log(`Button clicked with ID: ${qId}`);
+    console.log(`Button disabled state before click: ${this.disabledButtons[qId]}`);
+
+    if (this.disabledButtons[qId]) {
+      event.preventDefault();
+      event.stopPropagation();
+      return;
+    }
+    this.disabledButtons[qId] = true;
+    console.log(`Button disabled state after click: ${this.disabledButtons[qId]}`);
+    // Save the updated state to localStorage
+    localStorage.setItem('disabledButtons', JSON.stringify(this.disabledButtons));
+    this.router.navigate(['/print_quiz/', qId]);
+  }
+
+
+  loadReport() {
     const userDetails = localStorage.getItem('user');
     const Object = JSON.parse(userDetails);
-  this._report.getReport(Object.id,this.pqId).subscribe((report)=>{
-    this.reportData = report;
-  console.log(this.reportData[0].marks);
-  console.log(this.reportData[0].progress);
-  console.log(this.reportData[0].quiz.title);
-  console.log(this.reportData[0].user.lastname);
-  
-  
-  
-  console.log(report);
-  });
+    this._report.getReport(Object.id, this.pqId).subscribe((report) => {
+      this.reportData = report;
+      console.log(this.reportData[0].marks);
+      console.log(this.reportData[0].progress);
+      console.log(this.reportData[0].quiz.title);
+      console.log(this.reportData[0].user.lastname);
+
+
+
+      console.log(report);
+    });
   }
 
 
 
 
 
-  hola(){
+  hola() {
     // this.print_quiz.printQuiz();
   }
 }
