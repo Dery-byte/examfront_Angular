@@ -52,10 +52,10 @@ export class StartComponent implements OnInit {
   minutes: number;
   count_timer: any;
   timeT: number = 0;
-  timerAll : number = 0;
+  timerAll: number = 0;
   timeO: number = 0;
   quizTitle
-courseTitle
+  courseTitle
   quiz
   private countdownKey = 'countdown_timer';
   private intervalId: any;
@@ -73,8 +73,8 @@ courseTitle
   selectedQuestionsCount: number = 0;
   numberOfQuestionsToAnswer: number = 0;
   quizForm: FormGroup;
-   selectedQuestionsAnswer = [];
-   convertedJsonAPIResponsebody: any;
+  selectedQuestionsAnswer = [];
+  convertedJsonAPIResponsebody: any;
 
 
 
@@ -83,10 +83,9 @@ courseTitle
   sectionB: any[] = [];
 
   question: Question[] = [];
-  geminiResponse: any[]=[];
+  geminiResponse: any[] = [];
   //  ============================SUBJECTIVE QUESTIONS=======================================
 
-  //  ============================SUBJECTIVE QUESTIONS=======================================
   initForm(): void {
     const formGroupConfig = {};
     this.questionT.forEach(question => {
@@ -166,7 +165,7 @@ courseTitle
 
       console.log(this.quiz);
       console.log(this.quiz.quizTime)
-    return  this.timeO = parseInt(this.quiz.quizTime) * 60;
+      return this.timeO = parseInt(this.quiz.quizTime) * 60;
     },
       (error) => {
         this._snack.open("You're Session has expired! ", "", {
@@ -180,7 +179,7 @@ courseTitle
     this._quiz.getNumerOfQuesToAnswer(this.qid).subscribe((data: any) => {
       console.log(data);
       console.log(data[0].totalQuestToAnswer);
-      this.quizTitle =data[0].quiz.title;
+      this.quizTitle = data[0].quiz.title;
       this.courseTitle = data[0].quiz.category.title;
 
       this.numberOfQuestionsToAnswer = data[0].totalQuestToAnswer;
@@ -440,7 +439,7 @@ courseTitle
     // this.router.navigate(['./print_quiz/' + this.qid]);
     // this.router.navigate(['./start/' + this.qid]);
   }
- 
+
 
   startTimer() {
     let t = window.setInterval(() => {
@@ -449,7 +448,7 @@ courseTitle
         // this.submitQuiz();
         this.printQuiz();
         this.evalQuiz();
-        this.evalSubjective() ;
+        this.evalSubjective();
         this.loadQuestionsWithAnswers();
         clearInterval(t);
         // localStorage.removeItem("exam");
@@ -460,8 +459,8 @@ courseTitle
       }
     }, 1000);
   }
- 
-  
+
+
   getFormmatedTime() {
     // let timeToseconds = this.timerAll * 60
     let hr = Math.floor(this.timerAll / 3600);
@@ -515,11 +514,11 @@ courseTitle
       return null;
     }
   }
-  
 
 
 
-  
+
+
   evalSubjective() {
     // const selectedQuestions = [];
     for (const prefix in this.selectedQuestions) {
@@ -534,7 +533,7 @@ courseTitle
 
       this._quiz.evalTheory(this.convertedJsonAPIResponsebody).subscribe((data: any) => {
         // this.geminiResponse=data.replace('json', "");
-        this.geminiResponse=this.parseApiResponse(data);
+        this.geminiResponse = this.parseApiResponse(data);
         // this.geminiResponse= this.groupByPrefix(geminiResponse);
         console.log(data);
         console.log(this.geminiResponse);
@@ -546,7 +545,7 @@ courseTitle
       console.log('Submitted Questions:', this.selectedQuestionsAnswer);
       console.log(this.convertedJsonAPIResponsebody)
       // SAVE THE SELECTED QUESTIONS IN LOCAL STOREAGE
- localStorage.setItem("answeredQuestions", JSON.stringify(this.selectedQuestionsAnswer));
+      localStorage.setItem("answeredQuestions", JSON.stringify(this.selectedQuestionsAnswer));
 
     }
     (error) => {
@@ -570,8 +569,8 @@ courseTitle
   }
   loadQuestionsFromLocalStorage() {
     // this.questionss = JSON.parse(localStorage.getItem("exam"));
-        // this.timeO = parseInt(this.quiz.quizTime) * 60;
-        this.timeO = parseInt(this.questionss[0].quiz.category.quizTime) * 1 * 60;
+    // this.timeO = parseInt(this.quiz.quizTime) * 60;
+    this.timeO = parseInt(this.questionss[0].quiz.category.quizTime) * 1 * 60;
     // this.timer = this.questionss.length * 2 * 60; // THIS WORKS FINE
     localStorage.setItem('time', JSON.stringify(this.timeO));
     this.questions.forEach(q => {
@@ -598,44 +597,44 @@ courseTitle
 
   //CONVERT TO API RESPONSE
 
-// Method to convert JSON data
-convertJson() {
-   this.convertedJsonAPIResponsebody = {
-    contents: [
-      {
-        parts: this.selectedQuestionsAnswer.map(item => {
-          // Extract fields from each item
-          const questionNo = item.quesNo;
-          const question = item.question;
-          const answer = item.givenAnswer ? item.givenAnswer : ''; // Assume empty if null
-          const marks = item.marks ? item.marks.split(' ')[0] : ''; // Extracting the numeric part
-          let criteri = '';
-          let criteria ='Evaluate the answer for each question, returning the question, answer, and marks. If no answer is found, set marks to 0. Return the result in JSON format.';
-          
-          // Define criteria based on the question
-          // if (question.includes('Distinguish between')) {
-          //   criteria = 'Evaluate based on the accuracy of the comparison.';
-          // } else if (question.includes('Explain computer')) {
-          //   criteria = 'Evaluate based on clarity, completeness, and accuracy.';
-          // } else if (question.includes('What is Photosynthesis')) {
-          //   criteria = 'Evaluate based on the accuracy of the scientific explanation.';
-          // } else if (question.includes('What is a peripheral device')) {
-          //   criteria = 'Evaluate based on clarity and completeness of the definition.';
-          // }
+  // Method to convert JSON data
+  convertJson() {
+    this.convertedJsonAPIResponsebody = {
+      contents: [
+        {
+          parts: this.selectedQuestionsAnswer.map(item => {
+            // Extract fields from each item
+            const questionNo = item.quesNo;
+            const question = item.question;
+            const answer = item.givenAnswer ? item.givenAnswer : ''; // Assume empty if null
+            const marks = item.marks ? item.marks.split(' ')[0] : ''; // Extracting the numeric part
+            let criteri = '';
+            let criteria = 'Evaluate the answer for each question, returning the question, answer, and marks. If no answer is found, set marks to 0. Return the result in JSON format.';
 
-          // Create the text format
-          const text = `${questionNo}: ${question}. Answer: ${answer}. Marks: ${marks}. Criteria: ${criteria}.`;
-          
-          return { text: text };
-        })
-      }
-    ]
-  };
+            // Define criteria based on the question
+            // if (question.includes('Distinguish between')) {
+            //   criteria = 'Evaluate based on the accuracy of the comparison.';
+            // } else if (question.includes('Explain computer')) {
+            //   criteria = 'Evaluate based on clarity, completeness, and accuracy.';
+            // } else if (question.includes('What is Photosynthesis')) {
+            //   criteria = 'Evaluate based on the accuracy of the scientific explanation.';
+            // } else if (question.includes('What is a peripheral device')) {
+            //   criteria = 'Evaluate based on clarity and completeness of the definition.';
+            // }
 
-  console.log(this.convertedJsonAPIResponsebody);
-  // console.log(JSON.stringify(this.convertedJsonAPIResponsebody, null, 2));
-  return this.convertedJsonAPIResponsebody;
-}
+            // Create the text format
+            const text = `${questionNo}: ${question}. Answer: ${answer}. Marks: ${marks}. Criteria: ${criteria}.`;
+
+            return { text: text };
+          })
+        }
+      ]
+    };
+
+    console.log(this.convertedJsonAPIResponsebody);
+    // console.log(JSON.stringify(this.convertedJsonAPIResponsebody, null, 2));
+    return this.convertedJsonAPIResponsebody;
+  }
 
 
   //END OF CONVERT TO API RESPONSE
