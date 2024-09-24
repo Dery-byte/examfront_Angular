@@ -131,6 +131,8 @@ export class PrintQuizComponent implements OnInit {
     // const data = geminiResponse.replace("json\n", "");
     const data1 = JSON.parse(data);
     this.geminiResponse = this.groupByPrefix(data1);
+
+    console.log("This is the geminiRespnse groupedByPrefixes", this.geminiResponse);
   }
 
   groupByPrefix(data: any): { prefix: string, questions: any[] }[] {
@@ -192,6 +194,11 @@ export class PrintQuizComponent implements OnInit {
   getGroupedQuestions(prefix: string) {
     return this.answeredQuestions.filter(q => q.quesNo.startsWith(prefix));
   }
+
+
+
+
+
 
   // SECTION B
   loadReport() {

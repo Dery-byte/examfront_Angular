@@ -64,6 +64,7 @@ public actieQuizzes(){
   return this._http.get(`${baseUrl}/active/quizzes`);
 }
 
+
 // get active quizzes of category 
 public getActieQuizzesOfCategory(cid){
   return this._http.get(`${baseUrl}/category/active/${cid}`)
@@ -77,6 +78,12 @@ public getNumerOfQuesToAnswer(qId){
 
 public addNumberOfTheoryQuestions(quizNumberOfQuestion){
   return this._http.post(`${baseUrl}/numberOfTheoryQuestion/add`, quizNumberOfQuestion);
+}
+
+
+//get Active quizzzes
+public addSectionBMarks(questions){
+  return this._http.put(`${baseUrl}/addtheoryMark`,questions);
 }
 
 //BELOW IS FOR TESTING
