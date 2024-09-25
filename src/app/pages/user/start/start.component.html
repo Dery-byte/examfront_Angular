@@ -12,6 +12,10 @@
             <div class="row">
                 <div class=" hideInstruct col-md-2">
                     <!-- instructions -->
+
+                    <!-- {{timerAll}}
+                    {{timeO}}
+                    {{timeT}} -->
                     <mat-card class="cards">
                         <mat-card-content>
                             <h1><b>Instructions</b></h1>
@@ -59,7 +63,7 @@
 
                         <mat-card class="cards"
                         style="font-family: 'Times New Roman', Times, serif; font-size:18px; color: white;text-align: center; background-color: purple;">
-                    <mat-label> SECTION A -{{timeO /60}} minutes </mat-label>
+                    <mat-label> SECTION A -{{(timeO * 60)/60}} minutes </mat-label>
                     </mat-card>
                     </div>
 
@@ -135,7 +139,7 @@
                             <!-- {{resetData |json}} -->
                             <mat-card class="cards"
                                 style="font-family: 'Times New Roman', Times, serif; font-size:18px; color: white;text-align: center; background-color: purple;">
-                            <mat-label> SECTION B -{{timeT /60}} minutes </mat-label>
+                            <mat-label> SECTION B -{{(timeT*60)/60}} minutes </mat-label>
                             </mat-card>
                           
 
@@ -172,8 +176,8 @@
                                         <button type="submit" mat-raised-button color="primary" (click)="prevPage()"
                                             [disabled]="currentPage === 0">Previous</button>
                                         <span style="color: blueviolet; font-size: large; border: 2px solid red;">
-                                            Ques...
-                                            {{ currentPage + 1 }} of {{ prefixes.length }} </span>
+                                            
+                                            {{ prefixes[currentPage] }} of {{ prefixes[prefixes.length-1]}} </span>
                                         <button type="submit" mat-raised-button color="primary" (click)="nextPage()"
                                             [disabled]="currentPage === prefixes.length - 1">Next</button>
                                     </div>
@@ -236,6 +240,9 @@
 
                 <div class="large-devices col-md-2 fixed-card">
                     <!-- progres -->
+                     <!-- {{timerAll}}
+                     {{timeO}}
+                     {{timeT}} -->
                     <mat-card class="cards">
                         <mat-card-header>
                             <mat-card-title>Time Left: </mat-card-title>

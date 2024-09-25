@@ -13,6 +13,7 @@ import { MatSnackBar } from '@angular/material/snack-bar';
 
 
 
+
 import Swal from 'sweetalert2';
 
 @Component({
@@ -89,15 +90,15 @@ export class StartComponent implements OnInit {
   sectionBMarks;
 
 
-  theoryResults={
-     marksB:"",
-     quiz: {
-        qId:""
-      }
+  theoryResults = {
+    marksB: "",
+    quiz: {
+      qId: ""
     }
+  }
 
-   
-  
+
+
   //  ============================SUBJECTIVE QUESTIONS=======================================
 
   initForm(): void {
@@ -179,7 +180,14 @@ export class StartComponent implements OnInit {
 
       console.log(this.quiz);
       console.log(this.quiz.quizTime)
-      return this.timeO = parseInt(this.quiz.quizTime) * 60;
+
+            
+     this.timeO = this.quiz.quizTime * 1;
+    //  this.timerAll = this.quiz.quizTime * 1 * 60 ;
+     this.timerAll = (this.timeT + this.timeO) * 60;
+
+      
+      // return this.timeO = parseInt(this.quiz.quizTime);
     },
       (error) => {
         this._snack.open("You're Session has expired! ", "", {
@@ -197,13 +205,19 @@ export class StartComponent implements OnInit {
       this.courseTitle = data[0].quiz.category.title;
 
       this.numberOfQuestionsToAnswer = data[0].totalQuestToAnswer;
-      this.timeT = data[0].timeAllowed * 60;
+      this.timeT = data[0].timeAllowed;
 
-      this.timerAll = this.timeT + this.timeO;
+      this.timerAll = (this.timeT + this.timeO) * 60;
 
-      console.log(this.timeT);
-      console.log(this.timeO);
-      console.log(this.timerAll)
+      // this.timeT = data[0].timeAllowed;
+      // this.timerAll = (this.timeT + this.timeO) * 60;
+
+     
+
+
+      console.log("This is time for the theory questions", this.timeT);
+      console.log("This is the time for the Objectives", this.timeO);
+      console.log(" Both time for theory and objectives",this.timerAll)
 
     });
 
@@ -218,7 +232,6 @@ export class StartComponent implements OnInit {
     this.printQuiz();
     this.initForm();
     // this.preventBackButton();
-
 
   }
 
@@ -237,7 +250,7 @@ export class StartComponent implements OnInit {
       console.log(theory);
       // this.sectionB = theory;
       this.groupedQuestions = this.getQuestionsGroupedByPrefix(theory);
-      this.prefixes = Object.keys(this.groupedQuestions);
+      this.prefixes = Object.keys(this.groupedQuestions).sort();
 
       console.log(this.groupedQuestions);
     },
@@ -432,19 +445,27 @@ export class StartComponent implements OnInit {
     }).then((e) => {
       if (e.isConfirmed) {
         // EVALUATE THE SUBJECTIVE
-        this.evalQuiz();
+        // this.evalQuiz();
+        this.triggerFunctions();
         // localStorage.removeItem("countdown_timer");
         this.printQuiz();
         this.loadQuestionsWithAnswers();
-
         this.evalSubjective();
         this.loadSubjectiveAIEval();
         this.getGrandTotalMarks();
-        // EVALUATIING THE OBJECTIVES
-        this.addSectBMarks();
         this.preventBackButton();
       };
     });
+  }
+
+
+  triggerFunctions() {
+    // Call evalQuiz() first
+    this.evalQuiz();
+    // Set a delay before calling addSectBMarks()
+    setTimeout(() => {
+      this.addSectBMarks();
+    }, 3000); // 3000 milliseconds = 3 seconds delay
   }
 
 
@@ -464,12 +485,13 @@ export class StartComponent implements OnInit {
       //Code
       if (this.timerAll <= 0) {
         // this.submitQuiz();
+        this.triggerFunctions();
         this.printQuiz();
-        this.evalQuiz();
+        // this.evalQuiz();
         this.loadQuestionsWithAnswers();
-
         this.evalSubjective();
         this.loadSubjectiveAIEval();
+        // this.addSectBMarks();
         clearInterval(t);
         // localStorage.removeItem("exam");
         // this.preventBackButton();
@@ -509,7 +531,7 @@ export class StartComponent implements OnInit {
       localStorage.setItem('MarksGot', JSON.stringify(this.marksGot));
       localStorage.setItem('Attempted', JSON.stringify(this.attempted));
       localStorage.setItem('MaxMarks', JSON.stringify(this.maxMarks));
-      this.addSectBMarks();
+      // this.addSectBMarks();
       this.preventBackButton();
       this.isSubmit = true;
     },
@@ -517,6 +539,7 @@ export class StartComponent implements OnInit {
         console.log("Error !")
 
       }
+
     );
 
   }
@@ -577,131 +600,131 @@ export class StartComponent implements OnInit {
   }
 
 
-// TRYING TO BRING CALCULATION TO THE START
+  // TRYING TO BRING CALCULATION TO THE START
 
-// loadSubjective() {
-//   const questions = localStorage.getItem('answeredQuestions');
-//   this.answeredQuestions = JSON.parse(questions);
-//   console.log(this.answeredQuestions);
-// }
+  // loadSubjective() {
+  //   const questions = localStorage.getItem('answeredQuestions');
+  //   this.answeredQuestions = JSON.parse(questions);
+  //   console.log(this.answeredQuestions);
+  // }
 
- 
 
-loadSubjectiveAIEval() {
-  const geminiResponse = localStorage.getItem('answeredAIQuestions');
-  const data = geminiResponse.trim();
-  // const data = geminiResponse.replace("json\n", "");
-  const data1 = JSON.parse(data);
-  this.geminiResponseAI = this.groupByPrefix(data1);
-  console.log('This is the geminiResponse groupedByPrefixes',this.geminiResponseAI);
-}
 
-groupByPrefix(data: any): { prefix: string, questions: any[] }[] {
-  // Initialize a temporary map to collect grouped data
-  const tempMap: { [key: string]: any[] } = {};
+  loadSubjectiveAIEval() {
+    const geminiResponse = localStorage.getItem('answeredAIQuestions');
+    const data = geminiResponse.trim();
+    // const data = geminiResponse.replace("json\n", "");
+    const data1 = JSON.parse(data);
+    this.geminiResponseAI = this.groupByPrefix(data1);
+    console.log('This is the geminiResponse groupedByPrefixes', this.geminiResponseAI);
+  }
 
-  Object.keys(data).forEach(key => {
-    // Extract the prefix (e.g., "Q1" from "Q1b" or "Q1c")
-    const prefixMatch = key.match(/Q\d+/);
-    const prefix = prefixMatch ? prefixMatch[0] : 'Unknown';
-    if (prefix) {
-      // Initialize the group if it doesn't exist
-      if (!tempMap[prefix]) {
-        tempMap[prefix] = [];
+  groupByPrefix(data: any): { prefix: string, questions: any[] }[] {
+    // Initialize a temporary map to collect grouped data
+    const tempMap: { [key: string]: any[] } = {};
+
+    Object.keys(data).forEach(key => {
+      // Extract the prefix (e.g., "Q1" from "Q1b" or "Q1c")
+      const prefixMatch = key.match(/Q\d+/);
+      const prefix = prefixMatch ? prefixMatch[0] : 'Unknown';
+      if (prefix) {
+        // Initialize the group if it doesn't exist
+        if (!tempMap[prefix]) {
+          tempMap[prefix] = [];
+        }
+        // Add the current key and its object to the corresponding prefix group
+        tempMap[prefix].push({ key, ...data[key] });
       }
-      // Add the current key and its object to the corresponding prefix group
-      tempMap[prefix].push({ key, ...data[key] });
+    });
+
+    // Convert the tempMap to an array of grouped data
+    const groupedData: { prefix: string, questions: any[] }[] = [];
+    for (const [prefix, questions] of Object.entries(tempMap)) {
+      groupedData.push({ prefix, questions });
     }
-  });
-
-  // Convert the tempMap to an array of grouped data
-  const groupedData: { prefix: string, questions: any[] }[] = [];
-  for (const [prefix, questions] of Object.entries(tempMap)) {
-    groupedData.push({ prefix, questions });
+    return groupedData;
   }
-  return groupedData;
-}
 
 
 
 
 
-// Function to calculate the grand total marks across all prefixes
-getGrandTotalMarks(): number {
-  if (!this.geminiResponseAI || this.geminiResponseAI.length === 0) {
-    return 0;
-  }
-  this.sectionBMarks= this.geminiResponseAI.reduce((grandTotal, group) => {
-    return grandTotal + this.getTotalMarksForPrefix(group.questions);
-  }, 0);
-
-  console.log("Grand Total Marks: ",this.sectionBMarks);
-  console.log("hellllllloooooooo.........");
-
-  return this.sectionBMarks;
-}
-
-
-
-addSectBMarks(){
-  this.theoryResults={
-    marksB:this.sectionBMarks,
-    quiz: {
-       qId:this.qid
-     }
-   }
-
-   console.log(this.theoryResults.marksB);
-   console.log(this.theoryResults.quiz.qId);
-
-  this._quiz.addSectionBMarks(this.theoryResults).subscribe(
-    (data)=>{
-      // this.theoryResults.marksB=this.sectionBMarks,
-      // this.theoryResults.quiz.qId=this.qid
-      // this.theoryResults={
-      //   marksB:this.sectionBMarks,
-      //  quiz:
-      //   {
-      //     qId:this.qid
-      //   }
-      // },
-          // Swal.fire("Success", "Quiz is added", "success");
-          console.log("Marks sucessfull");
-    },
-    (error)=>{
-      // Swal.fire("Error !! ", "An error occurred while adding quiz", "error");
-
-      console.log("Unsuccessfull");
+  // Function to calculate the grand total marks across all prefixes
+  getGrandTotalMarks(): number {
+    if (!this.geminiResponseAI || this.geminiResponseAI.length === 0) {
+      return 0;
     }
-  );
-}
+    this.sectionBMarks = this.geminiResponseAI.reduce((grandTotal, group) => {
+      return grandTotal + this.getTotalMarksForPrefix(group.questions);
+    }, 0);
 
-// Function to calculate total marks for a given prefix (group)
-getTotalMarksForPrefix(questions: any[]): number {
-  if (!questions || questions.length === 0) {
-    return 0;
+    console.log("Grand Total Marks: ", this.sectionBMarks);
+    console.log("hellllllloooooooo.........");
+
+    return this.sectionBMarks;
   }
-  const totalMarks= questions.reduce((total, question) => total + question.marks, 0);
-  console.log("Total Marks for Prefix: ", totalMarks);
-  return totalMarks;
-}
 
-// SECTION B
-getPrefixes(): string[] {
-  const prefixes = new Set<string>();
-  this.selectedQuestionsAnswer.forEach(question => {
-    const prefix = question.quesNo.match(/^Q\d+/)?.[0];
-    if (prefix) {
-      prefixes.add(prefix);
+
+
+  addSectBMarks() {
+    this.theoryResults = {
+      marksB: this.sectionBMarks,
+      quiz: {
+        qId: this.qid
+      }
     }
-  });
-  return Array.from(prefixes);
-}
-getGroupedQuestions(prefix: string) {
-  return this.selectedQuestionsAnswer.filter(q => q.quesNo.startsWith(prefix));
-}
 
-// TYING ENDS HERE
+    console.log(this.theoryResults.marksB);
+    console.log(this.theoryResults.quiz.qId);
+
+    this._quiz.addSectionBMarks(this.theoryResults).subscribe(
+      (data) => {
+        // this.theoryResults.marksB=this.sectionBMarks,
+        // this.theoryResults.quiz.qId=this.qid
+        // this.theoryResults={
+        //   marksB:this.sectionBMarks,
+        //  quiz:
+        //   {
+        //     qId:this.qid
+        //   }
+        // },
+        // Swal.fire("Success", "Quiz is added", "success");
+        console.log("Marks sucessfull");
+      },
+      (error) => {
+        // Swal.fire("Error !! ", "An error occurred while adding quiz", "error");
+
+        console.log("Unsuccessfull");
+      }
+    );
+  }
+
+  // Function to calculate total marks for a given prefix (group)
+  getTotalMarksForPrefix(questions: any[]): number {
+    if (!questions || questions.length === 0) {
+      return 0;
+    }
+    const totalMarks = questions.reduce((total, question) => total + question.marks, 0);
+    console.log("Total Marks for Prefix: ", totalMarks);
+    return totalMarks;
+  }
+
+  // SECTION B
+  getPrefixes(): string[] {
+    const prefixes = new Set<string>();
+    this.selectedQuestionsAnswer.forEach(question => {
+      const prefix = question.quesNo.match(/^Q\d+/)?.[0];
+      if (prefix) {
+        prefixes.add(prefix);
+      }
+    });
+    return Array.from(prefixes);
+  }
+  getGroupedQuestions(prefix: string) {
+    return this.selectedQuestionsAnswer.filter(q => q.quesNo.startsWith(prefix));
+  }
+
+  // TYING ENDS HERE
 
 
 

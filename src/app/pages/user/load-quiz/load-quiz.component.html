@@ -23,13 +23,16 @@
 </div> -->
 
 
-  <!-- {{categories |json}} -->
+  <!-- {{reports |json}}
+  <hr> -->
   <!-- {{userRecords | json}} -->
+<!-- 
+  <hr>
 
-  <!-- {{AiAnsweredQuestions | json}} -->
+  {{availablequizzes | json}} -->
 
   <mat-card>
-    <div *ngIf="userRecords.length > 0; else elseBlock">
+    <div *ngIf="reports.length > 0; else elseBlock">
       <h4 class=" text-center">Quiz Taken Summary</h4>
 
       <div class="container">
@@ -40,8 +43,8 @@
               <mat-form-field appearance="fill" class="">
                 <mat-label>Select Course</mat-label>
                 <mat-select name="category" [(ngModel)]="categories.cid" (selectionChange)="onQuizOptionSelected()">
-                  <mat-option *ngFor="let c of userRecords" [value]="c.category.cid">
-                    {{c.category.title}}
+                  <mat-option *ngFor="let c of reports" [value]="c.quiz.category.cid">
+                    {{c.quiz.category.title}}
                   </mat-option>
                 </mat-select>
               </mat-form-field>
@@ -80,7 +83,7 @@
               <div class="col-md-12" *ngIf="availablequizzes.length==0">
                 <!-- <mat-card>
                       <mat-card-content> -->
-                <h1>No quizzes available for this course</h1>
+                <h1>Select quiz to print or view summary</h1>
                 <!-- </mat-card-content>
                   </mat-card> -->
               </div>
@@ -90,7 +93,7 @@
       </div>
     </div>
     <ng-template #elseBlock>
-      <h1>Go and Register for a course before</h1>
+      <h1>You have not taken any quiz yet.</h1>
     </ng-template>
   </mat-card>
 
@@ -105,7 +108,8 @@
         <tr>
           <th>Name </th>
           <th>Quiz</th>
-          <th>Marks</th>
+          <th>OBJ</th>
+          <th>Theory</th>
           <th>Status</th>
 
         </tr>
@@ -113,10 +117,13 @@
           <td>{{r.user.lastname}} {{r.user.firstname}}</td>
           <td>{{r.quiz.title}}</td>
           <td>{{r.marks}}</td>
+          <td>{{r.marksB}}</td>
           <td>{{r.progress}}</td>
+          
+
         </tr>
       </table>
-      <div class=" container text-center" *ngIf="reportData.length==0">
+      <div class=" container text-center" *ngIf="reports.length==0">
         <h1>No Results Summary, Take quiz before!</h1>
       </div>
     </mat-card>

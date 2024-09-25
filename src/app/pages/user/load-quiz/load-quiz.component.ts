@@ -30,6 +30,7 @@ export class LoadQuizComponent implements OnInit {
   RegCourse
   u_id
   disabledButtons: { [key: number]: boolean } = {};  // Track the disabled state by unique ID
+  reports
 
 
   // AiAnsweredQuestions: any=[];
@@ -57,7 +58,21 @@ export class LoadQuizComponent implements OnInit {
 
 
   ngOnInit(): void {
+
+    const userDetails = localStorage.getItem('user');
+    const Object = JSON.parse(userDetails);
+    this.u_id = Object.id;
+
+    this._report.getReportsByUserID(this.u_id).subscribe((data)=>{
+
+      this.reports=data;
+      console.log(data);
+    })
+
     this.getButtonState();
+
+
+
     // this.getAIAnsweredQuestions();
     // this.loadReport();
     // this.qId = this.router.navigate(['qid']);
@@ -103,7 +118,7 @@ export class LoadQuizComponent implements OnInit {
     console.log(this.qId)
     this._couseReg.getRegCourses().subscribe((data: any) => {
       this.categories = data;
-      this.userRecords = this.checkUserId();
+      // this.userRecords = this.checkUserId();
 
     },
       (error) => {
@@ -189,6 +204,9 @@ export class LoadQuizComponent implements OnInit {
     const Object = JSON.parse(userDetails);
     this._report.getReport(Object.id, this.pqId).subscribe((report) => {
       this.reportData = report;
+
+      console.log(this.reportData);
+      console.log(this.reportData[0].marksB)
       console.log(this.reportData[0].marks);
       console.log(this.reportData[0].progress);
       console.log(this.reportData[0].quiz.title);
