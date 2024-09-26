@@ -8,6 +8,8 @@ import { TokenExpirationService } from 'src/app/services/token-expiration.servic
 import * as XLSX from 'xlsx';
 import { LoginService } from 'src/app/services/login.service';
 import { UserService } from 'src/app/services/user.service';
+import { MatTableDataSource } from '@angular/material/table';
+
 @Component({
 	selector: 'app-welcome',
 	templateUrl: './welcome.component.html',
@@ -17,7 +19,9 @@ import { UserService } from 'src/app/services/user.service';
 })
 export class WelcomeComponent implements OnInit {
 	allQuizzes: any = [];
-	public reportsData: any = [];
+	reportsData: any[] = [];
+	// reportsData = new MatTableDataSource<any>([]);  // Initialize with an empty array
+
 
 	currentDate:Date;
 	// allReportData: any = [];
@@ -37,13 +41,15 @@ export class WelcomeComponent implements OnInit {
 	// timeDifferenceInSeconds: any;
 	// jwtToken: string;
 	AandB=0;
+	theoryMarks
+
 	selectedCategoryId;
 	associatedQuizzes: any[];
 	cateGory;
 	allUsers
 
 
-	public displayColumn: string[] = ['index', 'name', 'marks'];
+	public displayColumn: string[] = ['index', 'name', 'marks', 'theory', 'total'];
 	constructor(
 		private _cat: CategoryService, 
 		private _snackbar: MatSnackBar, 
@@ -230,16 +236,18 @@ onQuizOptionSelected() {
     this.totalMarks = 0;
 	// this.chartDataPoints = [];
     this._report.getReportByQuizId(this.qId).subscribe((report: any) => {
-        this.reportsData = report;
+        this.reportsData= [report];
 		this.extractForChart();
         this.totalQuizTakers = this.reportsData.length;
         console.log(this.reportsData);
         this.reportsData.forEach(item => {
             this.totalMarks += parseFloat(item.marks);
-			this.averageScore=this.totalMarks/this.totalQuizTakers
+			this.theoryMarks = item.marksB;
+			this.AandB=(this.totalMarks + this.theoryMarks)
+			this.averageScore=this.AandB/this.totalQuizTakers;
         });
-
-
+		console.log(this.averageScore);
+		// this.AandB = (this.totalMarks + this.theoryMarks)
         // Output the total marks
         console.log("Total Marks:", this.totalMarks);
     });

@@ -6,6 +6,9 @@
 
     <!-- <h3 class="text-center"><i>{{ getFormmatedTime() }} </i></h3> -->
 
+    <!-- {{reportsData|json}} -->
+
+
     <div class="row">
       <div class="col-md-4">
 
@@ -79,13 +82,15 @@
 
 
 
-    <!-- {{cateGory|json}} 
+    <!-- {{cateGory|json}}  -->
 
-    {{associatedQuizzes| json}}
+    <!-- {{associatedQuizzes| json}} -->
 
-    {{selectedCategoryId}} -->
+    <!-- <hr> -->
 
-    {{reportsData| json}}
+    <!-- {{selectedCategoryId}} -->
+
+    <!-- {{reportsData| json}} -->
 
     <!-- QUIZ STATISTICS -->
     <mat-card class="mt20">
@@ -197,9 +202,10 @@
 
       <!-- Table Section -->
 
+    
 
 
-      <!-- <div *ngIf="reportsData.length>0"> -->
+      <div *ngIf="reportsData.length>0">
         <div>
           &nbsp;&nbsp;<button mat-flat-button color="accent" (click)="exportexcel()">Export as Excel </button>
 
@@ -222,20 +228,20 @@
             <td mat-cell *matCellDef="let element">{{ element.marks }}</td>
           </ng-container>
 
-          <!--<ng-container matColumnDef="theory">
+          <ng-container matColumnDef="theory">
             <th mat-header-cell *matHeaderCellDef> Theory Marks </th>
             <td mat-cell *matCellDef="let element">{{ element.marksB }}</td>
           </ng-container>
 
           <ng-container matColumnDef="total">
             <th mat-header-cell *matHeaderCellDef> Total Marks </th>
-            <td mat-cell *matCellDef="let element">{{ 60 }}</td>
-          </ng-container> -->
+            <td mat-cell *matCellDef="let element">{{ AandB }}</td>
+          </ng-container>
 
           <tr mat-header-row *matHeaderRowDef="displayColumn"></tr>
           <tr mat-row *matRowDef="let row; columns: displayColumn;"></tr>
         </table>
-      <!-- </div> -->
+      </div>
 
 
 
