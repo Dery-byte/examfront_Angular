@@ -42,6 +42,8 @@ export class WelcomeComponent implements OnInit {
 	// jwtToken: string;
 	AandB=0;
 	theoryMarks
+	sectionAmarks
+	sectionB
 
 	selectedCategoryId;
 	associatedQuizzes: any[];
@@ -236,17 +238,24 @@ onQuizOptionSelected() {
     this.totalMarks = 0;
 	// this.chartDataPoints = [];
     this._report.getReportByQuizId(this.qId).subscribe((report: any) => {
-        this.reportsData= [report];
+        this.reportsData= report;
 		this.extractForChart();
         this.totalQuizTakers = this.reportsData.length;
         console.log(this.reportsData);
         this.reportsData.forEach(item => {
             this.totalMarks += parseFloat(item.marks);
+			this.sectionAmarks = parseFloat(item.marksB);
+
+
+			this.sectionB = item.marks;
 			this.theoryMarks = item.marksB;
-			this.AandB=(this.totalMarks + this.theoryMarks)
-			this.averageScore=this.AandB/this.totalQuizTakers;
+			this.averageScore=(this.totalMarks + this.sectionAmarks) /this.totalQuizTakers;
         });
 		console.log(this.averageScore);
+		this.AandB=(this.sectionB + this.theoryMarks)
+
+
+
 		// this.AandB = (this.totalMarks + this.theoryMarks)
         // Output the total marks
         console.log("Total Marks:", this.totalMarks);
