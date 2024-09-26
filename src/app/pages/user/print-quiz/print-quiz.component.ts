@@ -67,15 +67,20 @@ export class PrintQuizComponent implements OnInit {
   }
 
   ngOnInit(): void {
-    this.loadSubjective();
+    this.qid = this._route.snapshot.params['qid'];
+
+  
+
     const userDetails = localStorage.getItem('user');
     const Object = JSON.parse(userDetails);
     this.username = Object.username;
-    this.qid = this._route.snapshot.params['qid'];
+
+    console.log(this.qid);
     // this.qId =this._route.snapshot.params['qId'];
     // this.loadSubjective();
+    this.loadSubjective();
+    this.loadSubjectiveAIEval();
     this.loadReport();
-
 
 
     console.log(this.qid);
@@ -87,7 +92,6 @@ export class PrintQuizComponent implements OnInit {
     this.loadQuestions();
 
     this.saveDataInBrowser();
-    this.loadSubjectiveAIEval();
 
     this.loadQuestionsFromLocalStorage();
 
@@ -118,22 +122,28 @@ export class PrintQuizComponent implements OnInit {
   //       });
 
   loadSubjective() {
-    const questions = localStorage.getItem('answeredQuestions');
+    const questions = localStorage.getItem( this.qid + "answeredQuestions");
     this.answeredQuestions = JSON.parse(questions);
     console.log(this.answeredQuestions);
+    console.log(this.qid);
   }
 
 
 
   loadSubjectiveAIEval() {
-    const geminiResponse = localStorage.getItem('answeredAIQuestions');
+    // const geminiResponse = localStorage.getItem("answeredAIQuestions");
+    const geminiResponse = localStorage.getItem("answeredAIQuestions" + this.qid);
     const data = geminiResponse.trim();
+    console.log(geminiResponse);
     // const data = geminiResponse.replace("json\n", "");
     const data1 = JSON.parse(data);
     this.geminiResponse = this.groupByPrefix(data1);
+    console.log('This is the geminiResponse groupedByPrefixes', this.geminiResponse);
 
-    console.log("This is the geminiRespnse groupedByPrefixes", this.geminiResponse);
+    console.log("CHECKING ...")
   }
+
+ 
 
   groupByPrefix(data: any): { prefix: string, questions: any[] }[] {
     // Initialize a temporary map to collect grouped data
@@ -302,8 +312,8 @@ export class PrintQuizComponent implements OnInit {
     this.loadResults();
     this.loadReport();
     this.router.navigate(['./print_quiz/' + this.qid]);
-    localStorage.removeItem("answeredQuestions");
-    localStorage.removeItem("answeredAIQuestions");
+    localStorage.removeItem(this.qid + "answeredQuestions");
+    localStorage.removeItem("answeredAIQuestions" + this.qid);
   }
 
   loadResults() {

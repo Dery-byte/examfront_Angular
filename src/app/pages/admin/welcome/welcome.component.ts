@@ -36,6 +36,7 @@ export class WelcomeComponent implements OnInit {
 	// expirationSeconds: any;
 	// timeDifferenceInSeconds: any;
 	// jwtToken: string;
+	AandB=0;
 	selectedCategoryId;
 	associatedQuizzes: any[];
 	cateGory;
@@ -237,6 +238,7 @@ onQuizOptionSelected() {
             this.totalMarks += parseFloat(item.marks);
 			this.averageScore=this.totalMarks/this.totalQuizTakers
         });
+
 
         // Output the total marks
         console.log("Total Marks:", this.totalMarks);

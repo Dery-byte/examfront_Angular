@@ -427,7 +427,7 @@ export class StartComponent implements OnInit {
         // EVALUATIING THE OBJECTIVES
         this.evalQuiz();
         // localStorage.removeItem("countdown_timer");
-        this.printQuiz();
+        this.waitNavigateFunction();
         this.loadQuestionsWithAnswers();
         this.preventBackButton();
       };
@@ -446,9 +446,9 @@ export class StartComponent implements OnInit {
       if (e.isConfirmed) {
         // EVALUATE THE SUBJECTIVE
         // this.evalQuiz();
-        this.triggerFunctions();
+        this.triggerAddSectBMarks();
         // localStorage.removeItem("countdown_timer");
-        this.printQuiz();
+        this.waitNavigateFunction();
         this.loadQuestionsWithAnswers();
         this.evalSubjective();
         this.loadSubjectiveAIEval();
@@ -459,7 +459,7 @@ export class StartComponent implements OnInit {
   }
 
 
-  triggerFunctions() {
+  triggerAddSectBMarks() {
     // Call evalQuiz() first
     this.evalQuiz();
     // Set a delay before calling addSectBMarks()
@@ -468,7 +468,11 @@ export class StartComponent implements OnInit {
     }, 3000); // 3000 milliseconds = 3 seconds delay
   }
 
-
+  waitNavigateFunction() {
+        setTimeout(() => {
+      this.printQuiz();
+    }, 3000); // 3000 milliseconds = 3 seconds delay
+  }
 
 
 
@@ -485,8 +489,8 @@ export class StartComponent implements OnInit {
       //Code
       if (this.timerAll <= 0) {
         // this.submitQuiz();
-        this.triggerFunctions();
-        this.printQuiz();
+        this.triggerAddSectBMarks();
+        this.waitNavigateFunction();
         // this.evalQuiz();
         this.loadQuestionsWithAnswers();
         this.evalSubjective();
@@ -533,6 +537,7 @@ export class StartComponent implements OnInit {
       localStorage.setItem('MaxMarks', JSON.stringify(this.maxMarks));
       // this.addSectBMarks();
       this.preventBackButton();
+      this.evalSubjective();
       this.isSubmit = true;
     },
       (error) => {
@@ -571,7 +576,7 @@ export class StartComponent implements OnInit {
     if (Object.keys(this.selectedQuestions).length === this.numberOfQuestionsToAnswer) {
       // Handle the submission logic here
 
-      localStorage.setItem("answeredQuestions", JSON.stringify(this.selectedQuestions));
+      localStorage.setItem(this.qid + "answeredQuestions", JSON.stringify(this.selectedQuestions));
 
       this.convertJson();
 
@@ -581,7 +586,12 @@ export class StartComponent implements OnInit {
         // this.geminiResponse= this.groupByPrefix(geminiResponse);
         console.log(data);
         console.log(this.geminiResponse);
-        localStorage.setItem("answeredAIQuestions", JSON.stringify(this.geminiResponse));
+        // localStorage.setItem("answeredAIQuestions", JSON.stringify(this.geminiResponse));
+
+        localStorage.setItem("answeredAIQuestions" + this.qid, JSON.stringify(this.geminiResponse));
+        // console.log('Stored successfully:', localStorage.getItem("answeredAIQuestions" + this.qid)); // Just to confirm it's there
+
+       this.loadSubjectiveAIEval();
 
 
 
@@ -589,7 +599,9 @@ export class StartComponent implements OnInit {
       console.log('Submitted Questions:', this.selectedQuestionsAnswer);
       console.log(this.convertedJsonAPIResponsebody)
       // SAVE THE SELECTED QUESTIONS IN LOCAL STOREAGE
-      localStorage.setItem("answeredQuestions", JSON.stringify(this.selectedQuestionsAnswer));
+      // localStorage.setItem("answeredQuestions", JSON.stringify(this.selectedQuestionsAnswer));
+      localStorage.setItem(this.qid + "answeredQuestions", JSON.stringify(this.selectedQuestionsAnswer));
+
 
     }
     (error) => {
@@ -611,12 +623,16 @@ export class StartComponent implements OnInit {
 
 
   loadSubjectiveAIEval() {
-    const geminiResponse = localStorage.getItem('answeredAIQuestions');
+    // const geminiResponse = localStorage.getItem("answeredAIQuestions");
+    const geminiResponse = localStorage.getItem("answeredAIQuestions" + this.qid);
     const data = geminiResponse.trim();
+    console.log(geminiResponse);
     // const data = geminiResponse.replace("json\n", "");
     const data1 = JSON.parse(data);
     this.geminiResponseAI = this.groupByPrefix(data1);
     console.log('This is the geminiResponse groupedByPrefixes', this.geminiResponseAI);
+
+    console.log("CHECKING ...")
   }
 
   groupByPrefix(data: any): { prefix: string, questions: any[] }[] {
@@ -626,7 +642,7 @@ export class StartComponent implements OnInit {
     Object.keys(data).forEach(key => {
       // Extract the prefix (e.g., "Q1" from "Q1b" or "Q1c")
       const prefixMatch = key.match(/Q\d+/);
-      const prefix = prefixMatch ? prefixMatch[0] : 'Unknown';
+      const prefix = prefixMatch ? prefixMatch[0] : 'Theory';
       if (prefix) {
         // Initialize the group if it doesn't exist
         if (!tempMap[prefix]) {
