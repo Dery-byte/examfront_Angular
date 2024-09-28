@@ -44,6 +44,7 @@ export class WelcomeComponent implements OnInit {
 	theoryMarks
 	sectionAmarks
 	sectionB
+	maxOfTotalScore
 
 	selectedCategoryId;
 	associatedQuizzes: any[];
@@ -261,10 +262,12 @@ onQuizOptionSelected() {
     });
 }
 extractForChart(){
+	var maxOfTotalScore=0;
 	  // Extracting names and marks
 	  this.chartDataPoints = this.reportsData.map(item => {
 		const username = `${item.user.username}`;
-		return { label: username, y: parseFloat(item.marks) };
+		this.maxOfTotalScore=(parseFloat(item.marks) + parseFloat(item.marksB));
+		return { label: username, y: this.maxOfTotalScore };
 		// this.chartDataPoints = this.reportsData.map(item => ({
 		// 	label: item.label,
 		// 	y: item.y
@@ -277,6 +280,18 @@ extractForChart(){
 			zoomEnabled: true,
 			title: {
 			  text: "Quiz Performance"
+			},
+			axisX: {
+				title: "Students", // Label for the X-axis
+				labelFontSize: 14, // Font size for X-axis labels
+			}
+			,
+			axisY: {
+				title: "Marks", // Label for the Y-axis
+				minimum: 0, // Set the minimum value of Y-axis
+				maximum: this.maxOfTotalScore + 1, // Set the maximum value of Y-axis
+				interval: 1, // Set interval between data points on Y-axis
+				labelFontSize: 14, // Font size for Y-axis labels
 			},
 			data: [{
 			  type: "column",
