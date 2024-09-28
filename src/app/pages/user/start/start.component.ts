@@ -494,6 +494,7 @@ export class StartComponent implements OnInit {
         // this.submitQuiz();
         // this.triggerAddSectBMarks();
         // localStorage.removeItem("countdown_timer");
+        this.evalQuiz();
         this.waitNavigateFunction();
         this.loadQuestionsWithAnswers();
         this.evalSubjective();
