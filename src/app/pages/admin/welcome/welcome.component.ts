@@ -236,6 +236,7 @@ export class WelcomeComponent implements OnInit {
 	//SELECTING A QUIZ DISPLAY RESULTS FOR EACH STUDENT
 onQuizOptionSelected() {
     this.totalMarks = 0;
+	this.sectionAmarks = 0;
 	// this.chartDataPoints = [];
     this._report.getReportByQuizId(this.qId).subscribe((report: any) => {
         this.reportsData= report;
@@ -244,16 +245,14 @@ onQuizOptionSelected() {
         console.log(this.reportsData);
         this.reportsData.forEach(item => {
             this.totalMarks += parseFloat(item.marks);
-			this.sectionAmarks = parseFloat(item.marksB);
+			this.sectionAmarks += parseFloat(item.marksB);
 
 
-			this.sectionB = item.marks;
-			this.theoryMarks = item.marksB;
+			// this.sectionB = parseFloat(item.marks);
+			// this.theoryMarks = parseFloat(item.marksB);
 			this.averageScore=(this.totalMarks + this.sectionAmarks) /this.totalQuizTakers;
         });
 		console.log(this.averageScore);
-		this.AandB=(this.sectionB + this.theoryMarks)
-
 
 
 		// this.AandB = (this.totalMarks + this.theoryMarks)

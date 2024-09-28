@@ -309,11 +309,10 @@ export class PrintQuizComponent implements OnInit {
 
 
   printQuiz() {
-    this.loadResults();
-    this.loadReport();
-    this.router.navigate(['./print_quiz/' + this.qid]);
-    localStorage.removeItem(this.qid + "answeredQuestions");
-    localStorage.removeItem("answeredAIQuestions" + this.qid);
+    // this.loadResults();
+    // this.loadReport();
+    // this.router.navigate(['./print_quiz/' + this.qid]);
+   
   }
 
   loadResults() {
@@ -347,7 +346,8 @@ export class PrintQuizComponent implements OnInit {
   printPage() {
     document.title = this.username;
     window.print();
-    localStorage.removeItem("answeredAIQuestions");
+    localStorage.removeItem(this.qid + "answeredQuestions");
+    localStorage.removeItem("answeredAIQuestions" + this.qid);
 
   }
 

@@ -116,10 +116,11 @@ export class ViewQuizQuestionsComponent implements OnInit {
         prefixes.add(prefix);
       }
     });
-    return Array.from(prefixes);
+    return Array.from(prefixes).sort();
   }
   getGroupedQuestions(prefix: string) {
     return this.sectionB.filter(q => q.quesNo.startsWith(prefix));
+
   }
 
   getQuesNumberById(questionId: any): any {
