@@ -2,6 +2,8 @@ import { Component, OnInit } from '@angular/core';
 import { RegCoursesService } from 'src/app/services/reg-courses.service';
 import Swal from 'sweetalert2';
 import { ChangeDetectorRef } from '@angular/core';
+import { MatSnackBar } from '@angular/material/snack-bar';
+
 
 
 
@@ -15,6 +17,7 @@ import { ChangeDetectorRef } from '@angular/core';
 export class CoursesRegisteredComponent implements OnInit {
 
   constructor (private regCourse: RegCoursesService, 
+    private _snack: MatSnackBar,
     private changeDetectorRef: ChangeDetectorRef){}
   userRecords=[];  
 
@@ -46,11 +49,14 @@ export class CoursesRegisteredComponent implements OnInit {
    (data)=>{
 // this.userRecords = this.userRecords.filter((userRecord)=>userRecord.rid ! = rid);
 this.deleteRecord(rid)
-     Swal.fire("Success", "Course Removed", "success");
-   },
+this._snack.open("Course Deleted Successfully ! ", "",{
+  duration:3000,
+});   },
    (error)=>
    {
-     Swal.fire("Error", "Course could not be removed", "error");
+    this._snack.open("Course  Deletion Unsuccessfully ", "",{
+      duration:3000,
+    });
 
    }
  );

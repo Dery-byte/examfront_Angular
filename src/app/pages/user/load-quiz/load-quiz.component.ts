@@ -136,8 +136,6 @@ export class LoadQuizComponent implements OnInit {
   //   console.log(this.AiAnsweredQuestions);
   // }
 
-
-
   checkUserId(): any[] {
     // Filter the records associated with user id 6
     const userDetails = localStorage.getItem('user');
@@ -148,7 +146,7 @@ export class LoadQuizComponent implements OnInit {
 
   }
 
-
+// ================================================================
   onQuizOptionSelected() {
     this._quiz.getActieQuizzesOfCategory(this.categories.cid).subscribe((quiz: any) => {
       this.availablequizzes = quiz;
@@ -204,7 +202,6 @@ export class LoadQuizComponent implements OnInit {
     const Object = JSON.parse(userDetails);
     this._report.getReport(Object.id, this.pqId).subscribe((report) => {
       this.reportData = report;
-
       console.log(this.reportData);
       console.log(this.reportData[0].marksB)
       console.log(this.reportData[0].marks);
