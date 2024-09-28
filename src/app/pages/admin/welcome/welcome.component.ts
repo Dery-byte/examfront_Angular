@@ -291,7 +291,7 @@ extractForChart(){
 				minimum: 0, // Set the minimum value of Y-axis
 				maximum: this.maxOfTotalScore + 1, // Set the maximum value of Y-axis
 				interval: 1, // Set interval between data points on Y-axis
-				labelFontSize: 14, // Font size for Y-axis labels
+				labelFontSize: 10, // Font size for Y-axis labels
 			},
 			data: [{
 			  type: "column",

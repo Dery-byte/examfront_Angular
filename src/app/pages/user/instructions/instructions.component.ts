@@ -64,7 +64,7 @@ export class InstructionsComponent implements OnInit {
 
   ngOnInit(): void {
     this.qid = this._route.snapshot.params['qid'];
-    this.fectchReport();
+    this.fetchReport();
     this._quiz.getQuiz(this.qid).subscribe((data: any) => {
       console.log(data.title);
       this.quiz = data;
@@ -107,79 +107,42 @@ console.log(this.timerAll)
 
   }
 
-  fectchReport() {
+  fetchReport() {
     this._questions.getReport().subscribe((data) => {
-      this.report = data;
-      this.report.forEach((q) => {
-      });
+        this.report = data;
+        const userDetails = localStorage.getItem('user');
+        const currentUser = JSON.parse(userDetails);
+        const currentUserId = currentUser.id;
+        const currentQuizId = parseInt(this.qid);
+        
+        // Initialize flag for eligibility
+        let isQuizTaken = true;
 
-      const userDetails = localStorage.getItem('user');
-      const Object = JSON.parse(userDetails);
-      let foundMatchingUser = false; // Flag to track if a matching user is found
-      this.idNumberReport = [];
+        // Check if current user and quiz match any record in the report
+        this.report.forEach((entry) => {
+            const reportUserId = entry.user.id;
+            const reportQuizId = entry.quiz.qId;
 
-      this.report.forEach((q) => {
-        this.userId = q.user.id;
-        this.reportQuizId = q.quiz.qId;
-        this.currentQuizId = this.qid;
-        this.currentUserId = Object.id;
-        this.QuizIdsInReport = this.report.map(item => item.quiz.qId); // Fetch ALLthe quizIDs in the report and store them in an array
+            if (reportUserId === currentUserId && reportQuizId === currentQuizId) {
+                isQuizTaken = false;
+            }
+        });
 
-        console.log(this.QuizIdsInReport);
+        // Set eligibility based on whether the quiz has been taken
+        this.isLegible = !isQuizTaken;
 
-        if (q.user.id === this.currentUserId) {
-          this.idNumberReport.push(q.user.id);
-          foundMatchingUser = true; // Set the flag if a matching user is found
+        if (this.isLegible) {
+            console.log("You have not taken the quiz yet! You're eligible to take it.");
+        } else {
+            console.log("Quiz taken already! You're not eligible.");
         }
-        // console.log(this.idNumberReport[0]);
-        // console.log(this.currentUserId);
-        // console.log(this.reportQuizId); // 2=> Check this if it is actually in the array ReportQuizId array
-        // console.log(this.currentQuizId); // 1=> Software Enginerring
-        // console.log(this.idNumberReport);
 
-        const isPresent = this.isQIPresent(parseInt(this.qid));
-        console.log("current quiz ID : ",typeof(parseInt(this.qid)));
-
-        console.log(isPresent);
-
-      });
-
-      if (foundMatchingUser) {
-        // Compare IDs here
-        this.isLegible = ((this.idNumberReport[0] == this.currentUserId) && (this.isQIPresent(parseInt(this.qid))));
-
-      } else {
-        this.isLegible = false;
-      }
-      console.log(this.idNumberReport[0] == this.currentUserId);
-
-      // console.log( this.currentQuizId===this.reportQuizId.toString()); // 1 != 2: False
-      console.log(this.isQIPresent(parseInt(this.qid)));
-      console.log(this.isLegible);
-
-      console.log("current quiz ID",this.currentQuizId);
-      console.log("Quiz IDs in the report",this.QuizIdsInReport);
-      console.log("current user ID",this.currentUserId);
-      console.log("User ID in report",this.idNumberReport);
-
-
-      if (this.isLegible) {
-        // this.isLegible; // True
-        console.log("Quiz Taken Already!!!!!!!");
-      }
-      else {
-        // this.isLegible; //False
-        console.log("You have not taken the quiz yet!!!!");
-      }
-
-      console.log(data);
-      console.log(this.report);
+        // Debugging logs for clarity
+        console.log("Current User ID: ", currentUserId);
+        console.log("Current Quiz ID: ", currentQuizId);
+        console.log("Quiz Eligibility: ", this.isLegible);
     });
-  }
-
-  isQIPresent(qId: number): boolean {
-    return this.QuizIdsInReport.includes(qId);
-  }
+}
 
 
 
