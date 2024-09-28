@@ -474,7 +474,7 @@ export class StartComponent implements OnInit {
   waitNavigateFunction() {
     setTimeout(() => {
       this.printQuiz();
-    }, 2000); // 3000 milliseconds = 3 seconds delay
+    }, 1000); // 3000 milliseconds = 3 seconds delay
   }
 
 
