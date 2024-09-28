@@ -65,19 +65,7 @@ export class WelcomeComponent implements OnInit {
 
 			// this.chartDataPoints = [];
 		}
-	// @HostListener('window:beforeunload', ['$event'])
-	// beforeUnloadHandler(event: Event): void {
-	// 	// Custom code to be executed before the page is unloaded
-	// 	localStorage.setItem(this.tokenExpirationKey, JSON.stringify(this.expirationSeconds));
-	// 	console.log(this.expirationSeconds);
-	// 	event.preventDefault();
-	// 	// this.preventBackButton();
-	// 	event.returnValue = '' as any; // This is required for some older browsers
-	// }
-	// @HostListener('window:unload', ['$event'])
-	// unloadHandler(event: Event): void {
-	// 	// this.preventBackButton();
-	// }
+	
 	ngOnInit(): void {
 
 		this.currentDate = new Date();
@@ -101,20 +89,14 @@ export class WelcomeComponent implements OnInit {
 				this._login.logout();
 			});
 		this.allReports();
-		// this.extractUniqueCategories();
-		// this.expirationFromServer();
-		// this.startTimer();
-		// this.formattedExpirationTime();
+		
 	}
 
 	// =========================
 	allReports() {
 		this._report.getUniqueCategoriesAndQuizzes().subscribe((data) => {
 			this.cateGory = data;
-			// console.log(this.cateGory);
-			// console.log(this.cateGory[1].title);
-			// console.log(this.cateGory[1].cid);
-			// console.log(this.cateGory[1].quizTitles[1].title);
+		
 
 		});
 	}
@@ -142,97 +124,6 @@ export class WelcomeComponent implements OnInit {
 		XLSX.writeFile(wb, `${this.courseName}.xlsx`)
 	}
 
-	// formattedExpirationTime() {
-	// 	this.jwtToken = localStorage.getItem('token')
-	// 	const tokenParts = this.jwtToken.split('.');
-	// 	console.log(this.jwtToken);
-
-	// 	if (tokenParts.length !== 3) {
-	// 		console.error('Invalid JWT format');
-	// 		return null;
-	// 	}
-
-	// 	const payload = JSON.parse(atob(tokenParts[1]));
-
-	// 	if (!payload || !payload.exp) {
-	// 		console.error('Expiration time not found in JWT');
-	// 		return null;
-	// 	}
-
-	// 	const expirationTimeInSeconds = payload.exp;
-	// 	const expirationDate = new Date(expirationTimeInSeconds * 1000); // Convert to milliseconds
-	// 	const currentTime = new Date();
-	// 	const timeDifferenceInSeconds = Math.floor((expirationDate.getTime() - currentTime.getTime()) / 1000);
-	// 	console.log(timeDifferenceInSeconds);
-	// 	console.log(typeof (timeDifferenceInSeconds));
-
-	// 	console.log(expirationDate.toLocaleString());
-
-	// 	return timeDifferenceInSeconds; // Adjust the format as needed
-	// }
-
-
-	// // THIS JWT EXPIRATION NOT OPTIMIZED
-
-	// expirationFromServer() {
-	// 	// const expirationTimeFromServer = 120; // 15 minutes in seconds
-	// 	const expirationTimeFromServers = this.formattedExpirationTime();
-
-	// 	console.log(expirationTimeFromServers);
-
-	// 	this.tokenExpirationService.startCountdown(expirationTimeFromServers);
-
-	// 	this.startTimer();
-
-	// 	this.tokenExpirationService.expiration$.subscribe(seconds => {
-	// 		this.expirationSeconds = seconds;
-
-	// 		//   const remainingTime = this.tokenExpirationService.getRemainingTime();
-	// 		let timerString = localStorage.getItem(this.tokenExpirationKey);
-	// 		const timerNumber = parseInt(timerString, 10);
-
-	// 		if (timerNumber) {
-	// 			this.expirationSeconds = timerNumber;
-	// 			this.tokenExpirationService.startCountdown(this.expirationSeconds);
-
-	// 			console.log(timerNumber)
-	// 			console.log(typeof (timerNumber));
-	// 			localStorage.removeItem(this.tokenExpirationKey);
-
-	// 			// Start the countdown again with the remaining time
-	// 			// this.tokenExpirationService.startCountdown(this.expirationSeconds);
-	// 			// this.startTimer();
-	// 		} else {
-	// 			// Handle the case when there is no remaining time (e.g., user refreshed after expiration)
-	// 			// this.tokenExpirationService.startCountdown(this.expirationSeconds);
-	// 			// console.log('Token has expired.');
-	// 		}
-	// 	});
-	// }
-
-
-
-
-	// startTimer() {
-	// 	let t = window.setInterval(() => {
-	// 		//Code
-	// 		if (this.expirationSeconds <= 0) {
-	// 			this._login.logout();
-	// 			// window.location('/login')
-	// 			window.location.href = "/login";
-	// 			clearInterval(t);
-
-	// 		}
-	// 		else {
-	// 			// this.expirationSeconds--;
-	// 		}
-	// 	}, 1000);
-	// }
-	// getFormmatedTime() {
-	// 	let mm = Math.floor(this.expirationSeconds / 60);
-	// 	let ss = this.expirationSeconds - mm * 60;
-	// 	return `${mm} min : ${ss} sec`
-	// }
 
 	//SELECTING A QUIZ DISPLAY RESULTS FOR EACH STUDENT
 onQuizOptionSelected() {
@@ -273,7 +164,10 @@ extractForChart(){
 		// 	y: item.y
 		  });
 
-		  // Initialize chart options
+
+		  const maxScore = Math.max(...this.chartDataPoints.map(point => point.y));
+          const yAxisMax = Math.ceil(maxScore + 2);
+		  	  // Initialize chart options
 		  this.chartOptions = {
 			theme: "light2",
 			animationEnabled: true,
@@ -289,7 +183,7 @@ extractForChart(){
 			axisY: {
 				title: "Marks", // Label for the Y-axis
 				minimum: 0, // Set the minimum value of Y-axis
-				maximum: this.maxOfTotalScore + 1, // Set the maximum value of Y-axis
+				maximum: yAxisMax, // Set the maximum value of Y-axis
 				interval: 1, // Set interval between data points on Y-axis
 				labelFontSize: 10, // Font size for Y-axis labels
 			},
@@ -306,40 +200,9 @@ extractForChart(){
 	// });
 	console.log(this.chartDataPoints);
 }
-
-
-
-	// chart: any;
-	// chartOptions = {
-	// 	theme: "light2",
-	// 	animationEnabled: true,
-	// 	zoomEnabled: true,
-	// 	title: {
-	// 		text: "Quiz Performance"
-	// 	},
-	// 	data: [{
-	// 		type: "column",
-	// 		dataPoints:this.chartDataPoints
-
-
-
-	// 		// type: "pie",
-	// 		// type: "stepLine",
-	// 		// xlabel:"Marks",
-	// 		// xValueFormatString: "YYYY",
-	// 		// yValueFormatString: "$#,###.##",
-	// 		/* The `dataPoint` property in the `chartOptions` object is defining an array of data points for the
-	// 		chart. Each data point represents a label (name) and a value (y-axis value) for the chart. In
-	// 		this case, the array contains four data points: */
-	// 		// dataPoints: 
-	// 		// 	[
-	// 		// 	{ "label": 'Derry', "y": 5},
-	// 		// 	{ "label": 'Emmanuel', "y": 1 },
-	// 		// 	{ "label": 'Henry', "y": 5},
-	// 		// 	{ "label": 'Mark', "y": 2},
-	// 	    //     ]
-			
-	// 	}]
-	// }
 }
 
+
+
+
+// TOMORROW WORK ON THE JWT TOKEN EXPIRATION ALERT ON THE INTERFACE
