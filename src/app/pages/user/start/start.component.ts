@@ -181,12 +181,12 @@ export class StartComponent implements OnInit {
       console.log(this.quiz);
       console.log(this.quiz.quizTime)
 
-            
-     this.timeO = this.quiz.quizTime * 1;
-    //  this.timerAll = this.quiz.quizTime * 1 * 60 ;
-     this.timerAll = (this.timeT + this.timeO) * 60;
 
-      
+      this.timeO = this.quiz.quizTime * 1;
+      //  this.timerAll = this.quiz.quizTime * 1 * 60 ;
+      this.timerAll = (this.timeT + this.timeO) * 60;
+
+
       // return this.timeO = parseInt(this.quiz.quizTime);
     },
       (error) => {
@@ -212,12 +212,12 @@ export class StartComponent implements OnInit {
       // this.timeT = data[0].timeAllowed;
       // this.timerAll = (this.timeT + this.timeO) * 60;
 
-     
+
 
 
       console.log("This is time for the theory questions", this.timeT);
       console.log("This is the time for the Objectives", this.timeO);
-      console.log(" Both time for theory and objectives",this.timerAll)
+      console.log(" Both time for theory and objectives", this.timerAll)
 
     });
 
@@ -229,7 +229,7 @@ export class StartComponent implements OnInit {
     this.loadQuestions();
     this.startTimer();
     this.loadQuestionsFromLocalStorage();
-    this.printQuiz();
+    // this.printQuiz();
     this.initForm();
     // this.preventBackButton();
 
@@ -424,11 +424,14 @@ export class StartComponent implements OnInit {
       icon: "info",
     }).then((e) => {
       if (e.isConfirmed) {
-        // EVALUATIING THE OBJECTIVES
         this.evalQuiz();
+        // this.triggerAddSectBMarks();
         // localStorage.removeItem("countdown_timer");
         this.waitNavigateFunction();
         this.loadQuestionsWithAnswers();
+        this.evalSubjective();
+        // this.loadSubjectiveAIEval();
+        // this.getGrandTotalMarks();
         this.preventBackButton();
       };
     });
@@ -445,33 +448,33 @@ export class StartComponent implements OnInit {
     }).then((e) => {
       if (e.isConfirmed) {
         // EVALUATE THE SUBJECTIVE
-        // this.evalQuiz();
-        this.triggerAddSectBMarks();
+        this.evalQuiz();
+        // this.triggerAddSectBMarks();
         // localStorage.removeItem("countdown_timer");
         this.waitNavigateFunction();
         this.loadQuestionsWithAnswers();
         this.evalSubjective();
-        this.loadSubjectiveAIEval();
-        this.getGrandTotalMarks();
+        // this.loadSubjectiveAIEval();
+        // this.getGrandTotalMarks();
         this.preventBackButton();
       };
     });
   }
 
 
-  triggerAddSectBMarks() {
-    // Call evalQuiz() first
-    this.evalQuiz();
-    // Set a delay before calling addSectBMarks()
-    setTimeout(() => {
-      this.addSectBMarks();
-    }, 3000); // 3000 milliseconds = 3 seconds delay
-  }
+  // triggerAddSectBMarks() {
+  //   // Call evalQuiz() first
+  //   this.evalQuiz();
+  //   // Set a delay before calling addSectBMarks()
+  //   setTimeout(() => {
+  //     this.addSectBMarks();
+  //   }, 2000); // 3000 milliseconds = 3 seconds delay
+  // }
 
   waitNavigateFunction() {
-        setTimeout(() => {
+    setTimeout(() => {
       this.printQuiz();
-    }, 3000); // 3000 milliseconds = 3 seconds delay
+    }, 2000); // 3000 milliseconds = 3 seconds delay
   }
 
 
@@ -489,12 +492,14 @@ export class StartComponent implements OnInit {
       //Code
       if (this.timerAll <= 0) {
         // this.submitQuiz();
-        this.triggerAddSectBMarks();
+        // this.triggerAddSectBMarks();
+        // localStorage.removeItem("countdown_timer");
         this.waitNavigateFunction();
-        // this.evalQuiz();
         this.loadQuestionsWithAnswers();
         this.evalSubjective();
-        this.loadSubjectiveAIEval();
+        // this.loadSubjectiveAIEval();
+        // this.getGrandTotalMarks();
+        this.preventBackButton();
         // this.addSectBMarks();
         clearInterval(t);
         // localStorage.removeItem("exam");
@@ -591,8 +596,9 @@ export class StartComponent implements OnInit {
         localStorage.setItem("answeredAIQuestions" + this.qid, JSON.stringify(this.geminiResponse));
         // console.log('Stored successfully:', localStorage.getItem("answeredAIQuestions" + this.qid)); // Just to confirm it's there
 
-       this.loadSubjectiveAIEval();
-
+        setTimeout(() => {
+          this.loadSubjectiveAIEval();
+        }, 1000);
 
 
       });
@@ -633,12 +639,14 @@ export class StartComponent implements OnInit {
     console.log('This is the geminiResponse groupedByPrefixes', this.geminiResponseAI);
 
     console.log("CHECKING ...")
+    this.getGrandTotalMarks();
+    // this.triggerAddSectBMarks();
+    this.addSectBMarks();
   }
 
   groupByPrefix(data: any): { prefix: string, questions: any[] }[] {
     // Initialize a temporary map to collect grouped data
     const tempMap: { [key: string]: any[] } = {};
-
     Object.keys(data).forEach(key => {
       // Extract the prefix (e.g., "Q1" from "Q1b" or "Q1c")
       const prefixMatch = key.match(/Q\d+/);
@@ -667,7 +675,7 @@ export class StartComponent implements OnInit {
 
   // Function to calculate the grand total marks across all prefixes
   getGrandTotalMarks(): number {
-    // this.sectionBMarks=0;
+    this.sectionBMarks = 0;
     if (!this.geminiResponseAI || this.geminiResponseAI.length === 0) {
       return 0;
     }
@@ -741,20 +749,6 @@ export class StartComponent implements OnInit {
     return this.selectedQuestionsAnswer.filter(q => q.quesNo.startsWith(prefix));
   }
 
-  // TYING ENDS HERE
-
-
-
-
-
-
-
-
-
-
-
-
-
   printPage() {
     window.print();
     // this.preventBackButton();  
@@ -792,9 +786,7 @@ export class StartComponent implements OnInit {
     this.loadQuestionsFromLocalStorage();
   }
 
-
   //CONVERT TO API RESPONSE
-
   // Method to convert JSON data
   convertJson() {
     this.convertedJsonAPIResponsebody = {

@@ -68,10 +68,7 @@ export class PrintQuizComponent implements OnInit {
 
   ngOnInit(): void {
     this.qid = this._route.snapshot.params['qid'];
-
-  
-
-    const userDetails = localStorage.getItem('user');
+   const userDetails = localStorage.getItem('user');
     const Object = JSON.parse(userDetails);
     this.username = Object.username;
 
@@ -152,7 +149,7 @@ export class PrintQuizComponent implements OnInit {
     Object.keys(data).forEach(key => {
       // Extract the prefix (e.g., "Q1" from "Q1b" or "Q1c")
       const prefixMatch = key.match(/Q\d+/);
-      const prefix = prefixMatch ? prefixMatch[0] : 'Unknown';
+      const prefix = prefixMatch ? prefixMatch[0] : 'Theory';
       if (prefix) {
         // Initialize the group if it doesn't exist
         if (!tempMap[prefix]) {
