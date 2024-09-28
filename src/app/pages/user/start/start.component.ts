@@ -667,16 +667,15 @@ export class StartComponent implements OnInit {
 
   // Function to calculate the grand total marks across all prefixes
   getGrandTotalMarks(): number {
+    // this.sectionBMarks=0;
     if (!this.geminiResponseAI || this.geminiResponseAI.length === 0) {
       return 0;
     }
     this.sectionBMarks = this.geminiResponseAI.reduce((grandTotal, group) => {
       return grandTotal + this.getTotalMarksForPrefix(group.questions);
     }, 0);
-
     console.log("Grand Total Marks: ", this.sectionBMarks);
     console.log("hellllllloooooooo.........");
-
     return this.sectionBMarks;
   }
 
@@ -689,6 +688,8 @@ export class StartComponent implements OnInit {
         qId: this.qid
       }
     }
+
+    console.log(this.theoryResults);
 
     console.log(this.theoryResults.marksB);
     console.log(this.theoryResults.quiz.qId);
