@@ -1,148 +1,118 @@
-import { Component, OnInit, HostListener } from '@angular/core';
+import { Component, OnInit, HostListener, OnDestroy } from '@angular/core';
 import { LoginService } from 'src/app/services/login.service';
 import { TokenExpirationService } from 'src/app/services/token-expiration.service';
 
+interface TimeDisplay {
+    display: string;
+    className: string;
+}
+
 @Component({
-  selector: 'app-navbar',
-  templateUrl: './navbar.component.html',
-  styleUrls: ['./navbar.component.css']
+	selector: 'app-navbar',
+	templateUrl: './navbar.component.html',
+	styleUrls: ['./navbar.component.css']
 })
-export class NavbarComponent implements OnInit {
+export class NavbarComponent implements OnInit, OnDestroy {
 
-  isloggedIn = false;
-   user=null;
-   expirationSeconds: any;
-	timeDifferenceInSeconds: any;
-	jwtToken: string;
-  private tokenExpirationKey = 'tokenExpirationTime';
-  constructor(public login: LoginService, private tokenExpirationService: TokenExpirationService,){
-  }
+	isloggedIn = false;
+	user = null;
+    timeLeftDisplay: TimeDisplay | string;
+	private intervalId: any; // To store the interval reference
 
-
-  @HostListener('window:beforeunload', ['$event'])
-	beforeUnloadHandler(event: Event): void {
-		// Custom code to be executed before the page is unloaded
-		localStorage.setItem(this.tokenExpirationKey, JSON.stringify(this.expirationSeconds));
-		console.log(this.expirationSeconds);
-		// event.preventDefault();
-		// this.preventBackButton();
-		// event.returnValue = '' as any; // This is required for some older browsers
-	}
-	@HostListener('window:unload', ['$event'])
-	unloadHandler(event: Event): void {
-		// this.preventBackButton();
+	constructor(public login: LoginService, private tokenExpirationService: TokenExpirationService,) {
 	}
 
-  ngOnInit():void{
-    this.isloggedIn = this.login.isLoggedIn();
-    this.user = this.login.getUser();
-    this.login.loginStatusSubject.asObservable().subscribe(data=>{
-      this.isloggedIn = this.login.isLoggedIn();
-      // this.user = this.login.getUser();
-    }); 
 
-    this.expirationFromServer();
-		this.startTimer();
-		this.formattedExpirationTime();
-  }
-
-
-  public logout(){
-    this.login.logout();
-    this.isloggedIn=false;
-    this.user = null;
-    // window.location.reload();
-    window.location.href="/login"; 
-
-  }
-  formattedExpirationTime() {
-		this.jwtToken = localStorage.getItem('token')
-		const tokenParts = this.jwtToken.split('.');
-		console.log(this.jwtToken);
-
-		if (tokenParts.length !== 3) {
-			console.error('Invalid JWT format');
-			return null;
+	ngOnDestroy(): void {
+		// Clear the interval when the component is destroyed to prevent memory leaks
+		if (this.intervalId) {
+			clearInterval(this.intervalId);
 		}
-
-		const payload = JSON.parse(atob(tokenParts[1]));
-
-		if (!payload || !payload.exp) {
-			console.error('Expiration time not found in JWT');
-			return null;
-		}
-
-		const expirationTimeInSeconds = payload.exp;
-		const expirationDate = new Date(expirationTimeInSeconds * 1000); // Convert to milliseconds
-		const currentTime = new Date();
-		const timeDifferenceInSeconds = Math.floor((expirationDate.getTime() - currentTime.getTime()) / 1000);
-		console.log(timeDifferenceInSeconds);
-		console.log(typeof (timeDifferenceInSeconds));
-
-		console.log(expirationDate.toLocaleString());
-
-		return timeDifferenceInSeconds; // Adjust the format as needed
 	}
+	ngOnInit(): void {
+		this.isloggedIn = this.login.isLoggedIn();
+		this.startCountdown();
+		this.user = this.login.getUser();
+		this.login.loginStatusSubject.asObservable().subscribe(data => {
+			this.isloggedIn = this.login.isLoggedIn();
 
 
-	// THIS JWT EXPIRATION NOT OPTIMIZED
-
-	expirationFromServer() {
-		// const expirationTimeFromServer = 120; // 15 minutes in seconds
-		const expirationTimeFromServers = this.formattedExpirationTime();
-
-		console.log(expirationTimeFromServers);
-
-		this.tokenExpirationService.startCountdown(expirationTimeFromServers);
-
-		this.startTimer();
-
-		this.tokenExpirationService.expiration$.subscribe(seconds => {
-			this.expirationSeconds = seconds;
-
-			//   const remainingTime = this.tokenExpirationService.getRemainingTime();
-			let timerString = localStorage.getItem(this.tokenExpirationKey);
-			const timerNumber = parseInt(timerString, 10);
-
-			if (timerNumber) {
-				this.expirationSeconds = timerNumber;
-				this.tokenExpirationService.startCountdown(this.expirationSeconds);
-
-				console.log(timerNumber)
-				console.log(typeof (timerNumber));
-				localStorage.removeItem(this.tokenExpirationKey);
-
-				// Start the countdown again with the remaining time
-				// this.tokenExpirationService.startCountdown(this.expirationSeconds);
-				// this.startTimer();
-			} else {
-				// Handle the case when there is no remaining time (e.g., user refreshed after expiration)
-				// this.tokenExpirationService.startCountdown(this.expirationSeconds);
-				// console.log('Token has expired.');
-			}
+			// this.user = this.login.getUser();
 		});
+
 	}
 
 
+	public logout() {
+		this.login.logout();
+		this.isloggedIn = false;
+		this.user = null;
+		// window.location.reload();
+		window.location.href = "/login";
 
-  startTimer() {
-		let t = window.setInterval(() => {
-			//Code
-			if (this.expirationSeconds <= 0) {
-				this.login.logout();
-				// window.location('/login')
-				window.location.href = "/login";
-				clearInterval(t);
+	}
 
-			}
-			else {
-				// this.expirationSeconds--;
-			}
-		}, 1000);
+
+	//TRYING THE TIMER
+	startCountdown() {
+		const token = this.tokenExpirationService.getTokenFromLocalStorage();
+		if (token) {
+			this.intervalId = setInterval(() => {
+				const timeLeftInSeconds = this.tokenExpirationService.getTimeLeft(token);
+				if (timeLeftInSeconds > 0) {
+					const minutesLeft = Math.floor((timeLeftInSeconds % 3600) / 60);
+					this.timeLeftDisplay = this.formatTime(timeLeftInSeconds, minutesLeft);
+					
+					// Check if minutesLeft is 5 or less to trigger alert style
+					if (minutesLeft <= 5) {
+						this.triggerAlertEffect(); // Trigger alert effect
+					}
+				} else {
+					// Stop countdown and notify the user that the session has expired
+					this.logout();
+					this.timeLeftDisplay = { display: 'Your session has expired.', className: '' };
+					clearInterval(this.intervalId); // Stop the timer
+				}
+			}, 1000); // Update every second
+		} else {
+			this.timeLeftDisplay = { display: 'No session token found.', className: '' };
+		}
 	}
-	getFormmatedTime() {
-		let mm = Math.floor(this.expirationSeconds / 60);
-		let ss = this.expirationSeconds - mm * 60;
-		return `${mm} min : ${ss} sec`
+	
+	// Add a method to handle alert effect
+	private triggerAlertEffect(): void {
+		const alertClass = 'alert'; // Define the alert class
+		const minutesElement = document.querySelector('.minutes-display'); // Adjust selector based on your HTML structure
+	
+		if (minutesElement) {
+			minutesElement.classList.add(alertClass);
+			setTimeout(() => {
+				minutesElement.classList.remove(alertClass); // Remove alert class after 1 second
+			}, 1000);
+		}
 	}
+	
+	private formatTime(timeInSeconds: number, minutesLeft: number): TimeDisplay {
+        const hr = Math.floor(timeInSeconds / 3600);
+        const mm = Math.floor((timeInSeconds % 3600) / 60);
+        const ss = Math.floor(timeInSeconds % 60);
+
+        // Format the time string
+        let formattedTime = '';
+        if (hr > 0) {
+            formattedTime += `${this.formatNumber(hr)} hr(s) : `;
+        }
+
+        // Determine the CSS class based on minutesLeft
+        const minutesClass = minutesLeft <= 5 ? 'warning-minutes' : 'normal-minutes';
+
+        formattedTime += `${this.formatNumber(mm)} min : ${this.formatNumber(ss)} sec`;
+
+        return { display: formattedTime, className: minutesClass };
+    }
+
+    private formatNumber(num: number): string {
+        return num < 10 ? `0${num}` : num.toString();
+    }
+
 }

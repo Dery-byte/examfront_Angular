@@ -9,7 +9,7 @@
         <!-- <a mat-icon-button class="example-icon" aria-label="Example icon-button with menu icon">
           <mat-icon>menu_book</mat-icon>
         </a> -->
-        EduApp</div>
+        ACT LTD.</div>
       <nav>
         <a mat-button routerLink="/features">Features</a>
         <a mat-button routerLink="/about">About</a>
@@ -77,8 +77,13 @@
     <!-- <span *ngIf="isloggedIn && user" mat-icon-button -->
       <span  mat-icon-button
     class="example-icon favorite-icon username " aria-label="Example icon-button with heart icon">
-    {{ user.username | uppercase}}
+    {{ user.username | uppercase}}  
   </span>
+  
+  <span  mat-icon-button  class="tokeExpire" aria-label="Example icon-button with heart icon">
+    <span [ngClass]="timeLeftDisplay.className">Your session expires in : {{ timeLeftDisplay.display }}</span>
+</span>
+ 
     <!-- <a (click)="logout()" *ngIf="isloggedIn" mat-icon-button class="example-icon favorite-icon mr ml "
       aria-label="Example icon-button with heart icon">
       <mat-icon mat-list-icon class="icon-position">logout</mat-icon>

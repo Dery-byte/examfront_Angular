@@ -1,4 +1,4 @@
-import { Component, OnInit, HostListener } from '@angular/core';
+import { Component, OnInit, HostListener, OnDestroy } from '@angular/core';
 import { CategoryService } from 'src/app/services/category.service';
 import { MatSnackBar } from '@angular/material/snack-bar';
 import Swal from 'sweetalert2';
@@ -23,7 +23,7 @@ export class WelcomeComponent implements OnInit {
 	// reportsData = new MatTableDataSource<any>([]);  // Initialize with an empty array
 
 
-	currentDate:Date;
+	currentDate: Date;
 	// allReportData: any = [];
 	// public quizReportsData: any = [];
 
@@ -35,12 +35,9 @@ export class WelcomeComponent implements OnInit {
 	qId;
 	totalQuizTakers = 0;
 	totalMarks = 0;
-	averageScore: number= 0;
+	averageScore: number = 0;
 	courseName = 'Course Name';
-	// expirationSeconds: any;
-	// timeDifferenceInSeconds: any;
-	// jwtToken: string;
-	AandB=0;
+	AandB = 0;
 	theoryMarks
 	sectionAmarks
 	sectionB
@@ -54,24 +51,23 @@ export class WelcomeComponent implements OnInit {
 
 	public displayColumn: string[] = ['index', 'name', 'marks', 'theory', 'total'];
 	constructor(
-		private _cat: CategoryService, 
-		private _snackbar: MatSnackBar, 
-		private _report: ReportServiceService, 
+		private _cat: CategoryService,
+		private _snackbar: MatSnackBar,
+		private _report: ReportServiceService,
 		private _quiz: QuizService,
-		private tokenExpirationService: TokenExpirationService, 
+		private tokenExpirationService: TokenExpirationService,
 		private _login: LoginService,
-	private _user:UserService
-	) { 
+		private _user: UserService
+	) {
 
-			// this.chartDataPoints = [];
-		}
-	
+		// this.chartDataPoints = [];
+	}
+
 	ngOnInit(): void {
-
 		this.currentDate = new Date();
 		this._user.alluser().subscribe(
-			(users:any)=>{
-				this.allUsers=users.length;
+			(users: any) => {
+				this.allUsers = users.length;
 			}
 		)
 		this._quiz.loadQuizzes().subscribe(
@@ -85,18 +81,18 @@ export class WelcomeComponent implements OnInit {
 				// Swal.fire('Error !!', 'Server Error', 'error');
 				this._snackbar.open("You're Session has expired! ", "", {
 					duration: 3000,
-				  });
+				});
 				this._login.logout();
 			});
 		this.allReports();
-		
+
 	}
 
 	// =========================
 	allReports() {
 		this._report.getUniqueCategoriesAndQuizzes().subscribe((data) => {
 			this.cateGory = data;
-		
+
 
 		});
 	}
@@ -126,54 +122,54 @@ export class WelcomeComponent implements OnInit {
 
 
 	//SELECTING A QUIZ DISPLAY RESULTS FOR EACH STUDENT
-onQuizOptionSelected() {
-    this.totalMarks = 0;
-	this.sectionAmarks = 0;
-	// this.chartDataPoints = [];
-    this._report.getReportByQuizId(this.qId).subscribe((report: any) => {
-        this.reportsData= report;
-		this.extractForChart();
-        this.totalQuizTakers = this.reportsData.length;
-        console.log(this.reportsData);
-        this.reportsData.forEach(item => {
-            this.totalMarks += parseFloat(item.marks);
-			this.sectionAmarks += parseFloat(item.marksB);
+	onQuizOptionSelected() {
+		this.totalMarks = 0;
+		this.sectionAmarks = 0;
+		// this.chartDataPoints = [];
+		this._report.getReportByQuizId(this.qId).subscribe((report: any) => {
+			this.reportsData = report;
+			this.extractForChart();
+			this.totalQuizTakers = this.reportsData.length;
+			console.log(this.reportsData);
+			this.reportsData.forEach(item => {
+				this.totalMarks += parseFloat(item.marks);
+				this.sectionAmarks += parseFloat(item.marksB);
 
 
-			// this.sectionB = parseFloat(item.marks);
-			// this.theoryMarks = parseFloat(item.marksB);
-			this.averageScore=(this.totalMarks + this.sectionAmarks) /this.totalQuizTakers;
-        });
-		console.log(this.averageScore);
+				// this.sectionB = parseFloat(item.marks);
+				// this.theoryMarks = parseFloat(item.marksB);
+				this.averageScore = (this.totalMarks + this.sectionAmarks) / this.totalQuizTakers;
+			});
+			console.log(this.averageScore);
 
 
-		// this.AandB = (this.totalMarks + this.theoryMarks)
-        // Output the total marks
-        console.log("Total Marks:", this.totalMarks);
-    });
-}
-extractForChart(){
-	var maxOfTotalScore=0;
-	  // Extracting names and marks
-	  this.chartDataPoints = this.reportsData.map(item => {
-		const username = `${item.user.username}`;
-		this.maxOfTotalScore=(parseFloat(item.marks) + parseFloat(item.marksB));
-		return { label: username, y: this.maxOfTotalScore };
-		// this.chartDataPoints = this.reportsData.map(item => ({
-		// 	label: item.label,
-		// 	y: item.y
-		  });
+			// this.AandB = (this.totalMarks + this.theoryMarks)
+			// Output the total marks
+			console.log("Total Marks:", this.totalMarks);
+		});
+	}
+	extractForChart() {
+		var maxOfTotalScore = 0;
+		// Extracting names and marks
+		this.chartDataPoints = this.reportsData.map(item => {
+			const username = `${item.user.username}`;
+			this.maxOfTotalScore = (parseFloat(item.marks) + parseFloat(item.marksB));
+			return { label: username, y: this.maxOfTotalScore };
+			// this.chartDataPoints = this.reportsData.map(item => ({
+			// 	label: item.label,
+			// 	y: item.y
+		});
 
 
-		  const maxScore = Math.max(...this.chartDataPoints.map(point => point.y));
-          const yAxisMax = Math.ceil(maxScore + 2);
-		  	  // Initialize chart options
-		  this.chartOptions = {
+		const maxScore = Math.max(...this.chartDataPoints.map(point => point.y));
+		const yAxisMax = Math.ceil(maxScore + 2);
+		// Initialize chart options
+		this.chartOptions = {
 			theme: "light2",
 			animationEnabled: true,
 			zoomEnabled: true,
 			title: {
-			  text: "Quiz Performance"
+				text: "Quiz Performance"
 			},
 			axisX: {
 				title: "Students", // Label for the X-axis
@@ -188,18 +184,18 @@ extractForChart(){
 				labelFontSize: 10, // Font size for Y-axis labels
 			},
 			data: [{
-			  type: "column",
-			  dataPoints: this.chartDataPoints
+				type: "column",
+				dataPoints: this.chartDataPoints
 			}]
-		  };
-	
-		  // Render the chart
-		 let chart = new (window as any).CanvasJS.Chart("chartContainer", this.chartOptions);
-      chart.render();
+		};
+
+		// Render the chart
+		let chart = new (window as any).CanvasJS.Chart("chartContainer", this.chartOptions);
+		chart.render();
 		;
-	// });
-	console.log(this.chartDataPoints);
-}
+		// });
+		console.log(this.chartDataPoints);
+	}
 }
 
 

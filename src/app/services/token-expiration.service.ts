@@ -10,21 +10,6 @@ export class TokenExpirationService {
   constructor() { }
 
 
-  // @HostListener('window:beforeunload', ['$event'])
-	// 	beforeUnloadHandler(event: Event): void {
-	// 	  // Custom code to be executed before the page is unloaded
-	// 	  localStorage.setItem(this.countdownKey, JSON.stringify(this.expirationSeconds));
-	// 	  event.preventDefault();
-	// 	  // this.preventBackButton();
-	  
-	// 	  event.returnValue = '' as any; // This is required for some older browsers
-	// 	}
-	  
-	// 	@HostListener('window:unload', ['$event'])
-	// 	unloadHandler(event: Event): void {
-	// 	  // this.preventBackButton();
-	// 	}
-
 
   private expirationSubject: BehaviorSubject<number> = new BehaviorSubject<number>(0);
   expiration$: Observable<number> = this.expirationSubject.asObservable();
@@ -42,13 +27,44 @@ export class TokenExpirationService {
       });
   }
 
+  // ====================NEW TOKEN EXPIRATION CODE==========================
 
-  // getRemainingTime(): number {
-  //   const expirationTime = localStorage.getItem('tokenExpirationTime');
-  //   if (expirationTime) {
-  //     const remainingSeconds = Math.max(0, Math.floor((+expirationTime - new Date().getTime()) / 1000));
-  //     return remainingSeconds;
-  //   }
-  //   return 0;
-  // }
+  getTokenFromLocalStorage(): string | null {
+    return localStorage.getItem('token');
+  }
+  // Function to decode the JWT token
+  parseJwt(token: string): any {
+    const base64Url = token.split('.')[1];
+    const base64 = base64Url.replace(/-/g, '+').replace(/_/g, '/');
+    const jsonPayload = decodeURIComponent(
+      atob(base64)
+        .split('')
+        .map(function (c) {
+          return '%' + ('00' + c.charCodeAt(0).toString(16)).slice(-2);
+        })
+        .join('')
+    );
+    return JSON.parse(jsonPayload);
+  }
+
+  // Function to calculate the time left before expiration
+  getTimeLeft(token: string): number {
+    const decodedToken = this.parseJwt(token);
+    const exp = decodedToken.exp;
+    const currentTime = Math.floor(Date.now() / 1000); // Current time in seconds
+    return exp - currentTime; // Time left in seconds
+  }
+
+   // Function to check whether the token has expired
+   isTokenExpired(token: string): boolean {
+    const timeLeft = this.getTimeLeft(token);
+    return timeLeft <= 0;
+  }
+
+
+
+
+
+
+
 }
