@@ -143,7 +143,10 @@ public getReport(){
     const headers = new HttpHeaders({
       'Content-Type': 'application/json',
       // 'Content-Type': 'multipart/form-data',
+      
     });
+    console.log('Payload being sent:', JSON.stringify(questions));
+
       return this._http.post(`${baseUrl}/theoryupload/${qid}`, questions, {headers})
 }
 
