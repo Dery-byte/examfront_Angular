@@ -80,32 +80,121 @@ export class RegisterCoursesComponent implements OnInit {
 	}
 
 	loadCoursesData(): void {
-		// Fetch both registered and available courses in parallel
-		forkJoin({
-			regCourses: this._regCourse.getRegCourses(),  // Registered courses
-			categories: this._cat.getCategories()         // All available courses
-		}).subscribe(({ regCourses, categories }) => {
-			// Process registered courses
-			this.RegCourse = regCourses;
-			this.userRecords = this.checkUserId();
-
-			// Transform registered courses for comparison
-			this.transformedData = this.userRecords.map(item => ({
-				cid: item.category.cid,
-				level: item.category.level,
-				title: item.category.title,
-				description: item.category.description,
-				courseCode: item.category.courseCode
-			}));
-
+		// Fetch registered courses
+		this._regCourse.getRegCourses().subscribe(regCourses => {
+		  // Process registered courses
+		  this.RegCourse = regCourses;
+		  this.userRecords = this.checkUserId();
+	  
+		  // Transform registered courses for comparison
+		  this.transformedData = this.userRecords.map(item => ({
+			cid: item.category.cid,
+			level: item.category.level,
+			title: item.category.title,
+			description: item.category.description,
+			courseCode: item.category.courseCode
+		  }));
+	  
+		  // After transforming registered courses, fetch available courses
+		  this._cat.getCategories().subscribe(categories => {
 			// Combine available and registered courses and remove duplicates
 			this.categories = categories;
 			this.unRegCourse = this.combineAndRemoveDuplicates(this.categories, this.transformedData);
-
+	  
 			// Apply filters based on selected level
 			this.filterCourses();
+		  });
 		});
-	}
+	  }
+	  
+
+
+
+
+
+
+
+	// loadCoursesData(): void {
+	// 	// Fetch both registered and available courses in parallel
+	// 	forkJoin({
+	// 		regCourses: this._regCourse.getRegCourses(),  // Registered courses
+	// 		categories: this._cat.getCategories()         // All available courses
+	// 	}).subscribe(({ regCourses, categories }) => {
+	// 		// Process registered courses
+	// 		this.RegCourse = regCourses;
+	// 		this.userRecords = this.checkUserId();
+
+	// 		// Transform registered courses for comparison
+	// 		this.transformedData = this.userRecords.map(item => ({
+	// 			cid: item.category.cid,
+	// 			level: item.category.level,
+	// 			title: item.category.title,
+	// 			description: item.category.description,
+	// 			courseCode: item.category.courseCode
+	// 		}));
+
+	// 		// Combine available and registered courses and remove duplicates
+	// 		this.categories = categories;
+	// 		this.unRegCourse = this.combineAndRemoveDuplicates(this.categories, this.transformedData);
+
+	// 		// Apply filters based on selected level
+	// 		this.filterCourses();
+	// 	});
+	// }
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 	combineAndRemoveDuplicates(jsonArray1: any[], jsonArray2: any[]): any[] {
 		const combinedArray = [...jsonArray1, ...jsonArray2];
@@ -158,8 +247,9 @@ export class RegisterCoursesComponent implements OnInit {
 								}
 							};
 							event.target.checked = false;
+							console.log(this.regCourdetails);
 							// REMOVE THE COURSE FROM THE LIST IF REGISTRATION SUCCESSFUL
-							// this.deleteRecord(cid);
+							this.deleteRecord(cid);
 							this._snack.open("Course registered Successfully ! ", "", {
 								duration: 3000,
 							});

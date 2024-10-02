@@ -145,7 +145,7 @@ export class AddQuestionComponent implements OnInit {
 
 
 
-  uploadTheoryQuestions(): void {
+  uploadTheoryQuestionss(): void {
     if (!this.selectedFile && (this.theoryQuesToAnswer.totalQuestToAnswer == "")) {
 
       this._snack.open("Selected a file and specify No. of questions to answer! ", "",{
@@ -156,6 +156,9 @@ export class AddQuestionComponent implements OnInit {
       return;
     } this._question.uploadTheoryQuestions(this.qId, this.selectedFile).subscribe(
       response => {
+
+        console.log(this.qId);
+        console.log(this.selectedFile);
         Swal.fire("Error", "Error uploading questions", "error");
       }, (error) => {
         this.addNumberOfTheoryToAnswer();
