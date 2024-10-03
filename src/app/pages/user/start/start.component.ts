@@ -173,7 +173,6 @@ export class StartComponent implements OnInit {
   ngOnInit(): void {
     this.qid = this._route.snapshot.params['qid'];
     // this.qid = this._route.snapshot.params['qid'];
-
     this._quiz.getQuiz(this.qid).subscribe((data: any) => {
       console.log(data.title);
       this.quiz = data;
@@ -198,6 +197,14 @@ export class StartComponent implements OnInit {
         // alert("Error loading quiz data")
       }
     );
+
+
+    this.loadTheory();
+    // this.loadSubjective();
+    this.loadQuestions();
+    this.loadQuestionsFromLocalStorage();
+
+    
     this._quiz.getNumerOfQuesToAnswer(this.qid).subscribe((data: any) => {
       console.log(data);
       console.log(data[0].totalQuestToAnswer);
@@ -224,11 +231,9 @@ export class StartComponent implements OnInit {
     // console.log(this.timerAll);
 
 
-    this.loadTheory();
-    // this.loadSubjective();
-    this.loadQuestions();
+  
+
     this.startTimer();
-    this.loadQuestionsFromLocalStorage();
     // this.printQuiz();
     this.initForm();
     // this.preventBackButton();
