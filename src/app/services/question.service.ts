@@ -154,7 +154,6 @@ public getNumerOfQuesToAnswerBy(qId){
   return this._http.get(`${baseUrl}/numberOfTheoryQuestion/${qId}`);
 }
 
-
 }
 
 

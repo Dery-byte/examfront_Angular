@@ -39,7 +39,7 @@ export class RegisterCoursesComponent implements OnInit {
 	RegCourse;
 	// REGISTER course
 	regCourdetails = {
-		regDate: "",
+		// regDate: "",
 		category:
 		{
 			cid: ""
@@ -113,89 +113,6 @@ export class RegisterCoursesComponent implements OnInit {
 
 
 
-
-	// loadCoursesData(): void {
-	// 	// Fetch both registered and available courses in parallel
-	// 	forkJoin({
-	// 		regCourses: this._regCourse.getRegCourses(),  // Registered courses
-	// 		categories: this._cat.getCategories()         // All available courses
-	// 	}).subscribe(({ regCourses, categories }) => {
-	// 		// Process registered courses
-	// 		this.RegCourse = regCourses;
-	// 		this.userRecords = this.checkUserId();
-
-	// 		// Transform registered courses for comparison
-	// 		this.transformedData = this.userRecords.map(item => ({
-	// 			cid: item.category.cid,
-	// 			level: item.category.level,
-	// 			title: item.category.title,
-	// 			description: item.category.description,
-	// 			courseCode: item.category.courseCode
-	// 		}));
-
-	// 		// Combine available and registered courses and remove duplicates
-	// 		this.categories = categories;
-	// 		this.unRegCourse = this.combineAndRemoveDuplicates(this.categories, this.transformedData);
-
-	// 		// Apply filters based on selected level
-	// 		this.filterCourses();
-	// 	});
-	// }
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 	combineAndRemoveDuplicates(jsonArray1: any[], jsonArray2: any[]): any[] {
 		const combinedArray = [...jsonArray1, ...jsonArray2];
 		const cidCount = new Map<number, number>();
@@ -239,9 +156,8 @@ export class RegisterCoursesComponent implements OnInit {
 				if (result.isConfirmed) {
 					this._regCourse.regCourses(this.regCourdetails).subscribe(
 						(data) => {
-							const currentDate = new Date();
 							this.regCourdetails = {
-								regDate: currentDate.toISOString().split("T")[0],
+								// regDate: currentDate.toISOString().split("T")[0],
 								category: {
 									cid: ""
 								}
