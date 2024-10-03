@@ -58,6 +58,7 @@ export class StartComponent implements OnInit {
   quizTitle
   courseTitle
   quiz
+  noOfQuesObject;
   private countdownKey = 'countdown_timer';
   private intervalId: any;
 
@@ -173,9 +174,14 @@ export class StartComponent implements OnInit {
   ngOnInit(): void {
     this.qid = this._route.snapshot.params['qid'];
     // this.qid = this._route.snapshot.params['qid'];
+
+   
+
     this._quiz.getQuiz(this.qid).subscribe((data: any) => {
       console.log(data.title);
       this.quiz = data;
+      this.courseTitle = this.quiz.category.title;
+
 
       console.log(this.quiz);
       console.log(this.quiz.quizTime)
@@ -199,20 +205,21 @@ export class StartComponent implements OnInit {
     );
 
 
-    this.loadTheory();
-    // this.loadSubjective();
-    this.loadQuestions();
-    this.loadQuestionsFromLocalStorage();
-
+    
     
     this._quiz.getNumerOfQuesToAnswer(this.qid).subscribe((data: any) => {
-      console.log(data);
-      console.log(data[0].totalQuestToAnswer);
+      this.numberOfQuestionsToAnswer =data[0].totalQuestToAnswer;
+      console.log("This is for number of questions to answer", data[0].timeAllowed);
+      console.log("Number question to answer ", data[0].totalQuestToAnswer);
       this.quizTitle = data[0].quiz.title;
       this.courseTitle = data[0].quiz.category.title;
 
-      this.numberOfQuestionsToAnswer = data[0].totalQuestToAnswer;
+      // this.numberOfQuestionsToAnswer = this.noOfQuesObject[0].totalQuestToAnswer;
       this.timeT = data[0].timeAllowed;
+      console.log("This is the number of questions to answer", this.numberOfQuestionsToAnswer);
+      console.log("This is the time for the Theory ", this.timeT);
+
+     
 
       this.timerAll = (this.timeT + this.timeO) * 60;
 
@@ -232,8 +239,11 @@ export class StartComponent implements OnInit {
 
 
   
-
-    this.startTimer();
+    this.loadTheory();
+    // this.loadSubjective();
+    this.loadQuestions();
+    this.loadQuestionsFromLocalStorage();
+    // this.startTimer();
     // this.printQuiz();
     this.initForm();
     // this.preventBackButton();
@@ -241,12 +251,12 @@ export class StartComponent implements OnInit {
   }
 
 
-  loadNumQuesToAnswer() {
-    this._quiz.getNumerOfQuesToAnswer(this.qid).subscribe((data: any) => {
-      console.log(data.totalQuestToAnswer);
-      this.numberOfQuestionsToAnswer = data;
-    });
-  }
+  // loadNumQuesToAnswer() {
+  //   this._quiz.getNumerOfQuesToAnswer(this.qid).subscribe((data: any) => {
+  //     console.log(data.totalQuestToAnswer);
+  //     this.numberOfQuestionsToAnswer = data;
+  //   });
+  // }
 
 
   //  ============================SUBJECTIVE QUESTIONS=======================================
@@ -258,6 +268,8 @@ export class StartComponent implements OnInit {
       this.prefixes = Object.keys(this.groupedQuestions).sort();
 
       console.log(this.groupedQuestions);
+      this.startTimer();
+
     },
       (error) => {
         console.log("Could not load data from server");

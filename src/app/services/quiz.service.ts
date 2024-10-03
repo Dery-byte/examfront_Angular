@@ -83,6 +83,8 @@ public addNumberOfTheoryQuestions(quizNumberOfQuestion){
 
 //get Active quizzzes
 public addSectionBMarks(questions){
+
+  
   return this._http.put(`${baseUrl}/addtheoryMark`,questions);
 }
 
