@@ -73,11 +73,29 @@ export class PrintQuizComponent implements OnInit {
     this.username = Object.username;
 
     console.log(this.qid);
+
+    this._questions.getQuestionsOfQuiz(this.qid).subscribe((data: any) => {
+      // this._questions.getQuestionsOfQuizForText(this.qid).subscribe((data:any)=>{ // this does the question shuffle on print
+      // console.log(data[0].answer);
+      // this.loadResults();
+      this.questionWithAnswers = data;
+      console.log(data)
+      console.log(this.questionWithAnswers);
+      this.loadReport();
+      // this.attempted = JSON.parse(localStorage.getItem("Attempted"));
+      // this.loadResults();
+
+    },
+      (error) => {
+        console.log("Error Loading questions");
+        Swal.fire("Error", "Error loading questionsssssaaa", "error");
+      }
+    );
     // this.qId =this._route.snapshot.params['qId'];
     // this.loadSubjective();
     this.loadSubjective();
     this.loadSubjectiveAIEval();
-    this.loadReport();
+    // this.loadReport();
 
 
     console.log(this.qid);
@@ -250,25 +268,28 @@ export class PrintQuizComponent implements OnInit {
 
 
   loadQuestionsWithAnswers() {
-    this._questions.getQuestionsOfQuiz(this.qid).subscribe((data: any) => {
-      // this._questions.getQuestionsOfQuizForText(this.qid).subscribe((data:any)=>{ // this does the question shuffle on print
-      // console.log(data[0].answer);
-      // this.loadResults();
-      this.questionWithAnswers = data;
-      console.log(data)
-      console.log(this.questionWithAnswers);
-      // this.attempted = JSON.parse(localStorage.getItem("Attempted"));
-      // this.loadResults();
+    // this._questions.getQuestionsOfQuiz(this.qid).subscribe((data: any) => {
+    //   // this._questions.getQuestionsOfQuizForText(this.qid).subscribe((data:any)=>{ // this does the question shuffle on print
+    //   // console.log(data[0].answer);
+    //   // this.loadResults();
+    //   this.questionWithAnswers = data;
+    //   console.log(data)
+    //   console.log(this.questionWithAnswers);
+    //   // this.attempted = JSON.parse(localStorage.getItem("Attempted"));
+    //   // this.loadResults();
 
-    },
-      (error) => {
-        console.log("Error Loading questions");
-        Swal.fire("Error", "Error loading questionsssssaaa", "error");
-      }
-    );
+    // },
+    //   (error) => {
+    //     console.log("Error Loading questions");
+    //     Swal.fire("Error", "Error loading questionsssssaaa", "error");
+    //   }
+    // );
     this.preventBackButton();
     // this.refreshOnload();
   }
+
+
+
   loadQuestions(): void {
     this.loadReport();
     this._questions.getQuestionsOfQuizForText(this.qid).subscribe((data: any) => {

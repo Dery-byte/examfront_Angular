@@ -5,9 +5,11 @@
 <!-- {{geminiResponse | json}} -->
 <!-- <h6>==================================================================</h6> -->
 
-<!-- {{answeredQuestions | json}} -->
+<!-- {{questionWithAnswers| json}}
+{{answeredQuestions | json}} -->
 
-<!-- {{questions | json}} -->
+<!-- {{questions | json}}
+<hr> -->
 
 <!-- {{sectionB | json}} -->
 <!-- {{questionWithAnswers | json}} -->
@@ -52,10 +54,10 @@
                                 University of Cape Coast.<br>
                                 School of Physical Sciences. <br>Department of Computer Science and Information
                                 Technology<br>
-                                <b>{{questions[0].quiz.category.title}}</b>
-                                {{questions[0].quiz.title}}. Time Allowed:
+                                <b>{{questionWithAnswers[0].quiz.category.title}}</b>
+                                {{questionWithAnswers[0].quiz.title}}. Time Allowed:
                                 <i>
-                                    <b> {{questions[0].quiz.quizTime * 1}} minutes</b>
+                                    <b> {{questionWithAnswers[0].quiz.quizTime * 1}} minutes</b>
                                 </i> <br>
                                 <label> Index Number:<b>{{username | uppercase}}</b></label>
                             </p>
