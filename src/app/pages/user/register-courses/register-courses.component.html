@@ -48,8 +48,9 @@
 									<tbody>
 										<tr *ngFor="let c of filteredCourses; let i=index; let odd = odd"
 											[ngClass]="odd ? 'odd_col' : 'even_col'">
-											<td><input type="checkbox" (change)="showCid($event, c.cid)"
-													[(ngModel)]='c.cid'></td>
+											<td><input type="checkbox" (change)="showCid($event, c.cid)">
+												<!-- [(ngModel)]='c.cid'> -->
+											</td>
 											<!-- <td><input type="checkbox" 	(change)="onchangeSelection()" [(ngModel)]="c.cid" [value]="c.cid"></td> -->
 											<td>{{ c.courseCode}}</td>
 											<td>{{ c.title }}</td>
@@ -67,7 +68,7 @@
 			</div>
 		</mat-card-content>
 	</mat-card>
-<!-- 
+	<!-- 
 	{{categories | json}}
 	<hr>
 
