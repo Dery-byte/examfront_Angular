@@ -134,8 +134,13 @@ export class StartComponent implements OnInit {
   beforeUnloadHandler(event: Event): void {
     // Custom code to be executed before the page is unloaded
     localStorage.setItem(this.countdownKey, JSON.stringify(this.timerAll));
+    console.log('countdownKey:', this.countdownKey);
+    console.log('timerAll:', this.timerAll);
+
+    console.log("Helllooooo...")
     // event.preventDefault();
     this.preventBackButton();
+  
 
     // event.returnValue = '' as any; // This is required for some older browsers
   }
@@ -175,7 +180,6 @@ export class StartComponent implements OnInit {
     this.qid = this._route.snapshot.params['qid'];
     // this.qid = this._route.snapshot.params['qid'];
 
-   
 
     this._quiz.getQuiz(this.qid).subscribe((data: any) => {
       console.log(data.title);
@@ -188,8 +192,7 @@ export class StartComponent implements OnInit {
 
 
       this.timeO = this.quiz.quizTime * 1;
-      //  this.timerAll = this.quiz.quizTime * 1 * 60 ;
-      this.timerAll = (this.timeT + this.timeO) * 60;
+      // this.timerAll = (this.timeT + this.timeO) * 60;
 
 
       // return this.timeO = parseInt(this.quiz.quizTime);
@@ -219,9 +222,30 @@ export class StartComponent implements OnInit {
       console.log("This is the number of questions to answer", this.numberOfQuestionsToAnswer);
       console.log("This is the time for the Theory ", this.timeT);
 
+
+      let timerString = localStorage.getItem('countdown_timer');
+      const timerNumber = parseInt(timerString, 10);
+      console.log(typeof (timerNumber));
+      
+      if (timerNumber) {
+        this.timerAll = timerNumber;
+        console.log("The remaining time is ", this.timerAll);
+        console.log("The remaining time from the localStorage ", timerString);
+        console.log("This is remaining Theory timer", this.timeT);
+        console.log("This is remaining Theory timer", this.timeO);
+        //Remove value from local storage after accessing it.
+        localStorage.removeItem("countdown_timer");
+      } else {
+        // this.timer = this.questions.length * 2 * 60;
+        // this.timerAll = (this.quiz.quizTime * 60);
+        this.timerAll = (this.timeT + this.timeO) * 60;
+        // this.timerAll = (this.questions.length * 2 * 60) + this.timeT;
+
+      }
+
      
 
-      this.timerAll = (this.timeT + this.timeO) * 60;
+      // this.timerAll = (this.timeT + this.timeO) * 60;
 
       // this.timeT = data[0].timeAllowed;
       // this.timerAll = (this.timeT + this.timeO) * 60;
@@ -246,7 +270,7 @@ export class StartComponent implements OnInit {
     // this.startTimer();
     // this.printQuiz();
     this.initForm();
-    // this.preventBackButton();
+    this.preventBackButton();
 
   }
 
@@ -269,6 +293,8 @@ export class StartComponent implements OnInit {
 
       console.log(this.groupedQuestions);
       this.startTimer();
+      this.preventBackButton();
+
 
     },
       (error) => {
@@ -357,7 +383,7 @@ export class StartComponent implements OnInit {
       // this._questions.getQuestionsOfQuizForText(this.qid).subscribe((data: any) => {  // this does the question shuffle on start of quiz
       // this._questions.getQuestionsOfQuizForText(1).subscribe((data: any) => {  // this does the question shuffle on start of quiz
       // console.log(data[0].answer);
-      console.log(data);
+      console.log("This is quest data",data);
       this.questions = data.map((q, index) => {
         q.count = index + 1;
         q['givenAnswer'] = [];
@@ -367,24 +393,33 @@ export class StartComponent implements OnInit {
 
       });
 
+      // let timerString = localStorage.getItem('countdown_timer');
+      // const timerNumber = parseInt(timerString, 10);
+      // console.log(typeof (timerNumber));
+      // if (timerNumber) {
+      //   this.timerAll = timerNumber;
+      //   console.log("The remaining time is ", this.timerAll);
+      //   console.log("The remaining time from the localStorage ", timerString);
 
 
-      let timerString = localStorage.getItem('countdown_timer');
-      const timerNumber = parseInt(timerString, 10);
-      console.log(typeof (timerNumber));
-      if (timerNumber) {
-        this.timerAll = timerNumber;
-        //Remove value from local storage after accessing it.
-        localStorage.removeItem("countdown_timer");
-      } else {
-        // this.timer = this.questions.length * 2 * 60;
-        this.timerAll = (this.quiz.quizTime * 60);
-        // this.timerAll = (this.questions.length * 2 * 60) + this.timeT;
+      //   console.log("This is remaining Theory timer", this.timeT);
+      //   console.log("This is remaining Theory timer", this.timeO);
+      //   //Remove value from local storage after accessing it.
+      //   localStorage.removeItem("countdown_timer");
+      // } else {
+      //   // this.timer = this.questions.length * 2 * 60;
+      //   // this.timerAll = (this.quiz.quizTime * 60);
+      //   this.timerAll = (this.timeT + this.timeO) * 60;
+      //   // this.timerAll = (this.questions.length * 2 * 60) + this.timeT;
 
-      }
+      // }
+
+
       // this.questions.forEach(q => {
       //   q['givenAnswer'] = []; //Initialize as empty array
       // });
+      // this.startTimer();
+
     },
       (error) => {
         console.log("Error Loading questions");
@@ -788,7 +823,7 @@ export class StartComponent implements OnInit {
     });
     // localStorage.setItem('exam', JSON.stringify(data));
     // this.preventBackButton();
-    this.startTimer();
+    // this.startTimer();
     console.log(this.questionss[0]);
   }
 

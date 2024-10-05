@@ -11,6 +11,14 @@
   .mat-form-field {
     width: 100%;
 }
+
+.navselect{
+  align-items: center;
+  
+}
+.pagination-controls{
+  align-items: center;
+}
   
   /* .prefix-item {
     display: flex;
