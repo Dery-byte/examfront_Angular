@@ -18,22 +18,22 @@
 
 
         </div>        
-    </div>
+    </div> --->
     
-</div> -->
+</div> 
 
 
   <!-- {{reportData |json}}
   <hr> -->
   <!-- {{userRecords | json}} -->
-<!-- 
+  <!-- 
   <hr>
 
   {{availablequizzes | json}} -->
 
   <mat-card>
     <div *ngIf="reports.length > 0; else elseBlock">
-      <h4 class=" text-center">Quiz Taken Summary</h4>
+      <h4 class="">Quiz Taken Summary</h4>
 
       <div class="container">
         <div class="row">
@@ -73,9 +73,8 @@
                       aria-label="Button that displays a tooltip when focused or hovered over"
                       (click)="openNew(q.qId)">View Summary</button>
 
-                    <button mat-button color="accent"  (click)="onPrintClick($event, q.qId)"
-                    [disabled]="disabledButtons[q.qId]"
-                    [class.disabled-button]="disabledButtons[q.qId]"
+                    <button mat-button color="accent" (click)="onPrintClick($event, q.qId)"
+                      [disabled]="disabledButtons[q.qId]" [class.disabled-button]="disabledButtons[q.qId]"
                       [disabled]="isPrintDisabled">Print Results</button>
                   </mat-card-action>
                 </mat-card>
@@ -119,7 +118,7 @@
           <td>{{r.marks}}</td>
           <td>{{r.marksB}}</td>
           <td>{{r.progress}}</td>
-          
+
 
         </tr>
       </table>
@@ -242,5 +241,3 @@
 
 
 
-
-</div>

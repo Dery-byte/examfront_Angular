@@ -1,6 +1,10 @@
 import { Component, OnInit, HostListener, OnDestroy } from '@angular/core';
-import { LoginService } from 'src/app/services/login.service';
 import { TokenExpirationService } from 'src/app/services/token-expiration.service';
+import { MatSnackBar } from '@angular/material/snack-bar';
+import { CategoryService } from 'src/app/services/category.service';
+import { LoginService } from 'src/app/services/login.service';
+import { Router } from '@angular/router';
+
 
 interface TimeDisplay {
     display: string;
@@ -14,12 +18,28 @@ interface TimeDisplay {
 })
 export class NavbarComponent implements OnInit, OnDestroy {
 
+
+	badgevisible = false;
+	badgevisibility() {
+	  this.badgevisible = true;
+	}
+
 	isloggedIn = false;
+	hasAuthority(authority: string): boolean {
+		return this.user?.authorities?.some(auth => auth.authority === authority);
+	  }
+
 	user = null;
     timeLeftDisplay: TimeDisplay | string;
 	private intervalId: any; // To store the interval reference
 
-	constructor(public login: LoginService, private tokenExpirationService: TokenExpirationService,) {
+	categories;
+	
+	constructor(public login: LoginService, 
+		private _snack:MatSnackBar,
+		private _cat: CategoryService, 
+		private router: Router,
+		private tokenExpirationService: TokenExpirationService,) {
 	}
 
 
@@ -40,6 +60,15 @@ export class NavbarComponent implements OnInit, OnDestroy {
 			// this.user = this.login.getUser();
 		});
 
+		this._cat.getCategories().subscribe((data:any)=>{
+			this.categories=data;
+				},
+				(error)=>{
+			this._snack.open("Couldn't load Categories from Server","",{
+			  duration:3000
+			})
+				});
+
 	}
 
 
@@ -47,8 +76,8 @@ export class NavbarComponent implements OnInit, OnDestroy {
 		this.login.logout();
 		this.isloggedIn = false;
 		this.user = null;
-		// window.location.reload();
-		window.location.href = "/login";
+		window.location.reload();
+		// window.location.href = "/login";
 
 	}
 

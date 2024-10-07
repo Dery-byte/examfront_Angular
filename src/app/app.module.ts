@@ -64,6 +64,13 @@ import { RegisterCoursesComponent } from './pages/user/register-courses/register
 import { CoursesRegisteredComponent } from './pages/user/courses-registered/courses-registered.component';
 import { AvailableQuizzesComponent } from './pages/user/available-quizzes/available-quizzes.component';
 
+//Hnabuger menu staff
+import { MatSidenavModule } from '@angular/material/sidenav';
+import { MatBadgeModule } from '@angular/material/badge';
+
+
+
+
 
 
 
@@ -135,6 +142,9 @@ import { AvailableQuizzesComponent } from './pages/user/available-quizzes/availa
      InputTextModule,
     InputTextareaModule,
     ButtonModule,
+    MatSidenavModule,
+    MatMenuModule,
+    MatBadgeModule,
     NgxUiLoaderHttpModule.forRoot({
       showForeground:true,
     }),

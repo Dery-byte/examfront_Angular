@@ -1,93 +1,269 @@
+<div class="navbar">
+
+
+  <header @fadeIn *ngIf="!isloggedIn">
+    <mat-toolbar color="primary" class="mat-elevation-z8">
+      <!-- <button (click)="drawer.toggle()" mat-icon-button>
+      <mat-icon>menu</mat-icon>
+    </button> -->
+      <span>ACT LTD</span>
+      <span class="example-spacer"></span>
+      <a mat-button routerLink="/home1">Home</a>
+      <a mat-button routerLink="/about">About</a>
+      <a mat-button routerLink="/contact">Contact</a>
+
+      <a *ngIf="!isloggedIn" [routerLink]="'/signup'" mat-button aria-label="Example icon-button with heart icon">
+        Register </a>
+      <button *ngIf="!isloggedIn" mat-raised-button color="primary" routerLink="/login">Login</button>
+    </mat-toolbar>
+  </header>
+
+  <!-- IF LOGGED IN NAVBAR FOR NORMAL USER-->
+
+
+  <div @fadeIn *ngIf="isloggedIn && hasAuthority('NORMAL')">
+    <mat-toolbar color="accent" class="mat-elevation-z8">
+      <button (click)="drawer.toggle()" mat-icon-button>
+        <mat-icon>menu</mat-icon>
+      </button>
+      <span mat-icon-button class="example-icon favorite-icon username "
+        aria-label="Example icon-button with heart icon">
+        {{ user.username | uppercase}}
+      </span>
+      <span mat-icon-button class="tokeExpire" aria-label="Example icon-button with heart icon">
+        <span [ngClass]="timeLeftDisplay.className">Your session expires in : {{ timeLeftDisplay.display }}</span>
+      </span>
+      <button *ngIf="!isloggedIn" mat-raised-button color="primary" routerLink="/login">Logout</button>
+    </mat-toolbar>
+
+
+
+    <!-- IF LOGGED IN NAVBAR ENDS-->
+    <mat-drawer-container autosize>
+      <mat-drawer #drawer opened="true" mode="side" position="start">
+        <mat-nav-list>
+          <!-- <mat-list-item>
+          <button routerLink="card" mat-button><mat-icon>dashboard</mat-icon> Dashboard</button>
+        </mat-list-item> -->
+          <mat-list-item>
+            <button mat-button routerLink="/user-dashboard/0"> <mat-icon>home</mat-icon> Home</button>
+          </mat-list-item>
+          <mat-list-item>
+            <button mat-button routerLink="/user-dashboard/register"> <mat-icon>explore</mat-icon>Register
+              Courses</button>
+          </mat-list-item>
+
+          <mat-list-item>
+            <button mat-button routerLink="/user-dashboard/courses"> <mat-icon>table</mat-icon>Available
+              Courses</button>
+          </mat-list-item>
+          <mat-list-item>
+            <button mat-button routerLink="/user-dashboard/quizzes"> <mat-icon>settings</mat-icon>Available
+              Quizzes</button>
+          </mat-list-item>
+          <mat-list-item>
+            <button (click)="logout()" mat-button>
+              <mat-icon>Logout</mat-icon>Logout</button>
+          </mat-list-item>
+
+          <!-- <mat-list-item>
+          <button mat-button><mat-icon>analytics</mat-icon> analytics</button>
+        </mat-list-item> -->
+        </mat-nav-list>
+      </mat-drawer>
+      <mat-drawer-content>
+
+        <div style="text-align: center;min-height: 600px;">
+          <!-- <app-load-quiz></app-load-quiz> -->
+          <router-outlet></router-outlet>
+        </div>
+
+
+      </mat-drawer-content>
+    </mat-drawer-container>
+
+
+  </div>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  <!-- IF LOGGED IN NAVBAR FOR ADMIN-->
+
+
+  <div @fadeIn *ngIf="isloggedIn && hasAuthority('ADMIN')">
+    <mat-toolbar color="accent" class="mat-elevation-z8">
+      <button (click)="drawer.toggle()" mat-icon-button>
+        <mat-icon>menu</mat-icon>
+      </button>
+      <span mat-icon-button class="example-icon favorite-icon username "
+        aria-label="Example icon-button with heart icon">
+        {{ user.username | uppercase}}
+      </span>
+      <span mat-icon-button class="tokeExpire" aria-label="Example icon-button with heart icon">
+        <span [ngClass]="timeLeftDisplay.className">Your session expires in : {{ timeLeftDisplay.display }}</span>
+      </span>
+      <button *ngIf="!isloggedIn" mat-raised-button color="primary" routerLink="/login">Logout</button>
+    </mat-toolbar>
+
+    <!-- IF LOGGED IN NAVBAR ENDS-->
+    <mat-drawer-container autosize>
+      <mat-drawer #drawer opened="true" mode="side" position="start">
+        <mat-nav-list>
+          <mat-list-item>
+            <button mat-button routerLink="/admin/"> <mat-icon mat-list-icon>home</mat-icon> &nbsp;Home</button>
+          </mat-list-item>
+          <mat-list-item>
+            <button mat-button routerLink="/admin/profile">
+              <mat-icon mat-list-icon class="icon-position">account_circle</mat-icon> &nbsp;Profie</button>
+          </mat-list-item>
+          <mat-list-item>
+            <button mat-button routerLink="/admin/categories" class="cat">
+              <mat-icon mat-list-icon class="icon-position">list</mat-icon> &nbsp;Courses</button>
+          </mat-list-item>
+          <mat-list-item>
+            <button mat-button routerLink="/admin/add-category">
+              <mat-icon class="icon-position">add_circle_outline</mat-icon> &nbsp;Add Courses</button>
+          </mat-list-item>
+          <mat-list-item>
+            <button mat-button routerLink="/admin/quizzes">
+              <mat-icon class="icon-position">add</mat-icon> &nbsp;View Quizzes</button>
+          </mat-list-item>
+          <mat-list-item>
+            <button mat-button routerLink="/admin/add-quiz">
+              <mat-icon mat-list-icon class="icon-position">add</mat-icon> &nbsp;Add Quiz
+            </button>
+          </mat-list-item>
+          <mat-list-item>
+            <button (click)="logout()" mat-button>
+              <mat-icon>Logout</mat-icon>Logout</button>
+          </mat-list-item>
+
+          <!-- <mat-list-item>
+            <button mat-button><mat-icon>analytics</mat-icon> analytics</button>
+          </mat-list-item> -->
+        </mat-nav-list>
+      </mat-drawer>
+      <mat-drawer-content>
+
+        <!-- <div style="text-align: center;min-height: 600px;"> -->
+
+        <router-outlet></router-outlet>
+      <!-- </div> -->
+
+      </mat-drawer-content>
+    </mat-drawer-container>
+  </div>
+
+
+</div>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 <!-- <div class="navbar"> -->
 
 
-  <div class="navbar">
-
-
-  <header class="header" @fadeIn *ngIf="!isloggedIn">
+<!-- <div class="navbar">
+    <header class="header" @fadeIn *ngIf="!isloggedIn">
       <div class="logo">
-        <!-- <a mat-icon-button class="example-icon" aria-label="Example icon-button with menu icon">
-          <mat-icon>menu_book</mat-icon>
-        </a> -->
-        ACT LTD.</div>
+        
+        ACT LTD.
+      </div>
       <nav>
         <a mat-button routerLink="/features">Features</a>
         <a mat-button routerLink="/about">About</a>
         <a mat-button routerLink="/contact">Contact</a>
-        <!-- <a mat-button routerLink="/courses">Courses</a> -->
         <a *ngIf="!isloggedIn" [routerLink]="'/signup'" mat-button aria-label="Example icon-button with heart icon">
-        Register </a>
+          Register </a>
         <button *ngIf="!isloggedIn" mat-raised-button color="primary" routerLink="/login">Login</button>
       </nav>
     </header>
 
-  </div>
 
-  <!-- <mat-toolbar color="accent"> -->
-    <!-- <a
-    
-    [routerLink]="'/'" mat-icon-button 
-    class="example-icon" 
-    aria-label="Example icon-button with menu icon">
-      <mat-icon>menu_book</mat-icon>
-    </a> -->
-
-    <!-- <a mat-icon-button class="example-icon" aria-label="Example icon-button with menu icon">
-      <mat-icon>menu_book</mat-icon>
-    </a>
-
-    <span class="book">Exam Portal </span>
-    <span class="example-spacer"></span>
+  </div> -->
 
 
-    <a *ngIf="!isloggedIn" [routerLink]="'/login'" mat-icon-button class="example-icon favorite-icon mrl"
-      aria-label="Example icon-button with heart icon">
-      login
-    </a>
 
-    <a *ngIf="!isloggedIn" [routerLink]="'/signup'" mat-icon-button class="example-icon favorite-icon mr ml "
-      aria-label="Example icon-button with heart icon">
-      Register
-    </a> -->
-    <!-- <a 
-    (click)="logout()"
-    *ngIf="isloggedIn"
-    mat-icon-button class="example-icon favorite-icon mr ml " aria-label="Example icon-button with heart icon">
-        Logout
-    </a> -->
-
-
-    <!-- <div *ngIf="expirationSeconds">
-        Token will expire in {{ expirationSeconds }} seconds.
-      </div> -->
-    <!-- <div  *ngIf="isloggedIn && user">
-  <h3 class="text-center">Token will expire in <i>{{ getFormmatedTime() }} </i></h3>
-</div> -->
-
-<div class="navbar" *ngIf="isloggedIn && user">
+<!-- <div class="navbar" *ngIf="isloggedIn && user">
   <mat-toolbar color="accent">
-    <div class="container" >
+    <div class="container">
       <img src="../../../assets/profile.jpg" alt="profile image" class="profile-imag mt20" width="40" height="40" />
-      <!-- <h1 class="mt20">{{user.firstname}} {{user.lastname}}</h1> -->
     </div>
-    <!-- <button *ngIf="isloggedIn && user" routerLink="/admin/profile" mat-icon-button
-      class="example-icon favorite-icon mr ml " aria-label="Example icon-button with heart icon">
+    <span mat-icon-button class="example-icon favorite-icon username " aria-label="Example icon-button with heart icon">
       {{ user.username | uppercase}}
-    </button> -->
-    <!-- <span *ngIf="isloggedIn && user" mat-icon-button -->
-      <span  mat-icon-button
-    class="example-icon favorite-icon username " aria-label="Example icon-button with heart icon">
-    {{ user.username | uppercase}}  
-  </span>
-  
-  <span  mat-icon-button  class="tokeExpire" aria-label="Example icon-button with heart icon">
-    <span [ngClass]="timeLeftDisplay.className">Your session expires in : {{ timeLeftDisplay.display }}</span>
-</span>
- 
-    <!-- <a (click)="logout()" *ngIf="isloggedIn" mat-icon-button class="example-icon favorite-icon mr ml "
-      aria-label="Example icon-button with heart icon">
-      <mat-icon mat-list-icon class="icon-position">logout</mat-icon>
-    </a> -->
+    </span>
+
+    <span mat-icon-button class="tokeExpire" aria-label="Example icon-button with heart icon">
+      <span [ngClass]="timeLeftDisplay.className">Your session expires in : {{ timeLeftDisplay.display }}</span>
+    </span>
   </mat-toolbar>
 
-</div>
+</div> -->
