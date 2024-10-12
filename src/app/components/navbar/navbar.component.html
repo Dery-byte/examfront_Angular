@@ -61,6 +61,15 @@
             <button mat-button routerLink="/user-dashboard/quizzes"> <mat-icon>settings</mat-icon>Available
               Quizzes</button>
           </mat-list-item>
+
+
+
+          <mat-list-item>
+            <button mat-button (click)="openUpdateDialog(updateDialog)">
+              <mat-icon class="icon-position">add</mat-icon> &nbsp;Send us a Mail</button>
+          </mat-list-item>
+
+
           <mat-list-item>
             <button (click)="logout()" mat-button>
               <mat-icon>Logout</mat-icon>Logout</button>
@@ -81,6 +90,68 @@
 
       </mat-drawer-content>
     </mat-drawer-container>
+
+
+
+    <!-- POP UP DIALOG BOX TO EDIT THEORY  -->
+    <ng-template #updateDialog let-data="data">
+      <h1 mat-dialog-title>Send your inquiry or complaint</h1>
+      <div mat-dialog-content>
+
+        <!-- <form onsubmit="updateTheoryQuestion()"> -->
+          <mat-form-field class="mw450">
+            <input matInput  [(ngModel)]="mailInfo.mailTo" name="mailTo" disabled>
+            <!-- <mat-error *ngIf="emailFormControl.hasError('email') && !emailFormControl.hasError('required')">
+              Please enter a valid email address
+            </mat-error> -->
+            <!-- <mat-error *ngIf="emailFormControl.hasError('required')">
+              Email is <strong>required</strong>
+            </mat-error> -->
+          </mat-form-field>
+
+          <mat-form-field class="mw450">
+            <input matInput placeholder="Sender Email" [formControl]="emailFormControl" [(ngModel)]="mailInfo.mailFrom"
+              name="mailFrom" focus>
+            <mat-error *ngIf="emailFormControl.hasError('email') && !emailFormControl.hasError('required')">
+              Please enter a valid email address
+            </mat-error>
+            <mat-error *ngIf="emailFormControl.hasError('required')">
+              Email is <strong>required</strong>
+            </mat-error>
+          </mat-form-field>
+
+
+          <mat-form-field class="mw450">
+            <input matInput placeholder="Email Subject" [(ngModel)]="mailInfo.mailSubject"
+              name="mailSubject">
+            <mat-error *ngIf="emailFormControl.hasError('email') && !emailFormControl.hasError('required')">
+              Please enter a Subject
+            </mat-error>
+            <mat-error *ngIf="emailFormControl.hasError('required')">
+              Subject is <strong>required</strong>
+            </mat-error>
+          </mat-form-field>
+
+
+          <mat-form-field class="mw450">
+            <mat-label>Message</mat-label>
+            <textarea matInput cdkTextareaAutosize #autosize="cdkTextareaAutosize" name="mailContent"
+              [(ngModel)]="mailInfo.mailContent" cdkAutosizeMinRows="5" cdkAutosizeMaxRows="10"></textarea>
+          </mat-form-field>
+
+
+
+
+          <div mat-dialog-actions>
+            <button mat-button (click)="dialogRef.close()">Cancel</button>
+            <button mat-button (click)="sendEmail()">Send Mail</button>
+          </div>
+        <!-- </form> -->
+      </div>
+    </ng-template>
+
+
+
 
 
   </div>
@@ -189,7 +260,7 @@
         <!-- <div style="text-align: center;min-height: 600px;"> -->
 
         <router-outlet></router-outlet>
-      <!-- </div> -->
+        <!-- </div> -->
 
       </mat-drawer-content>
     </mat-drawer-container>

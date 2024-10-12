@@ -81,3 +81,13 @@ padding: 20px;
   color: rgb(238, 234, 234); /* Default color */
   transition: color 0.5s ease-out; /* Add transition for color */
 }
+
+.mw450{
+  width: 450px;
+}
+
+
+/* .custom-snackbar {
+  background-color: #2196f3 !important;  
+  color: white !important;               
+} */

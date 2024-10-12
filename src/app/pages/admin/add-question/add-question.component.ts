@@ -122,24 +122,25 @@ export class AddQuestionComponent implements OnInit {
       Swal.fire("Error", "No file selected.", "error");
       console.error('No file selected.');
       return;
+    }    else if(this.selectedFile){
+      this._question.uploadQuestions(this.qId, this.selectedFile).subscribe(
+        response => {
+          Swal.fire("Error", "Error uploading questions", "error");
+          console.log("Done");
+        },
+        
+        (error) => {
+          Swal.fire('Success', "Questions uploaded successfully", "success");
+          this._router.navigate(["/admin/quizzes"]);
+          console.log(" Not Done!!!");
+          // this._router.navigate(["/admin/view-questions"/{this.qId}]);
+        }
+      );
     }
     // const formData = new FormData();
     // formData.append('file', this.selectedFile);
 
-    this._question.uploadQuestions(this.qId, this.selectedFile).subscribe(
-      response => {
-        // console.error('Error uploading questions:', "error");
-        // Handle error, e.g., show an error message
-        Swal.fire('Success', "Questions uploaded successfully", "success");
-        this._router.navigate(["/admin/quizzes"]);
-        // Handle success, e.g., show a success message
-      },
-      (error) => {
-        Swal.fire("Error", "Error uploading questions", "error");
-        // console.log('Quiz uploaded successfully:', "succes");
-        // this._router.navigate(["/admin/view-questions"/{this.qId}]);
-      }
-    );
+   
   }
 
 

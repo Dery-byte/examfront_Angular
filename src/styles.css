@@ -53,3 +53,10 @@ body { margin: 0; font-family: Roboto, "Helvetica Neue", sans-serif; }
 .mb10{
     margin-bottom: 10px !important;
 }
+.custom-snackbar {
+    background-color: #2196f3 !important;  
+    color: rgb(100, 3, 48) !important;               
+  }
+  
+
+  
