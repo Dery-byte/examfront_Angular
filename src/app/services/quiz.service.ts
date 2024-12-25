@@ -98,6 +98,5 @@ public evalTheory(questions){
   return this._http.post(`${baseUrl}/quizEval`, questions);
 }
 
-
 }
  

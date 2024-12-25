@@ -633,14 +633,15 @@ export class StartComponent implements OnInit {
     }
     if (Object.keys(this.selectedQuestions).length === this.numberOfQuestionsToAnswer) {
       // Handle the submission logic here
-
       localStorage.setItem(this.qid + "answeredQuestions", JSON.stringify(this.selectedQuestions));
-
       this.convertJson();
-
       this._quiz.evalTheory(this.convertedJsonAPIResponsebody).subscribe((data: any) => {
         // this.geminiResponse=data.replace('json', "");
-        this.geminiResponse = this.parseApiResponse(data);
+        console.log("This is the Original Response from the server and formatted!!!!");
+        console.log(data);
+        // this.geminiResponse = this.parseApiResponse(data); WORKS PREVIOUSLY
+        this.geminiResponse = data;
+
         // this.geminiResponse= this.groupByPrefix(geminiResponse);
         console.log(data);
         console.log(this.geminiResponse);
@@ -648,6 +649,7 @@ export class StartComponent implements OnInit {
 
         localStorage.setItem("answeredAIQuestions" + this.qid, JSON.stringify(this.geminiResponse));
         // console.log('Stored successfully:', localStorage.getItem("answeredAIQuestions" + this.qid)); // Just to confirm it's there
+        console.log('Stored successfully:', localStorage.getItem("answeredAIQuestions" + this.qid)); // Just to confirm it's there
 
         setTimeout(() => {
           this.loadSubjectiveAIEval();
@@ -681,51 +683,52 @@ export class StartComponent implements OnInit {
 
 
 
+
+
+
+
+// WORKING ON THE BELOW
+
   loadSubjectiveAIEval() {
     // const geminiResponse = localStorage.getItem("answeredAIQuestions");
     const geminiResponse = localStorage.getItem("answeredAIQuestions" + this.qid);
-    const data = geminiResponse.trim();
+    // const data = geminiResponse.trim();
     console.log(geminiResponse);
     // const data = geminiResponse.replace("json\n", "");
-    const data1 = JSON.parse(data);
-    this.geminiResponseAI = this.groupByPrefix(data1);
+    // const data1 = JSON.parse(data);
+    this.geminiResponseAI = this.groupByPrefix(this.geminiResponse);
     console.log('This is the geminiResponse groupedByPrefixes', this.geminiResponseAI);
-
     console.log("CHECKING ...")
     this.getGrandTotalMarks();
     // this.triggerAddSectBMarks();
     this.addSectBMarks();
   }
 
-  groupByPrefix(data: any): { prefix: string, questions: any[] }[] {
-    // Initialize a temporary map to collect grouped data
-    const tempMap: { [key: string]: any[] } = {};
-    Object.keys(data).forEach(key => {
-      // Extract the prefix (e.g., "Q1" from "Q1b" or "Q1c")
-      const prefixMatch = key.match(/Q\d+/);
-      const prefix = prefixMatch ? prefixMatch[0] : 'Theory';
-      if (prefix) {
+   groupByPrefix(data: string[]): { prefix: string, questions: string[] }[] {
+    // Initialize a map to group questions by prefix
+    const tempMap: { [prefix: string]: string[] } = {};
+    // Iterate over the data array
+    data.forEach((item) => {
+        // Extract the prefix (e.g., "Q3" from "Q3a", "Q3ai", etc.)
+        const prefixMatch = item.match(/Q\d+/);
+        const prefix = prefixMatch ? prefixMatch[0] : 'Uncategorized';
         // Initialize the group if it doesn't exist
         if (!tempMap[prefix]) {
-          tempMap[prefix] = [];
+            tempMap[prefix] = [];
         }
-        // Add the current key and its object to the corresponding prefix group
-        tempMap[prefix].push({ key, ...data[key] });
-      }
+        // Add the current item to the corresponding prefix group
+        tempMap[prefix].push(item);
     });
-
     // Convert the tempMap to an array of grouped data
-    const groupedData: { prefix: string, questions: any[] }[] = [];
+    const groupedData: { prefix: string, questions: string[] }[] = [];
     for (const [prefix, questions] of Object.entries(tempMap)) {
-      groupedData.push({ prefix, questions });
+        groupedData.push({ prefix, questions });
     }
     return groupedData;
-  }
+}
 
 
-
-
-
+// WORKING ON ABOVE
   // Function to calculate the grand total marks across all prefixes
   getGrandTotalMarks(): number {
     this.sectionBMarks = 0;
@@ -780,12 +783,28 @@ export class StartComponent implements OnInit {
   // Function to calculate total marks for a given prefix (group)
   getTotalMarksForPrefix(questions: any[]): number {
     if (!questions || questions.length === 0) {
-      return 0;
+        return 0;
     }
-    const totalMarks = questions.reduce((total, question) => total + question.marks, 0);
+    // Define a regex to extract marks (format: X/Y)
+    const marksRegex = /Marks:\s*(\d+)\/\d+/;
+    const totalMarks = questions.reduce((total, question) => {
+        // Check if `question` contains marks as a string
+        if (typeof question === 'string') {
+            const match = question.match(marksRegex);
+            if (match) {
+                // Extract the first digit (X) and add it to the total
+                return total + parseInt(match[1], 10);
+            }
+        } else if (question.marks) {
+            // Directly add numeric marks if available
+            return total + question.marks;
+        }
+        return total; // If no valid marks, return current total
+    }, 0);
     console.log("Total Marks for Prefix: ", totalMarks);
     return totalMarks;
-  }
+}
+
 
   // SECTION B
   getPrefixes(): string[] {
@@ -852,7 +871,7 @@ export class StartComponent implements OnInit {
             const answer = item.givenAnswer ? item.givenAnswer : ''; // Assume empty if null
             const marks = item.marks ? item.marks.split(' ')[0] : ''; // Extracting the numeric part
             let criteri = '';
-            let criteria = 'Evaluate the answer for each question, returning the question, answer, and marks. If no answer is found, set marks to 0. Return the result in JSON format.';
+            let criteria = 'Evaluate based on clarity, completeness, and accuracy';
 
             // Define criteria based on the question
             // if (question.includes('Distinguish between')) {

@@ -1,7 +1,32 @@
-
-
+/*WaterMark Styling*/
+.watermarkss {
+    position: fixed;
+    top: 50%;
+    left: 50%;
+    /* transform: translate(-50%, -50%); */
+    transform: translate(-50%, -50%) rotate(-45deg); /* Rotate the text diagonally */
+    font-size: 5rem;
+    color: rgba(0, 0, 0, 0.1);
+    font-weight: bold;
+    pointer-events: none;
+    z-index: 1000;
+    user-select: none;
+    visibility: hidden;
+  }
     @media print {
-      
+        .watermarkss {
+            visibility: visible;
+            position: fixed;
+            top: 50%;
+            left: 50%;
+            /* transform: translate(-50%, -50%); */
+            transform: translate(-50%, -50%) rotate(-45deg); /* Rotate the text diagonally */
+            font-size: 6rem;
+            color: rgba(0, 0, 0, 0.1);
+            pointer-events: none;
+            z-index: 1000;
+            user-select: none;
+          }
     
     }
 
@@ -26,9 +51,9 @@
         font-size: large;
     }
 
-    .gemini{
+    .data{
         /* color:rgb(221, 74, 177); */
-        line-height: 0.7;
+        line-height: 1.2;
         /* font-family:'Franklin Gothic Medium', 'Arial Narrow', Arial, sans-serif; */
     }
 
@@ -46,14 +71,3 @@
         color: rgb(72, 13, 184);
     }
 
-/* 
-    .watermark {
-        position: fixed;
-        top: 50%;
-        left: 50%;
-        transform: translate(-50%, -50%);
-        font-size: 24px;
-        color: rgba(0, 0, 0, 0.3); 
-        pointer-events: none; 
-      } 
-       */

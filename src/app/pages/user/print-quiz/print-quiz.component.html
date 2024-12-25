@@ -5,12 +5,12 @@
 <!-- {{geminiResponse | json}} -->
 <!-- <h6>==================================================================</h6> -->
 
+<!-- {{transformedData| json}} -->
 <!-- {{questionWithAnswers| json}}
 {{answeredQuestions | json}} -->
 
 <!-- {{questions | json}}
 <hr> -->
-
 <!-- {{sectionB | json}} -->
 <!-- {{questionWithAnswers | json}} -->
 
@@ -33,7 +33,7 @@
                 <div class="watermark">
 
                     <div class="caption">
-                                               <!--DISPLAY IF ONLY THEORY -->
+                        <!--DISPLAY IF ONLY THEORY -->
                         <div *ngIf="geminiResponse; else elseBlock">
                             <p id="cape">
                                 University of Cape Coast.<br>
@@ -64,7 +64,7 @@
                         </ng-template>
 
                     </div>
-                    
+
 
                     <div *ngIf="reportData !=null">
                         <div id="marks" *ngFor="let r of reportData">
@@ -120,75 +120,45 @@
                             </mat-card-content>
                         </mat-card>
                     </div>
+                    <!-- {{value | json}} -->
 
-                    <!-- END OF SECTION A -->
+                    <!-- <h2>==============================</h2> -->
+                    <div class="watermarkss">{{username | uppercase}}</div>
 
-                    <!-- LOAD SECTION B HERE -->
-                    <!-- <div *ngIf="answeredQuestions !=null">
-                        <div *ngIf="getPrefixes().length>0">
-                            <h1 style="text-align: center;">Section B</h1>
-                            <div *ngFor="let prefix of getPrefixes()">
-                                <mat-card *ngIf="getGroupedQuestions(prefix).length > 0">
-                                    <mat-card-header>
-                                        <mat-card-title>{{ prefix }}</mat-card-title>
-                                    </mat-card-header>
-                                    <mat-card-content>
-                                        <div *ngFor="let question of getGroupedQuestions(prefix)">
-                                            <p><strong>{{ question.quesNo }}:</strong> {{ question.question }} (2 out of
-                                                {{ question.marks
-                                                }})</p>
-                                        </div>
-                                    </mat-card-content>
-                                </mat-card>
-                                <mat-divider></mat-divider>
-                            </div>
-                        </div>
-                    </div> -->
-
-
-
-                    <!-- END OF SECTION B -->
-                    <div *ngIf="geminiResponse !=null">
-                        <!-- <div *ngIf="getPrefixes().length>0"> -->
+                    <div  *ngIf="transformedData !=null">
                         <h1 style="text-align: center;">Section B <b> Total Marks:<em class="grandTotals"> {{
                                     getGrandTotalMarks() }}</em></b></h1>
-                        <div class="gemini" *ngFor="let group of geminiResponse">
-                            <mat-card *ngIf="geminiResponse.length > 0">
+                        <div *ngFor="let groups of transformedData">
+                            <mat-card *ngIf="transformedData.length > 0">
                                 <mat-card-header>
-                                    <mat-card-title>{{ group.prefix }} <em class="prefixTotals">( Marks: {{
-                                            getTotalMarksForPrefix(group.questions) }}) </em></mat-card-title>
+                                    <mat-card-title>{{ groups.prefix }} <em class="prefixTotals">( Marks: {{
+                                            getTotalMarksForPrefixs(groups.questions) }}) </em></mat-card-title>
                                 </mat-card-header>
                                 <mat-card-content>
-
-                                    <div *ngFor="let item of group.questions">
-                                        <p><strong>{{ item.key }}:</strong> {{ item.question }}</p>
-                                        <p><em>Your Answer:</em> {{ item.answer }}</p>
-                                        <p><em>Score:</em> {{item.marks}}</p>
+                                    <div class="data" *ngFor="let items of groups.questions">
+                                        <p><strong>{{ items.key }}:</strong> {{ items.question }}</p>
+                                        <p><strong>Your Answer:</strong> {{ items.Answer }}</p>
+                                        <p><strong>Score:</strong>{{ items.Marks }}</p>
                                     </div>
                                 </mat-card-content>
                             </mat-card>
                             <mat-divider></mat-divider>
                         </div>
-                        <!-- </div> -->
                     </div>
-                    <!-- GEMINI GRADING ENDS -->
 
 
+                    <!-- <h2>=================================================</h2> -->
 
+                    <mat-card-actions>
+                        <div class="container text-center">
+                            <button (click)="printPage()" mat-raised-button color="accent"
+                                id="homePrintbtn">Print</button>
 
-
-
+                            <button mat-raised-button color="primary" class="ml10" id="homePrintbtn"
+                                routerLink="/user-dashboard/0">Home</button>
+                        </div>
+                    </mat-card-actions>
                 </div>
-
-                <mat-card-actions>
-                    <div class="container text-center">
-                        <button (click)="printPage()" mat-raised-button color="accent" id="homePrintbtn">Print</button>
-
-                        <button mat-raised-button color="primary" class="ml10" id="homePrintbtn"
-                            routerLink="/user-dashboard/0">Home</button>
-                    </div>
-                </mat-card-actions>
             </div>
         </div>
     </div>
-</div>

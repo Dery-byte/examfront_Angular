@@ -49,7 +49,11 @@
 @media (max-width: 600px) {
     .small-devices{
         display: inline;
+        margin-bottom: 20px;
+        position: relative;
+        height: 10px;
         }
+        
     .large-devices{
         display: none;
     }
@@ -77,8 +81,13 @@ width: 1px;
   .text-center{
     font-size: 15px;
     color: white;
-    background-color: purple;
+    background-color: rgb(230, 43, 90);
     box-shadow: 0 4px 8px rgba(0,0,0,0.1);
+
+    position:fixed;
+    /* top: 8px; */
+    /* right: 9px; */
+    z-index: 1;
         
   }
 
@@ -86,12 +95,12 @@ width: 1px;
     text-align: center;
   }
   
-  .fixed-card {
+  /* .fixed-card {
     position: fixed;
-    top: 65px;
+    top: 33px;
     right: -10px;
-    z-index: 100;
-  }
+    z-index: 1;
+  } */
   
   
 

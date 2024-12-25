@@ -42,6 +42,10 @@ export class PrintQuizComponent implements OnInit {
   geminiResponse;
   groupedQuestions
   objectKeys = Object.keys;
+  transformedData: any[];
+
+  value
+
 
   qId
 
@@ -125,6 +129,8 @@ export class PrintQuizComponent implements OnInit {
       }
     );
 
+
+
   }
 
   // loadSubjective(){
@@ -148,48 +154,52 @@ export class PrintQuizComponent implements OnInit {
   loadSubjectiveAIEval() {
     // const geminiResponse = localStorage.getItem("answeredAIQuestions");
     const geminiResponse = localStorage.getItem("answeredAIQuestions" + this.qid);
-    const data = geminiResponse.trim();
+    // const data = geminiResponse.trim();
     console.log(geminiResponse);
     // const data = geminiResponse.replace("json\n", "");
-    const data1 = JSON.parse(data);
+    const data1 = JSON.parse(geminiResponse);
     this.geminiResponse = this.groupByPrefix(data1);
-    console.log('This is the geminiResponse groupedByPrefixes', this.geminiResponse);
+    this.transformedData = this.transformData(this.geminiResponse);
 
+    // this.value = this.geminiResponse[0].questions
+
+
+    this.value = this.transformedData[0].questions[0].key
+
+    console.log('This is the geminiResponse groupedByPrefixes', this.geminiResponse);
     console.log("CHECKING ...")
   }
 
  
 
-  groupByPrefix(data: any): { prefix: string, questions: any[] }[] {
-    // Initialize a temporary map to collect grouped data
-    const tempMap: { [key: string]: any[] } = {};
-
-    Object.keys(data).forEach(key => {
-      // Extract the prefix (e.g., "Q1" from "Q1b" or "Q1c")
-      const prefixMatch = key.match(/Q\d+/);
-      const prefix = prefixMatch ? prefixMatch[0] : 'Theory';
-      if (prefix) {
+  groupByPrefix(data: string[]): { prefix: string, questions: string[] }[] {
+    // Initialize a map to group questions by prefix
+    const tempMap: { [prefix: string]: string[] } = {};
+    // Iterate over the data array
+    data.forEach((item) => {
+        // Extract the prefix (e.g., "Q3" from "Q3a", "Q3ai", etc.)
+        const prefixMatch = item.match(/Q\d+/);
+        const prefix = prefixMatch ? prefixMatch[0] : 'Uncategorized';
         // Initialize the group if it doesn't exist
         if (!tempMap[prefix]) {
-          tempMap[prefix] = [];
+            tempMap[prefix] = [];
         }
-        // Add the current key and its object to the corresponding prefix group
-        tempMap[prefix].push({ key, ...data[key] });
-      }
+        // Add the current item to the corresponding prefix group
+        tempMap[prefix].push(item);
     });
-
     // Convert the tempMap to an array of grouped data
-    const groupedData: { prefix: string, questions: any[] }[] = [];
+    const groupedData: { prefix: string, questions: string[] }[] = [];
     for (const [prefix, questions] of Object.entries(tempMap)) {
-      groupedData.push({ prefix, questions });
+        groupedData.push({ prefix, questions });
     }
     return groupedData;
-  }
+}
+
 
 
   // Function to calculate the grand total marks across all prefixes
   getGrandTotalMarks(): number {
-    if (!this.geminiResponse || this.geminiResponse.length === 0) {
+    if (!this.transformedData || this.geminiResponse.length === 0) {
       return 0;
     }
     return this.geminiResponse.reduce((grandTotal, group) => {
@@ -198,12 +208,86 @@ export class PrintQuizComponent implements OnInit {
   }
 
   // Function to calculate total marks for a given prefix (group)
-  getTotalMarksForPrefix(questions: any[]): number {
+  getTotalMarksForPrefix(questions: string[]): number {
     if (!questions || questions.length === 0) {
-      return 0;
+        return 0;
     }
-    return questions.reduce((total, question) => total + question.marks, 0);
+    // Define a regex to extract marks in the format X/Y
+    const marksRegex = /Marks:\s*(\d+)\/\d+/;
+    // Reduce the questions array to calculate total marks
+    return questions.reduce((total, question) => {
+        // Attempt to match the regex to extract marks
+        const match = question.match(marksRegex);
+        if (match) {
+            const marks = parseInt(match[1], 10); // Extract X as a number
+            return total + marks; // Add to total
+        }
+        return total; // If no match, return current total
+    }, 0);
+}
+
+
+getTotalMarksForPrefixs(questions: { key: string, question: string, Answer: string, Marks: string }[]): number {
+  if (!questions || questions.length === 0) {
+      return 0;
   }
+
+  // Calculate the total marks
+  return questions.reduce((total, question) => {
+      // Extract the marks part (e.g., "1/3")
+      const marksParts = question.Marks.split('/');
+      if (marksParts.length === 2) {
+          const marks = parseInt(marksParts[0], 10); // Extract the numerator as a number
+          return total + marks; // Add to the total
+      }
+      return total; // If invalid marks format, return current total
+  }, 0);
+}
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+// TRANSFORM THE DATA BEFORE POPULATING IN THE HTML element
+transformData(data: any[]): any[] {
+  return data.map(group => ({
+    prefix: group.prefix,
+    questions: group.questions.map(questionText => {
+      // Extract key and question text
+      const questionMatch = questionText.match(/^(Q\d+[a-z]*(?:i{1,3})?):\s(.+?)\*\*,\sAnswer:\s"(.+?)"/);
+      const key = questionMatch ? questionMatch[1] : 'Unknown';
+      const question = questionMatch ? questionMatch[2] : 'Unknown';
+      // Extract answer text
+      const answerMatch = questionText.match(/Answer:\s"(.*?)"/);
+      const answer = answerMatch ? answerMatch[1] : 'Unknown';
+      // Extract marks
+      const marksMatch = questionText.match(/Marks:\s(\d+\/\d+)/);
+      const marks = marksMatch ? marksMatch[1] : 'Unknown';
+      return {
+        key,
+        question,
+        Answer: answer,
+        Marks: marks
+      };
+    })
+  }));
+}
+
+
+
+
+
+
 
   // SECTION B
   getPrefixes(): string[] {
@@ -216,6 +300,8 @@ export class PrintQuizComponent implements OnInit {
     });
     return Array.from(prefixes);
   }
+
+
   getGroupedQuestions(prefix: string) {
     return this.answeredQuestions.filter(q => q.quesNo.startsWith(prefix));
   }
