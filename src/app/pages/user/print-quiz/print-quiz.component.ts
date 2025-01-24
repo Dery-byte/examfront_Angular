@@ -161,10 +161,10 @@ export class PrintQuizComponent implements OnInit {
     this.geminiResponse = this.groupByPrefix(data1);
     this.transformedData = this.transformData(this.geminiResponse);
 
-    // this.value = this.geminiResponse[0].questions
+    this.value = this.geminiResponse[0].questions[0].Marks
 
 
-    this.value = this.transformedData[0].questions[0].key
+    // this.value = this.transformedData[0].questions[0].Marks
 
     console.log('This is the geminiResponse groupedByPrefixes', this.geminiResponse);
     console.log("CHECKING ...")

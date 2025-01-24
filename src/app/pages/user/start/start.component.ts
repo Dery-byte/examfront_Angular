@@ -635,6 +635,7 @@ export class StartComponent implements OnInit {
       // Handle the submission logic here
       localStorage.setItem(this.qid + "answeredQuestions", JSON.stringify(this.selectedQuestions));
       this.convertJson();
+      
       this._quiz.evalTheory(this.convertedJsonAPIResponsebody).subscribe((data: any) => {
         // this.geminiResponse=data.replace('json', "");
         console.log("This is the Original Response from the server and formatted!!!!");
@@ -885,7 +886,7 @@ export class StartComponent implements OnInit {
             // }
 
             // Create the text format
-            const text = `${questionNo}: ${question}. Answer: ${answer}. Marks: ${marks}. Criteria: ${criteria}.`;
+            const text = `${questionNo}: ${question}. Answer: ${answer}. Marks: ${marks}. Criteria:${criteria}.`;
 
             return { text: text };
           })

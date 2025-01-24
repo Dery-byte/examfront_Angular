@@ -2,12 +2,14 @@
 <!-- {{questions[0].quiz.category.title |json}}
 {{questions[0].quiz.maxMarks |json}} -->
 
-<!-- {{geminiResponse | json}} -->
-<!-- <h6>==================================================================</h6> -->
+{{geminiResponse | json}}
+<h6>==================================================================</h6>
 
-<!-- {{transformedData| json}} -->
-<!-- {{questionWithAnswers| json}}
-{{answeredQuestions | json}} -->
+{{transformedData| json}}
+<!-- {{questionWithAnswers| json}} -->
+
+<!-- <h1>=============================</h1> -->
+<!-- {{answeredQuestions | json}} -->
 
 <!-- {{questions | json}}
 <hr> -->
@@ -127,12 +129,12 @@
 
                     <div  *ngIf="transformedData !=null">
                         <h1 style="text-align: center;">Section B <b> Total Marks:<em class="grandTotals"> {{
-                                    getGrandTotalMarks() }}</em></b></h1>
+                                    getGrandTotalMarks() }}</em> {{value}}</b></h1>
                         <div *ngFor="let groups of transformedData">
                             <mat-card *ngIf="transformedData.length > 0">
                                 <mat-card-header>
                                     <mat-card-title>{{ groups.prefix }} <em class="prefixTotals">( Marks: {{
-                                            getTotalMarksForPrefixs(groups.questions) }}) </em></mat-card-title>
+                                            getTotalMarksForPrefixs(groups.questions)  }}) </em></mat-card-title>
                                 </mat-card-header>
                                 <mat-card-content>
                                     <div class="data" *ngFor="let items of groups.questions">

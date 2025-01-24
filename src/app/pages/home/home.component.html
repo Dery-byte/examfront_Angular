@@ -1,4 +1,4 @@
-<!-- 
+
  <div class="bootstrapo-wrapper">
     <div class="container">
         <div class="row mt20">
@@ -11,9 +11,15 @@
             
 <div class="home-container">
    
-      <h1>Welcome to EduApp</h1>
+      <h1>Welcome to Ace Company Limited</h1>
       <p>Your one-stop solution for online education</p>
-      <button mat-raised-button color="accent">Get Started</button>
+      <!-- <button mat-raised-button color="accent">Get Started</button> -->
+
+      <button mat-raised-button color="accent" [routerLink]="'/signup'">Explore Our Quiz System</button>
+
+      <!-- <a [routerLink]="'/signup'" mat-button aria-label="Example icon-button with heart icon">
+        Register </a> -->
+
   
     <section class="features">
       <h2 @slideIn>Our Features</h2>
@@ -112,4 +118,4 @@
         </div>
     </div>
     
-    </div> -->
+    </div>
