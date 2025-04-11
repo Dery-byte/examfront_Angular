@@ -67,6 +67,7 @@ import { AvailableQuizzesComponent } from './pages/user/available-quizzes/availa
 //Hnabuger menu staff
 import { MatSidenavModule } from '@angular/material/sidenav';
 import { MatBadgeModule } from '@angular/material/badge';
+import { CarouselModule } from 'ngx-owl-carousel-o';
 
 
 
@@ -145,6 +146,7 @@ import { MatBadgeModule } from '@angular/material/badge';
     MatSidenavModule,
     MatMenuModule,
     MatBadgeModule,
+    CarouselModule,
     NgxUiLoaderHttpModule.forRoot({
       showForeground:true,
     }),

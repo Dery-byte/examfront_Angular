@@ -11,6 +11,27 @@ import Swal from 'sweetalert2';
 import { ReportServiceService } from 'src/app/services/report-service.service';
 
 
+interface QuestionResponse {
+  questionNumber: string;
+  question: string;
+  studentAnswer: string;
+  score: number;
+  maxMarks: number;
+  feedback: string;
+  keyMissed: string[];
+}
+interface GroupedQuestions {
+  prefix: string;
+  questions: QuestionResponse[];
+}
+
+interface PrefixScores {
+  prefix: string;
+  totalScore: number;
+  totalMaxMarks: number;
+  percentage: number;
+}
+
 
 
 @Component({
@@ -40,12 +61,11 @@ export class PrintQuizComponent implements OnInit {
   answeredQuestions: any[] = [];
   isPrintDisabled = false;
   geminiResponse;
+  geminiRawResponse
   groupedQuestions
   objectKeys = Object.keys;
   transformedData: any[];
-
   value
-
 
   qId
 
@@ -79,24 +99,16 @@ export class PrintQuizComponent implements OnInit {
     console.log(this.qid);
 
     this._questions.getQuestionsOfQuiz(this.qid).subscribe((data: any) => {
-      // this._questions.getQuestionsOfQuizForText(this.qid).subscribe((data:any)=>{ // this does the question shuffle on print
-      // console.log(data[0].answer);
-      // this.loadResults();
       this.questionWithAnswers = data;
       console.log(data)
       console.log(this.questionWithAnswers);
       this.loadReport();
-      // this.attempted = JSON.parse(localStorage.getItem("Attempted"));
-      // this.loadResults();
-
     },
       (error) => {
         console.log("Error Loading questions");
         Swal.fire("Error", "Error loading questionsssssaaa", "error");
       }
     );
-    // this.qId =this._route.snapshot.params['qId'];
-    // this.loadSubjective();
     this.loadSubjective();
     this.loadSubjectiveAIEval();
     // this.loadReport();
@@ -133,14 +145,6 @@ export class PrintQuizComponent implements OnInit {
 
   }
 
-  // loadSubjective(){
-  //   this._questions.getSubjective(this.qid).subscribe((theory:any)=>{
-  //     console.log(theory);
-  //     this.sectionB = theory;
-  //        },
-  //       (error)=>{
-  //         console.log("Could not loading subjective from server");
-  //       });
 
   loadSubjective() {
     const questions = localStorage.getItem( this.qid + "answeredQuestions");
@@ -153,15 +157,21 @@ export class PrintQuizComponent implements OnInit {
 
   loadSubjectiveAIEval() {
     // const geminiResponse = localStorage.getItem("answeredAIQuestions");
+    this.geminiRawResponse = JSON.parse(localStorage.getItem("answeredAIQuestions" + this.qid));
+
     const geminiResponse = localStorage.getItem("answeredAIQuestions" + this.qid);
     // const data = geminiResponse.trim();
     console.log(geminiResponse);
     // const data = geminiResponse.replace("json\n", "");
     const data1 = JSON.parse(geminiResponse);
+    // this.geminiResponse = this.groupByPrefix(data1);
     this.geminiResponse = this.groupByPrefix(data1);
-    this.transformedData = this.transformData(this.geminiResponse);
 
-    this.value = this.geminiResponse[0].questions[0].Marks
+    // this.transformedData = this.geminiResponse;
+
+    console.log(this.getTotalMarksForPrefix(this.geminiResponse));
+
+    this.value = this.geminiResponse[0].questions[0].studentAnswer
 
 
     // this.value = this.transformedData[0].questions[0].Marks
@@ -170,141 +180,83 @@ export class PrintQuizComponent implements OnInit {
     console.log("CHECKING ...")
   }
 
- 
-
-  groupByPrefix(data: string[]): { prefix: string, questions: string[] }[] {
-    // Initialize a map to group questions by prefix
-    const tempMap: { [prefix: string]: string[] } = {};
-    // Iterate over the data array
-    data.forEach((item) => {
-        // Extract the prefix (e.g., "Q3" from "Q3a", "Q3ai", etc.)
-        const prefixMatch = item.match(/Q\d+/);
-        const prefix = prefixMatch ? prefixMatch[0] : 'Uncategorized';
-        // Initialize the group if it doesn't exist
-        if (!tempMap[prefix]) {
-            tempMap[prefix] = [];
-        }
-        // Add the current item to the corresponding prefix group
-        tempMap[prefix].push(item);
-    });
-    // Convert the tempMap to an array of grouped data
-    const groupedData: { prefix: string, questions: string[] }[] = [];
-    for (const [prefix, questions] of Object.entries(tempMap)) {
-        groupedData.push({ prefix, questions });
+  groupByPrefix(data: QuestionResponse[]): GroupedQuestions[] {
+    // Handle edge cases
+    if (!Array.isArray(data)) {
+      throw new Error('Input must be an array');
     }
-    return groupedData;
-}
+    if (data.length === 0) {
+      return [];
+    }
+    // Initialize a map to group questions by prefix
+    const prefixMap: Record<string, QuestionResponse[]> = {};
+    // Iterate over each question response
+    data.forEach((questionResponse) => {
+      // Validate the question number exists
+      if (!questionResponse.questionNumber) {
+        console.warn('Question missing questionNumber:', questionResponse);
+        return; // Skip this entry
+      }
+  
+      // Extract the prefix (e.g., "Q1" from "Q1a" or "Q3ai")
+      const prefixMatch = questionResponse.questionNumber.match(/^(Q\d+)/i);
+      const prefix = prefixMatch ? prefixMatch[0].toUpperCase() : 'UNCATEGORIZED';
+  
+      // Initialize the group if it doesn't exist
+      if (!prefixMap[prefix]) {
+        prefixMap[prefix] = [];
+      }
+      // Add the current question to its prefix group
+      prefixMap[prefix].push(questionResponse);
+    });
+  
+    // Convert the map to an array of grouped data
+    return Object.entries(prefixMap).map(([prefix, questions]) => ({
+      prefix,
+      questions
+    }));
+  }
 
-
-
-  // Function to calculate the grand total marks across all prefixes
-  getGrandTotalMarks(): number {
-    if (!this.transformedData || this.geminiResponse.length === 0) {
+   // Function to calculate the grand total marks across all prefixes
+   getGrandTotalMarks(): number {
+    if (!this.geminiResponse || this.geminiResponse.length === 0) {
       return 0;
     }
     return this.geminiResponse.reduce((grandTotal, group) => {
       return grandTotal + this.getTotalMarksForPrefix(group.questions);
     }, 0);
   }
+  
 
-  // Function to calculate total marks for a given prefix (group)
-  getTotalMarksForPrefix(questions: string[]): number {
+
+  getTotalMarksForPrefix(questions: any[]): number {
     if (!questions || questions.length === 0) {
-        return 0;
-    }
-    // Define a regex to extract marks in the format X/Y
-    const marksRegex = /Marks:\s*(\d+)\/\d+/;
-    // Reduce the questions array to calculate total marks
-    return questions.reduce((total, question) => {
-        // Attempt to match the regex to extract marks
-        const match = question.match(marksRegex);
-        if (match) {
-            const marks = parseInt(match[1], 10); // Extract X as a number
-            return total + marks; // Add to total
-        }
-        return total; // If no match, return current total
-    }, 0);
-}
-
-
-getTotalMarksForPrefixs(questions: { key: string, question: string, Answer: string, Marks: string }[]): number {
-  if (!questions || questions.length === 0) {
       return 0;
+    }
+  
+    return questions.reduce((total, question) => {
+      return total + (question.score || 0);
+    }, 0);
   }
-
-  // Calculate the total marks
-  return questions.reduce((total, question) => {
-      // Extract the marks part (e.g., "1/3")
-      const marksParts = question.Marks.split('/');
-      if (marksParts.length === 2) {
-          const marks = parseInt(marksParts[0], 10); // Extract the numerator as a number
-          return total + marks; // Add to the total
-      }
-      return total; // If invalid marks format, return current total
-  }, 0);
-}
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-// TRANSFORM THE DATA BEFORE POPULATING IN THE HTML element
-transformData(data: any[]): any[] {
-  return data.map(group => ({
-    prefix: group.prefix,
-    questions: group.questions.map(questionText => {
-      // Extract key and question text
-      const questionMatch = questionText.match(/^(Q\d+[a-z]*(?:i{1,3})?):\s(.+?)\*\*,\sAnswer:\s"(.+?)"/);
-      const key = questionMatch ? questionMatch[1] : 'Unknown';
-      const question = questionMatch ? questionMatch[2] : 'Unknown';
-      // Extract answer text
-      const answerMatch = questionText.match(/Answer:\s"(.*?)"/);
-      const answer = answerMatch ? answerMatch[1] : 'Unknown';
-      // Extract marks
-      const marksMatch = questionText.match(/Marks:\s(\d+\/\d+)/);
-      const marks = marksMatch ? marksMatch[1] : 'Unknown';
-      return {
-        key,
-        question,
-        Answer: answer,
-        Marks: marks
-      };
-    })
-  }));
-}
-
-
-
-
-
+  
 
 
   // SECTION B
-  getPrefixes(): string[] {
-    const prefixes = new Set<string>();
-    this.answeredQuestions.forEach(question => {
-      const prefix = question.quesNo.match(/^Q\d+/)?.[0];
-      if (prefix) {
-        prefixes.add(prefix);
-      }
-    });
-    return Array.from(prefixes);
-  }
+  // getPrefixes(): string[] {
+  //   const prefixes = new Set<string>();
+  //   this.answeredQuestions.forEach(question => {
+  //     const prefix = question.quesNo.match(/^Q\d+/)?.[0];
+  //     if (prefix) {
+  //       prefixes.add(prefix);
+  //     }
+  //   });
+  //   return Array.from(prefixes);
+  // }
 
 
-  getGroupedQuestions(prefix: string) {
-    return this.answeredQuestions.filter(q => q.quesNo.startsWith(prefix));
-  }
+  // getGroupedQuestions(prefix: string) {
+  //   return this.answeredQuestions.filter(q => q.quesNo.startsWith(prefix));
+  // }
 
 
 
@@ -354,22 +306,6 @@ transformData(data: any[]): any[] {
 
 
   loadQuestionsWithAnswers() {
-    // this._questions.getQuestionsOfQuiz(this.qid).subscribe((data: any) => {
-    //   // this._questions.getQuestionsOfQuizForText(this.qid).subscribe((data:any)=>{ // this does the question shuffle on print
-    //   // console.log(data[0].answer);
-    //   // this.loadResults();
-    //   this.questionWithAnswers = data;
-    //   console.log(data)
-    //   console.log(this.questionWithAnswers);
-    //   // this.attempted = JSON.parse(localStorage.getItem("Attempted"));
-    //   // this.loadResults();
-
-    // },
-    //   (error) => {
-    //     console.log("Error Loading questions");
-    //     Swal.fire("Error", "Error loading questionsssssaaa", "error");
-    //   }
-    // );
     this.preventBackButton();
     // this.refreshOnload();
   }

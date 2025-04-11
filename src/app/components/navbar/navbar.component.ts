@@ -114,7 +114,6 @@ export class NavbarComponent implements OnInit, OnDestroy {
 		this.user = null;
 		window.location.reload();
 		// window.location.href = "/login";
-
 	}
 
 

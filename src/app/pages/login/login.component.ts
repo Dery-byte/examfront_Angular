@@ -220,10 +220,6 @@ export class LoginComponent implements OnInit {
       (data: any) => {
         this.isLogingIn = true;
 
-
-
-
-
         console.log("Success");
         console.log(data);
 

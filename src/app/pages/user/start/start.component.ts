@@ -9,12 +9,29 @@ import { FormBuilder, Validators, FormGroup } from '@angular/forms';
 import { LoginService } from 'src/app/services/login.service';
 import { MatSnackBar } from '@angular/material/snack-bar';
 
-
-
-
-
-
 import Swal from 'sweetalert2';
+
+
+interface QuestionResponse {
+  questionNumber: string;
+  question: string;
+  studentAnswer: string;
+  score: number;
+  maxMarks: number;
+  feedback: string;
+  keyMissed: string[];
+}
+interface GroupedQuestions {
+  prefix: string;
+  questions: QuestionResponse[];
+}
+
+interface PrefixScores {
+  prefix: string;
+  totalScore: number;
+  totalMaxMarks: number;
+  percentage: number;
+}
 
 @Component({
   selector: 'app-start',
@@ -295,7 +312,6 @@ export class StartComponent implements OnInit {
       this.startTimer();
       this.preventBackButton();
 
-
     },
       (error) => {
         console.log("Could not load data from server");
@@ -393,32 +409,6 @@ export class StartComponent implements OnInit {
 
       });
 
-      // let timerString = localStorage.getItem('countdown_timer');
-      // const timerNumber = parseInt(timerString, 10);
-      // console.log(typeof (timerNumber));
-      // if (timerNumber) {
-      //   this.timerAll = timerNumber;
-      //   console.log("The remaining time is ", this.timerAll);
-      //   console.log("The remaining time from the localStorage ", timerString);
-
-
-      //   console.log("This is remaining Theory timer", this.timeT);
-      //   console.log("This is remaining Theory timer", this.timeO);
-      //   //Remove value from local storage after accessing it.
-      //   localStorage.removeItem("countdown_timer");
-      // } else {
-      //   // this.timer = this.questions.length * 2 * 60;
-      //   // this.timerAll = (this.quiz.quizTime * 60);
-      //   this.timerAll = (this.timeT + this.timeO) * 60;
-      //   // this.timerAll = (this.questions.length * 2 * 60) + this.timeT;
-
-      // }
-
-
-      // this.questions.forEach(q => {
-      //   q['givenAnswer'] = []; //Initialize as empty array
-      // });
-      // this.startTimer();
 
     },
       (error) => {
@@ -514,14 +504,6 @@ export class StartComponent implements OnInit {
   }
 
 
-  // triggerAddSectBMarks() {
-  //   // Call evalQuiz() first
-  //   this.evalQuiz();
-  //   // Set a delay before calling addSectBMarks()
-  //   setTimeout(() => {
-  //     this.addSectBMarks();
-  //   }, 2000); // 3000 milliseconds = 3 seconds delay
-  // }
 
   waitNavigateFunction() {
     setTimeout(() => {
@@ -607,24 +589,6 @@ export class StartComponent implements OnInit {
 
   }
 
-  parseApiResponse(apiResponse: string[]): any {
-    // Assuming apiResponse is an array with a single string element
-    let dataString = apiResponse[0];
-    // Remove the code block markers (```json and ```)
-    dataString = dataString.replace(/```json\n/, '').replace(/\n```/, '');
-    // Parse the remaining string into a JSON object
-    try {
-      const jsonData = JSON.parse(dataString);
-      return jsonData;
-    } catch (error) {
-      console.error('Failed to parse JSON:', error);
-      return null;
-    }
-  }
-
-
-
-
 
   evalSubjective() {
     // const selectedQuestions = [];
@@ -674,18 +638,6 @@ export class StartComponent implements OnInit {
   }
 
 
-  // TRYING TO BRING CALCULATION TO THE START
-
-  // loadSubjective() {
-  //   const questions = localStorage.getItem('answeredQuestions');
-  //   this.answeredQuestions = JSON.parse(questions);
-  //   console.log(this.answeredQuestions);
-  // }
-
-
-
-
-
 
 
 // WORKING ON THE BELOW
@@ -700,51 +652,91 @@ export class StartComponent implements OnInit {
     this.geminiResponseAI = this.groupByPrefix(this.geminiResponse);
     console.log('This is the geminiResponse groupedByPrefixes', this.geminiResponseAI);
     console.log("CHECKING ...")
+    this.getScoresForPrefixes(this.geminiResponseAI);
     this.getGrandTotalMarks();
     // this.triggerAddSectBMarks();
     this.addSectBMarks();
   }
 
-   groupByPrefix(data: string[]): { prefix: string, questions: string[] }[] {
-    // Initialize a map to group questions by prefix
-    const tempMap: { [prefix: string]: string[] } = {};
-    // Iterate over the data array
-    data.forEach((item) => {
-        // Extract the prefix (e.g., "Q3" from "Q3a", "Q3ai", etc.)
-        const prefixMatch = item.match(/Q\d+/);
-        const prefix = prefixMatch ? prefixMatch[0] : 'Uncategorized';
-        // Initialize the group if it doesn't exist
-        if (!tempMap[prefix]) {
-            tempMap[prefix] = [];
-        }
-        // Add the current item to the corresponding prefix group
-        tempMap[prefix].push(item);
-    });
-    // Convert the tempMap to an array of grouped data
-    const groupedData: { prefix: string, questions: string[] }[] = [];
-    for (const [prefix, questions] of Object.entries(tempMap)) {
-        groupedData.push({ prefix, questions });
+
+
+  getTotalMarksForPrefix(questions: any[]): number {
+    if (!questions || questions.length === 0) {
+      return 0;
     }
-    return groupedData;
-}
+  
+    return questions.reduce((total, question) => {
+      return total + (question.score || 0);
+    }, 0);
+  }
+
+
+  //grouped by prefixDEEPSEEK=========
+   groupByPrefix(data: QuestionResponse[]): GroupedQuestions[] {
+    // Handle edge cases
+    if (!Array.isArray(data)) {
+      throw new Error('Input must be an array');
+    }
+    if (data.length === 0) {
+      return [];
+    }
+  
+    // Initialize a map to group questions by prefix
+    const prefixMap: Record<string, QuestionResponse[]> = {};
+  
+    // Iterate over each question response
+    data.forEach((questionResponse) => {
+      // Validate the question number exists
+      if (!questionResponse.questionNumber) {
+        console.warn('Question missing questionNumber:', questionResponse);
+        return; // Skip this entry
+      }
+  
+      // Extract the prefix (e.g., "Q1" from "Q1a" or "Q3ai")
+      const prefixMatch = questionResponse.questionNumber.match(/^(Q\d+)/i);
+      const prefix = prefixMatch ? prefixMatch[0].toUpperCase() : 'UNCATEGORIZED';
+  
+      // Initialize the group if it doesn't exist
+      if (!prefixMap[prefix]) {
+        prefixMap[prefix] = [];
+      }
+      // Add the current question to its prefix group
+      prefixMap[prefix].push(questionResponse);
+    });
+  
+    // Convert the map to an array of grouped data
+    return Object.entries(prefixMap).map(([prefix, questions]) => ({
+      prefix,
+      questions
+    }));
+  }
+
+ 
+
+
 
 
 // WORKING ON ABOVE
   // Function to calculate the grand total marks across all prefixes
   getGrandTotalMarks(): number {
     this.sectionBMarks = 0;
+  
     if (!this.geminiResponseAI || this.geminiResponseAI.length === 0) {
       return 0;
     }
+
     this.sectionBMarks = this.geminiResponseAI.reduce((grandTotal, group) => {
-      return grandTotal + this.getTotalMarksForPrefix(group.questions);
+      const prefixScores = this.getScoresForPrefixes([group]);
+      const groupTotal = prefixScores.reduce((sum, p) => sum + p.totalScore, 0);
+      return grandTotal + groupTotal;
     }, 0);
+  
     console.log("Grand Total Marks: ", this.sectionBMarks);
-    console.log("hellllllloooooooo.........");
     return this.sectionBMarks;
   }
-
-
+  
+  
+ 
 
   addSectBMarks() {
     this.theoryResults = {
@@ -761,16 +753,6 @@ export class StartComponent implements OnInit {
 
     this._quiz.addSectionBMarks(this.theoryResults).subscribe(
       (data) => {
-        // this.theoryResults.marksB=this.sectionBMarks,
-        // this.theoryResults.quiz.qId=this.qid
-        // this.theoryResults={
-        //   marksB:this.sectionBMarks,
-        //  quiz:
-        //   {
-        //     qId:this.qid
-        //   }
-        // },
-        // Swal.fire("Success", "Quiz is added", "success");
         console.log("Marks sucessfull");
       },
       (error) => {
@@ -781,30 +763,29 @@ export class StartComponent implements OnInit {
     );
   }
 
-  // Function to calculate total marks for a given prefix (group)
-  getTotalMarksForPrefix(questions: any[]): number {
-    if (!questions || questions.length === 0) {
-        return 0;
-    }
-    // Define a regex to extract marks (format: X/Y)
-    const marksRegex = /Marks:\s*(\d+)\/\d+/;
-    const totalMarks = questions.reduce((total, question) => {
-        // Check if `question` contains marks as a string
-        if (typeof question === 'string') {
-            const match = question.match(marksRegex);
-            if (match) {
-                // Extract the first digit (X) and add it to the total
-                return total + parseInt(match[1], 10);
-            }
-        } else if (question.marks) {
-            // Directly add numeric marks if available
-            return total + question.marks;
-        }
-        return total; // If no valid marks, return current total
-    }, 0);
-    console.log("Total Marks for Prefix: ", totalMarks);
-    return totalMarks;
-}
+  getScoresForPrefixes(groupedData: GroupedQuestions[]): PrefixScores[] {
+    return groupedData.map(group => {
+      const { prefix, questions } = group;
+  
+      // Ensure questions is a valid array
+      const safeQuestions = Array.isArray(questions) ? questions : [];
+  
+      const totalScore = safeQuestions.reduce((sum, q) => sum + q.score, 0);
+      const totalMaxMarks = safeQuestions.reduce((sum, q) => sum + q.maxMarks, 0);
+      const percentage = totalMaxMarks > 0 
+        ? Math.round((totalScore / totalMaxMarks) * 100) 
+        : 0;
+  
+      console.log("Total Marks for Prefix: ", totalScore, totalMaxMarks);
+  
+      return {
+        prefix,
+        totalScore,
+        totalMaxMarks,
+        percentage
+      };
+    });
+  }
 
 
   // SECTION B
@@ -818,9 +799,16 @@ export class StartComponent implements OnInit {
     });
     return Array.from(prefixes);
   }
+
+
+
   getGroupedQuestions(prefix: string) {
     return this.selectedQuestionsAnswer.filter(q => q.quesNo.startsWith(prefix));
   }
+
+
+
+
 
   printPage() {
     window.print();
@@ -874,19 +862,8 @@ export class StartComponent implements OnInit {
             let criteri = '';
             let criteria = 'Evaluate based on clarity, completeness, and accuracy';
 
-            // Define criteria based on the question
-            // if (question.includes('Distinguish between')) {
-            //   criteria = 'Evaluate based on the accuracy of the comparison.';
-            // } else if (question.includes('Explain computer')) {
-            //   criteria = 'Evaluate based on clarity, completeness, and accuracy.';
-            // } else if (question.includes('What is Photosynthesis')) {
-            //   criteria = 'Evaluate based on the accuracy of the scientific explanation.';
-            // } else if (question.includes('What is a peripheral device')) {
-            //   criteria = 'Evaluate based on clarity and completeness of the definition.';
-            // }
-
             // Create the text format
-            const text = `${questionNo}: ${question}. Answer: ${answer}. Marks: ${marks}. Criteria:${criteria}.`;
+            const text = `Question Number ${questionNo}: ${question}. Answer: ${answer}. Marks: ${marks} Criteria:${criteria}.`;
 
             return { text: text };
           })

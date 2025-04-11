@@ -2,10 +2,14 @@
 <!-- {{questions[0].quiz.category.title |json}}
 {{questions[0].quiz.maxMarks |json}} -->
 
+<!-- <h1>======================Raw Response From BackEnd=======================================</h1>
+{{geminiRawResponse | json }}
+<h1>=============================================================</h1>
+
 {{geminiResponse | json}}
 <h6>==================================================================</h6>
 
-{{transformedData| json}}
+{{transformedData| json}} -->
 <!-- {{questionWithAnswers| json}} -->
 
 <!-- <h1>=============================</h1> -->
@@ -126,27 +130,47 @@
 
                     <!-- <h2>==============================</h2> -->
                     <div class="watermarkss">{{username | uppercase}}</div>
+                    <div *ngIf="geminiResponse != null">
+                        <h1 style="text-align: center;">
+                          Section B <b> Total Marks: 
+                          <em class="grandTotals">{{ getGrandTotalMarks() }}</em></b>
+                        </h1>
+                        <div *ngFor="let groups of geminiResponse">
+                          <mat-card>
+                            <mat-card-header>
+                              <mat-card-title>
+                                {{ groups.prefix }} 
+                                <em class="prefixTotals">( Marks: {{ getTotalMarksForPrefix(groups.questions) }}) </em>
+                              </mat-card-title>
+                            </mat-card-header>
+                            <mat-card-content>
+                              <div class="data" *ngFor="let items of groups.questions">
+                                <p><strong>{{ items.questionNumber }}:</strong> {{ items.question }}</p>
+                                <p><strong>Your Answer:</strong> {{ items.studentAnswer }}</p>
+                                <p><strong>Score:</strong> {{ items.score }}/{{items.maxMarks}}</p>
+                                <!-- <p><strong>Missing Elements</strong> {{ items.keyMissed }}</p> -->
+                                 
+                                <div *ngIf="items.keyMissed && items.keyMissed.length > 0" class="missing-elements">
+                                    <strong class="missing-elements-title">Missing Elements</strong>
+                                    <span class="missing-elements-list">
+                                      {{ items.keyMissed }}
+                                    </span>
+                                  </div>
+                                  
+                                  <div *ngIf="!items.keyMissed || items.keyMissed.length === 0" class="no-missing-elements">
+                                    <strong class="no-missing-title">Great Work!</strong>
+                                    <span class="no-missing-message">
+                                     No Suguestions
+                                    </span>
+                                  </div>
 
-                    <div  *ngIf="transformedData !=null">
-                        <h1 style="text-align: center;">Section B <b> Total Marks:<em class="grandTotals"> {{
-                                    getGrandTotalMarks() }}</em> {{value}}</b></h1>
-                        <div *ngFor="let groups of transformedData">
-                            <mat-card *ngIf="transformedData.length > 0">
-                                <mat-card-header>
-                                    <mat-card-title>{{ groups.prefix }} <em class="prefixTotals">( Marks: {{
-                                            getTotalMarksForPrefixs(groups.questions)  }}) </em></mat-card-title>
-                                </mat-card-header>
-                                <mat-card-content>
-                                    <div class="data" *ngFor="let items of groups.questions">
-                                        <p><strong>{{ items.key }}:</strong> {{ items.question }}</p>
-                                        <p><strong>Your Answer:</strong> {{ items.Answer }}</p>
-                                        <p><strong>Score:</strong>{{ items.Marks }}</p>
-                                    </div>
-                                </mat-card-content>
-                            </mat-card>
-                            <mat-divider></mat-divider>
+                              </div>
+                            </mat-card-content>
+                          </mat-card>
+                          <mat-divider></mat-divider>
                         </div>
-                    </div>
+                      </div>
+                      
 
 
                     <!-- <h2>=================================================</h2> -->

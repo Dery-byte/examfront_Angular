@@ -1,9 +1,12 @@
-import { HttpClient } from '@angular/common/http';
+import { HttpClient, HttpHeaders} from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import baseUrlCategory from './categoryHelper';
 import baseUrl from './helper';
 import { BehaviorSubject, Observable } from 'rxjs';
 import baseUrlGemini from './helperGemini';
+
+import { TokenExpirationService } from './token-expiration.service';
+
 
 
 @Injectable({
@@ -16,7 +19,7 @@ private items: BehaviorSubject<any> =new BehaviorSubject<any>(this.data);
 $items: Observable<any> = this.items.asObservable();
 
  
-  constructor( private _http:HttpClient) { }
+  constructor( private _http:HttpClient, private token: TokenExpirationService) { }
 
   setLocalStorageData(){
     localStorage.setItem("Attempts", this.attempts)
@@ -93,6 +96,16 @@ public addSectionBMarks(questions){
 // public evalTheory(questions){
 //   return this._http.post(`${baseUrlGemini}/quiz/eval`, questions);
 // }
+
+// public evalTheory(questions: any) {
+//   const token = this.token.getTokenFromLocalStorage();
+//   const headers = new HttpHeaders({
+//     'Content-Type': 'application/json',
+//     'Authorization': `Bearer ${token}` // Replace with your token retrieval logic
+//   });
+//   return this._http.post(`${baseUrl}/quizEval`, questions, { headers });
+// }
+
 
 public evalTheory(questions){
   return this._http.post(`${baseUrl}/quizEval`, questions);
