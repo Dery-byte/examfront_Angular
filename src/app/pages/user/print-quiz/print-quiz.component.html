@@ -148,7 +148,7 @@
                                 <p><strong>{{ items.questionNumber }}:</strong> {{ items.question }}</p>
                                 <p><strong>Your Answer:</strong> {{ items.studentAnswer }}</p>
                                 <p><strong>Score:</strong> {{ items.score }}/{{items.maxMarks}}</p>
-                                <!-- <p><strong>Missing Elements</strong> {{ items.keyMissed }}</p> -->
+                                <p><strong>Missing Elements</strong> {{ items.keyMissed }}</p>
                                  
                                 <div *ngIf="items.keyMissed && items.keyMissed.length > 0" class="missing-elements">
                                     <strong class="missing-elements-title">Missing Elements</strong>
