@@ -9,6 +9,8 @@ import { StartComponent } from '../start/start.component'; { }
 import { Router, NavigationStart, NavigationEnd, NavigationError, NavigationCancel } from '@angular/router';
 import Swal from 'sweetalert2';
 import { ReportServiceService } from 'src/app/services/report-service.service';
+import { ChangeDetectorRef } from '@angular/core';
+
 
 
 interface QuestionResponse {
@@ -69,7 +71,18 @@ export class PrintQuizComponent implements OnInit {
 
   qId
 
+  timeAllowed
+
+
+
+loadTimeFromLocalStorage() {
+  const quizTimes = localStorage.getItem('totalTime');
+  this.timeAllowed = quizTimes ? JSON.parse(quizTimes) : 0;
+  this.cdr.detectChanges(); // Force UI update
+}
+
   constructor(private _quiz: QuizService,
+    private cdr: ChangeDetectorRef,
     private locationSt: LocationStrategy,
     private _route: ActivatedRoute,
     private _questions: QuestionService,
@@ -95,6 +108,14 @@ export class PrintQuizComponent implements OnInit {
    const userDetails = localStorage.getItem('user');
     const Object = JSON.parse(userDetails);
     this.username = Object.username;
+
+
+    const quizTimes = localStorage.getItem('totalTime');
+    this.timeAllowed = (JSON.parse(quizTimes)) *1 /60;
+    // this.timeAllowed = Object.username;
+   console.log( typeof(this.timeAllowed));
+    console.log(localStorage.getItem('totalTime'));
+    console.log(this.timeAllowed);
 
     console.log(this.qid);
 

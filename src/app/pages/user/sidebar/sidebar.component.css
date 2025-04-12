@@ -1,3 +1,93 @@
-.example-spacer {
-    flex: 1 1 auto;
-  }
+.example-spacer{
+  flex: 1 1 auto;
+}
+
+.mrl{
+  margin-right: 50px;
+}
+
+.ml{
+  margin-right: 140px;
+}
+
+.username{
+padding: 20px;
+}
+
+
+
+.profile-imag{
+  border-radius: 50px;
+}
+
+.text-center{
+  color: black;
+  font-family: 'Times New Roman', Times, serif;
+  font-size: 25px;
+  margin-right:50px;
+  margin-bottom: auto;
+}
+
+
+
+
+
+
+
+/* home.component.css */
+.home-container {
+  text-align: center;
+  font-family: 'Roboto', sans-serif;
+}
+
+.header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 1rem;
+  background-color: #3f51b5;
+  color: white;
+}
+
+.logo {
+  font-size: 1.5rem;
+  font-weight: bold;
+}
+nav a {
+  margin: 0 0.5rem;
+  color: white;
+}
+
+
+/* TOKEN EXPIRE CSS */
+.tokeExpire{
+/* float: right; */
+margin-left: auto;
+font-size: 15px;
+}
+.warning-minutes {
+color: rgb(47, 4, 87); /* Change to your desired warning color */
+font-size: 20px;
+font-weight: bold;
+transition: color 0.5s ease-out, transform 0.5s ease-out; /* Add transition for color and transform */
+transform: scale(1); /* Initial scale for normal state */
+}
+
+.warning-minutes.alert {
+transform: scale(1.1); /* Scale up when alerting */
+}
+
+.normal-minutes {
+color: rgb(238, 234, 234); /* Default color */
+transition: color 0.5s ease-out; /* Add transition for color */
+}
+
+.mw450{
+width: 450px;
+}
+
+
+/* .custom-snackbar {
+background-color: #2196f3 !important;  
+color: white !important;               
+} */

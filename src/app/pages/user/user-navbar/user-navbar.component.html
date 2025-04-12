@@ -1,0 +1,17 @@
+<div class="navbar">
+
+    <div  *ngIf="isloggedIn && hasAuthority('NORMAL')">
+        <mat-toolbar color="accent" class="mat-elevation-z8">
+          <button (click)="drawer.toggle()" mat-icon-button>
+            <mat-icon>menu</mat-icon>
+          </button>
+          <span mat-icon-button class="example-icon favorite-icon username "
+            aria-label="Example icon-button with heart icon">
+            {{ user.username | uppercase}}
+          </span>
+          <span mat-icon-button class="tokeExpire" aria-label="Example icon-button with heart icon">
+            <span [ngClass]="timeLeftDisplay.className">Your session expires in : {{ timeLeftDisplay.display }}</span>
+          </span>
+          <button *ngIf="!isloggedIn" mat-raised-button color="primary" routerLink="/login">Logout</button>
+        </mat-toolbar>
+</div>

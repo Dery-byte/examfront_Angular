@@ -27,7 +27,7 @@
 <div ngxUiLoaderBlurred (blur)="10">
     <!-- QUESTIONS LOAD AFTER SUBMIT -->
     <!-- questions -->
-
+<!-- {{timeAllowed}} -->
 
     <div class="bootstrap-wrapper">
         <div class="row mt20">
@@ -48,7 +48,7 @@
                                 <b>{{answeredQuestions[0].quiz.category.title}}</b>
                                 {{answeredQuestions[0].quiz.title}}. Time Allowed:
                                 <i>
-                                    <b> {{answeredQuestions[0].quiz.quizTime * 1}} minutes</b>
+                                    <b>{{timeAllowed}} minutes</b>
                                 </i> <br>
                                 <label> Index Number:<b>{{username | uppercase}}</b></label>
                             </p>
@@ -57,6 +57,7 @@
                         <ng-template #elseBlock>
                             <!-- DISPLAYS IF QUESTIONS ARE ONLY OBJ -->
                             <p *ngIf="questionWithAnswers.length >0" id="cape">
+                                
                                 University of Cape Coast.<br>
                                 School of Physical Sciences. <br>Department of Computer Science and Information
                                 Technology<br>
@@ -64,7 +65,11 @@
                                 {{questionWithAnswers[0].quiz.title}}. Time Allowed:
                                 <i>
                                     <b> {{questionWithAnswers[0].quiz.quizTime * 1}} minutes</b>
-                                </i> <br>
+
+                                    
+                                </i> 
+                                
+                                <br>
                                 <label> Index Number:<b>{{username | uppercase}}</b></label>
                             </p>
                         </ng-template>
@@ -148,7 +153,7 @@
                                 <p><strong>{{ items.questionNumber }}:</strong> {{ items.question }}</p>
                                 <p><strong>Your Answer:</strong> {{ items.studentAnswer }}</p>
                                 <p><strong>Score:</strong> {{ items.score }}/{{items.maxMarks}}</p>
-                                <p><strong>Missing Elements</strong> {{ items.keyMissed }}</p>
+                                <!-- <p><strong>Missing Elements</strong> {{ items.keyMissed }}</p> -->
                                  
                                 <div *ngIf="items.keyMissed && items.keyMissed.length > 0" class="missing-elements">
                                     <strong class="missing-elements-title">Missing Elements</strong>

@@ -257,6 +257,7 @@ export class StartComponent implements OnInit {
         // this.timerAll = (this.quiz.quizTime * 60);
         this.timerAll = (this.timeT + this.timeO) * 60;
         // this.timerAll = (this.questions.length * 2 * 60) + this.timeT;
+        localStorage.setItem('totalTime',JSON.stringify(this.timerAll));
 
       }
 
@@ -457,56 +458,138 @@ export class StartComponent implements OnInit {
   }
 
 
+  // submitQuiz() {
+  //   // this.evalSubjective();
+  //   Swal.fire({
+  //     title: "Do you want to submit the quiz ?",
+  //     showCancelButton: true,
+  //     confirmButtonText: "Submit",
+  //     icon: "info",
+  //   }).then((e) => {
+  //     if (e.isConfirmed) {
+  //       this.evalQuiz();
+  //       // this.triggerAddSectBMarks();
+  //       // localStorage.removeItem("countdown_timer");
+  //       // this.waitNavigateFunction();
+  //       this.loadQuestionsWithAnswers();
+  //       this.evalSubjective();
+  //       // this.loadSubjectiveAIEval();
+  //       // this.getGrandTotalMarks();
+  //       this.preventBackButton();
+  //     };
+  //   });
+  // }
   submitQuiz() {
-    // this.evalSubjective();
     Swal.fire({
-      title: "Do you want to submit the quiz ?",
+      title: "Do you want to submit the quiz?",
+      icon: "info",
       showCancelButton: true,
       confirmButtonText: "Submit",
-      icon: "info",
+      cancelButtonText: "Cancel"
     }).then((e) => {
       if (e.isConfirmed) {
-        this.evalQuiz();
-        // this.triggerAddSectBMarks();
-        // localStorage.removeItem("countdown_timer");
-        this.waitNavigateFunction();
-        this.loadQuestionsWithAnswers();
-        this.evalSubjective();
-        // this.loadSubjectiveAIEval();
-        // this.getGrandTotalMarks();
-        this.preventBackButton();
-      };
+  
+        // Show the loading spinner
+        Swal.fire({
+          title: 'Evaluating...',
+          text: `Please wait while we evaluate your quiz for "${this.courseTitle}".`,
+          // text: `Your results for "${this.courseTitle}" is available for print on the dashboard.`,
+
+          allowOutsideClick: false,
+          didOpen: () => {
+            Swal.showLoading();
+          }
+        });
+  
+        // Run all your logic after a short delay or immediately
+        setTimeout(() => {
+          this.evalQuiz();
+          this.waitNavigateFunction();
+          this.loadQuestionsWithAnswers();
+          // this.evalSubjective();
+          this.preventBackButton();
+  
+          // Optional: Close the spinner and show success message
+          Swal.fire({
+            icon: 'success',
+            title: 'Evaluated!',
+            text: `Your results for "${this.courseTitle}" is available for print on the dashboard.`,
+          });
+  
+        }, 4000); // You can remove this delay or wait for async logic instead
+      }
     });
   }
+  
 
+  // submitAllQuiz() {
+  //   // this.evalSubjective();
+  //   Swal.fire({
+  //     title: "Do you want to submit the quiz ?",
+  //     showCancelButton: true,
+  //     confirmButtonText: "Submit",
+  //     icon: "info",
+  //   }).then((e) => {
+  //     if (e.isConfirmed) {
+  //       // EVALUATE THE SUBJECTIVE
+  //       this.evalQuiz();
+  //       // this.triggerAddSectBMarks();
+  //       // localStorage.removeItem("countdown_timer");
+  //       this.waitNavigateFunction();
+  //       this.loadQuestionsWithAnswers();
+  //       this.evalSubjective();
+  //       // this.loadSubjectiveAIEval();
+  //       // this.getGrandTotalMarks();
+  //       this.preventBackButton();
+  //     };
+  //   });
+  // }
 
   submitAllQuiz() {
-    // this.evalSubjective();
     Swal.fire({
-      title: "Do you want to submit the quiz ?",
+      title: "Do you want to submit the quiz?",
+      icon: "info",
       showCancelButton: true,
       confirmButtonText: "Submit",
-      icon: "info",
+      cancelButtonText: "Cancel"
     }).then((e) => {
       if (e.isConfirmed) {
-        // EVALUATE THE SUBJECTIVE
-        this.evalQuiz();
-        // this.triggerAddSectBMarks();
-        // localStorage.removeItem("countdown_timer");
-        this.waitNavigateFunction();
-        this.loadQuestionsWithAnswers();
-        this.evalSubjective();
-        // this.loadSubjectiveAIEval();
-        // this.getGrandTotalMarks();
-        this.preventBackButton();
-      };
+  
+        // Show the loading spinner
+        Swal.fire({
+          title: 'Evaluating...',
+          text: `Please wait while we evaluate your quiz for ${this.courseTitle}.`,
+          allowOutsideClick: false,
+          didOpen: () => {
+            Swal.showLoading();
+          }
+        });
+  
+        // Run all your logic after a short delay or immediately
+        setTimeout(() => {
+          this.evalQuiz();
+          this.waitNavigateFunction();
+          this.loadQuestionsWithAnswers();
+          this.evalSubjective();
+          this.preventBackButton();
+  
+          // Optional: Close the spinner and show success message
+          Swal.fire({
+            icon: 'success',
+            title: 'Evaluated!',
+            text: `Your results for ${this.courseTitle} is available for print on the dashboard.`,
+          });
+  
+        }, 8000); // You can remove this delay or wait for async logic instead
+      }
     });
   }
-
+  
 
 
   waitNavigateFunction() {
     setTimeout(() => {
+      
       this.printQuiz();
     }, 1000); // 3000 milliseconds = 3 seconds delay
   }
@@ -577,7 +660,7 @@ export class StartComponent implements OnInit {
       localStorage.setItem('MaxMarks', JSON.stringify(this.maxMarks));
       // this.addSectBMarks();
       this.preventBackButton();
-      this.evalSubjective();
+      // this.evalSubjective();
       this.isSubmit = true;
     },
       (error) => {
@@ -590,52 +673,96 @@ export class StartComponent implements OnInit {
   }
 
 
+  // evalSubjective() {
+  //   // const selectedQuestions = [];
+  //   for (const prefix in this.selectedQuestions) {
+  //     this.selectedQuestionsAnswer.push(...this.groupedQuestions[prefix]);
+  //   }
+  //   if (Object.keys(this.selectedQuestions).length === this.numberOfQuestionsToAnswer) {
+  //     // Handle the submission logic here
+  //     localStorage.setItem(this.qid + "answeredQuestions", JSON.stringify(this.selectedQuestions));
+  //     this.convertJson();
+      
+  //     this._quiz.evalTheory(this.convertedJsonAPIResponsebody).subscribe((data: any) => {
+  //       // this.geminiResponse=data.replace('json', "");
+  //       console.log("This is the Original Response from the server and formatted!!!!");
+  //       localStorage.setItem("answeredAI" + this.qid, JSON.stringify(data));
+
+  //       console.log(data);
+  //       // this.geminiResponse = this.parseApiResponse(data); WORKS PREVIOUSLY
+  //       this.geminiResponse = data;
+
+  //       // this.geminiResponse= this.groupByPrefix(geminiResponse);
+  //       console.log(data);
+  //       console.log(this.geminiResponse);
+  //       // localStorage.setItem("answeredAIQuestions", JSON.stringify(this.geminiResponse));
+
+  //       localStorage.setItem("answeredAIQuestions" + this.qid, JSON.stringify(this.geminiResponse));
+  //       // console.log('Stored successfully:', localStorage.getItem("answeredAIQuestions" + this.qid)); // Just to confirm it's there
+  //       console.log('Stored successfully:', localStorage.getItem("answeredAIQuestions" + this.qid)); // Just to confirm it's there
+  //       console.log(this.geminiResponse);
+
+  //       setTimeout(() => {
+  //         this.loadSubjectiveAIEval();
+  //       }, 1000);
+  //       console.log(this.geminiResponse);
+
+
+  //     });
+  //     console.log('Submitted Questions:', this.selectedQuestionsAnswer);
+  //     console.log(this.convertedJsonAPIResponsebody)
+  //     // SAVE THE SELECTED QUESTIONS IN LOCAL STOREAGE
+  //     // localStorage.setItem("answeredQuestions", JSON.stringify(this.selectedQuestionsAnswer));
+  //     localStorage.setItem(this.qid + "answeredQuestions", JSON.stringify(this.selectedQuestionsAnswer));
+
+
+  //   }
+  //   (error) => {
+  //     this._snack.open("Please select exactly 3 sets of questions to submit", "", {
+  //       duration: 3000,
+  //     });
+  //   }
+  // }
+
+
+
+
+
   evalSubjective() {
-    // const selectedQuestions = [];
     for (const prefix in this.selectedQuestions) {
-      this.selectedQuestionsAnswer.push(...this.groupedQuestions[prefix]);
+        this.selectedQuestionsAnswer.push(...this.groupedQuestions[prefix]);
     }
     if (Object.keys(this.selectedQuestions).length === this.numberOfQuestionsToAnswer) {
-      // Handle the submission logic here
-      localStorage.setItem(this.qid + "answeredQuestions", JSON.stringify(this.selectedQuestions));
-      this.convertJson();
-      
-      this._quiz.evalTheory(this.convertedJsonAPIResponsebody).subscribe((data: any) => {
-        // this.geminiResponse=data.replace('json', "");
-        console.log("This is the Original Response from the server and formatted!!!!");
-        console.log(data);
-        // this.geminiResponse = this.parseApiResponse(data); WORKS PREVIOUSLY
-        this.geminiResponse = data;
+        localStorage.setItem(this.qid + "answeredQuestions", JSON.stringify(this.selectedQuestions));
+        this.convertJson();
+        
+        this._quiz.evalTheory(this.convertedJsonAPIResponsebody).subscribe((data: any) => {
+            console.log("This is the Original Response from the server and formatted!!!!");
+            
+            // Store the response only once
+            this.geminiResponse = data;
+            localStorage.setItem("answeredAIQuestions" + this.qid, JSON.stringify(this.geminiResponse));
+            
+            console.log('Stored successfully:', localStorage.getItem("answeredAIQuestions" + this.qid));
+            console.log(this.geminiResponse);
 
-        // this.geminiResponse= this.groupByPrefix(geminiResponse);
-        console.log(data);
-        console.log(this.geminiResponse);
-        // localStorage.setItem("answeredAIQuestions", JSON.stringify(this.geminiResponse));
-
-        localStorage.setItem("answeredAIQuestions" + this.qid, JSON.stringify(this.geminiResponse));
-        // console.log('Stored successfully:', localStorage.getItem("answeredAIQuestions" + this.qid)); // Just to confirm it's there
-        console.log('Stored successfully:', localStorage.getItem("answeredAIQuestions" + this.qid)); // Just to confirm it's there
-
-        setTimeout(() => {
-          this.loadSubjectiveAIEval();
-        }, 1000);
-
-
-      });
-      console.log('Submitted Questions:', this.selectedQuestionsAnswer);
-      console.log(this.convertedJsonAPIResponsebody)
-      // SAVE THE SELECTED QUESTIONS IN LOCAL STOREAGE
-      // localStorage.setItem("answeredQuestions", JSON.stringify(this.selectedQuestionsAnswer));
-      localStorage.setItem(this.qid + "answeredQuestions", JSON.stringify(this.selectedQuestionsAnswer));
-
-
+            setTimeout(() => {
+                this.loadSubjectiveAIEval();
+            }, 1000);
+        });
+        
+        localStorage.setItem(this.qid + "answeredQuestions", JSON.stringify(this.selectedQuestionsAnswer));
     }
     (error) => {
-      this._snack.open("Please select exactly 3 sets of questions to submit", "", {
-        duration: 3000,
-      });
+        this._snack.open("Please select exactly 3 sets of questions to submit", "", {
+            duration: 3000,
+        });
     }
-  }
+}
+
+
+
+
 
 
 
