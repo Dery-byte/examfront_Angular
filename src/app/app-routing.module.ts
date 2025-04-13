@@ -25,6 +25,7 @@ import { PrintQuizComponent } from './pages/user/print-quiz/print-quiz.component
 import { RegisterCoursesComponent } from './pages/user/register-courses/register-courses.component';
 import { CoursesRegisteredComponent } from './pages/user/courses-registered/courses-registered.component';
 import { AvailableQuizzesComponent } from './pages/user/available-quizzes/available-quizzes.component';
+import { UserLayoutComponent } from './pages/layouts/user-layout/user-layout.component';
 // import { StartQuizComponent } from './pages/user/start-quiz/start-quiz.component';
 
 const routes: Routes = [
@@ -100,11 +101,15 @@ const routes: Routes = [
   {
     path:'user-dashboard',
       // path:'user',
-    component:UserDashboardComponent,
+    component:UserLayoutComponent,
     // path:'register-courses',
     // component:RegisterCoursesComponent,
     canActivate: [NormalGuard],
     children:[
+      // { path: '', redirectTo: 'courses', pathMatch: 'full' }, // Default redirect
+      { path: 'user-dashboard', component: UserDashboardComponent }, // 👈 Loads instead of redirecting
+
+
       {
         path:'register',
         component:RegisterCoursesComponent,

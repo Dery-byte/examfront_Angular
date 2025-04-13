@@ -68,6 +68,10 @@ import { AvailableQuizzesComponent } from './pages/user/available-quizzes/availa
 import { MatSidenavModule } from '@angular/material/sidenav';
 import { MatBadgeModule } from '@angular/material/badge';
 import { CarouselModule } from 'ngx-owl-carousel-o';
+import { UserLayoutComponent } from './pages/layouts/user-layout/user-layout.component';
+import { AdminLayoutComponent } from './pages/layouts/admin-layout/admin-layout.component';
+import { UserNavbarComponent } from './pages/user/user-navbar/user-navbar.component';
+import { UserSidebarComponent } from './pages/user/user-sidebar/user-sidebar.component';
 
 
 
@@ -105,6 +109,10 @@ import { CarouselModule } from 'ngx-owl-carousel-o';
     RegisterCoursesComponent,
     CoursesRegisteredComponent,
     AvailableQuizzesComponent,
+    UserLayoutComponent,
+    AdminLayoutComponent,
+    UserNavbarComponent,
+    UserSidebarComponent,
   ],
   imports: [
     BrowserModule, 

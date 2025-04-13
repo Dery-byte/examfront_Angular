@@ -289,6 +289,8 @@ export class StartComponent implements OnInit {
     // this.printQuiz();
     this.initForm();
     this.preventBackButton();
+  
+
 
   }
 
@@ -629,6 +631,11 @@ export class StartComponent implements OnInit {
     }, 1000);
   }
 
+  // DISABLE PASTE
+  // disablePaste(event: ClipboardEvent): void {
+  //   event.preventDefault();
+  // }
+  
 
   getFormmatedTime() {
     // let timeToseconds = this.timerAll * 60
@@ -673,56 +680,7 @@ export class StartComponent implements OnInit {
   }
 
 
-  // evalSubjective() {
-  //   // const selectedQuestions = [];
-  //   for (const prefix in this.selectedQuestions) {
-  //     this.selectedQuestionsAnswer.push(...this.groupedQuestions[prefix]);
-  //   }
-  //   if (Object.keys(this.selectedQuestions).length === this.numberOfQuestionsToAnswer) {
-  //     // Handle the submission logic here
-  //     localStorage.setItem(this.qid + "answeredQuestions", JSON.stringify(this.selectedQuestions));
-  //     this.convertJson();
-      
-  //     this._quiz.evalTheory(this.convertedJsonAPIResponsebody).subscribe((data: any) => {
-  //       // this.geminiResponse=data.replace('json', "");
-  //       console.log("This is the Original Response from the server and formatted!!!!");
-  //       localStorage.setItem("answeredAI" + this.qid, JSON.stringify(data));
-
-  //       console.log(data);
-  //       // this.geminiResponse = this.parseApiResponse(data); WORKS PREVIOUSLY
-  //       this.geminiResponse = data;
-
-  //       // this.geminiResponse= this.groupByPrefix(geminiResponse);
-  //       console.log(data);
-  //       console.log(this.geminiResponse);
-  //       // localStorage.setItem("answeredAIQuestions", JSON.stringify(this.geminiResponse));
-
-  //       localStorage.setItem("answeredAIQuestions" + this.qid, JSON.stringify(this.geminiResponse));
-  //       // console.log('Stored successfully:', localStorage.getItem("answeredAIQuestions" + this.qid)); // Just to confirm it's there
-  //       console.log('Stored successfully:', localStorage.getItem("answeredAIQuestions" + this.qid)); // Just to confirm it's there
-  //       console.log(this.geminiResponse);
-
-  //       setTimeout(() => {
-  //         this.loadSubjectiveAIEval();
-  //       }, 1000);
-  //       console.log(this.geminiResponse);
-
-
-  //     });
-  //     console.log('Submitted Questions:', this.selectedQuestionsAnswer);
-  //     console.log(this.convertedJsonAPIResponsebody)
-  //     // SAVE THE SELECTED QUESTIONS IN LOCAL STOREAGE
-  //     // localStorage.setItem("answeredQuestions", JSON.stringify(this.selectedQuestionsAnswer));
-  //     localStorage.setItem(this.qid + "answeredQuestions", JSON.stringify(this.selectedQuestionsAnswer));
-
-
-  //   }
-  //   (error) => {
-  //     this._snack.open("Please select exactly 3 sets of questions to submit", "", {
-  //       duration: 3000,
-  //     });
-  //   }
-  // }
+ 
 
 
 
@@ -1006,6 +964,43 @@ export class StartComponent implements OnInit {
 
   //END OF CONVERT TO API RESPONSE
 
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  //SAVING THE INPUT INFORMATION
 
 
 };

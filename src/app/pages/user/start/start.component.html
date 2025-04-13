@@ -16,7 +16,7 @@
                     <!-- {{timerAll}}
                     {{timeO}}
                     {{timeT}} -->
-                    <mat-card class="cards">
+                    <mat-card class="cards staticCard">
                         <mat-card-content>
                             <h1><b>Instructions</b></h1>
                             <ul>
@@ -81,6 +81,8 @@
                             <!-- MULTIPLE SELECTIONS STARTS -->
 
                             <mat-card-content>
+                                <span class="no-select">
+
                                 <div class="row">
                                     <div class="col-md-12">
                                         <p> <b> Q {{q.count}} </b> <span class="ml10" [innerHTML]="q.content"></span>
@@ -122,6 +124,7 @@
                                         </mat-checkbox>
                                     </div>
                                 </div>
+                                </span>
                             </mat-card-content>
                             <!-- MULTIPLE SELECTIONS ENDS -->
 
@@ -161,18 +164,34 @@
 
                                 <!-- <div *ngIf="currentQuestions"> -->
                                 <div *ngFor="let question of currentQuestions">
+
                                     <mat-card-content class="mat-card-content">
                                         <input type="checkbox" [checked]="question.selected"
                                             (change)="onQuestionSelect(question)" disabled hidden>
+                                      
                                         <mat-form-field class="mat-form-field" style="margin-top: -450px;">
-                                            <mat-label>
-                                                {{question.quesNo}} {{ question.question }} {{question.marks}}
-                                            </mat-label>
-                                            <input class="input" name="givenAnswer" [(ngModel)]="question.givenAnswer"
-                                                type="text" matInput>
+                                          <mat-label>
+                                            <span class="no-select">
 
+                                            {{question.quesNo}} {{ question.question }} {{question.marks}}
+                                            </span>
+
+                                          </mat-label>
+                                      
+                                          <textarea class="input"
+                                                    name="givenAnswer"
+                                                    [(ngModel)]="question.givenAnswer"
+                                                    matInput
+                                                    rows="2"
+                                                    >
+
+                                                    >
+                                          </textarea>
+                                          <!-- (paste)="disablePaste($event)" -->
                                         </mat-form-field>
-                                    </mat-card-content>
+                                      </mat-card-content>
+
+                                      
                                     <!-- {{question | json}} -->
 
                                 </div>
@@ -185,8 +204,8 @@
                                             <div class="col-md-6">
                                                 <div class="pagination-controls">
                                                     <button type="submit" mat-raised-button color="primary"
-                                                        (click)="prevPage()"
-                                                        [disabled]="currentPage === 0">Previous</button>
+                                                    (ngModelChange)="saveProgress()" (click)="prevPage()"
+                                                      (ngModelChange)="loadSavedProgress()"  [disabled]="currentPage === 0">Previous</button>
                                                     <span
                                                         style="color: blueviolet; font-size: large; border: 2px solid red;">
 
@@ -194,7 +213,7 @@
                                                         prefixes[prefixes.length-1]}}
                                                     </span>
                                                     <button type="submit" mat-raised-button color="primary"
-                                                        (click)="nextPage()"
+                                                    (ngModelChange)="loadSavedProgress()" (click)="saveProgress()"  (click)="nextPage()"
                                                         [disabled]="currentPage === prefixes.length - 1">Next</button>
                                                 </div>
                                             </div>
@@ -251,11 +270,11 @@
                      {{timeO}}
                      {{timeT}} -->
                     <mat-card class="cards">
-                        <mat-card-header>
+                        <!-- <mat-card-header>
                             <mat-card-title>Time Left: </mat-card-title>
-                        </mat-card-header>
+                        </mat-card-header> -->
                         <mat-card-content>
-                            <h1 class="text-center"><i>{{ getFormmatedTime() }} </i></h1>
+                            <h1 class="text-center"> Time Left: <i>{{ getFormmatedTime() }} </i></h1>
                             <!-- <mat-spinner [value]="(this.time/(this.questions.length * 2 * 60)) * 100"  -->
                             <!-- <mat-spinner [value]="(timer/(this.questions.length  * 60)) * 100 " mode="determinate"
                                 color="accent" style="margin: auto;"></mat-spinner> -->
