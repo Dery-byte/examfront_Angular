@@ -157,7 +157,7 @@
                                 <p><strong>Score:</strong> {{ items.score }}/{{items.maxMarks}}</p>
                                 <!-- <p><strong>Missing Elements</strong> {{ items.keyMissed }}</p> -->
                                  
-                                <div *ngIf="items.keyMissed && items.keyMissed.length > 0" class="missing-elements">
+                                <div *ngIf="items.keyMissed && items.keyMissed.length > 0 && !(items.keyMissed.length === 1 && items.keyMissed[0] === '')" class="missing-elements">
                                     <strong class="missing-elements-title">Missing Elements</strong>
                                     <span class="missing-elements-list">
                                       {{ items.keyMissed }}
