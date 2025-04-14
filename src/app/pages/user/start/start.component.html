@@ -191,7 +191,7 @@
                                                     matInput
                                                     rows="2"
                                                     (ngModelChange)="saveAnswers()"   
-                                                   
+                                                    (paste)="disablePaste($event)"
                                                     >
                                           </textarea>
                                           <!-- (paste)="disablePaste($event)" NO paste option--> 
