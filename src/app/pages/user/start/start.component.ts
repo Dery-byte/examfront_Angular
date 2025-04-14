@@ -11,6 +11,13 @@ import { MatSnackBar } from '@angular/material/snack-bar';
 
 import Swal from 'sweetalert2';
 
+interface QuizAnswers {
+  [prefix: string]: {
+    [tqId: number]: string  // Answers within each prefix group
+  }
+}
+
+
 
 interface QuestionResponse {
   questionNumber: string;
@@ -33,6 +40,42 @@ interface PrefixScores {
   percentage: number;
 }
 
+
+
+// =========================
+interface Category {
+  cid: number;
+  level: string;
+  title: string;
+  description: string;
+  courseCode: string;
+}
+
+interface Quiz {
+  qId: number;
+  title: string;
+  description: string;
+  maxMarks: string;
+  quizTime: string;
+  numberOfQuestions: string;
+  active: boolean;
+  attempted: boolean;
+  quizpassword: string;
+  category: Category;
+}
+
+// interface Question {
+//   quesNo: string;
+//   question: string;
+//   answer: string | null;
+//   marks: string;
+//   quiz: Quiz;
+//   tqId: number;  // Make sure this is included
+//   givenAnswer: string;
+//   selected: boolean;
+// }
+// =============================
+
 @Component({
   selector: 'app-start',
   templateUrl: './start.component.html',
@@ -41,6 +84,8 @@ interface PrefixScores {
 export class StartComponent implements OnInit {
 
   // BEGIN PAGINATION
+  private readonly QUIZ_STORAGE_KEY = 'quiz_answers_by_prefix';
+
 
   title = "pagination";
   page: number = 1;
@@ -115,6 +160,8 @@ export class StartComponent implements OnInit {
     }
   }
 
+
+  localStorageKey = 'quiz_answers';
 
 
   //  ============================SUBJECTIVE QUESTIONS=======================================
@@ -191,13 +238,11 @@ export class StartComponent implements OnInit {
   //   });
   // }
   //  ============================SUBJECTIVE QUESTIONS=======================================
-
+ 
 
   ngOnInit(): void {
     this.qid = this._route.snapshot.params['qid'];
     // this.qid = this._route.snapshot.params['qid'];
-
-
     this._quiz.getQuiz(this.qid).subscribe((data: any) => {
       console.log(data.title);
       this.quiz = data;
@@ -282,9 +327,13 @@ export class StartComponent implements OnInit {
 
   
     this.loadTheory();
+    // this.loadSavedAnswers();
+
     // this.loadSubjective();
     this.loadQuestions();
+
     this.loadQuestionsFromLocalStorage();
+
     // this.startTimer();
     // this.printQuiz();
     this.initForm();
@@ -309,7 +358,10 @@ export class StartComponent implements OnInit {
       console.log(theory);
       // this.sectionB = theory;
       this.groupedQuestions = this.getQuestionsGroupedByPrefix(theory);
+      
       this.prefixes = Object.keys(this.groupedQuestions).sort();
+
+      this.loadQuestionsTheory();
 
       console.log(this.groupedQuestions);
       this.startTimer();
@@ -336,9 +388,34 @@ export class StartComponent implements OnInit {
 
 
   //  ============================SUBJECTIVE QUESTIONS=======================================
-  get currentQuestions(): Question[] {
-    return this.groupedQuestions[this.prefixes[this.currentPage]];
-  }
+  // get currentQuestions(): Question[] {
+  //   return this.groupedQuestions[this.prefixes[this.currentPage]];
+  // }
+
+
+  // get currentQuestions(): Question[] {
+  //   const questions = this.groupedQuestions[this.prefixes[this.currentPage]] || [];
+  //   return questions.map(question => ({ ...question }));
+  // }
+
+
+
+  // get currentQuestions(): Question[] {
+  //   const key = this.prefixes[this.currentPage];
+  //   // this.loadSavedAnswers();
+  //   return this.groupedQuestions[key] || [];  // Returns Question[] or empty array
+  // }
+  public currentQuestions: Question[] = [];
+
+loadQuestionsTheory(): void {
+  const key = this.prefixes[this.currentPage];
+  this.currentQuestions = this.groupedQuestions[key] || [];
+  this.loadSavedAnswers(); // load into currentQuestions
+}
+
+
+
+
   togglePrefixSelection(prefix: string) {
     if (this.selectedQuestions[prefix]) {
       // Deselect all sub-questions
@@ -368,16 +445,46 @@ export class StartComponent implements OnInit {
   onPrefixChange(prefix: string) {
     this.selectedPrefix = prefix;
   }
+  // nextPage() {
+  //   if (this.currentPage < this.prefixes.length - 1) {
+  //     this.currentPage++;
+  //     this.saveAnswers();
+  //         // this.loadSavedAnswers();
+
+  //   }
+  // }
+  // prevPage() {
+  //   if (this.currentPage > 0) {
+  //     this.currentPage--;
+  //     this.saveAnswers();
+  //         // this.loadSavedAnswers();
+
+  //   }
+  // }
+
+
   nextPage() {
+    this.saveAnswers(); // save answers BEFORE changing the page
+  
     if (this.currentPage < this.prefixes.length - 1) {
       this.currentPage++;
+      this.loadQuestionsTheory(); // make sure this sets currentQuestions
     }
   }
+
+  
+
+
   prevPage() {
+    this.saveAnswers(); // save before page change
+  
     if (this.currentPage > 0) {
       this.currentPage--;
+      this.loadQuestionsTheory();
     }
   }
+
+  
   onQuestionSelect(question: Question) {
     if (question.selected) {
       question.selected = false;
@@ -492,6 +599,7 @@ export class StartComponent implements OnInit {
       if (e.isConfirmed) {
   
         // Show the loading spinner
+        this.clearSavedAnswers();
         Swal.fire({
           title: 'Evaluating...',
           text: `Please wait while we evaluate your quiz for "${this.courseTitle}".`,
@@ -558,6 +666,7 @@ export class StartComponent implements OnInit {
       if (e.isConfirmed) {
   
         // Show the loading spinner
+        this.clearSavedAnswers();
         Swal.fire({
           title: 'Evaluating...',
           text: `Please wait while we evaluate your quiz for ${this.courseTitle}.`,
@@ -665,6 +774,7 @@ export class StartComponent implements OnInit {
       localStorage.setItem('MarksGot', JSON.stringify(this.marksGot));
       localStorage.setItem('Attempted', JSON.stringify(this.attempted));
       localStorage.setItem('MaxMarks', JSON.stringify(this.maxMarks));
+      this.clearSavedAnswers();
       // this.addSectBMarks();
       this.preventBackButton();
       // this.evalSubjective();
@@ -1001,7 +1111,53 @@ export class StartComponent implements OnInit {
 
 
   //SAVING THE INPUT INFORMATION
+ 
+  // Save all answers (call this when answers change or before navigation)
+  // private readonly STORAGE_KEY = 'quiz_progress';
+
+ // In your component
+ private saveAnswers(): void {
+  const storageKey = 'savedAnswers';
+  const existing = localStorage.getItem(storageKey);
+  let savedAnswers = existing ? JSON.parse(existing) : [];
+
+  // Merge currentQuestions into savedAnswers
+  this.currentQuestions.forEach((currentQ: any) => {
+    const index = savedAnswers.findIndex((q: any) => q.quesNo === currentQ.quesNo);
+    if (index !== -1) {
+      savedAnswers[index].givenAnswer = currentQ.givenAnswer; // update existing
+    } else {
+      savedAnswers.push({
+        quesNo: currentQ.quesNo,
+        givenAnswer: currentQ.givenAnswer,
+      }); // keep only what's necessary
+    }
+  });
+
+  localStorage.setItem(storageKey, JSON.stringify(savedAnswers));
+}
 
 
+
+saved
+loadSavedAnswers() {
+  const saved = localStorage.getItem('savedAnswers');
+  if (saved) {
+    const savedAnswers = JSON.parse(saved);
+    this.currentQuestions.forEach((question: any) => {
+      const savedQ = savedAnswers.find((sq: any) => sq.quesNo === question.quesNo);
+      if (savedQ) {
+        question.givenAnswer = savedQ.givenAnswer;
+      }
+    });
+  }
+}
+
+
+clearSavedAnswers(): void {
+  localStorage.removeItem('savedAnswers');
+  console.log('Saved answers cleared from localStorage');
+}
+  
 };
 

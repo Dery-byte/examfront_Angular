@@ -434,4 +434,10 @@ loadTimeFromLocalStorage() {
     console.log(this.questionss[0]);
 
   }
+
+
+
+
+
+
 };

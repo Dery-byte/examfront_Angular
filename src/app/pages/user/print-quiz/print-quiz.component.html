@@ -20,6 +20,8 @@
 <!-- {{sectionB | json}} -->
 <!-- {{questionWithAnswers | json}} -->
 
+<!-- {{geminiResponse | json}} -->
+
 
 <!-- {{reportData|json}} -->
 <ngx-ui-loader fgsColor="#ff4081" pbColor="#ff4081" textColor="#ff4081" pbThickness="6"
@@ -162,10 +164,10 @@
                                     </span>
                                   </div>
                                   
-                                  <div *ngIf="!items.keyMissed || items.keyMissed.length <= 0" class="no-missing-elements">
+                                  <div *ngIf="!items.keyMissed || items.keyMissed.length === 0 || (items.keyMissed.length === 1 && items.keyMissed[0] === '')" class="no-missing-elements">
                                     <strong class="no-missing-title">Great Work!</strong>
                                     <span class="no-missing-message">
-                                     No Suguestions
+                                      No Suggestions
                                     </span>
                                   </div>
 
@@ -176,7 +178,6 @@
                         </div>
                       </div>
                       
-
 
                     <!-- <h2>=================================================</h2> -->
 
