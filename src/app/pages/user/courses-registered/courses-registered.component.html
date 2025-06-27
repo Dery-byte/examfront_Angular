@@ -1,39 +1,48 @@
-<!-- {{  RegCourse | json}} -->
+<mat-card style="margin-top: 40px;">
+    <h1>Registered Course(s)</h1>
+    <mat-card-content>
+        <div class="bootstrap-wrapper">
+            <div class="row">
+                <div class="col-md-12">
+                    <!-- Loading button -->
+                    <div *ngIf="isLoading" class="text-center">
+                        <button mat-raised-button color="accent"  style="height:50px;">
+                            <mat-icon class="spinner-icon">
+                                <mat-spinner  diameter="40"></mat-spinner>
+                            </mat-icon>
+                            Loading Courses...
+                        </button>
+                    </div>
 
-<mat-card>
-	<h1>Registered Course(s)</h1>
-	<mat-card-content>
-		<div class="bootstrap-wrapper">
-
-
-			<div class="row">
-				<div class="col-md-12">
-					<div *ngIf="userRecords.length > 0; else elseBlock">
-						<table class="datatable">
-							<thead>
-								<tr>
-									<th>Course Code</th>
-									<th>Course Name</th>
-									<th>Action</th>
-
-								</tr>
-							</thead>
-							<tbody>
-								<tr *ngFor="let c of userRecords; let i=index; let odd = odd" 
-									[ngClass]="odd ? 'odd_col' : 'even_col'">
-									<td>{{ c.category.courseCode}}</td>
-									<td>{{ c.category.title }}</td>
-									<td><button (click)="deleteRegCourse(c.rid)" ><mat-icon color="accent" >delete </mat-icon></button></td>
-								</tr>
-							</tbody>
-						</table>
-					</div>
-					<ng-template #elseBlock>You have not registered for any course yet</ng-template>
-				</div>
-			</div>
-		</div>
-	</mat-card-content>
+                    <div *ngIf="!isLoading">
+                        <div *ngIf="userRecords.length > 0; else elseBlock">
+                            <table class="datatable">
+                                <thead>
+                                    <tr>
+                                        <th>Course Code</th>
+                                        <th>Course Name</th>
+                                        <th>Action</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    <tr *ngFor="let c of userRecords; let i=index; let odd = odd" 
+                                        [ngClass]="odd ? 'odd_col' : 'even_col'">
+                                        <td>{{ c.category.courseCode}}</td>
+                                        <td>{{ c.category.title }}</td>
+                                        <td>
+                                            <button mat-button (click)="deleteRegCourse(c.rid)" [disabled]="isDeleting">
+                                                <mat-icon color="accent">delete</mat-icon>
+                                                <span *ngIf="isDeleting">Deleting...</span>
+                                            </button>
+                                        </td>
+                                    </tr>
+                                </tbody>
+                            </table>
+                        </div>
+                        <ng-template #elseBlock>You have not registered for any course yet</ng-template>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </mat-card-content>
 </mat-card>
-<!-- {{userRecords | json}} -->
-
-<!-- {{RegCourse | json}} -->

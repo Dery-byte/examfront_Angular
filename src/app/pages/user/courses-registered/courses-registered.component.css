@@ -33,3 +33,26 @@ table.datatable th {
 	background-color: black;
 	font-family: sans-serif;
 }
+
+
+
+
+.spinner-icon {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+	height: 200px;
+}
+/* Center the spinner */
+.text-center {
+    text-align: center;
+    margin: 20px 0;
+}
+
+/* Adjust spinner size in buttons */
+button mat-spinner {
+    margin: 0 auto;
+    display: inline-block;
+	width: 70px;
+	height: 30px;
+}

@@ -50,11 +50,27 @@
               </mat-card-content>
 
 
-              <button type="submit" [disabled]="isLogingIn" class="button-flex" mat-raised-button color="primary">
-                <!-- <img *ngIf="isLogingIn" class="spinner" src="../../../assets/images/spinningCircle.gif"> -->
+             <button type="submit" 
+        [disabled]="loading" 
+        class="button-flex" 
+        mat-raised-button 
+        color="primary">
+  <div class="button-content">
+    <mat-spinner *ngIf="loading" 
+                diameter="23" 
+                strokeWidth="4"
+                color="accent"
+                class="spinner-left"></mat-spinner>
+    <span>
+      {{ loading ? 'Authenticating...' : 'Sign in' }}
+    </span>
+  </div>
+</button>
 
-                <img *ngIf="isLogingIn" class="spinner" src="../../../assets/images/spinner.gif">
-                Sign in</button>
+
+
+
+
             </form>
             <!-- <button type="button" class="login-with-google-btn" (click)="signInWithGoogle()">
               Sign in with Google
@@ -84,11 +100,11 @@
 
 
     <!-- fancy dialog box STARTS -->
- <!-- POP UP DIALOG BOX -->
- <ng-template #updateDialog let-data="data">
-  <h1 mat-dialog-title>Reset Password</h1>
-  <div mat-dialog-content>
-      <!-- <form> -->
+    <!-- POP UP DIALOG BOX -->
+    <ng-template #updateDialog let-data="data">
+      <h1 mat-dialog-title>Reset Password</h1>
+      <div mat-dialog-content>
+        <!-- <form> -->
         <mat-form-field>
           <mat-label>Username</mat-label>
           <input [(ngModel)]="resetData.username" required name="username" type="text" matInput required
@@ -96,7 +112,7 @@
         </mat-form-field>
         <mat-form-field>
           <mat-label>Email</mat-label>
-          <input [(ngModel)]="resetData.email" name="email" type="text"  matInput placeholder="Email">
+          <input [(ngModel)]="resetData.email" name="email" type="text" matInput placeholder="Email">
         </mat-form-field>
         <mat-form-field>
           <mat-label>New Password</mat-label>
@@ -108,14 +124,14 @@
           <input [(ngModel)]="resetData.confirmPassword" required name="confirmPassword" type="text" matInput
             placeholder="Confirm Password">
         </mat-form-field>
-  <!-- </form> -->
-  </div>
-  <div mat-dialog-actions>
-    <button mat-button (click)="dialogRef.close()">Cancel</button>
-    <!-- <button mat-button (click)="dialogRef.close(data.question)" onclick="updateTheoryQuestion()">Update</button> -->
-    <button mat-button  (click)="passwordChange()">Update</button>
-  </div>
-</ng-template>
+        <!-- </form> -->
+      </div>
+      <div mat-dialog-actions>
+        <button mat-button (click)="dialogRef.close()">Cancel</button>
+        <!-- <button mat-button (click)="dialogRef.close(data.question)" onclick="updateTheoryQuestion()">Update</button> -->
+        <button mat-button (click)="passwordChange()">Update</button>
+      </div>
+    </ng-template>
 
     <!-- fancy dialog ends here -->
 

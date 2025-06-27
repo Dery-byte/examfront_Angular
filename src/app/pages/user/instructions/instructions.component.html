@@ -1,88 +1,75 @@
-<!-- <ngx-ui-loader
-fgsColor="#ff4081"
-pbColor="#ff4081"
-textColor="#ff4081"
-pbThickness="6"
-text="Loading instructions"
-></ngx-ui-loader>
- -->
-
-
-
-
-
-<!-- {{currentQuizId | json}}
-{{idNumberReport[0]| json}}
-{{currentUserId | json}}
-{{reportQuizId | json}} -->
-
-<!-- <div ngxUiLoaderBlurred (blur)="10"> -->
-<div class="">
-    <div class="contianer card">
-        <div class="row">
-            <div class="col-md-12 ">
-                <mat-card class="">
-                    <mat-card-header>
-                        <!-- Heading -->
-                        <mat-card-title>
-                            Quiz Instructions || Read it carefully
-                        </mat-card-title>
-                        <!-- <mat-card-subtitle>
-                            One step to go
-                        </mat-card-subtitle> -->
-                    </mat-card-header>
-
-                    <mat-card-content class="">
-                        <!-- Content -->
-                        <h1>{{quiz.title}}</h1>
-                        <p>{{quiz.description}}</p>
-                        <mat-divider></mat-divider>
-                        <br>
-                        <h1>Important Notice</h1>
-                        <ul style="list-style: none;">
-                            <!-- {{timeT}} -->
-
-                            <!-- {{timeO}}
-
-                            {{timerAll}} -->
-                            <!-- <li>This quiz is for practice purposes</li> -->
-                            <li>This quiz is just for <b>   {{getFormmatedTime()}} </b> </li>
-                            <!-- <li>You can attempt any number times</li> -->
-                            <li *ngIf="timeO > 0">There are <b>{{quiz.numberOfQuestions}} objectives questions </b> in total</li>
-                            <li>Each question carries <b> {{quiz.maxMarks/quiz.numberOfQuestions}} mark(s)</b>. No
-                                negative marking for wrong ones.</li>
-                            <li *ngIf="numberOfQuestionsToAnswer > 0">Answer all the Multiple choice, and any <b>{{numberOfQuestionsToAnswer}}</b> theory question(s)</li>
-                        </ul>
-                        <mat-divider></mat-divider>
-                        <br>
-                        <h1>Attempting Quiz</h1>
-                        <ul style="list-style: none;">
-                            <li>Click the <b>Start Quiz</b> button to start the quiz, then enter quiz password</li>
-                            <li>The time will start as soon as you start</li>
-                            <li>You can't resume this quiz, if interrupted for any reason</li>
-                            <li>Click on submit Quiz button on th completion of the quiz</li>
-                            <li>Click on Next button to move to the next question</li>
-                            <li>You can print your report as PDF after submitting. </li>
-                        </ul>
-                    </mat-card-content>
-
-
-
-                    <mat-card-actions>
-                        <!-- Action -->
-                        <div class=" container text-center" *ngIf="!isLegible">
-                            <button mat-raised-button color="primary" class="" (click)="startQuiz()">Start Quiz</button>
-                        </div>
-
-                        <div class=" container text-center" *ngIf="isLegible">
-                            <button mat-raised-button color="accent" class="">Quiz Completed</button>
-                        </div>
-                        <!-- Action -->
-                    </mat-card-actions>
-
-                </mat-card>
-
-            </div>
-        </div>
-    </div>
+<div class="loading-container" *ngIf="isLoading; else contentTemplate">
+  <mat-spinner diameter="50"></mat-spinner>
+  <p class="loading-text">Loading quiz instructions...</p>
 </div>
+
+<ng-template #contentTemplate>
+  <div class="container card">
+    <div class="row">
+      <div class="col-md-12">
+        <mat-card class="quiz-instruction-card">
+          <!-- Header Section -->
+          <mat-card-header>
+            <mat-card-title>
+              Quiz Instructions <span *ngIf="quiz">|| {{quiz.title}}</span>
+            </mat-card-title>
+          </mat-card-header>
+
+          <!-- Content Section -->
+          <mat-card-content *ngIf="quiz">
+            <h1>{{quiz.title}}</h1>
+            <p>{{quiz.description}}</p>
+            <mat-divider></mat-divider>
+            <br>
+            
+            <!-- Important Notice Section -->
+            <h2>Important Notice</h2>
+            <ul class="instruction-list">
+              <li>This quiz is timed for <b>{{getFormmatedTime()}}</b></li>
+              <li *ngIf="timeO > 0">There are <b>{{quiz.numberOfQuestions}} objective questions</b></li>
+              <li>Each question carries <b>{{quiz.maxMarks/quiz.numberOfQuestions}} mark(s)</b></li>
+              <li *ngIf="numberOfQuestionsToAnswer > 0">
+                Answer all MCQs and any <b>{{numberOfQuestionsToAnswer}}</b> theory question(s)
+              </li>
+            </ul>
+            
+            <mat-divider></mat-divider>
+            <br>
+            
+            <!-- Attempting Quiz Section -->
+            <h2>Attempting Quiz</h2>
+            <ul class="instruction-list">
+              <li>Click <b>Start Quiz</b> and enter the quiz password</li>
+              <li>The timer starts immediately</li>
+              <li>You can't resume if interrupted</li>
+              <li>Submit when completed</li>
+              <li>Use Next button to navigate</li>
+              <li>Print your report as PDF after submitting</li>
+            </ul>
+          </mat-card-content>
+
+          <!-- Actions Section -->
+          <mat-card-actions class="text-center">
+            <div class=" container text-center" >
+              <button *ngIf="!isLegible" 
+                      mat-raised-button 
+                      color="primary" 
+                      (click)="startQuiz()"
+                      [disabled]="!quiz">
+                Start Quiz
+              </button>
+              <!-- {{isLegible}} -->
+              
+              <button *ngIf="isLegible" 
+                      mat-raised-button 
+                      color="accent"
+                      disabled>
+                Quiz Completed
+              </button>
+            </div>
+          </mat-card-actions>
+        </mat-card>
+      </div>
+    </div>
+  </div>
+</ng-template>

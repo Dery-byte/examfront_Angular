@@ -18,3 +18,111 @@
     cursor: not-allowed;  
   }
   
+  mat-spinner {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+	margin-top: 30px;
+    margin-left: 200px;
+}
+
+
+
+
+
+
+.quiz-summary-card {
+  margin-top: 30px;
+  padding: 20px;
+}
+
+.loading-spinner {
+  margin: 20px auto;
+  display: block;
+}
+
+.section-title {
+  margin-bottom: 20px;
+}
+
+.course-selection {
+  padding: 15px;
+}
+
+.quiz-card {
+  margin-bottom: 20px;
+}
+
+.quiz-avatar {
+  background-color: #f0f0f0;
+}
+
+.quiz-description {
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.summary-table {
+  width: 100%;
+  margin: 10px 0;
+}
+
+.summary-table th {
+  text-align: left;
+  padding: 8px;
+}
+
+.summary-table td {
+  padding: 8px;
+}
+
+.no-quizzes-message, .no-results {
+  text-align: center;
+  padding: 20px;
+}
+
+.disabled-button {
+  opacity: 0.6;
+  cursor: not-allowed;
+}
+
+
+
+
+
+
+
+
+
+
+
+/* ======================= */
+
+
+.loading-container {
+  display: flex;
+  justify-content: center;
+  padding: 20px;
+}
+
+.loading-button {
+  min-width: 120px; /* Ensures consistent button width */
+}
+
+.button-content {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+}
+
+.button-spinner {
+  display: inline-flex; /* Corrects vertical alignment */
+  margin-right: 8px;
+}
+
+/* Properly centers the spinner circle */
+.mat-progress-spinner, .mat-spinner {
+  vertical-align: middle;
+}

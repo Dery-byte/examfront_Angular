@@ -1,12 +1,86 @@
-.truncate{
-    display: block;
-    white-space: nowrap;
-    width: 100%;
-    overflow: hidden;
-    text-overflow: ellipsis;
+/* Main loading container styles */
+.loading-container {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  padding: 2rem;
+  min-height: 200px;
 }
 
-.exmple-header-image{
-     background-image: url(../../../../assets/logo3.jpg);
-     background-size: cover;
+/* Button loading spinner styles */
+.button-loading .mat-spinner {
+  display: inline-block;
+  margin-right: 8px;
+}
+
+.button-loading .mat-spinner circle {
+  stroke: currentColor;
+}
+
+/* Form field spinner styles */
+.form-loading-spinner {
+  position: absolute;
+  right: -30px;
+  top: 50%;
+  transform: translateY(-50%);
+}
+
+/* Quiz list spinner styles */
+.quiz-list-spinner {
+  margin: 2rem auto;
+  display: block;
+}
+
+/* Dialog spinner styles */
+.dialog-spinner {
+  margin: 1.5rem auto;
+  display: block;
+}
+
+
+
+/* Truncate long quiz descriptions */
+.truncate {
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  display: block;
+}
+
+/* Table styles for results dialog */
+table {
+  width: 100%;
+  border-collapse: collapse;
+  margin: 1rem 0;
+}
+
+th, td {
+  padding: 12px;
+  text-align: left;
+  border-bottom: 1px solid #e0e0e0;
+}
+
+th {
+  background-color: #f5f5f5;
+  font-weight: 500;
+}
+
+/* Responsive adjustments */
+@media (max-width: 768px) {
+  .loading-container {
+    padding: 1rem;
+  }
+  
+  .form-loading-spinner {
+    position: relative;
+    right: auto;
+    top: auto;
+    transform: none;
+    margin: 10px auto;
+    display: block;
+  }
+  
+  .button-loading .mat-spinner {
+    margin-right: 6px;
+  }
 }

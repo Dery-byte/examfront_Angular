@@ -206,7 +206,7 @@ export class StartComponent implements OnInit {
     this.preventBackButton();
   
 
-    // event.returnValue = '' as any; // This is required for some older browsers
+    event.returnValue = '' as any; // This is required for some older browsers
   }
 
   @HostListener('window:unload', ['$event'])
@@ -504,45 +504,49 @@ loadQuestionsTheory(): void {
 
 
 
-  loadQuestions(): void {
-    this._questions.getQuestionsOfQuiz(this.qid).subscribe((data: any) => {
-      // this._questions.getQuestionsOfQuizForText(this.qid).subscribe((data: any) => {  // this does the question shuffle on start of quiz
-      // this._questions.getQuestionsOfQuizForText(1).subscribe((data: any) => {  // this does the question shuffle on start of quiz
-      // console.log(data[0].answer);
-      console.log("This is quest data",data);
-      this.questions = data.map((q, index) => {
-        q.count = index + 1;
-        q['givenAnswer'] = [];
-        console.log(this.questions)
+  // loadQuestions(): void {
+  //   this._questions.getQuestionsOfQuiz(this.qid).subscribe((data: any) => {
+  //     // this._questions.getQuestionsOfQuizForText(this.qid).subscribe((data: any) => {  // this does the question shuffle on start of quiz
+  //     // this._questions.getQuestionsOfQuizForText(1).subscribe((data: any) => {  // this does the question shuffle on start of quiz
+  //     // console.log(data[0].answer);
+  //     console.log("This is quest data",data);
+  //     this.questions = data.map((q, index) => {
+  //       q.count = index + 1;
+  //       q['givenAnswer'] = [];
+  //       console.log(this.questions)
 
-        return q;
+  //       return q;
 
-      });
-
-
-    },
-      (error) => {
-        console.log("Error Loading questions");
-        Swal.fire("Error", "Error loading questions", "error");
-      }
-    );
-    this.preventBackButton();
-  }
+  //     });
 
 
+  //   },
+  //     (error) => {
+  //       console.log("Error Loading questions");
+  //       Swal.fire("Error", "Error loading questions", "error");
+  //     }
+  //   );
+  //   this.preventBackButton();
+  // }
 
-  updateSelectedAnswers(q: any, option: string, isChecked: boolean) {
-    if (isChecked) {
-      // Add the option to the givenAnswer array if it's checked
-      q.givenAnswer.push(option);
-    } else {
-      // Remove the option from the givenAnswer array if it's unchecked
-      const index = q.givenAnswer.indexOf(option);
-      if (index !== -1) {
-        q.givenAnswer.splice(index, 1);
-      }
-    }
-  }
+
+
+  
+
+
+
+  // updateSelectedAnswers(q: any, option: string, isChecked: boolean) {
+  //   if (isChecked) {
+  //     // Add the option to the givenAnswer array if it's checked
+  //     q.givenAnswer.push(option);
+  //   } else {
+  //     // Remove the option from the givenAnswer array if it's unchecked
+  //     const index = q.givenAnswer.indexOf(option);
+  //     if (index !== -1) {
+  //       q.givenAnswer.splice(index, 1);
+  //     }
+  //   }
+  // }
 
   loadQuestionsWithAnswers() {
     this._questions.getQuestionsOfQuiz(this.qid).subscribe((data: any) => {
@@ -1110,10 +1114,8 @@ loadQuestionsTheory(): void {
 
 
 
-  //SAVING THE INPUT INFORMATION
- 
-  // Save all answers (call this when answers change or before navigation)
-  // private readonly STORAGE_KEY = 'quiz_progress';
+//PESISTING THEORY EVEN ON PAGE REFRESH
+
 
  // In your component
  private saveAnswers(): void {
@@ -1156,8 +1158,152 @@ loadSavedAnswers() {
 
 clearSavedAnswers(): void {
   localStorage.removeItem('savedAnswers');
+  localStorage.removeItem('selectedAnswers');
   console.log('Saved answers cleared from localStorage');
 }
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+//PESISTING OBJ EVEN ON PAGE REFRESH
+loadQuestions(): void {
+  this._questions.getQuestionsOfQuiz(this.qid).subscribe(
+    (data: any) => {
+      // Get all stored answers from localStorage
+      const storedAnswers = JSON.parse(localStorage.getItem('selectedAnswers') || '{}');
+
+      this.questions = data.map((q, index) => {
+        // Add count property for display purposes
+        q.count = index + 1;
+
+        // Restore givenAnswer from localStorage if available
+        if (storedAnswers[q.quesId]) {
+          q.givenAnswer = [...storedAnswers[q.quesId]]; // Create a fresh copy
+        } else {
+          q.givenAnswer = []; // Initialize empty array if no saved answers
+        }
+
+        // 🔍 Debugging Logs
+        console.log(`📥 Question ID: ${q.quesId}, Restored Answers:`, q.givenAnswer);
+
+        return q;
+      });
+
+      // 🔍 Final questions array check
+      console.log("✅ Final loaded questions:", this.questions);
+    },
+    (error) => {
+      console.log("Error Loading questions");
+      Swal.fire("Error", "Error loading questions", "error");
+    }
+  );
+
+  this.preventBackButton();
+}
+
+
+
+updateSelectedAnswers(q: any, option: string, isChecked: boolean) {
+  // Initialize storage if needed
+  if (!q.givenAnswer) {
+    q.givenAnswer = [];
+  }
+  
+  // Get all stored answers from localStorage
+  const allStoredAnswers = JSON.parse(localStorage.getItem('selectedAnswers') || '{}');
+  
+  // Handle adding or removing the option from current question's answers
+  if (isChecked) {
+    if (!q.givenAnswer.includes(option)) {
+      q.givenAnswer.push(option);
+    }
+  } else {
+    const index = q.givenAnswer.indexOf(option);
+    if (index !== -1) {
+      q.givenAnswer.splice(index, 1);
+    }
+  }
+  
+  // Update the specific question's answers in the overall storage object
+  // Using question ID as the unique key to avoid conflicts
+  allStoredAnswers[q.quesId] = [...q.givenAnswer]; // Create a copy to avoid reference issues
+  
+  // Save all answers back to localStorage
+  localStorage.setItem('selectedAnswers', JSON.stringify(allStoredAnswers));
+  
+  // 🔍 Debugging Logs
+  console.log("✅ Updated Question ID:", q.quesId);
+  console.log("➡️ Option Changed:", option, "Checked:", isChecked);
+  console.log("📦 Current givenAnswer:", q.givenAnswer);
+  console.log("🗃️ All storedAnswers:", allStoredAnswers);
+  
+  // Return the updated answers (useful for reactive frameworks)
+  return q.givenAnswer;
+}
+
   
 };
 

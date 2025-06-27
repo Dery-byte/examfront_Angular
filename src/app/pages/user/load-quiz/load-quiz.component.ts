@@ -1,14 +1,11 @@
 import { Component, OnInit } from '@angular/core';
-import { ActivatedRoute, Route, Router } from '@angular/router';
-import { QuestionService } from 'src/app/services/question.service';
+import { ActivatedRoute, Router } from '@angular/router';
 import { QuizService } from 'src/app/services/quiz.service';
-import { PrintQuizComponent } from '../print-quiz/print-quiz.component';
-import { MatDialog, MAT_DIALOG_DATA, MatDialogRef, MatDialogModule } from '@angular/material/dialog';
+import { MatDialog } from '@angular/material/dialog';
 import { ReportServiceService } from 'src/app/services/report-service.service';
 import { LoginService } from 'src/app/services/login.service';
 import { MatSnackBar } from '@angular/material/snack-bar';
 import { RegCoursesService } from 'src/app/services/reg-courses.service';
-
 
 @Component({
   selector: 'app-load-quiz',
@@ -16,212 +13,189 @@ import { RegCoursesService } from 'src/app/services/reg-courses.service';
   styleUrls: ['./load-quiz.component.css']
 })
 export class LoadQuizComponent implements OnInit {
+  // Dialog control
+  productDialog: boolean = false;
+  
+  // Data variables
+  userRecords: any[] = [];
+  availablequizzes: any[] = [];
+  quizzes: any[] = [];
+  reports: any[] = [];
+  reportData: any;
+  categories: any;
+  
+  // ID variables
+  catId: any;
+  qId: any;
+  pqId: any;
+  currentQID: any;
+  u_id: any;
+  
+  // State management
+  disabledButtons: { [key: number]: boolean } = {};
+  isPrintDisabled: boolean = false;
+  
+  // Loading states
+  isLoadingCourses: boolean = true;
+  isLoadingQuizzes: boolean = false;
+  isLoadingReports: boolean = false;
 
-  productDialog: boolean;
-  userRecords: any[];
-  public availablequizzes: any = [];
-  catId;
-  qId
-  pqId
-  quizzes;
-  currentQID
-  reportData;
-  categories;
-  RegCourse
-  u_id
-  disabledButtons: { [key: number]: boolean } = {};  // Track the disabled state by unique ID
-  reports
-
-
-  // AiAnsweredQuestions: any=[];
-  // reportData;
-  // pqId
-  // qId;
-
-
-
-
-
-  constructor(private _route: ActivatedRoute,
+  constructor(
+    private _route: ActivatedRoute,
     private _quiz: QuizService,
     public dialog: MatDialog,
     private router: Router,
     private _report: ReportServiceService,
     private _couseReg: RegCoursesService,
-
     private login: LoginService,
-    private snack: MatSnackBar,
-    // private print_quiz:PrintQuizComponent,
+    private snack: MatSnackBar
   ) { }
 
-
-
-
   ngOnInit(): void {
+    this.loadInitialData();
+    this.loadQuizzesBasedOnRoute();
+    this.loadRegisteredCourses();
+  }
 
+  private loadInitialData(): void {
+    this.isLoadingCourses=true;
     const userDetails = localStorage.getItem('user');
-    const Object = JSON.parse(userDetails);
-    this.u_id = Object.id;
-
-    this._report.getReportsByUserID(this.u_id).subscribe((data)=>{
-
-      this.reports=data;
-      console.log(data);
-    })
+    if (userDetails) {
+      const userObject = JSON.parse(userDetails);
+      this.u_id = userObject.id;
+      
+      this.isLoadingReports = true;
+      this._report.getReportsByUserID(this.u_id).subscribe({
+        next: (data:any) => {
+          this.reports = data;
+          this.isLoadingReports = false;
+        },
+        error: (error) => {
+          console.error('Error loading reports:', error);
+          this.isLoadingReports = false;
+        }
+      });
+    }
 
     this.getButtonState();
+  }
 
-
-
-    // this.getAIAnsweredQuestions();
-    // this.loadReport();
-    // this.qId = this.router.navigate(['qid']);
-    // this.qId = this._route.paramMap['qId']
-    this.qId = this._route.snapshot.params['qid'];
-    console.log(this.qId)
+  private loadQuizzesBasedOnRoute(): void {
     this._route.params.subscribe((params) => {
       this.catId = params['catId'];
-      console.log(this.catId);
+      
       if (this.catId == 0) {
-        this._quiz.actieQuizzes().subscribe((data: any) => {
-          this.quizzes = data;
-        },
-          (error) => {
-
-            this.snack.open("You're Session has expired! ", "", {
+        this._quiz.actieQuizzes().subscribe({
+          next: (data: any) => {
+            this.quizzes = data;
+          },
+          error: (error) => {
+            this.snack.open("Your session has expired!", "", {
               duration: 3000,
             });
             this.login.logout();
-            // alert("Failed to load quizzes");
           }
-        );
-      }
-      else {
-        // console.log("Load specific questions");
-        this._quiz.getActieQuizzesOfCategory(this.catId).subscribe((data: any) => {
-          this.quizzes = data;
-          console.log(data);
-        },
-          (error) => {
-            alert("Server error");
-          });
+        });
+      } else {
+        this._quiz.getActieQuizzesOfCategory(this.catId).subscribe({
+          next: (data: any) => {
+            this.quizzes = data;
+          },
+          error: (error) => {
+            this.snack.open("Error loading quizzes", "", {
+              duration: 3000,
+            });
+          }
+        });
       }
     });
-    // console.log("Load all quizzes");
+  }
 
-
-
-
-
-
-    this.qId = this._route.paramMap['qId']
-    console.log(this.qId)
-    this._couseReg.getRegCourses().subscribe((data: any) => {
-      this.categories = data;
-      // this.userRecords = this.checkUserId();
-
-    },
-      (error) => {
-        this.snack.open("You'er Session has expired", "", {
+  private loadRegisteredCourses(): void {
+    this.isLoadingCourses = true;
+    this._couseReg.getRegCourses().subscribe({
+      next: (data: any) => {
+        this.categories = data;
+        this.isLoadingCourses = false;
+      },
+      error: (error) => {
+        this.snack.open("Your session has expired", "", {
           duration: 3000
         });
-        this.login
-      });
+        this.login.logout();
+        this.isLoadingCourses = false;
+      }
+    });
   }
-
-
-  // getAIAnsweredQuestions(){
-  //   const theory = localStorage.getItem('answeredQuestions');
-  //   this.AiAnsweredQuestions = JSON.parse(theory);
-  //   console.log(this.AiAnsweredQuestions);
-  // }
 
   checkUserId(): any[] {
-    // Filter the records associated with user id 6
     const userDetails = localStorage.getItem('user');
-    const Object = JSON.parse(userDetails);
-    this.u_id = Object.id;
-    return this.categories.filter(item => item.user.id === this.u_id);
-    // return this.RegCourse.filter(item => item.user.id === 6);
-
+    if (userDetails) {
+      const userObject = JSON.parse(userDetails);
+      this.u_id = userObject.id;
+      return this.categories.filter((item: any) => item.user.id === this.u_id);
+    }
+    return [];
   }
 
-// ================================================================
-  onQuizOptionSelected() {
-    this._quiz.getActieQuizzesOfCategory(this.categories.cid).subscribe((quiz: any) => {
-      this.availablequizzes = quiz;
-      console.log(this.availablequizzes);
-    })
+  onQuizOptionSelected(): void {
+    if (!this.categories?.cid) return;
+    
+    this.isLoadingQuizzes = true;
+    this._quiz.getActieQuizzesOfCategory(this.categories.cid).subscribe({
+      next: (quiz: any) => {
+        this.availablequizzes = quiz;
+        this.isLoadingQuizzes = false;
+      },
+      error: (error) => {
+        console.error('Error loading quizzes:', error);
+        this.isLoadingQuizzes = false;
+      }
+    });
   }
 
-
-
-
-
-  hideDialog() {
+  hideDialog(): void {
     this.productDialog = false;
     this.qId = null;
   }
-  openNew(id: number) {
+
+  openNew(id: number): void {
     this.productDialog = true;
     this.pqId = id;
-    console.log(id)
     this.loadReport();
-    this.pqId = null;
   }
 
-
-  getButtonState() {
+  getButtonState(): void {
     const storedDisabledButtons = localStorage.getItem('disabledButtons');
     if (storedDisabledButtons) {
       this.disabledButtons = JSON.parse(storedDisabledButtons);
     }
   }
 
-
-
-  onPrintClick(event: MouseEvent, qId: number) {
-    console.log(`Button clicked with ID: ${qId}`);
-    console.log(`Button disabled state before click: ${this.disabledButtons[qId]}`);
-
+  onPrintClick(event: MouseEvent, qId: number): void {
     if (this.disabledButtons[qId]) {
       event.preventDefault();
       event.stopPropagation();
       return;
     }
+    
     this.disabledButtons[qId] = true;
-    console.log(`Button disabled state after click: ${this.disabledButtons[qId]}`);
-    // Save the updated state to localStorage
     localStorage.setItem('disabledButtons', JSON.stringify(this.disabledButtons));
     this.router.navigate(['/print_quiz/', qId]);
   }
 
-
-  loadReport() {
+  loadReport(): void {
     const userDetails = localStorage.getItem('user');
-    const Object = JSON.parse(userDetails);
-    this._report.getReport(Object.id, this.pqId).subscribe((report) => {
-      this.reportData = report;
-      console.log(this.reportData);
-      console.log(this.reportData[0].marksB)
-      console.log(this.reportData[0].marks);
-      console.log(this.reportData[0].progress);
-      console.log(this.reportData[0].quiz.title);
-      console.log(this.reportData[0].user.lastname);
-
-
-
-      console.log(report);
+    if (!userDetails || !this.pqId) return;
+    
+    const userObject = JSON.parse(userDetails);
+    this._report.getReport(userObject.id, this.pqId).subscribe({
+      next: (report) => {
+        this.reportData = report;
+      },
+      error: (error) => {
+        console.error('Error loading report:', error);
+      }
     });
   }
-
-
-
-
-
-  hola() {
-    // this.print_quiz.printQuiz();
-  }
 }
-
-

@@ -1,5 +1,3 @@
-
-
 <app-navbar></app-navbar>
 
 
@@ -7,7 +5,7 @@
   <div class="container">
     <div class="row">
       <div class="col-md-6 offset-md-3">
-       <div class="login-form-flex">
+        <div class="login-form-flex">
           <mat-card>
 
             <div class="container text-center">
@@ -18,9 +16,7 @@
             <form (ngSubmit)="formSubmit()">
               <mat-card-content class=" text-center">
                 <mat-form-field class="example-full-width">
-                  <input
-                  required
-                  [(ngModel)]="user.username" name="username" matInput placeholder="Username">
+                  <input required [(ngModel)]="user.username" name="username" matInput placeholder="Username">
                   <mat-hint>Username must be unique!! </mat-hint>
                 </mat-form-field>
 
@@ -45,14 +41,27 @@
                   <input [(ngModel)]="user.phone" name="phone" matInput placeholder="Phone Number">
                 </mat-form-field>
 
-                <button type="submit" class="example-full-width" mat-raised-button color="primary" class="btn-block">
+                <!-- <button type="submit" class="example-full-width" mat-raised-button color="primary" class="btn-block">
                   <img *ngIf="isLogingIn" class="spinner" src="../../../assets/images/spinningCircle.gif">
 
-                  Register</button>
+                  Register</button> -->
+
+
+
+
                 <!-- <button type="submit" mat-raised-button color="accent" style="margin-left: 20px;">Clear</button> -->
-  
+            <button type="submit" [disabled]="loading" class="example-full-width"  mat-raised-button
+                color="primary" class="btn-block">
+                <div class="button-content">
+                  <mat-spinner *ngIf="loading" diameter="23" strokeWidth="4" color="accent"
+                    class="spinner-left"></mat-spinner>
+                  <span>
+                    {{ loading ? 'Registering...' : 'Register' }}
+                  </span>
+                </div>
+              </button>
               </mat-card-content>
-              
+  
 
             </form>
           </mat-card>

@@ -193,17 +193,26 @@ export class LoginComponent implements OnInit {
   }
 
   deleteSelectedProducts() { }
-
+  
+  loading = false;
   formSubmit() {
-    // this.isLogingIn=true;
+        this.isLogingIn = true;
+
+    this.loading = true;
     this.hideDialog();
     if (this.loginData.username.trim() == ' ' || this.loginData.password == null) {
+      this.loading = false;
+
       this.snack.open('Username is required !! ', '', {
         duration: 3000,
       });
+
       return;
+
     }
-    this.isLogingIn = false;
+    // this.loading=false;
+
+    // this.isLogingIn = false;
 
     if (this.loginData.username.trim() == ' ' || this.loginData.password == null) {
       this.isLogingIn = true;
@@ -256,6 +265,8 @@ export class LoginComponent implements OnInit {
 
       },
       (error) => {
+        this.loading = false;
+
         console.log("Error !!!!");
         console.log(error);
         this.snack.open("Invalid Details  !! Try again", "", {
@@ -300,7 +311,7 @@ export class LoginComponent implements OnInit {
       }
     });
     // console.log("Not in the list")
-            // Swal.fire("Error", "Username not in the database", "error");
+    // Swal.fire("Error", "Username not in the database", "error");
 
   }
 

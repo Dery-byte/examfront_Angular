@@ -141,3 +141,18 @@ img, button{
 
 
 
+.button-content {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+}
+
+.spinner-left {
+  margin-right: 8px;
+}
+
+/* Optional: Custom spinner color */
+.mat-spinner.spinner-left ::ng-deep circle {
+  stroke: white;
+}
