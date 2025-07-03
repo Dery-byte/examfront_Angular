@@ -78,17 +78,17 @@
 
 
    /* ============================CURRENT TEMPLATE STYLES================ */
-   @import "src/assets/homecss/css/bootstrap.css";
-   @import "src/assets/homecss/css/flaticon.css"; /*There was an error he check the source file you commented it*/
-   @import "src/assets/homecss/css/themify-icons.css";
+   /* @import "src/assets/homecss/css/bootstrap.css";
+   @import "src/assets/homecss/css/flaticon.css"; 
+   @import "src/assets/homecss/css/themify-icons.css"; */
    /* @import "src/assets/homecss/vendors/owl-carousel/owl.carousel.min.css"; */
-   @import "src/assets/homecss/vendors/nice-select/css/nice-select.css";
+   /* @import "src/assets/homecss/vendors/nice-select/css/nice-select.css";
    @import "src/assets/homecss/css/style.css";
-   @import "src/assets/homecss/css/breadcrumb.css";
+   @import "src/assets/homecss/css/breadcrumb.css"; */
    /* @import "src/assets/homecss/css/style.css.map"; */
 
   
-  .testi_item img {
+  /* .testi_item img {
     width: 100px; 
     height: auto;
     border-radius: 50%;
@@ -97,14 +97,14 @@
 
 
   ::ng-deep .owl-dots .owl-dot span {
-    background-color: #e4e123 !important; /* Change to your preferred color */
+    background-color: #e4e123 !important; 
     width: 12px;
     height: 12px;
-  }
+  } */
   
-  ::ng-deep .owl-dots .owl-dot.active span {
-    background-color: #11033a !important; /* Active dot color */
-    width: 14px; /* Slightly larger for emphasis */
+  /* ::ng-deep .owl-dots .owl-dot.active span {
+    background-color: #11033a !important;
+    width: 14px; 
     height: 14px;
   }
-  
+   */

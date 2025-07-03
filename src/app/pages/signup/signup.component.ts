@@ -26,7 +26,10 @@ export class SignupComponent implements OnInit {
 
 
 
-  usernamePattern: RegExp = /^[a-zA-Z]{2}\/[a-zA-Z]{3}\/\d{2}\/\d{4}$/i;
+  // usernamePattern: RegExp = /^[a-zA-Z]{2}\/[a-zA-Z]{3}\/\d{2}\/\d{4}$/i;
+
+  usernamePattern: RegExp = /^[A-Z]{2,5}\/[A-Z]{2,4}\/\d{2}(\/\d{2})?\/\d{4}$/i;
+
   emailPattern: RegExp = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
 
   validateUsername(username: string): boolean {

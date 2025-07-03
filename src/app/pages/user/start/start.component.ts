@@ -706,7 +706,7 @@ loadQuestionsTheory(): void {
     setTimeout(() => {
       
       this.printQuiz();
-    }, 1000); // 3000 milliseconds = 3 seconds delay
+    }, 6000); // 3000 milliseconds = 3 seconds delay
   }
 
 
