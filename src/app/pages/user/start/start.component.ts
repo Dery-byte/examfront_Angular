@@ -204,7 +204,7 @@ export class StartComponent implements OnInit {
     console.log("Helllooooo...")
     // event.preventDefault();
     this.preventBackButton();
-  
+
 
     event.returnValue = '' as any; // This is required for some older browsers
   }
@@ -238,7 +238,7 @@ export class StartComponent implements OnInit {
   //   });
   // }
   //  ============================SUBJECTIVE QUESTIONS=======================================
- 
+
 
   ngOnInit(): void {
     this.qid = this._route.snapshot.params['qid'];
@@ -270,10 +270,10 @@ export class StartComponent implements OnInit {
     );
 
 
-    
-    
+
+
     this._quiz.getNumerOfQuesToAnswer(this.qid).subscribe((data: any) => {
-      this.numberOfQuestionsToAnswer =data[0].totalQuestToAnswer;
+      this.numberOfQuestionsToAnswer = data[0].totalQuestToAnswer;
       console.log("This is for number of questions to answer", data[0].timeAllowed);
       console.log("Number question to answer ", data[0].totalQuestToAnswer);
       this.quizTitle = data[0].quiz.title;
@@ -288,7 +288,7 @@ export class StartComponent implements OnInit {
       let timerString = localStorage.getItem('countdown_timer');
       const timerNumber = parseInt(timerString, 10);
       console.log(typeof (timerNumber));
-      
+
       if (timerNumber) {
         this.timerAll = timerNumber;
         console.log("The remaining time is ", this.timerAll);
@@ -302,11 +302,11 @@ export class StartComponent implements OnInit {
         // this.timerAll = (this.quiz.quizTime * 60);
         this.timerAll = (this.timeT + this.timeO) * 60;
         // this.timerAll = (this.questions.length * 2 * 60) + this.timeT;
-        localStorage.setItem('totalTime',JSON.stringify(this.timerAll));
+        localStorage.setItem('totalTime', JSON.stringify(this.timerAll));
 
       }
 
-     
+
 
       // this.timerAll = (this.timeT + this.timeO) * 60;
 
@@ -325,7 +325,7 @@ export class StartComponent implements OnInit {
     // console.log(this.timerAll);
 
 
-  
+
     this.loadTheory();
     // this.loadSavedAnswers();
 
@@ -338,7 +338,7 @@ export class StartComponent implements OnInit {
     // this.printQuiz();
     this.initForm();
     this.preventBackButton();
-  
+
 
 
   }
@@ -358,7 +358,7 @@ export class StartComponent implements OnInit {
       console.log(theory);
       // this.sectionB = theory;
       this.groupedQuestions = this.getQuestionsGroupedByPrefix(theory);
-      
+
       this.prefixes = Object.keys(this.groupedQuestions).sort();
 
       this.loadQuestionsTheory();
@@ -407,11 +407,11 @@ export class StartComponent implements OnInit {
   // }
   public currentQuestions: Question[] = [];
 
-loadQuestionsTheory(): void {
-  const key = this.prefixes[this.currentPage];
-  this.currentQuestions = this.groupedQuestions[key] || [];
-  this.loadSavedAnswers(); // load into currentQuestions
-}
+  loadQuestionsTheory(): void {
+    const key = this.prefixes[this.currentPage];
+    this.currentQuestions = this.groupedQuestions[key] || [];
+    this.loadSavedAnswers(); // load into currentQuestions
+  }
 
 
 
@@ -465,26 +465,26 @@ loadQuestionsTheory(): void {
 
   nextPage() {
     this.saveAnswers(); // save answers BEFORE changing the page
-  
+
     if (this.currentPage < this.prefixes.length - 1) {
       this.currentPage++;
       this.loadQuestionsTheory(); // make sure this sets currentQuestions
     }
   }
 
-  
+
 
 
   prevPage() {
     this.saveAnswers(); // save before page change
-  
+
     if (this.currentPage > 0) {
       this.currentPage--;
       this.loadQuestionsTheory();
     }
   }
 
-  
+
   onQuestionSelect(question: Question) {
     if (question.selected) {
       question.selected = false;
@@ -531,7 +531,7 @@ loadQuestionsTheory(): void {
 
 
 
-  
+
 
 
 
@@ -601,7 +601,7 @@ loadQuestionsTheory(): void {
       cancelButtonText: "Cancel"
     }).then((e) => {
       if (e.isConfirmed) {
-  
+
         // Show the loading spinner
         this.clearSavedAnswers();
         Swal.fire({
@@ -614,7 +614,7 @@ loadQuestionsTheory(): void {
             Swal.showLoading();
           }
         });
-  
+
         // Run all your logic after a short delay or immediately
         setTimeout(() => {
           this.evalQuiz();
@@ -622,19 +622,19 @@ loadQuestionsTheory(): void {
           this.loadQuestionsWithAnswers();
           // this.evalSubjective();
           this.preventBackButton();
-  
+
           // Optional: Close the spinner and show success message
           Swal.fire({
             icon: 'success',
             title: 'Evaluated!',
             text: `Your results for "${this.courseTitle}" is available for print on the dashboard.`,
           });
-  
-        }, 4000); // You can remove this delay or wait for async logic instead
+
+        }, 3000); // You can remove this delay or wait for async logic instead
       }
     });
   }
-  
+
 
   // submitAllQuiz() {
   //   // this.evalSubjective();
@@ -659,7 +659,7 @@ loadQuestionsTheory(): void {
   //   });
   // }
 
-  submitAllQuiz() {
+  async submitAllQuiz() {
     Swal.fire({
       title: "Do you want to submit the quiz?",
       icon: "info",
@@ -668,7 +668,7 @@ loadQuestionsTheory(): void {
       cancelButtonText: "Cancel"
     }).then((e) => {
       if (e.isConfirmed) {
-  
+
         // Show the loading spinner
         this.clearSavedAnswers();
         Swal.fire({
@@ -679,34 +679,36 @@ loadQuestionsTheory(): void {
             Swal.showLoading();
           }
         });
-  
+
         // Run all your logic after a short delay or immediately
-        setTimeout(() => {
+        setTimeout(async () => {
           this.evalQuiz();
           this.waitNavigateFunction();
           this.loadQuestionsWithAnswers();
-          this.evalSubjective();
+          // this.evalSubjective();
+          await this.evalSubjective();            // ✅ Wait here
+
           this.preventBackButton();
-  
+
           // Optional: Close the spinner and show success message
           Swal.fire({
             icon: 'success',
             title: 'Evaluated!',
             text: `Your results for ${this.courseTitle} is available for print on the dashboard.`,
           });
-  
+
         }, 8000); // You can remove this delay or wait for async logic instead
       }
     });
   }
-  
+
 
 
   waitNavigateFunction() {
     setTimeout(() => {
-      
+
       this.printQuiz();
-    }, 6000); // 3000 milliseconds = 3 seconds delay
+    }, 3000); // 3000 milliseconds = 3 seconds delay
   }
 
 
@@ -719,8 +721,8 @@ loadQuestionsTheory(): void {
   }
 
 
-  startTimer() {
-    let t = window.setInterval(() => {
+  async startTimer() {
+    let t = window.setInterval(async () => {
       //Code
       if (this.timerAll <= 0) {
         // this.submitQuiz();
@@ -729,7 +731,8 @@ loadQuestionsTheory(): void {
         this.evalQuiz();
         this.waitNavigateFunction();
         this.loadQuestionsWithAnswers();
-        this.evalSubjective();
+        // this.evalSubjective();
+        await this.evalSubjective();            // ✅ Wait here
         // this.loadSubjectiveAIEval();
         // this.getGrandTotalMarks();
         this.preventBackButton();
@@ -743,12 +746,11 @@ loadQuestionsTheory(): void {
       }
     }, 1000);
   }
-
   // DISABLE PASTE
   // disablePaste(event: ClipboardEvent): void {
   //   event.preventDefault();
   // }
-  
+
 
   getFormmatedTime() {
     // let timeToseconds = this.timerAll * 60
@@ -794,43 +796,43 @@ loadQuestionsTheory(): void {
   }
 
 
- 
 
 
 
 
 
-  evalSubjective() {
+
+  async evalSubjective(): Promise<void> {
     for (const prefix in this.selectedQuestions) {
-        this.selectedQuestionsAnswer.push(...this.groupedQuestions[prefix]);
+      this.selectedQuestionsAnswer.push(...this.groupedQuestions[prefix]);
     }
     if (Object.keys(this.selectedQuestions).length === this.numberOfQuestionsToAnswer) {
-        localStorage.setItem(this.qid + "answeredQuestions", JSON.stringify(this.selectedQuestions));
-        this.convertJson();
-        
-        this._quiz.evalTheory(this.convertedJsonAPIResponsebody).subscribe((data: any) => {
-            console.log("This is the Original Response from the server and formatted!!!!");
-            
-            // Store the response only once
-            this.geminiResponse = data;
-            localStorage.setItem("answeredAIQuestions" + this.qid, JSON.stringify(this.geminiResponse));
-            
-            console.log('Stored successfully:', localStorage.getItem("answeredAIQuestions" + this.qid));
-            console.log(this.geminiResponse);
+      localStorage.setItem(this.qid + "answeredQuestions", JSON.stringify(this.selectedQuestions));
+      this.convertJson();
 
-            setTimeout(() => {
-                this.loadSubjectiveAIEval();
-            }, 1000);
-        });
-        
-        localStorage.setItem(this.qid + "answeredQuestions", JSON.stringify(this.selectedQuestionsAnswer));
+      this._quiz.evalTheory(this.convertedJsonAPIResponsebody).subscribe((data: any) => {
+        console.log("This is the Original Response from the server and formatted!!!!");
+
+        // Store the response only once
+        this.geminiResponse = data;
+        localStorage.setItem("answeredAIQuestions" + this.qid, JSON.stringify(this.geminiResponse));
+
+        console.log('Stored successfully:', localStorage.getItem("answeredAIQuestions" + this.qid));
+        console.log(this.geminiResponse);
+
+        setTimeout(() => {
+          this.loadSubjectiveAIEval();
+        }, 1000);
+      });
+
+      localStorage.setItem(this.qid + "answeredQuestions", JSON.stringify(this.selectedQuestionsAnswer));
     }
     (error) => {
-        this._snack.open("Please select exactly 3 sets of questions to submit", "", {
-            duration: 3000,
-        });
+      this._snack.open("Please select exactly 3 sets of questions to submit", "", {
+        duration: 3000,
+      });
     }
-}
+  }
 
 
 
@@ -839,7 +841,7 @@ loadQuestionsTheory(): void {
 
 
 
-// WORKING ON THE BELOW
+  // WORKING ON THE BELOW
 
   loadSubjectiveAIEval() {
     // const geminiResponse = localStorage.getItem("answeredAIQuestions");
@@ -863,7 +865,7 @@ loadQuestionsTheory(): void {
     if (!questions || questions.length === 0) {
       return 0;
     }
-  
+
     return questions.reduce((total, question) => {
       return total + (question.score || 0);
     }, 0);
@@ -871,7 +873,7 @@ loadQuestionsTheory(): void {
 
 
   //grouped by prefixDEEPSEEK=========
-   groupByPrefix(data: QuestionResponse[]): GroupedQuestions[] {
+  groupByPrefix(data: QuestionResponse[]): GroupedQuestions[] {
     // Handle edge cases
     if (!Array.isArray(data)) {
       throw new Error('Input must be an array');
@@ -879,10 +881,10 @@ loadQuestionsTheory(): void {
     if (data.length === 0) {
       return [];
     }
-  
+
     // Initialize a map to group questions by prefix
     const prefixMap: Record<string, QuestionResponse[]> = {};
-  
+
     // Iterate over each question response
     data.forEach((questionResponse) => {
       // Validate the question number exists
@@ -890,11 +892,11 @@ loadQuestionsTheory(): void {
         console.warn('Question missing questionNumber:', questionResponse);
         return; // Skip this entry
       }
-  
+
       // Extract the prefix (e.g., "Q1" from "Q1a" or "Q3ai")
       const prefixMatch = questionResponse.questionNumber.match(/^(Q\d+)/i);
       const prefix = prefixMatch ? prefixMatch[0].toUpperCase() : 'UNCATEGORIZED';
-  
+
       // Initialize the group if it doesn't exist
       if (!prefixMap[prefix]) {
         prefixMap[prefix] = [];
@@ -902,7 +904,7 @@ loadQuestionsTheory(): void {
       // Add the current question to its prefix group
       prefixMap[prefix].push(questionResponse);
     });
-  
+
     // Convert the map to an array of grouped data
     return Object.entries(prefixMap).map(([prefix, questions]) => ({
       prefix,
@@ -910,16 +912,16 @@ loadQuestionsTheory(): void {
     }));
   }
 
- 
 
 
 
 
-// WORKING ON ABOVE
+
+  // WORKING ON ABOVE
   // Function to calculate the grand total marks across all prefixes
   getGrandTotalMarks(): number {
     this.sectionBMarks = 0;
-  
+
     if (!this.geminiResponseAI || this.geminiResponseAI.length === 0) {
       return 0;
     }
@@ -929,13 +931,13 @@ loadQuestionsTheory(): void {
       const groupTotal = prefixScores.reduce((sum, p) => sum + p.totalScore, 0);
       return grandTotal + groupTotal;
     }, 0);
-  
+
     console.log("Grand Total Marks: ", this.sectionBMarks);
     return this.sectionBMarks;
   }
-  
-  
- 
+
+
+
 
   addSectBMarks() {
     this.theoryResults = {
@@ -965,18 +967,18 @@ loadQuestionsTheory(): void {
   getScoresForPrefixes(groupedData: GroupedQuestions[]): PrefixScores[] {
     return groupedData.map(group => {
       const { prefix, questions } = group;
-  
+
       // Ensure questions is a valid array
       const safeQuestions = Array.isArray(questions) ? questions : [];
-  
+
       const totalScore = safeQuestions.reduce((sum, q) => sum + q.score, 0);
       const totalMaxMarks = safeQuestions.reduce((sum, q) => sum + q.maxMarks, 0);
-      const percentage = totalMaxMarks > 0 
-        ? Math.round((totalScore / totalMaxMarks) * 100) 
+      const percentage = totalMaxMarks > 0
+        ? Math.round((totalScore / totalMaxMarks) * 100)
         : 0;
-  
+
       console.log("Total Marks for Prefix: ", totalScore, totalMaxMarks);
-  
+
       return {
         prefix,
         totalScore,
@@ -1114,196 +1116,196 @@ loadQuestionsTheory(): void {
 
 
 
-//PESISTING THEORY EVEN ON PAGE REFRESH
+  //PESISTING THEORY EVEN ON PAGE REFRESH
 
 
- // In your component
- private saveAnswers(): void {
-  const storageKey = 'savedAnswers';
-  const existing = localStorage.getItem(storageKey);
-  let savedAnswers = existing ? JSON.parse(existing) : [];
+  // In your component
+  private saveAnswers(): void {
+    const storageKey = 'savedAnswers';
+    const existing = localStorage.getItem(storageKey);
+    let savedAnswers = existing ? JSON.parse(existing) : [];
 
-  // Merge currentQuestions into savedAnswers
-  this.currentQuestions.forEach((currentQ: any) => {
-    const index = savedAnswers.findIndex((q: any) => q.quesNo === currentQ.quesNo);
-    if (index !== -1) {
-      savedAnswers[index].givenAnswer = currentQ.givenAnswer; // update existing
-    } else {
-      savedAnswers.push({
-        quesNo: currentQ.quesNo,
-        givenAnswer: currentQ.givenAnswer,
-      }); // keep only what's necessary
-    }
-  });
-
-  localStorage.setItem(storageKey, JSON.stringify(savedAnswers));
-}
-
-
-
-saved
-loadSavedAnswers() {
-  const saved = localStorage.getItem('savedAnswers');
-  if (saved) {
-    const savedAnswers = JSON.parse(saved);
-    this.currentQuestions.forEach((question: any) => {
-      const savedQ = savedAnswers.find((sq: any) => sq.quesNo === question.quesNo);
-      if (savedQ) {
-        question.givenAnswer = savedQ.givenAnswer;
+    // Merge currentQuestions into savedAnswers
+    this.currentQuestions.forEach((currentQ: any) => {
+      const index = savedAnswers.findIndex((q: any) => q.quesNo === currentQ.quesNo);
+      if (index !== -1) {
+        savedAnswers[index].givenAnswer = currentQ.givenAnswer; // update existing
+      } else {
+        savedAnswers.push({
+          quesNo: currentQ.quesNo,
+          givenAnswer: currentQ.givenAnswer,
+        }); // keep only what's necessary
       }
     });
+
+    localStorage.setItem(storageKey, JSON.stringify(savedAnswers));
   }
-}
 
 
-clearSavedAnswers(): void {
-  localStorage.removeItem('savedAnswers');
-  localStorage.removeItem('selectedAnswers');
-  console.log('Saved answers cleared from localStorage');
-}
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-//PESISTING OBJ EVEN ON PAGE REFRESH
-loadQuestions(): void {
-  this._questions.getQuestionsOfQuiz(this.qid).subscribe(
-    (data: any) => {
-      // Get all stored answers from localStorage
-      const storedAnswers = JSON.parse(localStorage.getItem('selectedAnswers') || '{}');
-
-      this.questions = data.map((q, index) => {
-        // Add count property for display purposes
-        q.count = index + 1;
-
-        // Restore givenAnswer from localStorage if available
-        if (storedAnswers[q.quesId]) {
-          q.givenAnswer = [...storedAnswers[q.quesId]]; // Create a fresh copy
-        } else {
-          q.givenAnswer = []; // Initialize empty array if no saved answers
+  saved
+  loadSavedAnswers() {
+    const saved = localStorage.getItem('savedAnswers');
+    if (saved) {
+      const savedAnswers = JSON.parse(saved);
+      this.currentQuestions.forEach((question: any) => {
+        const savedQ = savedAnswers.find((sq: any) => sq.quesNo === question.quesNo);
+        if (savedQ) {
+          question.givenAnswer = savedQ.givenAnswer;
         }
-
-        // 🔍 Debugging Logs
-        console.log(`📥 Question ID: ${q.quesId}, Restored Answers:`, q.givenAnswer);
-
-        return q;
       });
-
-      // 🔍 Final questions array check
-      console.log("✅ Final loaded questions:", this.questions);
-    },
-    (error) => {
-      console.log("Error Loading questions");
-      Swal.fire("Error", "Error loading questions", "error");
-    }
-  );
-
-  this.preventBackButton();
-}
-
-
-
-updateSelectedAnswers(q: any, option: string, isChecked: boolean) {
-  // Initialize storage if needed
-  if (!q.givenAnswer) {
-    q.givenAnswer = [];
-  }
-  
-  // Get all stored answers from localStorage
-  const allStoredAnswers = JSON.parse(localStorage.getItem('selectedAnswers') || '{}');
-  
-  // Handle adding or removing the option from current question's answers
-  if (isChecked) {
-    if (!q.givenAnswer.includes(option)) {
-      q.givenAnswer.push(option);
-    }
-  } else {
-    const index = q.givenAnswer.indexOf(option);
-    if (index !== -1) {
-      q.givenAnswer.splice(index, 1);
     }
   }
-  
-  // Update the specific question's answers in the overall storage object
-  // Using question ID as the unique key to avoid conflicts
-  allStoredAnswers[q.quesId] = [...q.givenAnswer]; // Create a copy to avoid reference issues
-  
-  // Save all answers back to localStorage
-  localStorage.setItem('selectedAnswers', JSON.stringify(allStoredAnswers));
-  
-  // 🔍 Debugging Logs
-  console.log("✅ Updated Question ID:", q.quesId);
-  console.log("➡️ Option Changed:", option, "Checked:", isChecked);
-  console.log("📦 Current givenAnswer:", q.givenAnswer);
-  console.log("🗃️ All storedAnswers:", allStoredAnswers);
-  
-  // Return the updated answers (useful for reactive frameworks)
-  return q.givenAnswer;
-}
 
-  
+
+  clearSavedAnswers(): void {
+    localStorage.removeItem('savedAnswers');
+    localStorage.removeItem('selectedAnswers');
+    console.log('Saved answers cleared from localStorage');
+  }
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  //PESISTING OBJ EVEN ON PAGE REFRESH
+  loadQuestions(): void {
+    this._questions.getQuestionsOfQuiz(this.qid).subscribe(
+      (data: any) => {
+        // Get all stored answers from localStorage
+        const storedAnswers = JSON.parse(localStorage.getItem('selectedAnswers') || '{}');
+
+        this.questions = data.map((q, index) => {
+          // Add count property for display purposes
+          q.count = index + 1;
+
+          // Restore givenAnswer from localStorage if available
+          if (storedAnswers[q.quesId]) {
+            q.givenAnswer = [...storedAnswers[q.quesId]]; // Create a fresh copy
+          } else {
+            q.givenAnswer = []; // Initialize empty array if no saved answers
+          }
+
+          // 🔍 Debugging Logs
+          console.log(`📥 Question ID: ${q.quesId}, Restored Answers:`, q.givenAnswer);
+
+          return q;
+        });
+
+        // 🔍 Final questions array check
+        console.log("✅ Final loaded questions:", this.questions);
+      },
+      (error) => {
+        console.log("Error Loading questions");
+        Swal.fire("Error", "Error loading questions", "error");
+      }
+    );
+
+    this.preventBackButton();
+  }
+
+
+
+  updateSelectedAnswers(q: any, option: string, isChecked: boolean) {
+    // Initialize storage if needed
+    if (!q.givenAnswer) {
+      q.givenAnswer = [];
+    }
+
+    // Get all stored answers from localStorage
+    const allStoredAnswers = JSON.parse(localStorage.getItem('selectedAnswers') || '{}');
+
+    // Handle adding or removing the option from current question's answers
+    if (isChecked) {
+      if (!q.givenAnswer.includes(option)) {
+        q.givenAnswer.push(option);
+      }
+    } else {
+      const index = q.givenAnswer.indexOf(option);
+      if (index !== -1) {
+        q.givenAnswer.splice(index, 1);
+      }
+    }
+
+    // Update the specific question's answers in the overall storage object
+    // Using question ID as the unique key to avoid conflicts
+    allStoredAnswers[q.quesId] = [...q.givenAnswer]; // Create a copy to avoid reference issues
+
+    // Save all answers back to localStorage
+    localStorage.setItem('selectedAnswers', JSON.stringify(allStoredAnswers));
+
+    // 🔍 Debugging Logs
+    console.log("✅ Updated Question ID:", q.quesId);
+    console.log("➡️ Option Changed:", option, "Checked:", isChecked);
+    console.log("📦 Current givenAnswer:", q.givenAnswer);
+    console.log("🗃️ All storedAnswers:", allStoredAnswers);
+
+    // Return the updated answers (useful for reactive frameworks)
+    return q.givenAnswer;
+  }
+
+
 };
 
