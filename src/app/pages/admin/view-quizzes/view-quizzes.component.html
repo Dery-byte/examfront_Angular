@@ -20,13 +20,73 @@
         <button mat-stroked-button color="accent" class="ml20">Questions: {{q.numberOfQuestions}}</button>
         <!-- <button mat-flat-button color="accent" class="ml20" [routerLink]="'/admin/update-quiz/'+ q.qId ">Update</button> -->
 
-        <button mat-flat-button color="accent" (click)="openUpdateDialog(q.qId, updateObj)"> Update
+        <button mat-flat-button color="accent" (click)="openUpdateDialog(q.qId, updateObj)"> Update Quiz
         </button>
 
-        <button mat-flat-button color="accent" class="ml20">Attempts</button>
+        <!-- <button mat-flat-button color="accent" class="ml20">Attempts</button> -->
         <button mat-flat-button color="warn" class="ml20" (click)="deleteQuiz(q.qId)">Delete</button>
+
+
+
+
+<!-- Status dropdown -->
+  <mat-form-field class="ml20">
+    <mat-label>Quiz Status</mat-label>
+    <mat-select [(value)]="q.selectedStatus">
+      <mat-option value="CLOSED">CLOSE</mat-option>
+      <mat-option value="OPEN">OPEN</mat-option>
+    </mat-select>
+  </mat-form-field>
+
+  <!-- Update button -->
+  <button mat-flat-button color="warn" class="ml20"
+          [disabled]="q.updating || !q.selectedStatus"
+          (click)="updateQuizStatus(q)">
+    {{ q.updating ? 'Updating...' : 'Update' }}
+  </button>
+
+
     </mat-card-actions>
 </mat-card>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 <!-- POP UP DIALOG BOX TO EIDT OBJECTIVE QUESTIONS -->
 <ng-template #updateObj let-data="data">

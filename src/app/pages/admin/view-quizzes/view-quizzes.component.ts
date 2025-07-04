@@ -7,6 +7,9 @@ import { MatSnackBar } from '@angular/material/snack-bar';
 
 import { LoginService } from 'src/app/services/login.service';
 
+interface QuizStatusResponse {
+  status: string;
+}
 
 
 @Component({
@@ -134,4 +137,61 @@ this.quizzes = this.quizzes.filter((quiz)=> quiz.qId != qId);
     }
    })
   }
+
+
+
+
+
+
+
+ selectedStatus: string = '';
+  updating: boolean = false;
+
+
+
+ updateQuizStatus(q: any) {
+  Swal.fire({
+    title: 'Are you sure?',
+    text: `Change quiz status to "${q.selectedStatus}" ?`,
+    icon: 'warning',
+    showCancelButton: true,
+    confirmButtonColor: '#d33',
+    cancelButtonColor: '#aaa',
+    confirmButtonText: 'Yes, update it!'
+  }).then((result) => {
+    if (result.isConfirmed) {
+      q.updating = true;
+      this.quizz.updateQuizStatus(q.qId, q.selectedStatus).subscribe({
+        next: (res: QuizStatusResponse) => {
+          q.status = res.status;
+          q.updating = false;
+
+            this._snack.open(`Quiz status changed to ${res.status}`, "", {
+        duration: 3000,
+      });
+          // Swal.fire({
+          //   icon: 'success',
+          //   title: 'Status Updated',
+          //   text: `Quiz status changed to ${res.status}`
+          // });
+        },
+        error: (err) => {
+          console.error(err);
+          q.updating = false;
+      this._snack.open("Status update failed. Please try again.", "", {
+        duration: 3000,
+      });
+          // Swal.fire({
+          //   icon: 'error',
+          //   title: 'Update Failed',
+          //   text: 'Failed to update quiz status. Please try again.'
+          // });
+        }
+      });
+    }
+  });
+}
+
+
+
 }

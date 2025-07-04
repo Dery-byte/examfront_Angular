@@ -126,3 +126,19 @@
 .mat-progress-spinner, .mat-spinner {
   vertical-align: middle;
 }
+
+
+
+.print-warning {
+  color: #f44336;
+  font-size: 13px;
+  margin-top: 4px;
+  display: flex;
+  align-items: center;
+  gap: 4px;
+}
+
+.disabled-button {
+  opacity: 0.6;
+  pointer-events: none;
+}

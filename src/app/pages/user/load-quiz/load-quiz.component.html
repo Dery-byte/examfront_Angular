@@ -69,11 +69,26 @@
                       (click)="openNew(q.qId)">
                       View Summary
                     </button>
+
+                    <!-- {{q|json}} -->
+
                     <button mat-button color="accent" (click)="onPrintClick($event, q.qId)"
-                      [disabled]="disabledButtons[q.qId] || isPrintDisabled"
-                      [class.disabled-button]="disabledButtons[q.qId]">
+                      [disabled]="q.status !== 'CLOSED'" [class.disabled-button]="q.status !== 'CLOSED'">
                       Print Results
                     </button>
+
+                    <!-- Conditional message -->
+                    <div *ngIf="q.status !== 'CLOSED'" class="print-warning">
+                      <mat-icon color="warn">lock</mat-icon>
+                      Print available after quiz closure.
+                    </div>
+
+
+
+
+
+
+
                   </mat-card-actions>
                 </mat-card>
               </div>

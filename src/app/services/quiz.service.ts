@@ -86,8 +86,6 @@ public addNumberOfTheoryQuestions(quizNumberOfQuestion){
 
 //get Active quizzzes
 public addSectionBMarks(questions){
-
-  
   return this._http.put(`${baseUrl}/addtheoryMark`,questions);
 }
 
@@ -109,6 +107,15 @@ public addSectionBMarks(questions){
 
 public evalTheory(questions){
   return this._http.post(`${baseUrl}/quizEval`, questions);
+}
+
+
+
+
+
+public updateQuizStatus(qId: number, status: string) {
+  const body = { status };
+  return this._http.put(`${baseUrl}/quiz/status/${qId}`, body);
 }
 
 }
