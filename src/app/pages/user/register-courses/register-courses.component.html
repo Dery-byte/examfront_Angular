@@ -4,9 +4,9 @@
 
 <div ngxUiLoaderBlurred (blur)="50"> -->
 
-	<!-- {{selectedCategories | json}} -->
+<!-- {{selectedCategories | json}} -->
 
-	<mat-card class="course-registration-card">
+<mat-card class="course-registration-card">
     <mat-card-header>
         <div class="card-header">
             <mat-icon class="header-icon">assignment</mat-icon>
@@ -22,9 +22,9 @@
                 <mat-label>Select Academic Level</mat-label>
                 <mat-select id="levelSelect" [(ngModel)]="selectedLevel" (selectionChange)="filterCourses()">
                     <mat-option *ngFor="let level of uniqueLevels" [value]="level">
-                                                    <mat-icon>school</mat-icon>
+                        <mat-icon>school</mat-icon>
 
-                         {{ level }}
+                        {{ level }}
                     </mat-option>
                 </mat-select>
             </mat-form-field>
@@ -43,19 +43,16 @@
                                            class="custom-checkbox">
                                 </th> -->
 
-								<th>Select</th>
+                                <th>Select</th>
                                 <th>Course Code</th>
                                 <th>Course Name</th>
                             </tr>
                         </thead>
                         <tbody>
-                            <tr *ngFor="let c of filteredCourses; let i = index; let odd = odd" 
-                                [class.odd-row]="odd" 
+                            <tr *ngFor="let c of filteredCourses; let i = index; let odd = odd" [class.odd-row]="odd"
                                 [class.even-row]="!odd">
                                 <td class="checkbox-cell">
-                                    <input type="checkbox" 
-                                           (change)="showCid($event, c.cid)"
-                                           class="custom-checkbox">
+                                    <input type="checkbox" (change)="showCid($event, c.cid)" class="custom-checkbox">
                                 </td>
                                 <td class="course-code">{{ c.courseCode }}</td>
                                 <td class="course-title">{{ c.title }}</td>
@@ -88,7 +85,7 @@
     </mat-card-content>
 </mat-card>
 
-	<!-- 
+<!-- 
 	{{categories | json}}
 	<hr>
 
@@ -100,8 +97,8 @@
 	{{ unRegCourse | json}}
 	<hr> -->
 
-	<!-- {{ RegCourse | json}} -->
+<!-- {{ RegCourse | json}} -->
 
-	<!-- {{courses | json}}
+<!-- {{courses | json}}
 	<hr>
 	{{filteredCourses| json}} -->
