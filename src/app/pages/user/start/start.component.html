@@ -123,10 +123,12 @@
                                                 {{question.quesNo}} {{ question.question }} {{question.marks}}
                                             </span>
                                         </mat-label>
-                                        <!-- <textarea class="input" [name]="'givenAnswer' + i" [(ngModel)]="question.givenAnswer" matInput rows="2" (ngModelChange)="saveAnswers()" (paste)="disablePaste($event)"> -->
                                         <textarea class="input" [name]="'givenAnswer' + i"
                                             [(ngModel)]="question.givenAnswer" matInput rows="2"
-                                            (ngModelChange)="saveAnswers()">
+                                            (ngModelChange)="saveAnswers()" (paste)="disablePaste($event)">
+                                        <!-- <textarea class="input" [name]="'givenAnswer' + i"
+                                            [(ngModel)]="question.givenAnswer" matInput rows="2"
+                                            (ngModelChange)="saveAnswers()"> -->
 
                                         </textarea>
                                     </mat-form-field>

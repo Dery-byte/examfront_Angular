@@ -175,4 +175,7 @@ export class InstructionsComponent implements OnInit {
     formattedTime += `${mm} min(s)`;
     return formattedTime;
   }
+
+
+  
 }

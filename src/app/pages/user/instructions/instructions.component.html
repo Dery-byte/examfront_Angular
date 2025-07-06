@@ -21,7 +21,7 @@
             <p>{{quiz.description}}</p>
             <mat-divider></mat-divider>
             <br>
-            
+
             <!-- Important Notice Section -->
             <h2>Important Notice</h2>
             <ul class="instruction-list">
@@ -32,10 +32,10 @@
                 Answer all MCQs and any <b>{{numberOfQuestionsToAnswer}}</b> theory question(s)
               </li>
             </ul>
-            
+
             <mat-divider></mat-divider>
             <br>
-            
+
             <!-- Attempting Quiz Section -->
             <h2>Attempting Quiz</h2>
             <ul class="instruction-list">
@@ -49,7 +49,30 @@
           </mat-card-content>
 
           <!-- Actions Section -->
+
+
           <mat-card-actions class="text-center">
+            <div class="container text-center">
+              <button *ngIf="quiz?.status === 'OPEN' && !isLegible" mat-raised-button color="primary"
+                (click)="startQuiz()" [disabled]="!quiz">
+                Start Quiz
+              </button>
+              <button *ngIf="quiz?.status === 'CLOSED'" mat-raised-button color="warn" disabled>
+                Quiz Closed
+              </button>
+              <button *ngIf="quiz?.attempted || (quiz?.status === 'OPEN' && isLegible)" mat-raised-button
+                color="accent" disabled>
+                Quiz Completed
+              </button>
+            </div>
+          </mat-card-actions>
+
+
+
+
+
+
+          <!-- <mat-card-actions class="text-center">
             <div class=" container text-center" >
               <button *ngIf="!isLegible" 
                       mat-raised-button 
@@ -57,9 +80,7 @@
                       (click)="startQuiz()"
                       [disabled]="!quiz">
                 Start Quiz
-              </button>
-              <!-- {{isLegible}} -->
-              
+              </button>              
               <button *ngIf="isLegible" 
                       mat-raised-button 
                       color="accent"
@@ -67,7 +88,7 @@
                 Quiz Completed
               </button>
             </div>
-          </mat-card-actions>
+          </mat-card-actions> -->
         </mat-card>
       </div>
     </div>
