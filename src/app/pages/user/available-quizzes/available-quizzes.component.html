@@ -1,122 +1,162 @@
-<!-- {{categories |json}} -->
-<!-- {{userRecords | json}} -->
-
-
-<mat-card style="margin-top: 30px;">
-    <!-- Main loading spinner -->
-    <div *ngIf="isLoadingUserRecords" class="loading-container">
-        <button mat-raised-button color="accent" class="loading-button">
-            <div class="button-content">
-                <span>Loading, Please Wait ...</span>
-            </div>
-        </button>
+<div class="quiz-dashboard-container">
+  <!-- Loading State -->
+  <div *ngIf="isLoadingUserRecords" class="loading-overlay">
+    <div class="loading-content">
+      <mat-spinner diameter="50" color="accent"></mat-spinner>
+      <h3 class="loading-text">Loading available quizzes ...</h3>
     </div>
+  </div>
 
-    <div *ngIf="!isLoadingUserRecords">
-        <div *ngIf="userRecords.length > 0; else elseBlock">
-            <h4 class="text-center">Current Quizzes available</h4>
+  <!-- Main Content -->
+  <div *ngIf="!isLoadingUserRecords" class="dashboard-content">
+    <!-- Empty State -->
+    <ng-template #elseBlock>
+      <div class="empty-state">
+        <mat-icon class="empty-icon">school</mat-icon>
+        <h1 class="empty-title">No Courses Registered</h1>
+        <p class="empty-description">Please register for a course to access available quizzes</p>
+        <button mat-raised-button color="primary" class="empty-action">
+          Browse Courses
+        </button>
+      </div>
+    </ng-template>
 
-            <div class="container">
-                <div class="row">
-                    <div class="col-md-2">
-                        <form>
-                            <br />
-                            <!-- Course selection loading -->
-                            <mat-spinner *ngIf="isLoadingCategories" diameter="30" class="mb-2"></mat-spinner>
-                            <mat-form-field appearance="fill">
-                                <mat-label>Select Course</mat-label>
-                                <mat-select name="category" [(ngModel)]="categories.cid"
-                                    (selectionChange)="onQuizOptionSelected()">
-                                    <mat-option *ngFor="let c of userRecords" [value]="c.category.cid">
-                                        {{c.category.title}}
-                                    </mat-option>
-                                </mat-select>
-                            </mat-form-field>
-                        </form>
-                    </div>
+    <!-- With Content State -->
+    <div *ngIf="userRecords.length > 0">
+      <div class="dashboard-header">
+        <h1 class="dashboard-title">Available Quizzes</h1>
+        <p class="dashboard-subtitle">Select a course to view available assessments</p>
+      </div>
 
-                    <div class="col-md-9 offset-md-1">
-                        <!-- Quizzes loading spinner -->
-                        <!-- <mat-spinner *ngIf="isLoadingQuizzes" diameter="40" class="my-3 mx-auto"></mat-spinner> -->
-
-                        <div *ngIf="isLoadingQuizzes" class="loading-container">
-                            <button mat-raised-button color="accent" class="loading-button">
-                                <div class="button-content">
-                                    <span>Loading, available quizes ...</span>
-                                </div>
-                            </button>
-                        </div>
-
-                        <div class="row mt20" *ngIf="availablequizzes && !isLoadingQuizzes">
-                            <div class="col-md-6 mt20" *ngFor="let q of availablequizzes">
-                                <mat-card>
-                                    <mat-card-header>
-                                        <div mat-card-avatar class="exmple-header-image"></div>
-                                        <mat-card-title>{{q.title}}</mat-card-title>
-                                        <mat-card-subtitle>
-                                            {{q.category.courseCode}} | {{q.category.title}}
-                                        </mat-card-subtitle>
-                                    </mat-card-header>
-                                    <mat-card-content>
-                                        <p class="truncate">{{q.description}}</p>
-                                    </mat-card-content>
-                                    <mat-card-actions>
-                                        <button mat-button color="primary" matTooltip="Summary Results"
-                                            (click)="openNew(q.qId)">
-                                            View
-                                        </button>
-                                        <button mat-button color="accent"
-                                            [routerLink]="'/user-dashboard/instructions/'+q.qId">
-                                            Start
-                                        </button>
-                                        <button mat-button color="accent">
-                                            {{q.numberOfQuestions}} Questions
-                                        </button>
-                                        <button mat-button color="accent">
-                                            {{q.maxMarks}} Marks
-                                        </button>
-                                    </mat-card-actions>
-                                </mat-card>
-                            </div>
-
-                            <div class="col-md-12" *ngIf="availablequizzes.length==0">
-                                <h1>No quizzes available for this course</h1>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-            </div>
+      <div class="dashboard-body">
+        <!-- Course Selection -->
+        <div class="course-selection">
+          <mat-card class="selection-card">
+            <mat-card-header>
+              <mat-card-title>Select Course</mat-card-title>
+            </mat-card-header>
+            <mat-card-content>
+              <form>
+                <mat-form-field appearance="outline" class="w-100">
+                  <mat-label>Choose your course</mat-label>
+                  <mat-select name="category" [(ngModel)]="categories.cid" (selectionChange)="onQuizOptionSelected()">
+                    <mat-option *ngFor="let c of userRecords" [value]="c.category.cid">
+                      {{c.category.title}} ({{c.category.courseCode}})
+                    </mat-option>
+                  </mat-select>
+                  <mat-icon matSuffix>arrow_drop_down</mat-icon>
+                </mat-form-field>
+              </form>
+            </mat-card-content>
+          </mat-card>
         </div>
 
-        <ng-template #elseBlock>
-            <h1 class="text-center py-3">Register for a course first</h1>
-        </ng-template>
+        <!-- Quizzes Loading -->
+        <div *ngIf="isLoadingQuizzes" class="quizzes-loading">
+          <mat-spinner diameter="50" color="accent"></mat-spinner>
+          <p>Loading available quizzes...</p>
+        </div>
+
+        <!-- Quizzes Grid -->
+        <div *ngIf="availablequizzes && !isLoadingQuizzes" class="quizzes-grid">
+          <!-- No Quizzes State -->
+          <div *ngIf="availablequizzes.length === 0" class="no-quizzes">
+            <mat-icon class="no-quizzes-icon">quiz</mat-icon>
+            <h3>No quizzes available for this course</h3>
+            <p>Check back later or contact your instructor</p>
+          </div>
+
+          <!-- Quiz Cards -->
+          <div *ngFor="let q of availablequizzes" class="quiz-card-container">
+            <mat-card class="quiz-card">
+              <mat-card-header>
+                <div mat-card-avatar class="quiz-avatar">
+                  <mat-icon>assignment</mat-icon>
+                </div>
+                <mat-card-title>{{q.title}}</mat-card-title>
+                <mat-card-subtitle>
+                  {{q.category.title}} • {{q.category.courseCode}}
+                </mat-card-subtitle>
+              </mat-card-header>
+              
+              <mat-card-content>
+                <p class="quiz-description">{{q.description}}</p>
+                <div class="quiz-meta">
+                  <span class="meta-item">
+                    <mat-icon>help_outline</mat-icon>
+                    {{q.numberOfQuestions}} Questions
+                  </span>
+                  <span class="meta-item">
+                    <mat-icon>star</mat-icon>
+                    {{q.maxMarks}} Points
+                  </span>
+                </div>
+              </mat-card-content>
+              
+              <mat-card-actions class="quiz-actions">
+                <button mat-stroked-button color="primary" matTooltip="View Summary" 
+                        (click)="openNew(q.qId)" class="action-button">
+                  <mat-icon>visibility</mat-icon>
+                  Results
+                </button>
+                <button mat-raised-button color="accent" 
+                        [routerLink]="'/user-dashboard/instructions/'+q.qId" class="action-button">
+                  <mat-icon>play_arrow</mat-icon>
+                  Start Quiz
+                </button>
+              </mat-card-actions>
+            </mat-card>
+          </div>
+        </div>
+      </div>
     </div>
-</mat-card>
+  </div>
 
-<!-- Results Dialog -->
-<p-dialog [(visible)]="productDialog" [style]="{width: '300px', height:'550px'}" class="container text-center"
-    header="Quiz Summary">
-    <!-- Dialog loading spinner -->
-    <!-- <mat-spinner style="margin-right: 30px;" *ngIf="isLoadingReportData" diameter="40" class="my-3 mx-auto"></mat-spinner> -->
+  <!-- Results Dialog -->
+  <p-dialog [(visible)]="productDialog" [style]="{width: '450px'}" header="Quiz Results Summary" 
+            [modal]="true" [draggable]="false" [resizable]="false">
+    <div *ngIf="isLoadingReportData" class="dialog-loading">
+      <mat-spinner diameter="40"></mat-spinner>
+      <p>Loading results...</p>
+    </div>
 
-    <mat-card *ngIf="reportData && !isLoadingReportData">
-        <table class="w-100">
-            <tr>
+    <div *ngIf="reportData && !isLoadingReportData">
+      <div *ngIf="reportData.length === 0" class="empty-results">
+        <mat-icon class="empty-results-icon">info</mat-icon>
+        <h3>No results available</h3>
+        <p>Complete the quiz to see your results</p>
+      </div>
+
+      <div *ngIf="reportData.length > 0">
+        <div class="results-header">
+          <h3>Performance Summary</h3>
+        </div>
+        <div class="results-table-container">
+          <table class="results-table">
+            <thead>
+              <tr>
                 <th>Name</th>
                 <th>Quiz</th>
-                <th>Marks</th>
+                <th>Score</th>
                 <th>Status</th>
-            </tr>
-            <tr *ngFor="let r of reportData">
-                <td>{{r.user.lastname}} {{r.user.firstname}}</td>
+              </tr>
+            </thead>
+            <tbody>
+              <tr *ngFor="let r of reportData">
+                <td>{{r.user.lastname}}, {{r.user.firstname}}</td>
                 <td>{{r.quiz.title}}</td>
-                <td>{{r.marks}}</td>
-                <td>{{r.progress}}</td>
-            </tr>
-        </table>
-        <div class="text-center py-3" *ngIf="reportData.length==0">
-            <h3>No results available</h3>
+                <td class="score-cell">{{r.marks}}</td>
+                <td>
+                  <span class="status-badge" [class.passed]="r.progress === 'Completed'" 
+                        [class.failed]="r.progress !== 'Completed'">
+                    {{r.progress}}
+                  </span>
+                </td>
+              </tr>
+            </tbody>
+          </table>
         </div>
-    </mat-card>
-</p-dialog>
+      </div>
+    </div>
+  </p-dialog>
+</div>

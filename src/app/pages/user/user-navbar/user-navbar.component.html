@@ -1,4 +1,4 @@
-<div class="navbar">
+<!-- <div class="navbar">
 
     <div  *ngIf="isloggedIn && hasAuthority('NORMAL')">
         <mat-toolbar color="accent" class="mat-elevation-z8">
@@ -14,4 +14,112 @@
           </span>
           <button *ngIf="!isloggedIn" mat-raised-button color="primary" routerLink="/login">Logout</button>
         </mat-toolbar>
+</div> -->
+
+
+<div class="bootstrap-wrapper">
+  <!-- Full-width header (12 columns) - Made sticky -->
+  <div class="container-fluid sticky-top" style="position: sticky; top: 0; z-index: 1000;">
+    <div class="row">
+      <div class="col-md-12">
+        <mat-toolbar color="accent" class="mat-elevation-z8 toolbar-responsive" *ngIf="isloggedIn && hasAuthority('NORMAL')">
+          <button (click)="drawer.toggle()" mat-icon-button>
+            <mat-icon>menu</mat-icon>
+          </button>
+          <span mat-icon-button class="example-icon favorite-icon username username-responsive" aria-label="Username">
+            {{ user.username | uppercase }}
+          </span>
+          <span mat-icon-button class="tokeExpire session-timer-responsive" aria-label="Session timer">
+            <span [ngClass]="timeLeftDisplay.className">Your session expires in: {{ timeLeftDisplay.display }}</span>
+          </span>
+          <button *ngIf="!isloggedIn" mat-raised-button color="primary" routerLink="/login">Logout</button>
+        </mat-toolbar>
+      </div>
+    </div>
+  </div>
+
+  <!-- Main content area with drawer - Added fixed positioning -->
+  <mat-drawer-container autosize class="container-fluid" style="margin-top: 64px; height: calc(100vh - 64px);">
+    <!-- Navigation drawer (3 columns) - Made fixed -->
+   <mat-drawer #drawer opened="true" mode="side" class="elegant-drawer" 
+            style="position: fixed; top: 64px; height: calc(100vh - 64px); width: 240px;">
+  <mat-nav-list>
+    <!-- Header Section -->
+    <div class="drawer-header">
+      <mat-icon class="header-icon">account_circle</mat-icon>
+      <h3 class="user-name">{{ user.username | uppercase }}</h3>
+    </div>
+    
+    <mat-divider></mat-divider>
+    
+    <!-- Navigation Items -->
+    <mat-list-item class="nav-item" routerLink="/user-dashboard/0" (click)="closeDrawerOnMobile()">
+      <mat-icon class="nav-icon">home</mat-icon>
+      <span class="nav-text">Home</span>
+    </mat-list-item>
+    
+    <mat-list-item class="nav-item" routerLink="/user-dashboard/register" (click)="closeDrawerOnMobile()">
+      <mat-icon class="nav-icon">explore</mat-icon>
+      <span class="nav-text">Register Courses</span>
+    </mat-list-item>
+    
+    <mat-list-item class="nav-item" routerLink="/user-dashboard/courses" (click)="closeDrawerOnMobile()">
+      <mat-icon class="nav-icon">table_chart</mat-icon>
+      <span class="nav-text">Available Courses</span>
+    </mat-list-item>
+    
+    <mat-list-item class="nav-item" routerLink="/user-dashboard/quizzes" (click)="closeDrawerOnMobile()">
+      <mat-icon class="nav-icon">quiz</mat-icon>
+      <span class="nav-text">Available Quizzes</span>
+    </mat-list-item>
+    
+    <mat-divider></mat-divider>
+    
+    <!-- Logout Item -->
+    <mat-list-item class="nav-item logout-item" (click)="logout(); closeDrawerOnMobile()">
+      <mat-icon class="nav-icon">logout</mat-icon>
+      <span class="nav-text" >Logout</span>
+    </mat-list-item>
+  </mat-nav-list>
+</mat-drawer>
+    <!-- Main content (9 columns) - Added scrollable area -->
+    <mat-drawer-content class="col-md-9">
+      <div style="min-height: calc(100vh - 64px); padding: 2px;">
+        <router-outlet></router-outlet>
+      </div>
+    </mat-drawer-content>
+  </mat-drawer-container>
+
+  <!-- Email dialog template (unchanged) -->
+  <ng-template #updateDialog let-data="data">
+    <h1 mat-dialog-title>Send your inquiry or complaint</h1>
+    <div mat-dialog-content>
+      <mat-form-field class="mw450">
+        <input matInput [(ngModel)]="mailInfo.mailTo" name="mailTo" disabled>
+      </mat-form-field>
+      <mat-form-field class="mw450">
+        <input matInput placeholder="Sender Email" [formControl]="emailFormControl" 
+               [(ngModel)]="mailInfo.mailFrom" name="mailFrom" focus>
+        <mat-error *ngIf="emailFormControl.hasError('email') && !emailFormControl.hasError('required')">
+          Please enter a valid email address
+        </mat-error>
+        <mat-error *ngIf="emailFormControl.hasError('required')">
+          Email is <strong>required</strong>
+        </mat-error>
+      </mat-form-field>
+      <mat-form-field class="mw450">
+        <input matInput placeholder="Email Subject" [(ngModel)]="mailInfo.mailSubject" name="mailSubject">
+      </mat-form-field>
+      <mat-form-field class="mw450">
+        <mat-label>Message</mat-label>
+        <textarea matInput cdkTextareaAutosize #autosize="cdkTextareaAutosize" 
+                  name="mailContent" [(ngModel)]="mailInfo.mailContent" 
+                  cdkAutosizeMinRows="5" cdkAutosizeMaxRows="10"></textarea>
+      </mat-form-field>
+      <div mat-dialog-actions>
+        <button mat-button (click)="dialogRef.close()">Cancel</button>
+        <button mat-button (click)="sendEmail()">Send Mail</button>
+      </div>
+    </div>
+  </ng-template>
 </div>

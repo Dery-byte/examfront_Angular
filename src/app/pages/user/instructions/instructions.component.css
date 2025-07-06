@@ -1,36 +1,269 @@
-/* Loading container styles */
-.loading-container {
+/* Loading State */
+.loading-overlay {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  min-height: 70vh;
+}
+
+.loading-card {
   display: flex;
   flex-direction: column;
   align-items: center;
+  padding: 2rem;
+  text-align: center;
+  max-width: 400px;
+}
+
+.loading-text-container {
+  margin-top: 1.5rem;
+}
+
+.loading-title {
+  font-weight: 500;
+  color: #3f51b5;
+  margin-bottom: 0.5rem;
+}
+
+.loading-subtitle {
+  color: #757575;
+  font-size: 1rem;
+}
+
+/* Main Card */
+.quiz-instruction-container {
+  max-width: auto;
+  margin: 2rem auto;
+}
+
+.instruction-card {
+  border-radius: 12px;
+  overflow: hidden;
+  position: relative;
+}
+
+.header-background {
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  height: 120px;
+  background: linear-gradient(135deg, #3f51b5 0%, #2196f3 100%);
+  z-index: 0;
+}
+
+/* Header */
+.instruction-header {
+  position: relative;
+  z-index: 1;
+  padding-top: 2rem;
+  color: white;
+}
+
+.quiz-icon-container {
+  background-color: rgba(255, 255, 255, 0.2);
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
   justify-content: center;
-  height: 50vh;
+  width: 56px;
+  height: 56px;
+}
+
+.quiz-icon {
+  font-size: 32px;
+  width: 32px;
+  height: 32px;
+  color: white;
+}
+
+.quiz-title {
+  font-size: 1.5rem;
+  font-weight: 500;
+  margin-bottom: 0.5rem;
+  color: white;
+}
+
+.quiz-description {
+  color: rgba(255, 255, 255, 0.8);
+  font-size: 1rem;
+}
+
+/* Detail Cards */
+.detail-cards-container {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
+  gap: 1rem;
+  margin: 2rem 0;
+}
+
+.detail-card {
+  padding: 1.5rem;
+  text-align: center;
+  border-radius: 8px;
+  transition: transform 0.2s;
+}
+
+.detail-card:hover {
+  transform: translateY(-4px);
+}
+
+.detail-card-icon {
+  font-size: 2.5rem;
+  width: 2.5rem;
+  height: 2.5rem;
+  margin-bottom: 0.5rem;
+}
+
+.detail-card-title {
+  font-weight: 500;
+  color: #3f51b5;
+  margin-bottom: 0.5rem;
+}
+
+.detail-card-value {
+  color: #616161;
+  font-size: 0.95rem;
+}
+
+.detail-card-value p {
+  margin: 0.25rem 0;
+}
+
+/* Instructions Section */
+.instructions-section {
+  margin: 2rem 0;
+}
+
+.section-header {
+  display: flex;
+  align-items: center;
+  margin-bottom: 1.5rem;
+}
+
+.section-icon {
+  font-size: 28px;
+  width: 28px;
+  height: 28px;
+  margin-right: 12px;
+}
+
+.section-title {
+  font-weight: 500;
+  color: #212121;
+  margin: 0;
+}
+
+.instruction-items {
+  display: grid;
+  grid-template-columns: 1fr;
   gap: 1rem;
 }
 
-.loading-text {
-  color: #666;
-  font-size: 1.1rem;
+.instruction-item {
+  display: flex;
+  align-items: flex-start;
+  padding: 0.75rem;
+  border-radius: 6px;
+  background-color: #f5f5f5;
 }
 
-
-li{
-    list-style-type: none;
+.item-icon {
+  color: #3f51b5;
+  margin-right: 1rem;
+  font-size: 22px;
+  width: 22px;
+  height: 22px;
 }
 
+.item-text {
+  margin: 0;
+  color: #424242;
+}
 
+/* Status Card */
+.status-container {
+  margin: 2rem 0;
+}
 
+.status-card {
+  border-radius: 8px;
+  overflow: hidden;
+}
 
+.status-card.closed {
+  border-left: 4px solid #f44336;
+}
 
+.status-card.completed {
+  border-left: 4px solid #4caf50;
+}
 
+.status-content {
+  display: flex;
+  align-items: center;
+  padding: 1rem;
+}
 
-/* Responsive adjustments */
+.status-icon {
+  font-size: 2.5rem;
+  width: 2.5rem;
+  height: 2.5rem;
+  margin-right: 1rem;
+  color: #757575;
+}
+
+.status-card.closed .status-icon {
+  color: #f44336;
+}
+
+.status-card.completed .status-icon {
+  color: #4caf50;
+}
+
+.status-text h3 {
+  margin: 0 0 0.25rem 0;
+  font-weight: 500;
+}
+
+.status-text p {
+  margin: 0;
+  color: #616161;
+}
+
+/* Action Buttons */
+.action-buttons {
+  display: flex;
+  justify-content: center;
+  padding: 1.5rem;
+}
+
+.action-button {
+  padding: 0.75rem 2rem;
+  font-size: 1rem;
+  border-radius: 8px;
+  min-width: 200px;
+}
+
+.action-button.primary {
+  box-shadow: 0 2px 10px rgba(63, 81, 181, 0.3);
+}
+
+.action-button mat-icon {
+  margin-right: 8px;
+}
+
+/* Responsive Design */
 @media (max-width: 768px) {
-  .quiz-instruction-card {
-    padding: 1rem;
+  .detail-cards-container {
+    grid-template-columns: 1fr;
   }
   
-  .action-buttons button {
+  .instruction-item {
+    padding: 0.75rem 0.5rem;
+  }
+  
+  .action-button {
     width: 100%;
   }
 }

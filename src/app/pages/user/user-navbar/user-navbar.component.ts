@@ -8,6 +8,7 @@ import { MatDialog, MatDialogRef } from '@angular/material/dialog';
 import { FormControl, Validators } from '@angular/forms';
 import { CdkTextareaAutosize } from '@angular/cdk/text-field';
 import { take } from 'rxjs/operators';
+import { MatDrawer } from '@angular/material/sidenav';
 
 import { MailServiceService } from 'src/app/services/mail-service.service';
 
@@ -21,8 +22,17 @@ interface TimeDisplay {
   styleUrls: ['./user-navbar.component.css']
 })
 export class UserNavbarComponent {
+@ViewChild('drawer') drawer!: MatDrawer;
+
+dialogRef!: MatDialogRef<any>;
 
 
+closeDrawerOnMobile() {
+  // Check if screen width is small (you can adjust the breakpoint as needed)
+  if (window.innerWidth < 768) {
+    this.drawer.close();
+  }
+}
 
   isloggedIn = false;
 	hasAuthority(authority: string): boolean {
@@ -154,7 +164,18 @@ constructor(public login: LoginService,
 
 
 
+	openUpdateDialog(templateRef: TemplateRef<any>): void {
+		this.dialogRef = this.dialog.open(templateRef, {
+			width: '500px',
+			data: "",
+		});
 
+		this.dialogRef.afterClosed().subscribe(result => {
+			if (result) {
+				//   this.theory = result;
+			}
+		});
+	}
 
 
 

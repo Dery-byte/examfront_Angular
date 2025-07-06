@@ -1,35 +1,190 @@
-.w100{
+.course-registration-card {
+    margin: 24px auto;
+    max-width: 900px;
+    border-radius: 8px;
+    box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+}
+
+.card-header {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+}
+
+.header-icon {
+    color: #3f51b5;
+    font-size: 32px;
+    width: 32px;
+    height: 32px;
+}
+
+.level-selection {
+    padding: 16px;
+    background-color: #f5f5f5;
+    border-radius: 4px;
+    margin-bottom: 16px;
+}
+
+.level-select-field {
     width: 100%;
+    max-width: 300px;
 }
 
+.table-responsive {
+    overflow-x: auto;
+    margin: 16px 0;
+}
 
-table.datatable {
-	width:100%;
-	border: none;
-	background:#fff;
+.courses-table {
+    width: 100%;
+    border-collapse: collapse;
+    box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
 }
-table.datatable td.table_foot {
-	border: none;
-	background: #fff;
-	text-align: center;
+
+.courses-table th {
+    background-color: #3f51b5;
+    color: white;
+    font-weight: 500;
+    padding: 12px 16px;
+    text-align: left;
 }
-table.datatable tr.odd_col {
-	background: none;
+
+.checkbox-header, .checkbox-cell {
+    width: 50px;
+    text-align: center;
 }
-table.datatable tr.even_col {
-	background: #ddd;
+
+.custom-checkbox {
+    width: 18px;
+    height: 18px;
+    cursor: pointer;
 }
-table.datatable td {
-	font-size:10pt;
-	padding:5px 10px;
-	text-align: left;
+
+.courses-table td {
+    padding: 12px 16px;
+    border-bottom: 1px solid #e0e0e0;
 }
-table.datatable th {
-	text-align: left;
-	font-size: 8pt;
-	padding: 10px 10px 7px;   
-	text-transform: uppercase;
-	color: #fff;
-	background-color: black;
-	font-family: sans-serif;
+
+.course-code {
+    font-family: 'Roboto Mono', monospace;
+    font-weight: 500;
+    color: #3f51b5;
+}
+
+.course-title {
+    font-weight: 500;
+}
+
+.odd-row {
+    background-color: #ffffff;
+}
+
+.even-row {
+    background-color: #fafafa;
+}
+
+.register-button-container {
+    display: flex;
+    justify-content: flex-end;
+    padding: 16px 0;
+}
+
+.register-button {
+    padding: 8px 24px;
+}
+
+.empty-state, .initial-state {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    padding: 24px;
+    background-color: #f5f5f5;
+    border-radius: 4px;
+    margin: 16px 0;
+}
+
+.empty-state mat-icon, .initial-state mat-icon {
+    color: #757575;
+}
+
+/* Popup Styles */
+.registration-popup-overlay {
+    position: fixed;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background-color: rgba(0, 0, 0, 0.5);
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    z-index: 1000;
+}
+
+.registration-popup {
+    background-color: white;
+    border-radius: 8px;
+    width: 90%;
+    max-width: 500px;
+    box-shadow: 0 4px 20px rgba(0, 0, 0, 0.2);
+}
+
+.popup-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 16px 24px;
+    border-bottom: 1px solid #e0e0e0;
+}
+
+.popup-header h3 {
+    margin: 0;
+    color: #3f51b5;
+}
+
+.close-button {
+    color: #757575;
+}
+
+.popup-content {
+    padding: 24px;
+}
+
+.selected-courses-list {
+    list-style-type: none;
+    padding: 0;
+    margin: 16px 0 0;
+}
+
+.selected-courses-list li {
+    padding: 8px 0;
+    border-bottom: 1px solid #f0f0f0;
+}
+
+.course-code {
+    font-weight: 500;
+}
+
+.popup-actions {
+    display: flex;
+    justify-content: flex-end;
+    gap: 12px;
+    padding: 16px 24px;
+    border-top: 1px solid #e0e0e0;
+}
+
+/* Responsive adjustments */
+@media (max-width: 768px) {
+    .course-registration-card {
+        margin: 12px;
+    }
+    
+    .courses-table th, 
+    .courses-table td {
+        padding: 8px 12px;
+    }
+    
+    .register-button {
+        width: 100%;
+    }
 }

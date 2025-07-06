@@ -1,96 +1,149 @@
-<div class="loading-container" *ngIf="isLoading; else contentTemplate">
-  <mat-spinner diameter="50"></mat-spinner>
-  <p class="loading-text">Loading quiz instructions...</p>
+<div class="loading-overlay" *ngIf="isLoading; else contentTemplate">
+  <div class="loading-card">
+    <mat-spinner diameter="60" color="primary"></mat-spinner>
+    <div class="loading-text-container">
+      <h2 class="loading-title">Preparing Your Quiz</h2>
+      <p class="loading-subtitle">Loading instructions and requirements...</p>
+    </div>
+  </div>
 </div>
 
 <ng-template #contentTemplate>
-  <div class="container card">
-    <div class="row">
-      <div class="col-md-12">
-        <mat-card class="quiz-instruction-card">
-          <!-- Header Section -->
-          <mat-card-header>
-            <mat-card-title>
-              Quiz Instructions <span *ngIf="quiz">|| {{quiz.title}}</span>
-            </mat-card-title>
-          </mat-card-header>
+  <div class="quiz-instruction-container">
+    <mat-card class="instruction-card mat-elevation-z4">
+      <!-- Header Section -->
+      <div class="header-background"></div>
+      <mat-card-header class="instruction-header">
+        <div mat-card-avatar class="quiz-icon-container">
+          <mat-icon class="quiz-icon">assignment</mat-icon>
+        </div>
+        <mat-card-title class="quiz-title">
+          {{quiz?.title || 'Quiz Instructions'}}
+        </mat-card-title>
+        <mat-card-subtitle *ngIf="quiz?.description" class="quiz-description">
+          {{quiz.description}}
+        </mat-card-subtitle>
+      </mat-card-header>
 
-          <!-- Content Section -->
-          <mat-card-content *ngIf="quiz">
-            <h1>{{quiz.title}}</h1>
-            <p>{{quiz.description}}</p>
-            <mat-divider></mat-divider>
-            <br>
+      <!-- Content Section -->
+      <mat-card-content *ngIf="quiz" class="instruction-content">
+        <!-- Quiz Details Cards -->
+        <div class="detail-cards-container">
+          <mat-card class="detail-card">
+            <mat-icon class="detail-card-icon" color="primary">schedule</mat-icon>
+            <h3 class="detail-card-title">Duration</h3>
+            <p class="detail-card-value">{{getFormmatedTime()}}</p>
+          </mat-card>
 
-            <!-- Important Notice Section -->
-            <h2>Important Notice</h2>
-            <ul class="instruction-list">
-              <li>This quiz is timed for <b>{{getFormmatedTime()}}</b></li>
-              <li *ngIf="timeO > 0">There are <b>{{quiz.numberOfQuestions}} objective questions</b></li>
-              <li>Each question carries <b>{{quiz.maxMarks/quiz.numberOfQuestions}} mark(s)</b></li>
-              <li *ngIf="numberOfQuestionsToAnswer > 0">
-                Answer all MCQs and any <b>{{numberOfQuestionsToAnswer}}</b> theory question(s)
-              </li>
-            </ul>
-
-            <mat-divider></mat-divider>
-            <br>
-
-            <!-- Attempting Quiz Section -->
-            <h2>Attempting Quiz</h2>
-            <ul class="instruction-list">
-              <li>Click <b>Start Quiz</b> and enter the quiz password</li>
-              <li>The timer starts immediately</li>
-              <li>You can't resume if interrupted</li>
-              <li>Submit when completed</li>
-              <li>Use Next button to navigate</li>
-              <li>Print your report as PDF after submitting</li>
-            </ul>
-          </mat-card-content>
-
-          <!-- Actions Section -->
-
-
-          <mat-card-actions class="text-center">
-            <div class="container text-center">
-              <button *ngIf="quiz?.status === 'OPEN' && !isLegible" mat-raised-button color="primary"
-                (click)="startQuiz()" [disabled]="!quiz">
-                Start Quiz
-              </button>
-              <button *ngIf="quiz?.status === 'CLOSED'" mat-raised-button color="warn" disabled>
-                Quiz Closed
-              </button>
-              <button *ngIf="quiz?.attempted || (quiz?.status === 'OPEN' && isLegible)" mat-raised-button
-                color="accent" disabled>
-                Quiz Completed
-              </button>
+          <mat-card class="detail-card">
+            <mat-icon class="detail-card-icon" color="primary">help_outline</mat-icon>
+            <h3 class="detail-card-title">Questions</h3>
+            <div class="detail-card-value">
+              <p *ngIf="timeO > 0">{{quiz.numberOfQuestions}} objective</p>
+              <p *ngIf="numberOfQuestionsToAnswer > 0">Answer any {{numberOfQuestionsToAnswer}} theory</p>
             </div>
-          </mat-card-actions>
+          </mat-card>
 
-
-
-
-
-
-          <!-- <mat-card-actions class="text-center">
-            <div class=" container text-center" >
-              <button *ngIf="!isLegible" 
-                      mat-raised-button 
-                      color="primary" 
-                      (click)="startQuiz()"
-                      [disabled]="!quiz">
-                Start Quiz
-              </button>              
-              <button *ngIf="isLegible" 
-                      mat-raised-button 
-                      color="accent"
-                      disabled>
-                Quiz Completed
-              </button>
+          <mat-card class="detail-card">
+            <mat-icon class="detail-card-icon" color="primary">star</mat-icon>
+            <h3 class="detail-card-title">Scoring</h3>
+            <div class="detail-card-value">
+              <p>{{quiz.maxMarks/quiz.numberOfQuestions}} mark per question</p>
+              <p>Total: {{quiz.maxMarks}} marks</p>
             </div>
-          </mat-card-actions> -->
-        </mat-card>
-      </div>
-    </div>
+          </mat-card>
+        </div>
+
+        <!-- Instructions Section -->
+        <div class="instructions-section">
+          <div class="section-header">
+            <mat-icon class="section-icon" color="warn">error_outline</mat-icon>
+            <h2 class="section-title">Important Instructions</h2>
+          </div>
+          
+          <div class="instruction-items">
+            <div class="instruction-item">
+              <mat-icon class="item-icon">timer</mat-icon>
+              <p class="item-text">The timer will start immediately when you begin the quiz</p>
+            </div>
+            
+            <div class="instruction-item">
+              <mat-icon class="item-icon">pause_circle_outline</mat-icon>
+              <p class="item-text">You cannot pause or resume the quiz once started</p>
+            </div>
+            
+            <div class="instruction-item">
+              <mat-icon class="item-icon">navigation</mat-icon>
+              <p class="item-text">Use navigation buttons to move between questions</p>
+            </div>
+            
+            <div class="instruction-item">
+              <mat-icon class="item-icon">assignment_turned_in</mat-icon>
+              <p class="item-text">Submit your answers when completed</p>
+            </div>
+            
+            <div class="instruction-item">
+              <mat-icon class="item-icon">picture_as_pdf</mat-icon>
+              <p class="item-text">Download your report as PDF after submission</p>
+            </div>
+          </div>
+        </div>
+
+        <!-- Status Card -->
+        <div class="status-container" *ngIf="quiz.status === 'CLOSED' || quiz.attempted || isLegible">
+          <mat-card class="status-card" [ngClass]="{
+            'closed': quiz.status === 'CLOSED',
+            'completed': quiz.attempted || isLegible
+          }">
+            <mat-card-content>
+              <div class="status-content">
+                <mat-icon class="status-icon">
+                  {{quiz.status === 'CLOSED' ? 'lock_clock' : 'check_circle'}}
+                </mat-icon>
+                <div class="status-text">
+                  <h3>{{quiz.status === 'CLOSED' ? 'Quiz Closed' : 'Quiz Completed'}}</h3>
+                  <p>
+                    {{quiz.status === 'CLOSED' ? 
+                      'This quiz is no longer available for attempts' : 
+                      'You have already completed this quiz'}}
+                  </p>
+                </div>
+              </div>
+            </mat-card-content>
+          </mat-card>
+        </div>
+      </mat-card-content>
+
+      <!-- Action Buttons -->
+      <mat-card-actions class="action-buttons">
+        <button *ngIf="quiz?.status === 'OPEN' && !isLegible" 
+                mat-raised-button 
+                color="primary" 
+                class="action-button primary"
+                (click)="startQuiz()"
+                [disabled]="!quiz">
+          <mat-icon>play_arrow</mat-icon>
+          Begin Quiz
+        </button>
+        
+        <button *ngIf="quiz?.status === 'CLOSED'" 
+                mat-stroked-button 
+                color="warn" 
+                class="action-button"
+                disabled>
+          <mat-icon>lock</mat-icon>
+          Quiz Closed
+        </button>
+        
+        <button *ngIf="quiz?.attempted || (quiz?.status === 'OPEN' && isLegible)" 
+                mat-stroked-button 
+                color="accent" 
+                class="action-button"
+                disabled>
+          <mat-icon>check_circle</mat-icon>
+          Already Completed
+        </button>
+      </mat-card-actions>
+    </mat-card>
   </div>
 </ng-template>

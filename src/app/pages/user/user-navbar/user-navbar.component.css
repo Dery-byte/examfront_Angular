@@ -1,31 +1,31 @@
-.example-spacer{
-    flex: 1 1 auto;
+.example-spacer {
+  flex: 1 1 auto;
 }
 
-.mrl{
-    margin-right: 50px;
+.mrl {
+  margin-right: 50px;
 }
 
-.ml{
-    margin-right: 140px;
+.ml {
+  margin-right: 140px;
 }
 
-.username{
-padding: 20px;
+.username {
+  padding: 20px;
 }
 
 
 
-.profile-imag{
-    border-radius: 50px;
+.profile-imag {
+  border-radius: 50px;
 }
 
-.text-center{
-    color: black;
-    font-family: 'Times New Roman', Times, serif;
-    font-size: 25px;
-    margin-right:50px;
-    margin-bottom: auto;
+.text-center {
+  color: black;
+  font-family: 'Times New Roman', Times, serif;
+  font-size: 25px;
+  margin-right: 50px;
+  margin-bottom: auto;
 }
 
 
@@ -36,53 +36,61 @@ padding: 20px;
 
 /* home.component.css */
 .home-container {
-    text-align: center;
-    font-family: 'Roboto', sans-serif;
-  }
-  
-  .header {
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    padding: 1rem;
-    background-color: #3f51b5;
-    color: white;
-  }
-  
-  .logo {
-    font-size: 1.5rem;
-    font-weight: bold;
-  }
-  nav a {
-    margin: 0 0.5rem;
-    color: white;
-  }
-  
+  text-align: center;
+  font-family: 'Roboto', sans-serif;
+}
+
+.header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 1rem;
+  background-color: #3f51b5;
+  color: white;
+}
+
+.logo {
+  font-size: 1.5rem;
+  font-weight: bold;
+}
+
+nav a {
+  margin: 0 0.5rem;
+  color: white;
+}
+
 
 /* TOKEN EXPIRE CSS */
-.tokeExpire{
+.tokeExpire {
   /* float: right; */
   margin-left: auto;
   font-size: 15px;
 }
+
 .warning-minutes {
-  color: rgb(47, 4, 87); /* Change to your desired warning color */
+  color: rgb(47, 4, 87);
+  /* Change to your desired warning color */
   font-size: 20px;
   font-weight: bold;
-  transition: color 0.5s ease-out, transform 0.5s ease-out; /* Add transition for color and transform */
-  transform: scale(1); /* Initial scale for normal state */
+  transition: color 0.5s ease-out, transform 0.5s ease-out;
+  /* Add transition for color and transform */
+  transform: scale(1);
+  /* Initial scale for normal state */
 }
 
 .warning-minutes.alert {
-  transform: scale(1.1); /* Scale up when alerting */
+  transform: scale(1.1);
+  /* Scale up when alerting */
 }
 
 .normal-minutes {
-  color: rgb(238, 234, 234); /* Default color */
-  transition: color 0.5s ease-out; /* Add transition for color */
+  color: rgb(238, 234, 234);
+  /* Default color */
+  transition: color 0.5s ease-out;
+  /* Add transition for color */
 }
 
-.mw450{
+.mw450 {
   width: 450px;
 }
 
@@ -91,3 +99,228 @@ padding: 20px;
   background-color: #2196f3 !important;  
   color: white !important;               
 } */
+
+
+/* Make navbar sticky */
+.sticky-top {
+  position: sticky;
+  top: 0;
+  z-index: 1000;
+}
+
+/* Adjust content container */
+.content-container {
+  margin-top: 64px;
+  /* Matches toolbar height */
+}
+
+/* Sidebar styling */
+.sidebar-column {
+  position: sticky;
+  top: 64px;
+  /* Below navbar */
+  height: calc(100vh - 64px);
+  overflow-y: auto;
+}
+
+/* Main content area */
+.main-content {
+  padding: 15px;
+}
+
+
+/* mobile UI */
+
+
+
+
+/* Mobile responsiveness */
+@media (max-width: 767.98px) {
+  .main-content {
+    width: 100% !important;
+    margin-left: 0 !important;
+  }
+
+  .mat-drawer {
+    box-shadow: 0 8px 10px -5px rgba(0, 0, 0, .2),
+      0 16px 24px 2px rgba(0, 0, 0, .14),
+      0 6px 30px 5px rgba(0, 0, 0, .12);
+  }
+}
+
+/* Desktop styles */
+@media (min-width: 768px) {
+  .mat-drawer {
+    width: 250px !important;
+  }
+
+  .main-content {
+    margin-left: 250px !important;
+  }
+}
+
+/* General styles */
+.content-wrapper {
+  min-height: calc(100vh - 64px);
+}
+
+.mw450 {
+  min-width: 450px;
+}
+
+@media (max-width: 575.98px) {
+  .mw450 {
+    min-width: 100%;
+    width: 100%;
+  }
+}
+
+
+
+
+
+
+
+/* Responsive toolbar styles */
+.toolbar-responsive {
+  padding: 0 8px;
+  min-height: 56px;
+}
+
+.toolbar-content {
+  display: flex;
+  width: 100%;
+  align-items: center;
+  justify-content: space-between;
+  flex-wrap: wrap;
+}
+
+.username-responsive {
+  font-size: 14px;
+  margin: 0 8px;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  max-width: 170px;
+}
+
+/* .session-timer-responsive {
+  font-size: 12px;
+  white-space: nowrap;
+  margin: 0 8px;
+} */
+
+/* Responsive adjustments */
+@media (max-width: 768px) {
+  .toolbar-content {
+    justify-content: flex-start;
+    gap: 8px;
+  }
+
+  .session-timer-responsive {
+    font-size: 10px;
+    flex-grow: 1;
+    text-align: center;
+  }
+
+  .username-responsive {
+    font-size: 10px;
+    white-space: nowrap;
+    overflow: hidden;
+    max-width: 200px;
+  }
+}
+
+@media (max-width: 480px) {
+  .session-timer-responsive {}
+
+  .username-responsive {
+    max-width: 200px;
+    font-size: 5px;
+  }
+}
+
+.elegant-drawer {
+  background: linear-gradient(145deg, #e7aada, #78777a);
+  color: white;
+  box-shadow: 2px 0 10px rgba(0, 0, 0, 0.1);
+  
+  .drawer-header {
+    padding: 16px;
+    text-align: center;
+    background: rgba(255, 255, 255, 0.1);
+    
+    .header-icon {
+      font-size: 48px;
+      width: 48px;
+      height: 48px;
+    }
+    
+    .user-name {
+      margin: 8px 0 0;
+      font-weight: 500;
+      font-size: 16px;
+    }
+  }
+  
+  .nav-item {
+    transition: all 0.3s ease;
+    margin: 4px 8px;
+    border-radius: 4px;
+    
+    &:hover {
+      background: rgba(255, 255, 255, 0.1);
+    }
+    
+    &.active {
+      background: rgba(255, 255, 255, 0.2);
+    }
+    
+    .nav-icon {
+      margin-right: 16px;
+      color: rgba(255, 255, 255, 0.8);
+    }
+    
+    .nav-text {
+      font-size: 14px;
+      font-weight: 500;
+      /* margin-bottom: 10%;
+      margin-top: auto; */
+    }
+  }
+  
+  .logout-item {
+    margin-top: auto;
+    background: rgba(255, 255, 255, 0.05);
+    
+    &:hover {
+      background: rgba(255, 0, 0, 0.1);
+    }
+  }
+  
+  mat-divider {
+    margin: 4px 0;
+    border-top-color: rgba(20, 19, 19, 0.1);
+  }
+}
+
+/* Responsive adjustments */
+@media (max-width: 600px) {
+  .elegant-drawer {
+    width: 72px;
+    overflow: hidden;
+    
+    /* .drawer-header, .nav-text {
+      display: none;
+    } */
+    
+    .nav-item {
+      justify-content: center;
+      padding-left: 0;
+      
+      .nav-icon {
+        margin-right: 0;
+      }
+    }
+  }
+}

@@ -6,68 +6,88 @@
 
 	<!-- {{selectedCategories | json}} -->
 
-	<mat-card>
-		<h1>Register Course(s)</h1>
-		<mat-card-content>
-			<div class="bootstrap-wrapper">
+	<mat-card class="course-registration-card">
+    <mat-card-header>
+        <div class="card-header">
+            <mat-icon class="header-icon">assignment</mat-icon>
+            <mat-card-title>Course Registration</mat-card-title>
+        </div>
+    </mat-card-header>
 
-				<div class="row">
-					<div class="col-md-2">
-						<br />
-						<mat-form-field appearance="fill" class="">
-							<mat-label>Select Level</mat-label>
-							<mat-select id="levelSelect" [(ngModel)]="selectedLevel"
-								(selectionChange)="filterCourses()">
-								<mat-option *ngFor="let level of uniqueLevels" [value]="level">{{ level }}</mat-option>
-							</mat-select>
-						</mat-form-field>
-					</div>
+    <mat-divider></mat-divider>
 
+    <mat-card-content>
+        <div class="level-selection">
+            <mat-form-field appearance="fill" class="level-select-field">
+                <mat-label>Select Academic Level</mat-label>
+                <mat-select id="levelSelect" [(ngModel)]="selectedLevel" (selectionChange)="filterCourses()">
+                    <mat-option *ngFor="let level of uniqueLevels" [value]="level">
+                                                    <mat-icon>school</mat-icon>
 
-					<div class="col-md-9 offset-md-1">
+                         {{ level }}
+                    </mat-option>
+                </mat-select>
+            </mat-form-field>
+        </div>
 
+        <div *ngIf="selectedLevel" class="course-selection-container">
+            <div *ngIf="filteredCourses.length > 0; else emptyState">
+                <div class="table-responsive">
+                    <table class="courses-table">
+                        <thead>
+                            <tr>
+                                <!-- <th class="checkbox-header">
+                                    <input type="checkbox" 
+                                           [checked]="isAllCheckBoxChecked()"
+                                           (change)="checkAllCheckBox($event)"
+                                           class="custom-checkbox">
+                                </th> -->
 
-						<!-- <form (ngSubmit)="formSubmit()"> -->
-						<form>
-							<!-- <form (ngSubmit)="onsubmission()"> -->
-							<div *ngIf="filteredCourses.length > 0; else elseBlock">
-								<table class="datatable">
-									<thead>
-										<tr>
-											<th>
-												<!-- <input type="checkbox" [checked]="isAllCheckBoxChecked()"
-											((selectionchange))="checkAllCheckBox($event)"> -->
-												Select
-											</th>
-											<th>Course Code</th>
-											<th>Course Name</th>
-											<!-- <th>C ID</th> -->
+								<th>Select</th>
+                                <th>Course Code</th>
+                                <th>Course Name</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr *ngFor="let c of filteredCourses; let i = index; let odd = odd" 
+                                [class.odd-row]="odd" 
+                                [class.even-row]="!odd">
+                                <td class="checkbox-cell">
+                                    <input type="checkbox" 
+                                           (change)="showCid($event, c.cid)"
+                                           class="custom-checkbox">
+                                </td>
+                                <td class="course-code">{{ c.courseCode }}</td>
+                                <td class="course-title">{{ c.title }}</td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
 
-										</tr>
-									</thead>
-									<tbody>
-										<tr *ngFor="let c of filteredCourses; let i=index; let odd = odd"
-											[ngClass]="odd ? 'odd_col' : 'even_col'">
-											<td><input type="checkbox" (change)="showCid($event, c.cid)">
-												<!-- [(ngModel)]='c.cid'> -->
-											</td>
-											<!-- <td><input type="checkbox" 	(change)="onchangeSelection()" [(ngModel)]="c.cid" [value]="c.cid"></td> -->
-											<td>{{ c.courseCode}}</td>
-											<td>{{ c.title }}</td>
-											<!-- <td>{{ c.cid }}</td> -->
-										</tr>
-									</tbody>
-								</table>
-								<div class="col-md-3"><button mat-raised-button color="primary">Register</button></div>
-							</div>
-						</form>
-						<ng-template #elseBlock>Select level to register a course</ng-template>
-					</div>
+                <!-- <div class="register-button-container">
+                    <button mat-raised-button 
+                            color="primary" 
+                            class="register-button">
+                        Register Selected Courses
+                        <mat-icon>arrow_forward</mat-icon>
+                    </button>
+                </div> -->
+            </div>
+            <ng-template #emptyState>
+                <div class="empty-state">
+                    <mat-icon>info</mat-icon>
+                    <p>No courses available for {{ selectedLevel }}</p>
+                </div>
+            </ng-template>
+        </div>
 
-				</div>
-			</div>
-		</mat-card-content>
-	</mat-card>
+        <div *ngIf="!selectedLevel" class="initial-state">
+            <mat-icon>help_outline</mat-icon>
+            <p>Please select your academic level to view available courses</p>
+        </div>
+    </mat-card-content>
+</mat-card>
+
 	<!-- 
 	{{categories | json}}
 	<hr>
