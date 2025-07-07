@@ -1,60 +1,129 @@
-.full-width{
 
-    width: 100%;
-}
-
-.box{
-    align-items: center;
-}
-
-
-.example-full-width{
-    align-content: center;
-}
-
-.full-width{
-    align-content: center;
-
-}
-
-
-.login-form-flex {
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    height: 100%;
-  }
-
-  .spinner{
-    /* display: inline-flex; */
-    position: absolute;
-    /* width: 100%; */
-    /* justify-content: flex-end; */
-    border-radius: 50%; 
-  width: 30px; 
-  height: 30px; 
-  margin-top:-5px ; 
-  margin-left: -33px;
-  
-  }
-  .btn-block{
-    width: 30%;
-
-  }
-
-
-  .button-content {
+.registration-container {
   display: flex;
-  align-items: center;
   justify-content: center;
-  gap: 8px;
+  align-items: center;
+  min-height: calc(100vh - 64px); 
+  padding: 1rem;
+  background: #f5f7fa;
 }
 
-.spinner-left {
-  margin-right: 8px;
+.registration-card {
+  width: 100%;
+  max-width: 800px;
+  border-radius: 12px;
+  overflow: hidden;
+  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.08);
+  margin: 1rem;
+  
+  @include mat.elevation(4);
 }
 
-/* Optional: Custom spinner color */
-.mat-spinner.spinner-left ::ng-deep circle {
-  stroke: white;
+.registration-header {
+  text-align: center;
+  padding: 2rem 2rem 1rem;
+  background: linear-gradient(135deg, #3f51b5 0%, #2196f3 100%);
+  color: white;
+}
+
+.registration-logo {
+  width: 100px;
+  height: 100px;
+  border-radius: 50%;
+  object-fit: cover;
+  border: 3px solid rgba(255, 255, 255, 0.2);
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+}
+
+.registration-title {
+  font-size: 1.8rem;
+  font-weight: 500;
+  margin: 1rem 0 0.5rem;
+}
+
+.registration-subtitle {
+  font-size: 1rem;
+  opacity: 0.9;
+  margin-bottom: 0;
+}
+
+.registration-form {
+  padding: 2rem;
+  
+  .form-grid {
+    display: grid;
+    gap: 1.5rem;
+  }
+}
+
+.name-fields,
+.contact-fields,
+.password-fields {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 1rem;
+  
+  @media (max-width: 600px) {
+    grid-template-columns: 1fr;
+  }
+}
+
+mat-form-field {
+  width: 100%;
+  
+  .mat-icon {
+    color: rgba(0, 0, 0, 0.54);
+  }
+}
+
+.submit-button {
+  width: 100%;
+  padding: 12px;
+  margin-top: 1rem;
+  font-size: 1rem;
+  border-radius: 8px;
+  height: 48px;
+  
+  .button-content {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 8px;
+  }
+}
+
+.login-redirect {
+  text-align: center;
+  margin-top: 1.5rem;
+  color: #666;
+  
+  a {
+    text-decoration: none;
+    padding: 0 4px;
+  }
+}
+
+@media (max-width: 960px) {
+  .registration-card {
+    margin: 1rem;
+  }
+}
+
+@media (max-width: 600px) {
+  .registration-header {
+    padding: 1.5rem 1rem;
+  }
+  
+  .registration-form {
+    padding: 1.5rem;
+  }
+  
+  .registration-logo {
+    width: 80px;
+    height: 80px;
+  }
+  
+  .registration-title {
+    font-size: 1.5rem;
+  }
 }

@@ -1,78 +1,86 @@
 <app-navbar></app-navbar>
 
+<div class="registration-container">
+  <mat-card class="registration-card">
+    <div class="registration-header">
+      <img class="registration-logo" src="../../../assets/logo1.jpg" alt="Company Logo">
+      <h1 class="registration-title">Create Your Account</h1>
+      <p class="registration-subtitle">Join our platform to get started</p>
+    </div>
 
-<div class="bootstrap-wrapper">
-  <div class="container">
-    <div class="row">
-      <div class="col-md-6 offset-md-3">
-        <div class="login-form-flex">
-          <mat-card>
+    <form (ngSubmit)="formSubmit()" class="registration-form">
+      <div class="form-grid">
+        <!-- Name Fields Row -->
+        <div class="name-fields">
+          <mat-form-field appearance="outline">
+            <mat-label>First Name</mat-label>
+            <input [(ngModel)]="user.firstname" name="firstname" matInput required>
+            <mat-icon matPrefix>person_outline</mat-icon>
+          </mat-form-field>
 
-            <div class="container text-center">
-              <img style="border-radius: 50%;" src="../../../assets/logo1.jpg" height="150" width="150" alt="logo.png">
-              <mat-card-title class=" text-center">Register</mat-card-title>
-
-            </div>
-            <form (ngSubmit)="formSubmit()">
-              <mat-card-content class=" text-center">
-                <mat-form-field class="example-full-width">
-                  <input required [(ngModel)]="user.username" name="username" matInput placeholder="Username">
-                  <mat-hint>Username must be unique!! </mat-hint>
-                </mat-form-field>
-
-                <mat-form-field class="example-full-width">
-                  <input required [(ngModel)]="user.password" name="password" type="password" matInput matInput
-                    placeholder="Password">
-                </mat-form-field>
-
-                <mat-form-field class="example-full-width">
-                  <input [(ngModel)]="user.firstname" name="firstname" matInput placeholder="First Name">
-                </mat-form-field>
-
-                <mat-form-field class="example-full-width">
-                  <input [(ngModel)]="user.lastname" name="lastname" matInput placeholder="Last Name">
-                </mat-form-field>
-
-                <mat-form-field class="example-full-width">
-                  <input [(ngModel)]="user.email" name="email" type="email" matInput placeholder="Email Address">
-                </mat-form-field>
-
-                <mat-form-field class="example-full-width">
-                  <input [(ngModel)]="user.phone" name="phone" matInput placeholder="Phone Number">
-                </mat-form-field>
-
-                <!-- <button type="submit" class="example-full-width" mat-raised-button color="primary" class="btn-block">
-                  <img *ngIf="isLogingIn" class="spinner" src="../../../assets/images/spinningCircle.gif">
-
-                  Register</button> -->
-
-
-
-
-                <!-- <button type="submit" mat-raised-button color="accent" style="margin-left: 20px;">Clear</button> -->
-            <button type="submit" [disabled]="loading" class="example-full-width"  mat-raised-button
-                color="primary" class="btn-block">
-                <div class="button-content">
-                  <mat-spinner *ngIf="loading" diameter="23" strokeWidth="4" color="accent"
-                    class="spinner-left"></mat-spinner>
-                  <span>
-                    {{ loading ? 'Registering...' : 'Register' }}
-                  </span>
-                </div>
-              </button>
-              </mat-card-content>
-  
-
-            </form>
-          </mat-card>
+          <mat-form-field appearance="outline">
+            <mat-label>Last Name</mat-label>
+            <input [(ngModel)]="user.lastname" name="lastname" matInput required>
+          </mat-form-field>
         </div>
 
+        <!-- Username Field -->
+        <mat-form-field appearance="outline">
+          <mat-label>Username</mat-label>
+          <input [(ngModel)]="user.username" name="username" matInput required>
+          <mat-icon matPrefix>alternate_email</mat-icon>
+          <mat-hint align="end">Must be unique</mat-hint>
+        </mat-form-field>
 
+        <!-- Contact Fields Row -->
+        <div class="contact-fields">
+          <mat-form-field appearance="outline">
+            <mat-label>Email</mat-label>
+            <input [(ngModel)]="user.email" name="email" type="email" matInput required>
+            <mat-icon matPrefix>mail_outline</mat-icon>
+          </mat-form-field>
 
+          <mat-form-field appearance="outline">
+            <mat-label>Phone Number</mat-label>
+            <input [(ngModel)]="user.phone" name="phone" type="tel" matInput>
+            <mat-icon matPrefix>phone</mat-icon>
+          </mat-form-field>
+        </div>
 
+        <!-- Password Fields Row -->
+        <div class="password-fields">
+          <mat-form-field appearance="outline">
+            <mat-label>Password</mat-label>
+            <input [(ngModel)]="user.password" name="password" [type]="hidePassword ? 'password' : 'text'" matInput required>
+            <mat-icon matPrefix>lock_outline</mat-icon>
+            <button type="button" mat-icon-button matSuffix (click)="hidePassword = !hidePassword">
+              <mat-icon>{{hidePassword ? 'visibility_off' : 'visibility'}}</mat-icon>
+            </button>
+          </mat-form-field>
 
+          <mat-form-field appearance="outline">
+            <mat-label>Confirm Password</mat-label>
+            <input [type]="hideConfirmPassword ? 'password' : 'text'" matInput required>
+            <mat-icon matPrefix>lock_outline</mat-icon>
+            <button type="button" mat-icon-button matSuffix (click)="hideConfirmPassword = !hideConfirmPassword">
+              <mat-icon>{{hideConfirmPassword ? 'visibility_off' : 'visibility'}}</mat-icon>
+            </button>
+          </mat-form-field>
+        </div>
       </div>
-    </div>
-  </div>
 
+      <!-- Submit Button -->
+      <button type="submit" [disabled]="loading" mat-raised-button color="primary" class="submit-button">
+        <div class="button-content">
+          <mat-spinner *ngIf="loading" diameter="20" strokeWidth="3" color="accent"></mat-spinner>
+          <span>{{ loading ? 'Creating Account...' : 'Register Now' }}</span>
+        </div>
+      </button>
+
+      <!-- Login Redirect -->
+      <div class="login-redirect">
+        Already have an account? <a mat-button routerLink="/login">Sign In</a>
+      </div>
+    </form>
+  </mat-card>
 </div>

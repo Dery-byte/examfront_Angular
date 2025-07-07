@@ -1,185 +1,142 @@
-<!-- BELOW CONATAINS THE CORRECT CODE -->
-
 <app-navbar></app-navbar>
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-<div class="container">
-  <div class="row">
-    <div class="col-md-6 offset-md-3">
-      <mat-card>
-        <div class="container text-center">
-          <img style="border-radius: 50%;" src="../../../assets/logo1.jpg" height="150" width="150" alt="logo.png">
+<div class="login-container">
+  <div class="login-background"></div>
+  <div class="login-card-wrapper">
+    <mat-card class="login-card">
+      <div class="logo-container">
+        <div class="logo-frame">
+          <img class="logo" src="../../../assets/logo1.jpg" alt="Company Logo">
         </div>
+      </div>
 
-        <div class="login-form-flex">
-          <mat-card>
-            <form (ngSubmit)="formSubmit()">
-              <!-- {{loginData|json}} -->
-              <h1 class="text-center">Login Here!!</h1>
-              <mat-card-content>
-                <mat-form-field>
-                  <mat-label>Username</mat-label>
-                  <input [(ngModel)]="loginData.username" name="username" required type="text" matInput
-                    placeholder="Username">
-                </mat-form-field>
-                <br />
-                <mat-form-field>
-                  <mat-label>Password</mat-label>
-                  <input [(ngModel)]="loginData.password" required name="password" type="password" matInput
-                    placeholder="Password" />
-                </mat-form-field>
-              </mat-card-content>
+      <mat-card class="form-card">
+        <form (ngSubmit)="formSubmit()">
+          <div class="form-header">
+            <h1 class="login-title">Welcome Back</h1>
+            <p class="login-subtitle">Please enter your credentials to continue</p>
+          </div>
 
+          <mat-card-content>
+            <mat-form-field appearance="fill" class="full-width-field">
+              <mat-label>Username</mat-label>
+              <input [(ngModel)]="loginData.username" name="username" required type="text" matInput
+                placeholder="Enter your username">
+              <mat-icon matPrefix>person_outline</mat-icon>
+              <mat-icon matSuffix class="decorative-icon">fiber_manual_record</mat-icon>
+            </mat-form-field>
 
-             <button type="submit" 
-        [disabled]="loading" 
-        class="button-flex" 
-        mat-raised-button 
-        color="primary">
-  <div class="button-content">
-    <mat-spinner *ngIf="loading" 
-                diameter="23" 
-                strokeWidth="4"
-                color="accent"
-                class="spinner-left"></mat-spinner>
-    <span>
-      {{ loading ? 'Authenticating...' : 'Sign in' }}
-    </span>
-  </div>
-</button>
+            <mat-form-field appearance="fill" class="full-width-field">
+              <mat-label>Password</mat-label>
+              <input [(ngModel)]="loginData.password" required name="password" 
+                [type]="hidePassword ? 'password' : 'text'" matInput
+                placeholder="Enter your password" />
+              <mat-icon matPrefix>lock_outline</mat-icon>
+              <button type="button" mat-icon-button matSuffix (click)="hidePassword = !hidePassword" class="password-toggle">
+                <mat-icon>{{hidePassword ? 'visibility_off' : 'visibility'}}</mat-icon>
+              </button>
+            </mat-form-field>
+          </mat-card-content>
 
-
-
-
-
-            </form>
-            <!-- <button type="button" class="login-with-google-btn" (click)="signInWithGoogle()">
-              Sign in with Google
-            </button> -->
-
-            <!-- <a [routerLink]="['/oauth2/authorization/google']" class="login-with-google-btn">
-                Sign in with Google
-              </a> -->
-
-            <mat-card-actions>
-              <div class="button-flex-container">
-                <!-- <button mat-button color="primary" (click)="Openpopup()" class="" >Forgotten Password?</button> -->
-                <button mat-button color="primary" (click)="openUpdateDialog(updateDialog)">Forgotten Password?</button>
-                <!-- <button mat-menu-item (click)="openUpdateDialog(updateDialog)">
-                   <mat-icon color="accent">update</mat-icon> 
-                  <span>Forgotten Password?</span>
-                </button> -->
-              </div>
-            </mat-card-actions>
-          </mat-card>
-        </div>
+          <button type="submit" 
+            [disabled]="loading" 
+            class="login-button" 
+            mat-raised-button>
+            <div class="button-content">
+              <mat-spinner *ngIf="loading" 
+                          diameter="20" 
+                          strokeWidth="3"
+                          color="accent"
+                          class="spinner-left"></mat-spinner>
+              <span>
+                {{ loading ? 'Authenticating...' : 'Sign In' }}
+              </span>
+            </div>
+          </button>
+          
+        </form>
+        <div class="forgot-password">
+            <button mat-button (click)="openUpdateDialog(updateDialog)">
+              Forgot Password?
+              <mat-icon>arrow_forward</mat-icon>
+            </button>
+          </div>
       </mat-card>
+    </mat-card>
+  </div>
+</div>
+
+<!-- Password Reset Dialog -->
+<ng-template #updateDialog let-data="data">
+  <div class="dialog-container">
+    <div class="dialog-header">
+      <h1 mat-dialog-title>Reset Password</h1>
+      <div class="dialog-divider"></div>
+    </div>
+    
+    <div mat-dialog-content class="dialog-content">
+      <mat-form-field appearance="fill" class="full-width-field">
+        <mat-label>Username</mat-label>
+        <input [(ngModel)]="resetData.username" required name="username" type="text" matInput required
+          placeholder="Enter your username">
+        <mat-icon matPrefix>person_outline</mat-icon>
+      </mat-form-field>
+      
+      <mat-form-field appearance="fill" class="full-width-field">
+        <mat-label>Email</mat-label>
+        <input [(ngModel)]="resetData.email" name="email" type="email" matInput placeholder="Enter your email">
+        <mat-icon matPrefix>email</mat-icon>
+      </mat-form-field>
+      
+      <mat-form-field appearance="fill" class="full-width-field">
+        <mat-label>New Password</mat-label>
+        <input [(ngModel)]="resetData.password" required name="newpassword" 
+          [type]="hideNewPassword ? 'password' : 'text'" matInput
+          placeholder="Enter new password">
+        <mat-icon matPrefix>lock_reset</mat-icon>
+        <button type="button" mat-icon-button matSuffix (click)="hideNewPassword = !hideNewPassword" class="password-toggle">
+          <mat-icon>{{hideNewPassword ? 'visibility_off' : 'visibility'}}</mat-icon>
+        </button>
+      </mat-form-field>
+      
+      <mat-form-field appearance="fill" class="full-width-field">
+        <mat-label>Confirm Password</mat-label>
+        <input [(ngModel)]="resetData.confirmPassword" required name="confirmPassword" 
+          [type]="hideConfirmPassword ? 'password' : 'text'" matInput
+          placeholder="Confirm new password">
+        <mat-icon matPrefix>lock_reset</mat-icon>
+        <button type="button" mat-icon-button matSuffix (click)="hideConfirmPassword = !hideConfirmPassword" class="password-toggle">
+          <mat-icon>{{hideConfirmPassword ? 'visibility_off' : 'visibility'}}</mat-icon>
+        </button>
+      </mat-form-field>
+    </div>
+    
+    <div mat-dialog-actions class="dialog-actions">
+      <button mat-stroked-button (click)="dialogRef.close()">
+        <mat-icon>close</mat-icon>
+        Cancel
+      </button>
+      <button mat-raised-button class="update-button" (click)="passwordChange()">
+        <mat-icon>lock_reset</mat-icon>
+        Update Password
+      </button>
     </div>
   </div>
-  <div>
+</ng-template>
 
-
-
-    <!-- fancy dialog box STARTS -->
-    <!-- POP UP DIALOG BOX -->
-    <ng-template #updateDialog let-data="data">
-      <h1 mat-dialog-title>Reset Password</h1>
-      <div mat-dialog-content>
-        <!-- <form> -->
-        <mat-form-field>
-          <mat-label>Username</mat-label>
-          <input [(ngModel)]="resetData.username" required name="username" type="text" matInput required
-            placeholder="Username">
-        </mat-form-field>
-        <mat-form-field>
-          <mat-label>Email</mat-label>
-          <input [(ngModel)]="resetData.email" name="email" type="text" matInput placeholder="Email">
-        </mat-form-field>
-        <mat-form-field>
-          <mat-label>New Password</mat-label>
-          <input [(ngModel)]="resetData.password" required name="newpassword" type="text" matInput
-            placeholder="New Password">
-        </mat-form-field>
-        <mat-form-field>
-          <mat-label>Confirm Password</mat-label>
-          <input [(ngModel)]="resetData.confirmPassword" required name="confirmPassword" type="text" matInput
-            placeholder="Confirm Password">
-        </mat-form-field>
-        <!-- </form> -->
-      </div>
-      <div mat-dialog-actions>
-        <button mat-button (click)="dialogRef.close()">Cancel</button>
-        <!-- <button mat-button (click)="dialogRef.close(data.question)" onclick="updateTheoryQuestion()">Update</button> -->
-        <button mat-button (click)="passwordChange()">Update</button>
-      </div>
-    </ng-template>
-
-    <!-- fancy dialog ends here -->
-
-
-
-
-
-    <!-- DIALOG BOX STARTS FROM HERE -->
-    <!-- <div class="">
-      <p-dialog class="resetcontainer" [(visible)]="productDialog" [style]="{width: '60%', height:'1400px'}" header="">
-        <mat-card>
-          <form (ngSubmit)="passwordChange()">
-            <mat-card-content>
-              <h3>Provide theses details to reset Password</h3>
-              <mat-form-field>
-                <mat-label>Username</mat-label>
-                <input [(ngModel)]="resetData.username" required name="username" type="text" matInput
-                  placeholder="Username">
-              </mat-form-field>
-              <mat-form-field>
-                <mat-label>Email</mat-label>
-                <input [(ngModel)]="resetData.email" name="email" type="text" matInput placeholder="Email">
-              </mat-form-field>
-              <mat-form-field>
-                <mat-label>New Password</mat-label>
-                <input [(ngModel)]="resetData.password" name="newpassword" type="text" matInput
-                  placeholder="New Password">
-              </mat-form-field>
-              <mat-form-field>
-                <mat-label>Confirm Password</mat-label>
-                <input [(ngModel)]="resetData.confirmPassword" name="confirmPassword" type="text" matInput
-                  placeholder="Confirm Password">
-              </mat-form-field>
-            </mat-card-content>
-
-            <mat-card-actions>
-              <button type="submit" mat-raised-button color="primary">Reset</button>
-            </mat-card-actions>
-
-
-          </form>
-        </mat-card>
-      </p-dialog>
-    </div> -->
-    <!-- DIALOG BOX ENDS HERE -->
-
-
-
+<footer class="footer">
+  <div class="footer-content">
+    <p class="copyright">&copy; 2024 ACL. All rights reserved.</p>
+    <div class="footer-divider"></div>
+    <nav class="footer-links">
+      <a mat-button routerLink="/privacy">
+        <mat-icon>privacy_tip</mat-icon>
+        Privacy Policy
+      </a>
+      <a mat-button routerLink="/terms">
+        <mat-icon>description</mat-icon>
+        Terms of Service
+      </a>
+    </nav>
   </div>
-
-</div>
+</footer>

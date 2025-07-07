@@ -23,7 +23,9 @@ export class SignupComponent implements OnInit {
   };
   ngOnInit(): void { }
 
-
+// Add these to your component class
+hidePassword = true;
+hideConfirmPassword = true;
 
 
   // usernamePattern: RegExp = /^[a-zA-Z]{2}\/[a-zA-Z]{3}\/\d{2}\/\d{4}$/i;

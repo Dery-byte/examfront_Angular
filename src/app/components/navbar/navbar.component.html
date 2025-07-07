@@ -1,10 +1,4 @@
-<!-- <ngx-ui-loader
-fgsColor="#ff4081"
-pbColor="#ff4081"
-textColor="#ff4081"
-pbThickness="6"
-text="Loading instructions"
-></ngx-ui-loader> -->
+
 
 
 
@@ -14,14 +8,10 @@ text="Loading instructions"
 
   <header @fadeIn *ngIf="!isloggedIn">
     <mat-toolbar color="primary" class="mat-elevation-z8">
-      <!-- <button (click)="drawer.toggle()" mat-icon-button>
-      <mat-icon>menu</mat-icon>
-    </button> -->
       <span>ACT LTD</span>
       <span class="example-spacer"></span>
-      <a mat-button routerLink="/">Home</a>
-      <!-- <a mat-button routerLink="/about">About</a>
-      <a mat-button routerLink="/contact">Contact</a> -->
+      <!-- <a mat-button routerLink="/">Home</a> -->
+    
 
       <a *ngIf="!isloggedIn" [routerLink]="'/signup'" mat-button aria-label="Example icon-button with heart icon">
         Register </a>
@@ -31,145 +21,6 @@ text="Loading instructions"
 
   <!-- IF LOGGED IN NAVBAR FOR NORMAL USER-->
 
-
-  <div @fadeIn *ngIf="isloggedIn && hasAuthority('NORMAL')">
-    <mat-toolbar color="accent" class="mat-elevation-z8">
-      <button (click)="drawer.toggle()" mat-icon-button>
-        <mat-icon>menu</mat-icon>
-      </button>
-      <span mat-icon-button class="example-icon favorite-icon username "
-        aria-label="Example icon-button with heart icon">
-        {{ user.username | uppercase}}
-      </span>
-      <span mat-icon-button class="tokeExpire" aria-label="Example icon-button with heart icon">
-        <span [ngClass]="timeLeftDisplay.className">Your session expires in : {{ timeLeftDisplay.display }}</span>
-      </span>
-      <button *ngIf="!isloggedIn" mat-raised-button color="primary" routerLink="/login">Logout</button>
-    </mat-toolbar>
-
-
-
-    <!-- IF LOGGED IN NAVBAR ENDS-->
-    <mat-drawer-container autosize>
-      <mat-drawer #drawer opened="true" mode="side" position="start">
-        <mat-nav-list>
-          <!-- <mat-list-item>
-          <button routerLink="card" mat-button><mat-icon>dashboard</mat-icon> Dashboard</button>
-        </mat-list-item> -->
-          <mat-list-item>
-            <button mat-button routerLink="/user-dashboard/0"> <mat-icon>home</mat-icon> Home</button>
-          </mat-list-item>
-          <mat-list-item>
-            <button mat-button routerLink="/user-dashboard/register"> <mat-icon>explore</mat-icon>Register
-              Courses</button>
-          </mat-list-item>
-
-          <mat-list-item>
-            <button mat-button routerLink="/user-dashboard/courses"> <mat-icon>table</mat-icon>Available
-              Courses</button>
-          </mat-list-item>
-          <mat-list-item>
-            <button mat-button routerLink="/user-dashboard/quizzes"> <mat-icon>settings</mat-icon>Available
-              Quizzes</button>
-          </mat-list-item>
-
-
-
-          <mat-list-item>
-            <button mat-button (click)="openUpdateDialog(updateDialog)">
-              <mat-icon class="icon-position">add</mat-icon> &nbsp;Send us a Mail</button>
-          </mat-list-item>
-
-
-          <mat-list-item>
-            <button (click)="logout()" mat-button>
-              <mat-icon>Logout</mat-icon>Logout</button>
-          </mat-list-item>
-
-          <!-- <mat-list-item>
-          <button mat-button><mat-icon>analytics</mat-icon> analytics</button>
-        </mat-list-item> -->
-        </mat-nav-list>
-      </mat-drawer>
-      <mat-drawer-content>
-
-        <div style="text-align: center;min-height: 600px;">
-          <!-- <app-load-quiz></app-load-quiz> -->
-
-
-          <!-- <router-outlet></router-outlet> -->
-
-          
-        </div>
-
-
-      </mat-drawer-content>
-    </mat-drawer-container>
-
-
-
-    <!-- POP UP DIALOG BOX TO EDIT THEORY  -->
-    <ng-template #updateDialog let-data="data">
-      <h1 mat-dialog-title>Send your inquiry or complaint</h1>
-      <div mat-dialog-content>
-
-        <!-- <form onsubmit="updateTheoryQuestion()"> -->
-          <mat-form-field class="mw450">
-            <input matInput  [(ngModel)]="mailInfo.mailTo" name="mailTo" disabled>
-            <!-- <mat-error *ngIf="emailFormControl.hasError('email') && !emailFormControl.hasError('required')">
-              Please enter a valid email address
-            </mat-error> -->
-            <!-- <mat-error *ngIf="emailFormControl.hasError('required')">
-              Email is <strong>required</strong>
-            </mat-error> -->
-          </mat-form-field>
-
-          <mat-form-field class="mw450">
-            <input matInput placeholder="Sender Email" [formControl]="emailFormControl" [(ngModel)]="mailInfo.mailFrom"
-              name="mailFrom" focus>
-            <mat-error *ngIf="emailFormControl.hasError('email') && !emailFormControl.hasError('required')">
-              Please enter a valid email address
-            </mat-error>
-            <mat-error *ngIf="emailFormControl.hasError('required')">
-              Email is <strong>required</strong>
-            </mat-error>
-          </mat-form-field>
-
-
-          <mat-form-field class="mw450">
-            <input matInput placeholder="Email Subject" [(ngModel)]="mailInfo.mailSubject"
-              name="mailSubject">
-            <mat-error *ngIf="emailFormControl.hasError('email') && !emailFormControl.hasError('required')">
-              Please enter a Subject
-            </mat-error>
-            <mat-error *ngIf="emailFormControl.hasError('required')">
-              Subject is <strong>required</strong>
-            </mat-error>
-          </mat-form-field>
-
-
-          <mat-form-field class="mw450">
-            <mat-label>Message</mat-label>
-            <textarea matInput cdkTextareaAutosize #autosize="cdkTextareaAutosize" name="mailContent"
-              [(ngModel)]="mailInfo.mailContent" cdkAutosizeMinRows="5" cdkAutosizeMaxRows="10"></textarea>
-          </mat-form-field>
-
-
-
-
-          <div mat-dialog-actions>
-            <button mat-button (click)="dialogRef.close()">Cancel</button>
-            <button mat-button (click)="sendEmail()">Send Mail</button>
-          </div>
-        <!-- </form> -->
-      </div>
-    </ng-template>
-
-
-
-
-
-  </div>
 
 
 
@@ -217,72 +68,6 @@ text="Loading instructions"
   <!-- IF LOGGED IN NAVBAR FOR ADMIN-->
 
 
-  <div @fadeIn *ngIf="isloggedIn && hasAuthority('ADMIN')">
-    <mat-toolbar color="accent" class="mat-elevation-z8">
-      <button (click)="drawer.toggle()" mat-icon-button>
-        <mat-icon>menu</mat-icon>
-      </button>
-      <span mat-icon-button class="example-icon favorite-icon username "
-        aria-label="Example icon-button with heart icon">
-        {{ user.username | uppercase}}
-      </span>
-      <span mat-icon-button class="tokeExpire" aria-label="Example icon-button with heart icon">
-        <span [ngClass]="timeLeftDisplay.className">Your session expires in : {{ timeLeftDisplay.display }}</span>
-      </span>
-      <button *ngIf="!isloggedIn" mat-raised-button color="primary" routerLink="/login">Logout</button>
-    </mat-toolbar>
-
-    <!-- IF LOGGED IN NAVBAR ENDS-->
-    <mat-drawer-container autosize>
-      <mat-drawer #drawer opened="true" mode="side" position="start">
-        <mat-nav-list>
-          <mat-list-item>
-            <button mat-button routerLink="/admin/"> <mat-icon mat-list-icon>home</mat-icon> &nbsp;Home</button>
-          </mat-list-item>
-          <mat-list-item>
-            <button mat-button routerLink="/admin/profile">
-              <mat-icon mat-list-icon class="icon-position">account_circle</mat-icon> &nbsp;Profie</button>
-          </mat-list-item>
-          <mat-list-item>
-            <button mat-button routerLink="/admin/categories" class="cat">
-              <mat-icon mat-list-icon class="icon-position">list</mat-icon> &nbsp;Courses</button>
-          </mat-list-item>
-          <mat-list-item>
-            <button mat-button routerLink="/admin/add-category">
-              <mat-icon class="icon-position">add_circle_outline</mat-icon> &nbsp;Add Courses</button>
-          </mat-list-item>
-          <mat-list-item>
-            <button mat-button routerLink="/admin/quizzes">
-              <mat-icon class="icon-position">add</mat-icon> &nbsp;View Quizzes</button>
-          </mat-list-item>
-          <mat-list-item>
-            <button mat-button routerLink="/admin/add-quiz">
-              <mat-icon mat-list-icon class="icon-position">add</mat-icon> &nbsp;Add Quiz
-            </button>
-          </mat-list-item>
-          <mat-list-item>
-            <button (click)="logout()" mat-button>
-              <mat-icon>Logout</mat-icon>Logout</button>
-          </mat-list-item>
-
-          <!-- <mat-list-item>
-            <button mat-button><mat-icon>analytics</mat-icon> analytics</button>
-          </mat-list-item> -->
-        </mat-nav-list>
-      </mat-drawer>
-      <mat-drawer-content>
-
-        <!-- <div style="text-align: center;min-height: 600px;"> -->
-
-        <router-outlet></router-outlet>
-        <!-- </div> -->
-
-      </mat-drawer-content>
-    </mat-drawer-container>
-  </div>
-
-
-</div>
 
 
 
@@ -310,46 +95,3 @@ text="Loading instructions"
 
 
 
-
-
-
-
-<!-- <div class="navbar"> -->
-
-
-<!-- <div class="navbar">
-    <header class="header" @fadeIn *ngIf="!isloggedIn">
-      <div class="logo">
-        
-        ACT LTD.
-      </div>
-      <nav>
-        <a mat-button routerLink="/features">Features</a>
-        <a mat-button routerLink="/about">About</a>
-        <a mat-button routerLink="/contact">Contact</a>
-        <a *ngIf="!isloggedIn" [routerLink]="'/signup'" mat-button aria-label="Example icon-button with heart icon">
-          Register </a>
-        <button *ngIf="!isloggedIn" mat-raised-button color="primary" routerLink="/login">Login</button>
-      </nav>
-    </header>
-
-
-  </div> -->
-
-
-
-<!-- <div class="navbar" *ngIf="isloggedIn && user">
-  <mat-toolbar color="accent">
-    <div class="container">
-      <img src="../../../assets/profile.jpg" alt="profile image" class="profile-imag mt20" width="40" height="40" />
-    </div>
-    <span mat-icon-button class="example-icon favorite-icon username " aria-label="Example icon-button with heart icon">
-      {{ user.username | uppercase}}
-    </span>
-
-    <span mat-icon-button class="tokeExpire" aria-label="Example icon-button with heart icon">
-      <span [ngClass]="timeLeftDisplay.className">Your session expires in : {{ timeLeftDisplay.display }}</span>
-    </span>
-  </mat-toolbar>
-
-</div> -->

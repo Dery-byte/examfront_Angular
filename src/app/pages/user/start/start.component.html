@@ -1,5 +1,11 @@
-<div class="bootstrap-wrapper" *ngIf="!isSubmit">
-    <div class="container-fluid">
+<div class="bootstrap-wrapper">
+    <!-- Loading Spinner -->
+    <div *ngIf="isLoading" class="loading-overlay">
+        <mat-spinner diameter="50"></mat-spinner>
+        <p>Loading quiz content...</p>
+    </div>
+
+    <div class="container-fluid" *ngIf="!isSubmit && !isLoading">
         <div class="row">
             <div class="hideInstruct col-md-2">
                 <!-- instructions -->
@@ -115,10 +121,6 @@
                                         <textarea class="input" [name]="'givenAnswer' + i"
                                             [(ngModel)]="question.givenAnswer" matInput rows="2"
                                             (ngModelChange)="saveAnswers()" (paste)="disablePaste($event)">
-                                        <!-- <textarea class="input" [name]="'givenAnswer' + i"
-                                            [(ngModel)]="question.givenAnswer" matInput rows="2"
-                                            (ngModelChange)="saveAnswers()"> -->
-
                                         </textarea>
                                     </mat-form-field>
                                 </mat-card-content>

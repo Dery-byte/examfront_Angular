@@ -92,6 +92,8 @@ export class StartComponent implements OnInit {
   count: number = 0;
   tableSize: number = 3;
   tableSizes: any = [3, 6, 9, 12];
+  isLoading: boolean = true;
+
 
 
   checked: true;
@@ -241,6 +243,8 @@ export class StartComponent implements OnInit {
 
 
   ngOnInit(): void {
+      this.isLoading = true; // Set loading to true when starting
+
     this.qid = this._route.snapshot.params['qid'];
     // this.qid = this._route.snapshot.params['qid'];
     this._quiz.getQuiz(this.qid).subscribe((data: any) => {
@@ -260,6 +264,7 @@ export class StartComponent implements OnInit {
       // return this.timeO = parseInt(this.quiz.quizTime);
     },
       (error) => {
+            this.isLoading = false;
         this._snack.open("You're Session has expired! ", "", {
           duration: 3000,
         });
@@ -320,17 +325,23 @@ export class StartComponent implements OnInit {
       console.log("This is the time for the Objectives", this.timeO);
       console.log(" Both time for theory and objectives", this.timerAll)
 
-    });
-
-    // console.log(this.timerAll);
-
-
 
     this.loadTheory();
     // this.loadSavedAnswers();
 
     // this.loadSubjective();
     this.loadQuestions();
+    },
+    (error)=>{
+          this.isLoading = false;
+
+
+    });
+
+    // console.log(this.timerAll);
+
+
+
 
     this.loadQuestionsFromLocalStorage();
 
@@ -367,9 +378,16 @@ export class StartComponent implements OnInit {
       this.startTimer();
       this.preventBackButton();
 
+
+      // Only set loading to false if this is the last API call
+    if (!this.isLoading) {
+      this.isLoading = false;
+    }
+
     },
       (error) => {
         console.log("Could not load data from server");
+            this.isLoading = false;
       });
   }
   getQuestionsGroupedByPrefix(questions) {
@@ -1254,11 +1272,16 @@ export class StartComponent implements OnInit {
           return q;
         });
 
+
+         // Set loading to false when questions are loaded
+      this.isLoading = false;
         // 🔍 Final questions array check
         console.log("✅ Final loaded questions:", this.questions);
       },
       (error) => {
         console.log("Error Loading questions");
+         // Set loading to false when questions are loaded
+      this.isLoading = false;
         Swal.fire("Error", "Error loading questions", "error");
       }
     );

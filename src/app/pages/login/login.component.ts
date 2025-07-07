@@ -27,7 +27,9 @@ export class LoginComponent implements OnInit {
 
 
 
-
+hidePassword = true;
+hideNewPassword = true;
+hideConfirmPassword = true;
 
 
 
