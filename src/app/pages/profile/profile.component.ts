@@ -15,17 +15,15 @@ export class ProfileComponent implements OnInit {
   ngOnInit(): void{
 this.user = this.login.getUser(); // THIS IS DIRECTLY FETCHED FROM THE SERVER.
 
-// THE DATA IS FETCHED FROM LOCAL STORAGE
 
-// this.login.getCurrentUser().subscribe(
-//   (user:any)=>{
-//     this.user = user;
-//   },
-//   (error)=>
-//   {
-//     alert("error");
-//   }
-// )
+  }
+
+  changePassword(){
+    
+  }
+
+  editProfile(){
+
   }
 
 }

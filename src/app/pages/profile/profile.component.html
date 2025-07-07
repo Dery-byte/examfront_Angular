@@ -1,209 +1,96 @@
-<!-- <mat-card *ngIf="user">
-    <h1>Your Profile Details</h1>
-    <mat-card-content>
-        <div class="boostrap-wrapper">
-            <div class="container">
-                <div class="container text-center" >
-                    <img src="../../../assets/profile.jpg" alt="profile image" class="profile-image"/>
-                    <h1 class="mt20">{{user.firstname}} {{user.lastname}}</h1>
-                </div>
-                <div class="row">
-                    <div class="col-md-10 offset-md-1">
-                        <table class ="table text-center">
-
-                            <tr>
-                                <td> Username </td>
-                                <td> {{user.username}} </td>
-                            </tr>
-
-                            <tr>
-                                <td> Userid </td>
-                                <td> Exam {{user.id}} </td>
-                            </tr>
-
-                            <tr>
-                                <td> Phone </td>
-                                <td> {{user.phone}} </td>
-                            </tr>
-
-                            <tr>
-                                <td> Role </td>
-                                <td> {{user.authorities[0].authority}} </td>
-                            </tr>
-                            
-                            <tr>
-                                <td> Status </td>
-                                <td>{{user.enabled? "ACTIVE":"INACTIVE"}} </td>
-                            </tr>
-                            <tr>
-                                <td> Account Expired </td>
-                                <td>{{user.credentialsNonExpired? "NO":"YES"}} </td>
-                            </tr>
-                            <tr>
-                                <td> Account Locked </td>
-                                <td>{{user.accountNonLocked? "NO":"YES"}} </td>
-                            </tr>
-                            <tr>
-                                <td> Credential Expired </td>
-                                <td>{{user.accountNonExpired? "NO":"YES"}} </td>
-                            </tr>
-                        </table>
-
-                    </div>
-                </div>
-            </div>
+<div class="profile-container">
+  <mat-card class="profile-card">
+    <div class="profile-header">
+      <div class="avatar-container">
+        <img mat-card-avatar [src]="user.profilePicture || '/src/assets/logo1.jpg'" alt="Profile Picture" class="profile-picture">
+        <div class="status-badge" [ngClass]="{'active': user.enabled, 'inactive': !user.enabled}">
+          {{ user.enabled ? 'Active' : 'Inactive' }}
         </div>
-    </mat-card-content>
-    <div class="container text-center mt15">
-        <button mat-raised-button color="primary">UPDATE</button>
-        <button mat-raised-button color="accent">DELETE</button>
-
-    </div>
-
-</mat-card> -->
-
-<!-- 
-
-<mat-card>
-    <div class="contianer">
-        <div class="row">
-            <div class="cold-md-4">
-                <div class="container text-center " >
-                    <img src="../../../assets/profile.jpg" alt="profile image" class="profile-image ml20"/>
-                    <h1>Account details</h1>
-                    <h1 class="mt20">{{user.firstname}} {{user.lastname}}</h1> 
-                </div>
-            </div>
-
-            <div class="col-md-8">
-                <div class="container text-center" >
-                    <h1 class="mt20">{{user.firstname}} {{user.lastname}}</h1>
-                    <label>immanuelderry31@gmail.com - Administrator</label>
-                </div>
-            </div>
-        </div>
-<mat-divider></mat-divider>
-        <div class="container">
-            <div class="row">
-                <div class="col-md-12">
-
-                    <table  class ="table">
-                        <tr>
-                            <td> Username </td>
-                            <td> {{user.username}} </td>
-                        </tr>
-
-                        <tr>
-                            <td> Userid </td>
-                            <td> Exam {{user.id}} </td>
-                        </tr>
-
-                        <tr>
-                            <td> Phone </td>
-                            <td> {{user.phone}} </td>
-                        </tr>
-
-                        <tr>
-                            <td> Role </td>
-                            <td> {{user.authorities[0].authority}} </td>
-                        </tr>
-                        
-                        <tr>
-                            <td> Status </td>
-                            <td>{{user.enabled? "ACTIVE":"INACTIVE"}} </td>
-                        </tr>
-                        <tr>
-                            <td> Account Expired </td>
-                            <td>{{user.credentialsNonExpired? "NO":"YES"}} </td>
-                        </tr>
-                        <tr>
-                            <td> Account Locked </td>
-                            <td>{{user.accountNonLocked? "NO":"YES"}} </td>
-                        </tr>
-                        <tr>
-                            <td> Credential Expired </td>
-                            <td>{{user.accountNonExpired? "NO":"YES"}} </td>
-                        </tr>
-                    </table>
-
-                </div>
-            </div>
-        </div>
-    </div>
-  </mat-card> -->
-
-
-
-
-
-  <div class="user-profile-container">
-    <mat-card class="profile-card">
-      <div class="profile-header">
-        <img mat-card-avatar src="/src/assets/logo1.jpg" alt="Profile Picture" class="profile-picture">
-        <mat-card-subtitle>{{user.firstname}} {{user.lastname}}</mat-card-subtitle>
-        <mat-card-title>{{user.name}}</mat-card-title>
       </div>
-      <mat-divider></mat-divider>
-      <mat-card-content>
-        <div class="profile-info">
-          <div class="info-group">
-            <mat-icon>person</mat-icon>
-            <span>Username: {{user.username}}</span>
-          </div>
-          <div class="info-group">
-            <mat-icon>email</mat-icon>
-            <span>Email: {{user.email}}</span>
-          </div>
-          <div class="info-group">
-            <mat-icon>phone</mat-icon>
-            <span>Phone: {{user.phone}}</span>
-          </div>
-          <div class="info-group">
-            <mat-icon>check_circle</mat-icon>
-            <span>Account Active: {{user.enabled? "ACTIVE":"INACTIVE"}}</span>
-          </div>
-
-
-          <div class="info-group">
-            <mat-icon>warning</mat-icon>
-            <span>Credential Expired:{{user.credentialsNonExpired? "NO":"YES"}}</span>
-          </div>
-
-
-          <div class="info-group">
-            <mat-icon>warning</mat-icon>
-            <span>Account Locked:{{user.accountNonLocked? "NO":"YES"}}</span>
-          </div>
-
-
-          <div class="info-group">
-            <mat-icon>warning</mat-icon>
-            <span>Account Expired:{{user.accountNonExpired? "NO":"YES"}} </span>
-          </div>
-
-
-<div class="info-group">
-            <mat-icon>warning</mat-icon>
-            <span>User Role:  {{user.authorities[0].authority}}</span>
-          </div>
-
-
-         
-
-          <mat-form-field class="bio-field">
-            <mat-label>Bio</mat-label>
-            <textarea matInput [(ngModel)]="user.bio" rows="4" disabled></textarea>
-          </mat-form-field>
+      <div class="profile-titles">
+        <h1 class="profile-name">{{user.firstname}} {{user.lastname}}</h1>
+        <p class="profile-username"> &#64;{{user.username}}</p>
+        <div class="profile-role">
+          <mat-icon class="role-icon">badge</mat-icon>
+          <span>{{user.authorities[0].authority | titlecase}}</span>
         </div>
-      </mat-card-content>
-      <mat-divider></mat-divider>
-      <mat-card-actions align="end">
-        <button mat-raised-button color="primary" >Edit Profile</button>
-      </mat-card-actions>
-    </mat-card>
-  </div>
-  
-  
-  
+      </div>
+    </div>
 
- 
+    <mat-divider class="divider"></mat-divider>
+
+    <mat-card-content>
+      <div class="profile-details">
+        <div class="details-section">
+          <h3 class="section-title">Contact Information</h3>
+          <div class="info-group">
+            <mat-icon class="info-icon">email</mat-icon>
+            <div class="info-content">
+              <span class="info-label">Email</span>
+              <span class="info-value">{{user.email}}</span>
+            </div>
+          </div>
+          <div class="info-group">
+            <mat-icon class="info-icon">phone</mat-icon>
+            <div class="info-content">
+              <span class="info-label">Phone</span>
+              <span class="info-value">{{user.phone || 'Not provided'}}</span>
+            </div>
+          </div>
+        </div>
+
+        <div class="details-section">
+          <h3 class="section-title">Account Status</h3>
+          <div class="info-group">
+            <mat-icon class="info-icon" [ngClass]="{'warning': !user.credentialsNonExpired}">
+              {{user.credentialsNonExpired ? 'check_circle' : 'warning'}}
+            </mat-icon>
+            <div class="info-content">
+              <span class="info-label">Credentials</span>
+              <span class="info-value">{{user.credentialsNonExpired ? 'Valid' : 'Expired'}}</span>
+            </div>
+          </div>
+          <div class="info-group">
+            <mat-icon class="info-icon" [ngClass]="{'warning': !user.accountNonLocked}">
+              {{user.accountNonLocked ? 'lock_open' : 'lock'}}
+            </mat-icon>
+            <div class="info-content">
+              <span class="info-label">Account Lock</span>
+              <span class="info-value">{{user.accountNonLocked ? 'Unlocked' : 'Locked'}}</span>
+            </div>
+          </div>
+          <div class="info-group">
+            <mat-icon class="info-icon" [ngClass]="{'warning': !user.accountNonExpired}">
+              {{user.accountNonExpired ? 'calendar_today' : 'event_busy'}}
+            </mat-icon>
+            <div class="info-content">
+              <span class="info-label">Account Status</span>
+              <span class="info-value">{{user.accountNonExpired ? 'Active' : 'Expired'}}</span>
+            </div>
+          </div>
+        </div>
+
+        <div class="details-section bio-section">
+          <h3 class="section-title">About</h3>
+          <div class="bio-content" *ngIf="user.bio; else noBio">
+            {{user.bio}}
+          </div>
+          <ng-template #noBio>
+            <div class="no-bio">No bio provided yet</div>
+          </ng-template>
+        </div>
+      </div>
+    </mat-card-content>
+
+    <mat-divider class="divider"></mat-divider>
+
+    <mat-card-actions class="profile-actions">
+      <button mat-flat-button color="primary" class="action-button" (click)="editProfile()">
+        <mat-icon>edit</mat-icon> Edit Profile
+      </button>
+      <button mat-stroked-button color="primary" class="action-button" (click)="changePassword()">
+        <mat-icon>vpn_key</mat-icon> Change Password
+      </button>
+    </mat-card-actions>
+  </mat-card>
+</div>
