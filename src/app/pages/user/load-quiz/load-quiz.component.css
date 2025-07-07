@@ -1,5 +1,7 @@
 /* Main card styling */
 .quiz-summary-card {
+      max-width: 1000px;
+
   margin: 24px;
   border-radius: 8px;
   overflow: hidden;
