@@ -72,6 +72,7 @@ import { UserLayoutComponent } from './pages/layouts/user-layout/user-layout.com
 import { AdminLayoutComponent } from './pages/layouts/admin-layout/admin-layout.component';
 import { UserNavbarComponent } from './pages/user/user-navbar/user-navbar.component';
 import { UserSidebarComponent } from './pages/user/user-sidebar/user-sidebar.component';
+import { UserfooterComponent } from './pages/user/userfooter/userfooter.component';
 
 
 
@@ -113,6 +114,7 @@ import { UserSidebarComponent } from './pages/user/user-sidebar/user-sidebar.com
     AdminLayoutComponent,
     UserNavbarComponent,
     UserSidebarComponent,
+    UserfooterComponent,
   ],
   imports: [
     BrowserModule, 

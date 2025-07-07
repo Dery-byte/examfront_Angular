@@ -17,7 +17,7 @@
 </div> -->
 
 
-<div class="bootstrap-wrapper">
+<div class="">
   <!-- Full-width header (12 columns) - Made sticky -->
   <div class="container-fluid sticky-top" style="position: sticky; top: 0; z-index: 1000;">
     <div class="row">
@@ -39,10 +39,10 @@
   </div>
 
   <!-- Main content area with drawer - Added fixed positioning -->
-  <mat-drawer-container autosize class="container-fluid" style="margin-top: 64px; height: calc(100vh - 64px);">
+  <mat-drawer-container autosize class="" style="margin-top: -5px; ">
     <!-- Navigation drawer (3 columns) - Made fixed -->
    <mat-drawer #drawer opened="true" mode="side" class="elegant-drawer" 
-            style="position: fixed; top: 64px; height: calc(100vh - 64px); width: 240px;">
+            style="position: fixed; top: 58px; height: calc(100vh - 64px); width: 240px;">
   <mat-nav-list>
     <!-- Header Section -->
     <div class="drawer-header">
@@ -83,11 +83,19 @@
   </mat-nav-list>
 </mat-drawer>
     <!-- Main content (9 columns) - Added scrollable area -->
+
+
+    
     <mat-drawer-content class="col-md-10">
-      <div style="min-height: calc(100vh - 64px); padding: 2px;">
+      <div style="min-height: calc(100vh - 160px); padding: 4px;">
         <router-outlet></router-outlet>
       </div>
     </mat-drawer-content>
+
+
+
+
+
   </mat-drawer-container>
 
   <!-- Email dialog template (unchanged) -->
