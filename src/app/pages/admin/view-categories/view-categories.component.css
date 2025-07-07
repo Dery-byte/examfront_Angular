@@ -1,35 +1,281 @@
-.w100{
+/* Card Styling */
+.elevated-card {
+  border-radius: 12px;
+  overflow: hidden;
+  box-shadow: 0 8px 30px rgba(0, 0, 0, 0.08);
+  margin: 24px;
+}
+
+.card-header {
+  padding: 24px 24px 16px;
+  background-color: #f8f9fa;
+}
+
+.header-content {
+  display: flex;
+  align-items: center;
+  width: 100%;
+}
+
+.header-icon {
+  font-size: 36px;
+  width: 36px;
+  height: 36px;
+  margin-right: 16px;
+  color: #3f51b5;
+}
+
+.card-title {
+  font-size: 24px;
+  font-weight: 500;
+  margin: 0;
+  color: #2c3e50;
+}
+
+.add-course-btn {
+  border-radius: 8px;
+  padding: 8px 16px;
+  font-weight: 500;
+  transition: all 0.3s ease;
+}
+
+/* Table Styling */
+.table-container {
+  padding: 16px;
+  overflow-x: auto;
+}
+
+.elegant-table {
+  width: 100%;
+  border-radius: 8px;
+  overflow: hidden;
+}
+
+.elegant-table th {
+  font-size: 14px;
+  font-weight: 600;
+  color: #5c6bc0;
+  background-color: #f5f7ff;
+  padding: 16px;
+  text-transform: uppercase;
+}
+
+.elegant-table td {
+  padding: 16px;
+  vertical-align: middle;
+  border-bottom: 1px solid #f0f0f0;
+}
+
+.cell-icon {
+  margin-right: 8px;
+  vertical-align: middle;
+  color: #5c6bc0;
+}
+
+.code-cell {
+  font-family: 'Roboto Mono', monospace;
+  font-weight: 500;
+  color: #3f51b5;
+}
+
+.name-cell {
+  font-weight: 500;
+}
+
+.level-cell {
+  text-align: center;
+}
+
+mat-chip {
+  font-weight: 500;
+  border-radius: 12px;
+}
+
+.level-100 {
+  background-color: #e3f2fd;
+  color: #1565c0;
+}
+
+.level-200 {
+  background-color: #e8f5e9;
+  color: #2e7d32;
+}
+
+.level-300 {
+  background-color: #fff8e1;
+  color: #f57f17;
+}
+
+.level-400 {
+  background-color: #fce4ec;
+  color: #ad1457;
+}
+
+.actions-cell {
+  text-align: right;
+}
+
+.action-btn {
+  transition: all 0.3s ease;
+}
+
+.action-btn:hover {
+  background-color: rgba(63, 81, 181, 0.1);
+}
+
+.row-hover:hover {
+  background-color: #f9f9f9;
+}
+
+/* Action Menu */
+.action-menu {
+  border-radius: 8px;
+  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.12);
+  padding: 8px 0;
+}
+
+.menu-item {
+  font-size: 14px;
+  height: 40px;
+  line-height: 40px;
+}
+
+.menu-icon {
+  margin-right: 8px;
+  font-size: 20px;
+}
+
+.delete-item {
+  color: #f44336;
+}
+
+/* Empty State */
+.empty-state {
+  padding: 40px 0;
+  text-align: center;
+}
+
+.empty-icon {
+  font-size: 72px;
+  width: 72px;
+  height: 72px;
+  color: #b0bec5;
+  margin-bottom: 16px;
+}
+
+.empty-state h3 {
+  font-size: 20px;
+  font-weight: 500;
+  color: #546e7a;
+  margin: 8px 0;
+}
+
+.empty-state p {
+  color: #90a4ae;
+  margin-bottom: 24px;
+}
+
+.empty-action-btn {
+  border-radius: 8px;
+  padding: 8px 24px;
+}
+
+/* Dialog Styling */
+.dialog-container {
+  max-width: 600px;
+  width: 100%;
+}
+
+.dialog-header {
+  display: flex;
+  align-items: center;
+  padding: 24px 24px 16px;
+}
+
+.dialog-icon {
+  font-size: 32px;
+  width: 32px;
+  height: 32px;
+  margin-right: 12px;
+  color: #3f51b5;
+}
+
+.dialog-content {
+  padding: 16px 24px;
+}
+
+.course-form {
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+}
+
+.form-row {
+  display: flex;
+  gap: 20px;
+}
+
+.form-row mat-form-field {
+  flex: 1;
+}
+
+mat-form-field {
+  width: 100%;
+}
+
+.dialog-actions {
+  display: flex;
+  justify-content: flex-end;
+  padding: 16px 24px;
+  gap: 12px;
+}
+
+.cancel-btn, .save-btn {
+  border-radius: 8px;
+  padding: 8px 20px;
+}
+
+.save-btn {
+  box-shadow: 0 2px 10px rgba(63, 81, 181, 0.3);
+}
+
+/* Responsive Adjustments */
+@media (max-width: 768px) {
+  .elevated-card {
+    margin: 16px 8px;
+  }
+  
+  .form-row {
+    flex-direction: column;
+    gap: 16px;
+  }
+  
+  .dialog-header {
+    padding: 16px;
+  }
+  
+  .dialog-content {
+    padding: 16px;
+  }
+  
+  .dialog-actions {
+    padding: 16px;
+  }
+}
+
+@media (max-width: 480px) {
+  .header-content {
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 12px;
+  }
+  
+  .add-course-btn {
     width: 100%;
-}
-
-
-table.datatable {
-	width:100%;
-	border: none;
-	background:#fff;
-}
-table.datatable td.table_foot {
-	border: none;
-	background: #fff;
-	text-align: center;
-}
-table.datatable tr.odd_col {
-	background: none;
-}
-table.datatable tr.even_col {
-	background: #ddd;
-}
-table.datatable td {
-	font-size:10pt;
-	padding:5px 10px;
-	text-align: left;
-}
-table.datatable th {
-	text-align: left;
-	font-size: 8pt;
-	padding: 10px 10px 7px;   
-	text-transform: uppercase;
-	color: #fff;
-	background-color: black;
-	font-family: sans-serif;
+  }
+  
+  .elegant-table th, 
+  .elegant-table td {
+    padding: 12px 8px;
+  }
 }

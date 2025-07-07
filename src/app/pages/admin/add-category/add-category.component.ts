@@ -11,6 +11,7 @@ import Swal from 'sweetalert2';
 export class AddCategoryComponent implements OnInit {
 
   selectedLevel: string;
+  levels = ['Level 100', 'Level 200', 'Level 300', 'Level 400'];
 
   category = {
     title: "",

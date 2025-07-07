@@ -9,74 +9,78 @@ import Swal from 'sweetalert2';
   templateUrl: './add-quiz.component.html',
   styleUrls: ['./add-quiz.component.css']
 })
-export class AddQuizComponent  implements OnInit{
+export class AddQuizComponent implements OnInit {
 
-categories=[];
+  categories = [];
 
-quizData={
-  title:"",
-  description:"",
-  maxMarks:"",
-  numberOfQuestions:"",
-  quizpassword:"",
-  quizTime:"",
-  attempted:false,
-  active:true,
-  category:
-  {
-    cid:""
-  },
-}
+  quizData = {
+    title: "",
+    description: "",
+    maxMarks: "",
+    numberOfQuestions: "",
+    quizpassword: "",
+    quizTime: "",
+    startTime: "",
+    quizDate: "",
+    attempted: false,
+    active: true,
+    category:
+    {
+      cid: ""
+    },
+  }
 
-  constructor(private _cat:CategoryService, 
-              private _snackbar:MatSnackBar, 
-              private _quiz:QuizService){}
+  constructor(private _cat: CategoryService,
+    private _snackbar: MatSnackBar,
+    private _quiz: QuizService) { }
 
   ngOnInit(): void {
     this._cat.getCategories().subscribe(
-      (data:any)=>{
-        this.categories=data;
+      (data: any) => {
+        this.categories = data;
         // console.log(this.categories);
       },
-      (error)=>{
+      (error) => {
         console.log(error);
         Swal.fire('Error !!', 'Server Error', 'error');
       }
     )
   }
 
-  addQuiz(){
-    if(this.quizData.title.trim()== '' || this.quizData.title==null){
-this._snackbar.open("Title is required !!","",{
-  duration:3000, 
-})
-return;
+  addQuiz() {
+    if (this.quizData.title.trim() == '' || this.quizData.title == null) {
+      this._snackbar.open("Title is required !!", "", {
+        duration: 3000,
+      })
+      return;
     }
     //validation...
-this._quiz.addQuiz(this.quizData).subscribe(
-  (data)=>{
-    this.quizData={
-      title:"",
-      description:"",
-      maxMarks:"",
-      quizpassword:"",
-      numberOfQuestions:"",
-      quizTime:"",
-      attempted:false,
-      active:true,
-     category:
-      {
-        cid:""
+    this._quiz.addQuiz(this.quizData).subscribe(
+      (data) => {
+        this.quizData = {
+          title: "",
+          description: "",
+          maxMarks: "",
+          quizpassword: "",
+          numberOfQuestions: "",
+          quizTime: "",
+          startTime: "",
+          quizDate: "",
+          attempted: false,
+          active: true,
+          category:
+          {
+            cid: ""
+          }
+        },
+          Swal.fire("Success", "Quiz is added", "success");
+
+      },
+      (error) => {
+        Swal.fire("Error !! ", "An error occurred while adding quiz", "error");
       }
-    },
-        Swal.fire("Success", "Quiz is added", "success");
-   
-  },
-  (error)=>{
-    Swal.fire("Error !! ", "An error occurred while adding quiz", "error");
-  }
-);
+    );
   }
 
- 
+
 }

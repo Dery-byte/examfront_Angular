@@ -1,53 +1,68 @@
-<mat-card>
-    <h1>Add New Course </h1>
+<mat-card class="form-card">
+  <mat-card-header class="form-header">
+    <div class="header-content">
+      <mat-icon class="header-icon">add_circle_outline</mat-icon>
+      <div>
+        <h1 class="form-title">Create New Course</h1>
+        <p class="form-subtitle">Fill in the details to add a new course to the system</p>
+      </div>
+    </div>
+  </mat-card-header>
 
-    <!-- {{category | json}} -->
-    <mat-card-content>
-        <div class="bootstrap-wrapper">
-            <div class="row">
-                <div class="col-md-8 offset-md-2">
-                    <form (ngSubmit)="formSubmit()">
-                        <mat-label> Course Title:</mat-label>
+  <mat-divider></mat-divider>
 
-                        <mat-form-field class="w100" appearance="outline">
-                            <input type="text" name="title" matInput placeholder="Course Name"
-                                [(ngModel)]="category.title">
-                        </mat-form-field>
-                        <mat-label>Course Code:</mat-label>
-                        <mat-form-field class="w100" appearance="outline">
-                            <input type="text" name="courseCode" matInput placeholder="Course Code"
-                                [(ngModel)]="category.courseCode">
-                        </mat-form-field>
+  <mat-card-content>
+    <form (ngSubmit)="formSubmit()" class="course-form">
+      <div class="form-grid">
+        <!-- Course Title -->
+        <mat-form-field appearance="fill" class="form-field">
+          <mat-label>Course Title</mat-label>
+          <input matInput type="text" name="title" [(ngModel)]="category.title" required>
+          <mat-icon matSuffix>title</mat-icon>
+          <mat-hint>Enter the full course name</mat-hint>
+        </mat-form-field>
 
+        <!-- Course Code -->
+        <mat-form-field appearance="fill" class="form-field">
+          <mat-label>Course Code</mat-label>
+          <input matInput type="text" name="courseCode" [(ngModel)]="category.courseCode" required>
+          <mat-icon matSuffix>code</mat-icon>
+          <mat-hint>e.g. CS101, MATH201</mat-hint>
+        </mat-form-field>
 
+        <!-- Level Selector -->
+        <mat-form-field appearance="fill" class="form-field">
+          <mat-label>Academic Level</mat-label>
+          <mat-select name="level" [(ngModel)]="category.level" required>
+            <mat-option *ngFor="let level of levels" [value]="level">
+              <div class="level-option">
+                <mat-icon class="level-icon">school</mat-icon>
+                <span>{{level}}</span>
+              </div>
+            </mat-option>
+          </mat-select>
+          <mat-icon matSuffix>arrow_drop_down</mat-icon>
+        </mat-form-field>
 
-                        <mat-label>Level:</mat-label>
-                        <mat-form-field class="w100" appearance="outline">
-                            <mat-label>Select Level:</mat-label>
+        <!-- Description -->
+        <mat-form-field appearance="fill" class="form-field full-width">
+          <mat-label>Course Description</mat-label>
+          <textarea matInput name="descript" [(ngModel)]="category.description" rows="5" required></textarea>
+          <mat-icon matSuffix>description</mat-icon>
+          <mat-hint>Provide a detailed course overview</mat-hint>
+        </mat-form-field>
+      </div>
 
-                            <mat-select name="level" [(ngModel)]="category.level">
-
-                                <mat-option [value]="'Level 100'">Level 100</mat-option>
-                                <mat-option [value]="'Level 200'">Level 200</mat-option>
-                                <mat-option [value]="'Level 300'">Level 300</mat-option>
-                                <mat-option [value]="'Level 400'">Level 400</mat-option>
-
-                            </mat-select>
-                        </mat-form-field>
-
-
-                        <mat-label>Description</mat-label>
-                        <mat-form-field class="w100" appearance="outline">
-                            <textarea rows="10" name="descript" matInput placeholder="Enter Description"
-                                [(ngModel)]="category.description">
-                        </textarea>
-                        </mat-form-field>
-                        <div class="container text-center mt15">
-                            <button mat-raised-button color="accent">Add</button>
-                        </div>
-                    </form>
-                </div>
-            </div>
-        </div>
-    </mat-card-content>
+      <div class="form-actions">
+        <button mat-stroked-button type="button" class="cancel-btn" routerLink="/admin/categories">
+          <mat-icon>close</mat-icon>
+          Cancel
+        </button>
+        <button mat-raised-button color="primary" type="submit" class="submit-btn">
+          <mat-icon>save</mat-icon>
+          Create Course
+        </button>
+      </div>
+    </form>
+  </mat-card-content>
 </mat-card>

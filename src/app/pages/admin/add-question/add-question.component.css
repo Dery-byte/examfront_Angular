@@ -1,46 +1,279 @@
-.w100{
-    width:100%
+/* Main Container */
+.question-creator-container {
+  max-width: 1200px;
+  margin: 0 auto;
+  padding: 24px;
 }
 
+/* Header Styles */
+.creator-header {
+  margin-bottom: 32px;
+  text-align: center;
+}
 
-.file-input-label {
-    display: inline-block;
-    position: relative;
-    overflow: hidden;
-    cursor: pointer;
-    border: 2px solid #7476bf;
-    border-radius: 6px;
-    padding: 8px 12px;
-    background-color: #354e5e;
-    color: #fff;
-    font-size: 16px;
-    margin: 7px 0px 0px 0px;
+.page-title {
+  font-size: 28px;
+  font-weight: 500;
+  color: #3f51b5;
+  margin-bottom: 8px;
+}
 
-width: 200px;
-height: 40px;
+.quiz-title-highlight {
+  color: #e91e63;
+  font-weight: 600;
+}
+
+.page-subtitle {
+  font-size: 16px;
+  color: #757575;
+  margin: 0;
+}
+
+/* Question Form Card */
+.question-form-card {
+  border-radius: 12px;
+  margin-bottom: 32px;
+  overflow: hidden;
+}
+
+.form-card-header {
+  padding: 24px 24px 16px;
+  background-color: #f5f7ff;
+}
+
+.form-icon {
+  font-size: 32px;
+  width: 32px;
+  height: 32px;
+  margin-right: 16px;
+  color: #3f51b5;
+}
+
+.form-title {
+  font-size: 20px;
+  font-weight: 500;
+  margin: 0;
+}
+
+/* Form Sections */
+.form-section {
+  margin-bottom: 24px;
+  padding: 0 24px;
+}
+
+.section-title {
+  display: flex;
+  align-items: center;
+  font-size: 16px;
+  font-weight: 500;
+  color: #5c6bc0;
+  margin: 16px 0;
+}
+
+.section-title mat-icon {
+  margin-right: 8px;
+  font-size: 20px;
+}
+
+/* Editor Styles */
+.editor-container {
+  margin: 16px 0;
+  border: 1px solid #e0e0e0;
+  border-radius: 8px;
+  overflow: hidden;
+}
+
+.question-editor {
+  min-height: 150px;
+  padding: 12px;
+}
+
+/* Options Grid */
+.options-grid {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: 16px;
+  margin: 16px 0;
+}
+
+.option-field {
+  width: 100%;
+}
+
+/* Answer Selection */
+.answer-select {
+  width: 100%;
+  margin: 16px 0;
+}
+
+.option-badge {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 20px;
+  height: 20px;
+  background-color: #e3f2fd;
+  color: #1976d2;
+  border-radius: 50%;
+  font-size: 12px;
+  margin-right: 8px;
+}
+
+/* Form Actions */
+.form-actions {
+  display: flex;
+  justify-content: flex-end;
+  padding: 16px 24px;
+  border-top: 1px solid #f0f0f0;
+}
+
+.submit-btn {
+  border-radius: 8px;
+  padding: 8px 32px;
+  font-weight: 500;
+}
+
+/* Upload Section */
+.upload-section {
+  margin-top: 32px;
+}
+
+.upload-card {
+  border-radius: 12px;
+  overflow: hidden;
+}
+
+.upload-icon {
+  font-size: 32px;
+  width: 32px;
+  height: 32px;
+  margin-right: 16px;
+  color: #4caf50;
+}
+
+.upload-title {
+  font-size: 20px;
+  font-weight: 500;
+  margin: 0;
+}
+
+.upload-options {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: 24px;
+  padding: 16px;
+}
+
+.upload-option {
+  padding: 16px;
+  border-radius: 8px;
+  background-color: #fafafa;
+}
+
+.option-title {
+  display: flex;
+  align-items: center;
+  font-size: 16px;
+  font-weight: 500;
+  color: #424242;
+  margin: 0 0 8px 0;
+}
+
+.option-title mat-icon {
+  margin-right: 8px;
+  color: #5c6bc0;
+}
+
+.option-description {
+  font-size: 14px;
+  color: #757575;
+  margin: 0 0 16px 0;
+}
+
+.format-btn {
+  margin-bottom: 16px;
+}
+
+.file-upload-wrapper {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+
+.file-upload-label {
+  display: inline-block;
+  position: relative;
+  cursor: pointer;
+}
+
+.file-upload-input {
+  position: absolute;
+  opacity: 0;
+  width: 0;
+  height: 0;
+}
+
+.file-upload-button {
+  display: inline-flex;
+  align-items: center;
+  padding: 8px 16px;
+  background-color: #f5f5f5;
+  border-radius: 4px;
+  color: #424242;
+  transition: all 0.3s ease;
+}
+
+.file-upload-button:hover {
+  background-color: #eeeeee;
+}
+
+.file-upload-button mat-icon {
+  margin-right: 8px;
+}
+
+.upload-action-btn {
+  border-radius: 8px;
+}
+
+.theory-controls {
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+}
+
+.theory-params {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: 16px;
+}
+
+.param-field {
+  width: 100%;
+}
+
+/* Responsive Design */
+@media (max-width: 960px) {
+  .options-grid,
+  .upload-options {
+    grid-template-columns: 1fr;
   }
   
-  .file-input {
-    position: absolute;
-    /* top: 0;
-    right: 0;
-    bottom: 0;
-    left: 0;
-    opacity: 0; */
-    cursor: pointer;
+  .theory-params {
+    grid-template-columns: 1fr;
+  }
+}
+
+@media (max-width: 600px) {
+  .question-creator-container {
+    padding: 16px;
   }
   
-  .file-input-text {
-    display:none;
-    margin-left: 8px;
-
-  }
-
-  .upload-btn{
-    /* display: inline-block; */
-    /* position: relative; */
-    /* overflow: hidden; */
-    margin: -25px 0px 0px 20px;
-    cursor: pointer;
+  .page-title {
+    font-size: 24px;
   }
   
+  .form-section,
+  .form-actions {
+    padding: 0 16px;
+  }
+}

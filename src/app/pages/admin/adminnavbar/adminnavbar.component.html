@@ -1,0 +1,220 @@
+<!-- Loading spinner with better visual integration -->
+<ngx-ui-loader
+  fgsColor="#3f51b5"
+  pbColor="#3f51b5"
+  textColor="#3f51b5"
+  pbThickness="4"
+  text="Loading..."
+></ngx-ui-loader>
+
+<div class="app-container">
+  <!-- Public header for non-logged in users -->
+  <header @fadeIn *ngIf="!isloggedIn">
+    <mat-toolbar color="primary" class="main-toolbar">
+      <div class="toolbar-content">
+        <div class="branding">
+          <mat-icon class="brand-icon">school</mat-icon>
+          <span class="brand-name">Exam Portal</span>
+        </div>
+        <nav class="nav-links">
+          <a mat-button routerLink="/" class="nav-link">
+            <mat-icon>home</mat-icon>
+            <span>Home</span>
+          </a>
+          <a *ngIf="!isloggedIn" [routerLink]="'/signup'" mat-button class="nav-link">
+            <mat-icon>person_add</mat-icon>
+            <span>Register</span>
+          </a>
+          <button *ngIf="!isloggedIn" mat-raised-button color="accent" routerLink="/login" class="login-btn">
+            <mat-icon>login</mat-icon>
+            <span>Login</span>
+          </button>
+        </nav>
+      </div>
+    </mat-toolbar>
+  </header>
+
+  <!-- Normal User Dashboard -->
+  <!-- <div @fadeIn *ngIf="isloggedIn && hasAuthority('NORMAL')" class="dashboard-container">
+    <mat-toolbar color="primary" class="user-toolbar">
+      <button (click)="drawer.toggle()" mat-icon-button class="menu-btn">
+        <mat-icon>menu</mat-icon>
+      </button>
+      <div class="user-info">
+        <mat-icon class="user-icon">account_circle</mat-icon>
+        <span class="username">{{ user.username | uppercase }}</span>
+      </div>
+      <div class="session-timer" [ngClass]="timeLeftDisplay.className">
+        <mat-icon>timer</mat-icon>
+        <span>Session expires: {{ timeLeftDisplay.display }}</span>
+      </div>
+    </mat-toolbar>
+
+    <mat-drawer-container autosize class="drawer-container">
+      <mat-drawer #drawer mode="side" position="start" class="side-nav">
+        <div class="nav-header">
+          <mat-icon class="nav-icon">dashboard</mat-icon>
+          <h3 class="nav-title">User Dashboard</h3>
+        </div>
+        <mat-nav-list>
+          <mat-list-item routerLink="/user-dashboard/0" class="nav-item">
+            <mat-icon>home</mat-icon>
+            <span>Home</span>
+          </mat-list-item>
+          <mat-list-item routerLink="/user-dashboard/register" class="nav-item">
+            <mat-icon>app_registration</mat-icon>
+            <span>Register Courses</span>
+          </mat-list-item>
+          <mat-list-item routerLink="/user-dashboard/courses" class="nav-item">
+            <mat-icon>library_books</mat-icon>
+            <span>Available Courses</span>
+          </mat-list-item>
+          <mat-list-item routerLink="/user-dashboard/quizzes" class="nav-item">
+            <mat-icon>quiz</mat-icon>
+            <span>Available Quizzes</span>
+          </mat-list-item>
+          <mat-divider></mat-divider>
+          <mat-list-item (click)="openUpdateDialog(updateDialog)" class="nav-item">
+            <mat-icon>contact_mail</mat-icon>
+            <span>Contact Support</span>
+          </mat-list-item>
+          <mat-list-item (click)="logout()" class="nav-item logout-item">
+            <mat-icon>logout</mat-icon>
+            <span>Logout</span>
+          </mat-list-item>
+        </mat-nav-list>
+      </mat-drawer>
+
+      <mat-drawer-content class="main-content">
+        <div class="content-container">
+          <router-outlet></router-outlet>
+        </div>
+      </mat-drawer-content>
+    </mat-drawer-container>
+  </div> -->
+
+  <!-- Admin Dashboard -->
+  <div @fadeIn *ngIf="isloggedIn && hasAuthority('ADMIN')" class="dashboard-container">
+    <mat-toolbar color="primary" class="user-toolbar fixed-header">
+      <button (click)="drawer.toggle()" mat-icon-button class="menu-btn">
+        <mat-icon>menu</mat-icon>
+      </button>
+      <div class="user-info">
+        <mat-icon class="admin-icon">admin_panel_settings</mat-icon>
+        <span class="username">{{ user.username | uppercase }}</span>
+      </div>
+      <div class="session-timer" [ngClass]="timeLeftDisplay.className">
+        <mat-icon>timer</mat-icon>
+        <span>Session expires: {{ timeLeftDisplay.display }}</span>
+      </div>
+    </mat-toolbar>
+
+
+    <div class="dashboard-content"> 
+    <mat-drawer-container autosize class="drawer-container">
+      <mat-drawer #drawer mode="side" position="start" class="side-nav fixed-nav">
+        <div class="nav-header">
+          <mat-icon class="nav-icon">admin_panel_settings</mat-icon>
+          <h3 class="nav-title">Admin Dashboard</h3>
+        </div>
+        <mat-nav-list>
+          <mat-list-item routerLink="/admin/" class="nav-item">
+            <mat-icon>home</mat-icon>
+            <span>Dashboard</span>
+          </mat-list-item>
+          <mat-list-item routerLink="/admin/profile" class="nav-item">
+            <mat-icon>account_circle</mat-icon>
+            <span>Profile</span>
+          </mat-list-item>
+          <mat-divider></mat-divider>
+          <mat-list-item routerLink="/admin/categories" class="nav-item">
+            <mat-icon>category</mat-icon>
+            <span>Manage Courses</span>
+          </mat-list-item>
+          <mat-list-item routerLink="/admin/add-category" class="nav-item">
+            <mat-icon>add_circle</mat-icon>
+            <span>Add Course</span>
+          </mat-list-item>
+          <mat-divider></mat-divider>
+          <mat-list-item routerLink="/admin/quizzes" class="nav-item">
+            <mat-icon>assignment</mat-icon>
+            <span>View Quizzes</span>
+          </mat-list-item>
+          <mat-list-item routerLink="/admin/add-quiz" class="nav-item">
+            <mat-icon>post_add</mat-icon>
+            <span>Create Quiz</span>
+          </mat-list-item>
+          <mat-divider></mat-divider>
+          <mat-list-item (click)="logout()" class="nav-item logout-item">
+            <mat-icon>logout</mat-icon>
+            <span>Logout</span>
+          </mat-list-item>
+        </mat-nav-list>
+      </mat-drawer>
+
+      <mat-drawer-content class="main-content">
+        <div class="content-container">
+          <router-outlet></router-outlet>
+        </div>
+      </mat-drawer-content>
+    </mat-drawer-container>
+  </div>
+  </div>
+
+  <!-- Contact Support Dialog -->
+  <ng-template #updateDialog let-data="data">
+    <div class="dialog-header">
+      <h1 mat-dialog-title>
+        <mat-icon class="dialog-icon">contact_mail</mat-icon>
+        Contact Support
+      </h1>
+    </div>
+    <div mat-dialog-content class="dialog-content">
+      <form>
+        <mat-form-field appearance="outline" class="form-field">
+          <mat-label>Recipient</mat-label>
+          <input matInput [(ngModel)]="mailInfo.mailTo" name="mailTo" disabled>
+          <mat-icon matSuffix>mail</mat-icon>
+        </mat-form-field>
+
+        <mat-form-field appearance="outline" class="form-field">
+          <mat-label>Your Email</mat-label>
+          <input matInput placeholder="your@email.com" [formControl]="emailFormControl" 
+                 [(ngModel)]="mailInfo.mailFrom" name="mailFrom" required>
+          <mat-icon matSuffix>email</mat-icon>
+          <mat-error *ngIf="emailFormControl.hasError('email') && !emailFormControl.hasError('required')">
+            Please enter a valid email address
+          </mat-error>
+          <mat-error *ngIf="emailFormControl.hasError('required')">
+            Email is required
+          </mat-error>
+        </mat-form-field>
+
+        <mat-form-field appearance="outline" class="form-field">
+          <mat-label>Subject</mat-label>
+          <input matInput placeholder="Subject" [(ngModel)]="mailInfo.mailSubject" name="mailSubject" required>
+          <mat-icon matSuffix>subject</mat-icon>
+          <mat-error>Subject is required</mat-error>
+        </mat-form-field>
+
+        <mat-form-field appearance="outline" class="form-field">
+          <mat-label>Your Message</mat-label>
+          <textarea matInput cdkTextareaAutosize #autosize="cdkTextareaAutosize" 
+                    name="mailContent" [(ngModel)]="mailInfo.mailContent" required
+                    cdkAutosizeMinRows="5" cdkAutosizeMaxRows="10"></textarea>
+        </mat-form-field>
+
+        <div mat-dialog-actions class="dialog-actions">
+          <button mat-button (click)="dialogRef.close()" class="cancel-btn">
+            <mat-icon>cancel</mat-icon>
+            Cancel
+          </button>
+          <button mat-raised-button color="primary" (click)="sendEmail()" class="send-btn">
+            <mat-icon>send</mat-icon>
+            Send Message
+          </button>
+        </div>
+      </form>
+    </div>
+  </ng-template>
+</div>

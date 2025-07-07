@@ -1,178 +1,220 @@
-<div class="bootstrap">
+<div class="question-creator-container">
+  <!-- Header Section -->
+  <div class="creator-header">
+    <h1 class="page-title">
+      Add Questions to 
+      <span class="quiz-title-highlight">{{qTitle}}</span>
+    </h1>
+    <p class="page-subtitle">Create new assessment items for your quiz</p>
+  </div>
 
-    <div class="row mt20 ">
-        <div class="col-md-12">
-<h1>Add Question(s) to <span style="color:pink; font-weight: bold;">{{qTitle}}</span></h1>
-            <mat-card>
+  <!-- Main Question Form Card -->
+  <mat-card class="question-form-card mat-elevation-z8">
+    <mat-card-header class="form-card-header">
+      <mat-icon class="form-icon">create</mat-icon>
+      <h2 class="form-title">Question Details</h2>
+    </mat-card-header>
 
+    <mat-divider></mat-divider>
 
-                <mat-card-header>
-                    <mat-card-subtitle class="mb20">
-                        <h2><b>Enter the Question details below.</b></h2>
-                    </mat-card-subtitle>
-                </mat-card-header>
-
-                <mat-card-content>
-                    <form (submit)="addQuestion()">
-                        <!-- <mat-form-field class="w100">
-                            <mat-label>Type the Question here</mat-label>
-                            <textarea required
-                            [(ngModel)]="question.content"
-                            name="content"
-                            matInput placeholder="Type Question here.">
-                            </textarea>
-                        </mat-form-field> -->
-                        <ckeditor [editor]="Editor" 
-                        data="<h2>Type the Question here !</h2>"
-                        name="content"
-                        [(ngModel)]="question.content"
-                        ></ckeditor>
-
-                        <div class="row">
-                            <div class="col-md-6">
-                                <!-- option 1 -->
-                                <mat-form-field class="w100">
-                                    <mat-label>Enter Option 1</mat-label>
-                                    <input required
-                                    [(ngModel)]="question.option1"
-                                    name="option1"
-                                    type="text" matInput/>
-
-                                </mat-form-field>
-                            </div>
-                            <div class="col-md-6">
-                                <!-- option 2 -->
-                                <mat-form-field class="w100">
-                                    <mat-label>Enter Option 2</mat-label>
-                                    <input required
-                                    [(ngModel)]="question.option2"
-                                    name="option2"
-                                    type="text" matInput/>
-
-                                </mat-form-field>
-                            </div>
-                        </div>
-
-                        <div class="row">
-                            <div class="col-md-6">
-                                <!-- option 3 -->
-                                <mat-form-field class="w100">
-                                    <mat-label>Enter Option 3</mat-label>
-                                    <input 
-                                    [(ngModel)]="question.option3"
-                                    name="option3"
-                                    type="text" matInput/>
-
-                                </mat-form-field>
-                            </div>
-                            <div class="col-md-6">
-                                <!-- option 4 -->
-                                <mat-form-field class="w100">
-                                    <mat-label>Enter Option 4</mat-label>
-                                    <input 
-                                    [(ngModel)]="question.option4"
-                                    name="option4"
-                                    type="text" matInput/>
-
-                                </mat-form-field>
-                            </div>
-                        </div>
-
-                            <!-- answer -->
-                            <mat-form-field class="w100">
-                                <mat-label>Select answer</mat-label>
-                                <mat-select [(ngModel)]="question.correct_answer" name="correct_answer" multiple required>
-                                   <mat-option *ngIf="question.option1" [value]="question.option1">{{question.option1}}</mat-option>
-                                   <mat-option *ngIf="question.option2" [value]="question.option2">{{question.option2}}</mat-option>
-                                   <mat-option *ngIf="question.option3" [value]="question.option3">{{question.option3}}</mat-option>
-                                   <mat-option *ngIf="question.option4" [value]="question.option4">{{question.option4}}</mat-option>
-                                </mat-select>
-                                   </mat-form-field>
-
-                                   <div class="container text-center">
-                                    <button mat-raised-button color="accent">Add</button>
-                                   </div>
-                    </form>
-
-                    <div class="row">
-                        <div class="col-md-6">
-                    <label>Upload Objective Questions Instead!   <button  mat-button color="primary" 
-                        matTooltip='The acccepted quiz format is JSON'>
-        See Acccepted Format
-                        </button>
-            </label>
-                    <mat-divider></mat-divider>
-
-                    <!-- <form> -->
-                    <!-- <input type="file" (change)="onFileSelected($event)"> -->
-                    <label class="file-input-label">
-                        <input type="file" (change)="onFileSelected($event)" class="file-input">
-                        <span class="file-input-text">Select questions</span>
-                      </label>
-                      
-
-                    <button class="upload-btn" mat-raised-button color="accent" (click)="uploadQuiz()">Upload </button>
-
-                    </div>
-                    <div class="col-md-6">
-
-                        <div class="row">
-
-                            <div class="col-md-6">
-                                <!-- {{theoryQuesToAnswer| json}} -->
-                                <mat-form-field class="w100">
-                                    <mat-label>No. of theory Questions to Answer</mat-label>
-                                    <input required
-                                    [(ngModel)]= "theoryQuesToAnswer.totalQuestToAnswer"
-                                    name="totalQuestToAnswer"
-                                    type="text" matInput/>
-                                </mat-form-field>
-                            </div>
-
-
-                            <div class="col-md-6">
-
-
-                                <mat-form-field class="w100">
-                                    <mat-label>Time Allowed</mat-label>
-                                    <input required
-                                    [(ngModel)]= "theoryQuesToAnswer.timeAllowed"
-                                    name="timeAllowed"
-                                    type="text" matInput/>
-                                </mat-form-field>
-                                <!-- <label>Upload Theory Questions!   <button  mat-button color="primary" 
-                                    matTooltip='The acccepted quiz format is JSON'>
-                                         See Acccepted Format
-                                    </button>
-                                     </label>-->
-                                    </div>
-
-                            </div>
-
-
-                        <mat-divider></mat-divider>
-    
-                        <!-- <form> -->
-                        <!-- <input type="file" (change)="onFileSelected($event)"> -->
-                        <label class="file-input-label">
-                            <input type="file" (change)="onFileSelected($event)" class="file-input">
-                            <span class="file-input-text">Select questions</span>
-                          </label>
-                          
-                        <button class="upload-btn" mat-raised-button color="accent" (click)="uploadTheoryQuestionss()">Upload </button>
-                    </div>
-
-
-
-                </div>
-                <!-- </form> -->
-
-                </mat-card-content>
-
-               
-            </mat-card>
+    <mat-card-content>
+      <form (submit)="addQuestion()" class="question-form">
+        <!-- Question Content Editor -->
+        <div class="form-section">
+          <h3 class="section-title">
+            <mat-icon>short_text</mat-icon>
+            Question Content
+          </h3>
+          <div class="editor-container">
+            <ckeditor [editor]="Editor" 
+                     [(ngModel)]="question.content"
+                     name="content"
+                     class="question-editor"
+                     placeholder="Type your question here..."></ckeditor>
+          </div>
         </div>
-    </div>
-</div>
-<!-- {{question | json}} -->
 
+        <!-- Answer Options -->
+        <div class="form-section">
+          <h3 class="section-title">
+            <mat-icon>format_list_numbered</mat-icon>
+            Answer Options
+          </h3>
+          
+          <div class="options-grid">
+            <!-- Option 1 -->
+            <mat-form-field appearance="outline" class="option-field">
+              <mat-label>Option 1</mat-label>
+              <input matInput required
+                    [(ngModel)]="question.option1"
+                    name="option1"
+                    placeholder="Enter first answer choice">
+              <mat-icon matSuffix>looks_one</mat-icon>
+            </mat-form-field>
+
+            <!-- Option 2 -->
+            <mat-form-field appearance="outline" class="option-field">
+              <mat-label>Option 2</mat-label>
+              <input matInput required
+                    [(ngModel)]="question.option2"
+                    name="option2"
+                    placeholder="Enter second answer choice">
+              <mat-icon matSuffix>looks_two</mat-icon>
+            </mat-form-field>
+
+            <!-- Option 3 -->
+            <mat-form-field appearance="outline" class="option-field">
+              <mat-label>Option 3 (Optional)</mat-label>
+              <input matInput
+                    [(ngModel)]="question.option3"
+                    name="option3"
+                    placeholder="Enter third answer choice">
+              <mat-icon matSuffix>looks_3</mat-icon>
+            </mat-form-field>
+
+            <!-- Option 4 -->
+            <mat-form-field appearance="outline" class="option-field">
+              <mat-label>Option 4 (Optional)</mat-label>
+              <input matInput
+                    [(ngModel)]="question.option4"
+                    name="option4"
+                    placeholder="Enter fourth answer choice">
+              <mat-icon matSuffix>looks_4</mat-icon>
+            </mat-form-field>
+          </div>
+        </div>
+
+        <!-- Correct Answer Selection -->
+        <div class="form-section">
+          <h3 class="section-title">
+            <mat-icon>check_circle</mat-icon>
+            Correct Answer(s)
+          </h3>
+          
+          <mat-form-field appearance="outline" class="answer-select">
+            <mat-label>Select correct answer(s)</mat-label>
+            <mat-select [(ngModel)]="question.correct_answer" 
+                       name="correct_answer" 
+                       multiple 
+                       required>
+              <mat-option *ngIf="question.option1" [value]="question.option1">
+                <span class="option-badge">1</span> {{question.option1}}
+              </mat-option>
+              <mat-option *ngIf="question.option2" [value]="question.option2">
+                <span class="option-badge">2</span> {{question.option2}}
+              </mat-option>
+              <mat-option *ngIf="question.option3" [value]="question.option3">
+                <span class="option-badge">3</span> {{question.option3}}
+              </mat-option>
+              <mat-option *ngIf="question.option4" [value]="question.option4">
+                <span class="option-badge">4</span> {{question.option4}}
+              </mat-option>
+            </mat-select>
+            <mat-icon matSuffix>checklist</mat-icon>
+            <mat-hint>Select all that apply (multiple correct answers allowed)</mat-hint>
+          </mat-form-field>
+        </div>
+
+        <!-- Form Submission -->
+        <div class="form-actions">
+          <button mat-raised-button color="primary" type="submit" class="submit-btn">
+            <mat-icon>add</mat-icon>
+            Add Question
+          </button>
+        </div>
+      </form>
+    </mat-card-content>
+  </mat-card>
+
+  <!-- Bulk Upload Section -->
+  <div class="upload-section">
+    <!-- Objective Questions Upload -->
+    <mat-card class="upload-card mat-elevation-z6">
+      <mat-card-header>
+        <mat-icon class="upload-icon">cloud_upload</mat-icon>
+        <h2 class="upload-title">Bulk Upload Questions</h2>
+      </mat-card-header>
+      
+      <mat-card-content>
+        <div class="upload-options">
+          <!-- Objective Questions -->
+          <div class="upload-option">
+            <h3 class="option-title">
+              <mat-icon>check_box</mat-icon>
+              Objective Questions
+            </h3>
+            <p class="option-description">Upload multiple choice questions in JSON format</p>
+            
+            <div class="upload-controls">
+              <button mat-button color="primary" class="format-btn"
+                      matTooltip="The accepted quiz format is JSON"
+                      matTooltipPosition="above">
+                <mat-icon>help_outline</mat-icon>
+                View Format Requirements
+              </button>
+              
+              <div class="file-upload-wrapper">
+                <label class="file-upload-label">
+                  <input type="file" (change)="onFileSelected($event)" class="file-upload-input">
+                  <span class="file-upload-button" mat-raised-button>
+                    <mat-icon>attach_file</mat-icon>
+                    Select JSON File
+                  </span>
+                </label>
+                <button mat-raised-button color="accent" (click)="uploadQuiz()" class="upload-action-btn">
+                  <mat-icon>publish</mat-icon>
+                  Upload Questions
+                </button>
+              </div>
+            </div>
+          </div>
+          
+          <!-- Theory Questions -->
+          <div class="upload-option">
+            <h3 class="option-title">
+              <mat-icon>subject</mat-icon>
+              Theory Questions
+            </h3>
+            <p class="option-description">Upload essay questions with assessment parameters</p>
+            
+            <div class="theory-controls">
+              <div class="theory-params">
+                <mat-form-field appearance="outline" class="param-field">
+                  <mat-label>Questions to Answer</mat-label>
+                  <input matInput required
+                        [(ngModel)]="theoryQuesToAnswer.totalQuestToAnswer"
+                        name="totalQuestToAnswer"
+                        type="number">
+                  <mat-icon matSuffix>format_list_numbered</mat-icon>
+                </mat-form-field>
+                
+                <mat-form-field appearance="outline" class="param-field">
+                  <mat-label>Time Allowed (minutes)</mat-label>
+                  <input matInput required
+                        [(ngModel)]="theoryQuesToAnswer.timeAllowed"
+                        name="timeAllowed"
+                        type="number">
+                  <mat-icon matSuffix>timer</mat-icon>
+                </mat-form-field>
+              </div>
+              
+              <div class="file-upload-wrapper">
+                <label class="file-upload-label">
+                  <input type="file" (change)="onFileSelected($event)" class="file-upload-input">
+                  <span class="file-upload-button" mat-raised-button>
+                    <mat-icon>attach_file</mat-icon>
+                    Select JSON File
+                  </span>
+                </label>
+                <button mat-raised-button color="accent" (click)="uploadTheoryQuestionss()" class="upload-action-btn">
+                  <mat-icon>publish</mat-icon>
+                  Upload Questions
+                </button>
+              </div>
+            </div>
+          </div>
+        </div>
+      </mat-card-content>
+    </mat-card>
+  </div>
+</div>

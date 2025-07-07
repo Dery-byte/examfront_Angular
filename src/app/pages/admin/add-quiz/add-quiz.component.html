@@ -1,144 +1,129 @@
-<mat-card>
-    <h1>Add New Quiz</h1>
-
-<div class="container">
-    <div class="row">
-        <div class="col-md-8 offset-md-2">
-            <form (ngSubmit)="addQuiz()">
-<mat-form-field class="w100" appearance="fill">
-    <mat-label>Enter Quiz Title</mat-label>
-    <input [(ngModel)] = "quizData.title" 
-     type="text" name="title" matInput required>
-</mat-form-field>
-
-<mat-form-field class="w100" appearance="fill">
-    <mat-label>Quiz Description</mat-label>
-    <textarea [(ngModel)] = "quizData.description" 
-     type="text" name="description" matInput rows="8"> </textarea>
-</mat-form-field>
-
-<div class="row">
-    <div class="col-md-6">
-        <mat-form-field class="w100" appearance="fill">
-            <mat-label>Maximum Marks</mat-label>
-            <input [(ngModel)] = "quizData.maxMarks"  
-            type="maxMarks" name="title" matInput>
-        </mat-form-field>
+<mat-card class="form-card">
+  <mat-card-header class="form-header">
+    <div class="header-content">
+      <mat-icon class="header-icon">quiz</mat-icon>
+      <div>
+        <h1 class="form-title">Create New Quiz</h1>
+        <p class="form-subtitle">Fill in the details to set up a new assessment</p>
+      </div>
     </div>
+  </mat-card-header>
 
-    <div class="col-md-6">
-        <!-- Number of questions to be displayed -->
-        <mat-form-field class="w100" appearance="fill">
-            <mat-label>Total questions</mat-label>
-            <input [(ngModel)] = "quizData.numberOfQuestions"  
-            type="numberOfQuestions" name="title" matInput>
+  <mat-divider></mat-divider>
+
+  <mat-card-content>
+    <form (ngSubmit)="addQuiz()" class="quiz-form">
+      <!-- Basic Information Section -->
+      <div class="form-section">
+        <h3 class="section-title">
+          <mat-icon>info</mat-icon>
+          Basic Information
+        </h3>
+        
+        <div class="form-row">
+          <mat-form-field appearance="outline" class="form-field">
+            <mat-label>Quiz Title</mat-label>
+            <input matInput [(ngModel)]="quizData.title" name="title" required>
+            <mat-icon matSuffix>title</mat-icon>
+            <mat-hint>Enter a descriptive quiz name</mat-hint>
+          </mat-form-field>
+
+          <mat-form-field appearance="outline" class="form-field">
+            <mat-label>Course</mat-label>
+            <mat-select name="category" [(ngModel)]="quizData.category.cid" required>
+              <mat-option *ngFor="let c of categories" [value]="c.cid">
+                {{c.title}}
+              </mat-option>
+            </mat-select>
+            <mat-icon matSuffix>school</mat-icon>
+          </mat-form-field>
+        </div>
+
+        <mat-form-field appearance="outline" class="full-width">
+          <mat-label>Description</mat-label>
+          <textarea matInput [(ngModel)]="quizData.description" name="description" rows="4"></textarea>
+          <mat-icon matSuffix>description</mat-icon>
+          <mat-hint>Provide instructions or overview for students</mat-hint>
         </mat-form-field>
+      </div>
 
-    </div>
-</div>
+      <!-- Quiz Configuration Section -->
+      <div class="form-section">
+        <h3 class="section-title">
+          <mat-icon>settings</mat-icon>
+          Quiz Configuration
+        </h3>
+        
+        <div class="form-row">
+          <mat-form-field appearance="outline" class="form-field">
+            <mat-label>Max Marks</mat-label>
+            <input matInput type="number" [(ngModel)]="quizData.maxMarks" name="maxMarks">
+            <mat-icon matSuffix>score</mat-icon>
+          </mat-form-field>
 
-<!-- ADD QUIZ PASSWORD -->
-<div class="row">
-    <div class="col-md-6">
-        <mat-form-field class="w100" appearance="fill">
+          <mat-form-field appearance="outline" class="form-field">
+            <mat-label>Total Questions</mat-label>
+            <input matInput type="number" [(ngModel)]="quizData.numberOfQuestions" name="numberOfQuestions">
+            <mat-icon matSuffix>help_outline</mat-icon>
+          </mat-form-field>
+        </div>
+
+        <div class="form-row">
+          <mat-form-field appearance="outline" class="form-field">
             <mat-label>Quiz Password</mat-label>
-            <input [(ngModel)] = "quizData.quizpassword"  
-            type="quizPassword" name="quizpassword" matInput>
-        </mat-form-field>
-    </div>
+            <input matInput [(ngModel)]="quizData.quizpassword" name="quizpassword" type="password">
+            <mat-icon matSuffix>vpn_key</mat-icon>
+            <mat-hint>Optional password protection</mat-hint>
+          </mat-form-field>
 
-    <div class="col-md-6">
-        <!-- Number of questions to be displayed -->
-        <mat-form-field class="w100" appearance="fill">
-            <mat-label>Quiz Time</mat-label>
-            <input [(ngModel)] = "quizData.quizTime"  
-            type="quizTime" name="quizTime" matInput>
-        </mat-form-field>
+          <mat-form-field appearance="outline" class="form-field">
+            <mat-label>Time Limit (minutes)</mat-label>
+            <input matInput type="number" [(ngModel)]="quizData.quizTime" name="quizTime">
+            <mat-icon matSuffix>timer</mat-icon>
+          </mat-form-field>
+        </div>
+      </div>
 
-    </div>
-</div>
-
-
-
-
-
-<!-- <mat-form-field class="w100" appearance="fill">
-    <mat-label>Quiz Password</mat-label>
-    <input [(ngModel)] = "quizData.quizpassword"  
-    type="quizPassword" name="quizpassword" matInput>
-</mat-form-field> -->
-
-
-
-<div class="row">
-    <div class="col-md-6">
-<mat-slide-toggle name="active" [(ngModel)] = "quizData.active"
-class="mb20" 
-> Publish Status</mat-slide-toggle>
-</div>
-
-<div class="col-md-6">
-    Quiz date:DD-MM-YYYY | Time: 00:00
-
-<div class="row">
-
-    <div class="col-md-6">
-        <!-- <mat-form-field class="w100" appearance="fill">
+      <!-- Schedule & Publishing Section -->
+      <div class="form-section">
+        <h3 class="section-title">
+          <mat-icon>schedule</mat-icon>
+          Schedule & Publishing
+        </h3>
+        
+        <div class="form-row">
+          <mat-form-field appearance="outline" class="form-field">
             <mat-label>Quiz Date</mat-label>
-            <input [(ngModel)]="quizData.quizTime" matInput [matDatepicker]="picker">
+            <input matInput [matDatepicker]="picker" [(ngModel)]="quizData.quizDate">
             <mat-datepicker-toggle matSuffix [for]="picker"></mat-datepicker-toggle>
             <mat-datepicker #picker></mat-datepicker>
-          </mat-form-field> -->
-
-          <mat-form-field>
-            <mat-label>Quiz Date</mat-label>
-            <input matInput [matDatepicker]="picker">
-            <mat-hint>MM/DD/YYYY</mat-hint>
-            <mat-datepicker-toggle matIconSuffix [for]="picker"></mat-datepicker-toggle>
-            <mat-datepicker #picker></mat-datepicker>
+            <mat-icon matSuffix>event</mat-icon>
           </mat-form-field>
-          
-          
 
-    </div>
-
-    <div class="col-md-6">
-        <mat-form-field class="w100" appearance="fill">
-            <mat-label>Quiz Time</mat-label>
-            <input [(ngModel)]="quizData.quizTime" type="time" name="quiztime" matInput>
+          <mat-form-field appearance="outline" class="form-field">
+            <mat-label>Start Time</mat-label>
+            <input matInput type="time" [(ngModel)]="quizData.startTime" name="startTime">
+            <mat-icon matSuffix>access_time</mat-icon>
           </mat-form-field>
-    </div>
-
-
-
-    </div>
-    
-     
-
-</div>
-</div>
-
-
-
-<br/>
-<mat-form-field appearance="fill" class="mt20 w100">
-    <mat-label>Select Course</mat-label>
-    <mat-select name="category" [(ngModel)] = "quizData.category.cid">
-        <mat-option *ngFor="let c of categories" [value]="c.cid">
-            {{c.title}}
-        </mat-option>
-    </mat-select>
-</mat-form-field>
- 
-<div class="container text-center">
-    <button mat-raised-button color="accent" type="submit ">Add</button>
-</div>
-  
-            </form>
         </div>
-    </div>
-</div>
 
+        <mat-slide-toggle [(ngModel)]="quizData.active" name="active" color="primary" class="publish-toggle">
+          <mat-icon>{{quizData.active ? 'visibility' : 'visibility_off'}}</mat-icon>
+          {{quizData.active ? 'Publish Immediately' : 'Save as Draft'}}
+        </mat-slide-toggle>
+      </div>
+
+      <!-- Form Actions -->
+      <div class="form-actions">
+        <button mat-stroked-button type="button" routerLink="/admin/quizzes" class="cancel-btn">
+          <mat-icon>close</mat-icon>
+          Cancel
+        </button>
+        <button mat-raised-button color="primary" type="submit" class="submit-btn">
+          <mat-icon>add</mat-icon>
+          Create Quiz
+        </button>
+      </div>
+    </form>
+  </mat-card-content>
 </mat-card>
-
-<!-- {{quizData | json}} -->
