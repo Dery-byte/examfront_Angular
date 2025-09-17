@@ -56,8 +56,18 @@ export class AddQuestionComponent implements OnInit {
   }
 
   // THIS FUNCTION SUBMIT THE NUMBER OF QUESTIONS TO ANSWER
+
+
+
+
+
+
+
+
+
   addNumberOfTheoryToAnswer() {
-    if (this.theoryQuesToAnswer.totalQuestToAnswer.trim() == '' || this.theoryQuesToAnswer.totalQuestToAnswer == null) {
+    const value = this.theoryQuesToAnswer.totalQuestToAnswer;
+    if (value == null || String(value).trim() === '') {
       return;
     }
     // forms submit

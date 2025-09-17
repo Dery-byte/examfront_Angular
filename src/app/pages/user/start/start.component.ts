@@ -703,7 +703,6 @@ export class StartComponent implements OnInit {
           this.evalQuiz();
           this.waitNavigateFunction();
           this.loadQuestionsWithAnswers();
-          // this.evalSubjective();
           await this.evalSubjective();            // ✅ Wait here
 
           this.preventBackButton();
@@ -749,7 +748,6 @@ export class StartComponent implements OnInit {
         this.evalQuiz();
         this.waitNavigateFunction();
         this.loadQuestionsWithAnswers();
-        // this.evalSubjective();
         await this.evalSubjective();            // ✅ Wait here
         // this.loadSubjectiveAIEval();
         // this.getGrandTotalMarks();
@@ -1074,6 +1072,9 @@ export class StartComponent implements OnInit {
         {
           parts: this.selectedQuestionsAnswer.map(item => {
             // Extract fields from each item
+
+            const quizId = item.quiz.qId;
+            const quesId = item.tqId;
             const questionNo = item.quesNo;
             const question = item.question;
             const answer = item.givenAnswer ? item.givenAnswer : ''; // Assume empty if null
@@ -1082,7 +1083,7 @@ export class StartComponent implements OnInit {
             let criteria = 'Evaluate based on clarity, completeness, and accuracy';
 
             // Create the text format
-            const text = `Question Number ${questionNo}: ${question}. Answer: ${answer}. Marks: ${marks} Criteria:${criteria}.`;
+            const text = `quizId ${quizId}: tqid ${quesId}: Question Number ${questionNo}: ${question}. Answer: ${answer}. Marks: ${marks} Criteria:${criteria}.`;
 
             return { text: text };
           })

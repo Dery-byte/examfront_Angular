@@ -2,7 +2,7 @@
   <mat-card class="profile-card">
     <div class="profile-header">
       <div class="avatar-container">
-        <img mat-card-avatar [src]="user.profilePicture || '/src/assets/logo1.jpg'" alt="Profile Picture" class="profile-picture">
+        <img mat-card-avatar [src]="user.profilePicture || '/assets/OTCLogo.png'" alt="Profile Picture" class="profile-picture">
         <div class="status-badge" [ngClass]="{'active': user.enabled, 'inactive': !user.enabled}">
           {{ user.enabled ? 'Active' : 'Inactive' }}
         </div>

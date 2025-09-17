@@ -74,6 +74,7 @@ import { UserNavbarComponent } from './pages/user/user-navbar/user-navbar.compon
 import { UserSidebarComponent } from './pages/user/user-sidebar/user-sidebar.component';
 import { UserfooterComponent } from './pages/user/userfooter/userfooter.component';
 import { AdminnavbarComponent } from './pages/admin/adminnavbar/adminnavbar.component';
+import { ResetPasswordComponent } from './pages/reset-password/reset-password.component';
 
 
 
@@ -117,6 +118,7 @@ import { AdminnavbarComponent } from './pages/admin/adminnavbar/adminnavbar.comp
     UserSidebarComponent,
     UserfooterComponent,
     AdminnavbarComponent,
+    ResetPasswordComponent,
   ],
   imports: [
     BrowserModule, 

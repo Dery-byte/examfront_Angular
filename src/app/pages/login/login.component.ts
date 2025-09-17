@@ -5,6 +5,7 @@ import Swal from 'sweetalert2';
 import { LoginService } from 'src/app/services/login.service';
 import { FormBuilder, Validators, FormGroup } from '@angular/forms';
 import { MatDialog, MAT_DIALOG_DATA, MatDialogRef, MatDialogModule } from '@angular/material/dialog';
+import { NgForm } from '@angular/forms';  // <--- add this
 
 
 import { Question } from 'src/model testing/model';
@@ -197,25 +198,23 @@ hideConfirmPassword = true;
   deleteSelectedProducts() { }
   
   loading = false;
-  formSubmit() {
-        this.isLogingIn = true;
 
+
+
+
+
+  formSubmit() {
+    this.isLogingIn = true;
     this.loading = true;
     this.hideDialog();
     if (this.loginData.username.trim() == ' ' || this.loginData.password == null) {
       this.loading = false;
-
       this.snack.open('Username is required !! ', '', {
         duration: 3000,
       });
-
       return;
-
     }
-    // this.loading=false;
-
-    // this.isLogingIn = false;
-
+   
     if (this.loginData.username.trim() == ' ' || this.loginData.password == null) {
       this.isLogingIn = true;
 
@@ -278,44 +277,71 @@ hideConfirmPassword = true;
 
   }
 
-  passwordChange() {
-    console.log(this.allUsers);
-    this.hideDialog();
-    this.allUsers.forEach((u) => {
-      console.log(u.username);
-      console.log(u.email);
 
-      console.log(this.resetData.username);
-      console.log(this.resetData.email);
+   showSuccessMessage = false;
+    isSubmitting = false;
+  loginError = '';
+  passwordVisible = false;
 
 
-      if (u.username == this.resetData.username) {
-        this.login.resetPassword(this.resetData).subscribe((resetdata: any) => {
-          Swal.fire("Success ", "Quiz Updated Successfully", "success");
-        },
-          (error) => {
-            // this.resetPasswordForm();
-            Swal.fire({
-              title: "Success",
-              text: "Password reset was successful",
-              icon: "success",
-              timer: 10000,
-              showConfirmButton: true
-            }).then(() => {
-              // window.location.href="/login"; 
-            });
+  apiError: string | null = null;
+  successEmail: string | null = null;  // store the email that was sent
 
-          });
-      } else {
-        // this.resetPasswordForm();
-        // Swal.fire("Error", "Username not in the database", "error");
-        // console.log("Username not in the database");
-      }
-    });
-    // console.log("Not in the list")
-    // Swal.fire("Error", "Username not in the database", "error");
 
+
+
+onForgotPasswordSubmit(form?: NgForm) {
+  // Validate email: empty or invalid format
+  if (!this.resetData.email || !this.isValidEmail(this.resetData.email)) {
+    if (form) form.control.markAllAsTouched(); // show validation errors
+    return;
   }
+
+  this.isSubmitting = true;
+  this.showSuccessMessage = false;
+  this.apiError = null;
+
+  const email = this.resetData.email;
+  console.log(email);
+
+  this.login.requestPasswordResetLink(email).subscribe({
+    next: () => {
+       this.successEmail = email;      
+
+  if (form) {
+    form.resetForm();             // reset first
+  }
+  this.resetData.email = '';      // clear model
+
+  this.showSuccessMessage = true; // now hide the form
+    },
+    error: (err) => {
+      console.error('Password reset error:', err);
+      this.apiError = err.error?.message || 'Failed to send reset link. Please try again.';
+        this.isSubmitting = false;
+
+    },
+    complete: () => {
+      this.isSubmitting = false;
+    }
+  });
+}
+
+// Helper function to check valid email
+isValidEmail(email: string): boolean {
+  const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+  return emailRegex.test(email);
+}
+
+onCloseDialog() {
+    this.dialogRef.close();
+  // reset state so the form shows next time
+  this.showSuccessMessage = false;
+  this.apiError = null;
+  this.successEmail = null;
+  this.resetData.email = '';
+
+}
 
   resetPasswordForm() {
     this.resetData.username = '',

@@ -7,6 +7,7 @@ import { Router } from '@angular/router';
 
 import { jwtDecode } from 'jwt-decode';
 import { Question } from 'src/model testing/model';
+import { Observable } from 'rxjs';
 
 
 @Injectable({
@@ -79,12 +80,7 @@ export class LoginService {
   }
 
 
-  // RESET PASSWORD
 
-  public resetPassword(resetData:any){
-    return this.http.put(`${baseUrl}/changePassword`, resetData);
-
-  }
 
 
     //  TOKEN EXPIRATION
@@ -112,4 +108,22 @@ export class LoginService {
     return true;
   }
  
+
+
+  // SENT PASSWORD RESET link
+resetPassword(token: string, newPassword: string): Observable<any> {
+  return this.http.post(`${baseUrl}/reset-password`, { token, newPassword });
+}
+
+
+  // RESET PASSWORD
+
+  // public resetPassword(resetData:any){
+  //   return this.http.put(`${baseUrl}/changePassword`, resetData);
+  // }
+
+  requestPasswordResetLink(email: any): Observable<any> {
+  return this.http.post(`${baseUrl}/forgotten-password`, { email });
+}
+
 }
