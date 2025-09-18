@@ -112,7 +112,8 @@
 
     <div class="dashboard-content"> 
     <mat-drawer-container autosize class="drawer-container">
-      <mat-drawer #drawer mode="side" opened="true" position="start" class="side-nav fixed-nav mat-elevation-z2">
+      <mat-drawer #drawer mode="side" opened="true" position="start" class="side-nav  mat-elevation-z2">   <!-- fixed-nav here causing problems with display-->
+
         <div class="nav-header">
           <mat-icon class="nav-icon">admin_panel_settings</mat-icon>
           <h3 class="nav-title">Admin Dashboard</h3>
