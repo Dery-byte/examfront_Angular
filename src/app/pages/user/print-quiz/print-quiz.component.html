@@ -2,6 +2,7 @@
 <!-- {{questions[0].quiz.category.title |json}}
 {{questions[0].quiz.maxMarks |json}} -->
 
+
 <!-- <h1>======================Raw Response From BackEnd=======================================</h1>
 {{geminiRawResponse | json }}
 <h1>=============================================================</h1>
@@ -27,9 +28,8 @@
 <ngx-ui-loader fgsColor="#ff4081" pbColor="#ff4081" textColor="#ff4081" pbThickness="6"
     text="Preparing results please wait...!"></ngx-ui-loader>
 <div ngxUiLoaderBlurred (blur)="10">
-    <!-- QUESTIONS LOAD AFTER SUBMIT -->
-    <!-- questions -->
-<!-- {{timeAllowed}} -->
+
+    <!-- {{theoryAnswer | json}} -->
 
     <div class="bootstrap-wrapper">
         <div class="row mt20">
@@ -59,7 +59,7 @@
                         <ng-template #elseBlock>
                             <!-- DISPLAYS IF QUESTIONS ARE ONLY OBJ -->
                             <p *ngIf="questionWithAnswers.length >0" id="cape">
-                                
+
                                 University of Cape Coast.<br>
                                 School of Physical Sciences. <br>Department of Computer Science and Information
                                 Technology<br>
@@ -68,9 +68,9 @@
                                 <i>
                                     <b> {{questionWithAnswers[0].quiz.quizTime * 1}} minutes</b>
 
-                                    
-                                </i> 
-                                
+
+                                </i>
+
                                 <br>
                                 <label> Index Number:<b>{{username | uppercase}}</b></label>
                             </p>
@@ -137,47 +137,66 @@
 
                     <!-- <h2>==============================</h2> -->
                     <div class="watermarkss">{{username | uppercase}}</div>
-                    <div *ngIf="geminiResponse != null">
-                        <h1 style="text-align: center;">
-                          Section B <b> Total Marks: 
-                          <em class="grandTotals">{{ getGrandTotalMarks() }}</em></b>
+                    <div *ngIf="theoryAnswer != null">
+                        <h1 class="section-header">
+                            Section B
+                            <b class="section-total">
+                                Total Marks: <em class="grand-totals">{{ getGrandTotalMarks() }}</em>
+                            </b>
                         </h1>
-                        <div *ngFor="let groups of geminiResponse">
-                          <mat-card>
-                            <mat-card-header>
-                              <mat-card-title>
-                                {{ groups.prefix }} 
-                                <em class="prefixTotals">( Marks: {{ getTotalMarksForPrefix(groups.questions) }}) </em>
-                              </mat-card-title>
-                            </mat-card-header>
-                            <mat-card-content>
-                              <div class="data" *ngFor="let items of groups.questions">
-                                <p><strong>{{ items.questionNumber }}:</strong> {{ items.question }}</p>
-                                <p><strong>Your Answer:</strong> {{ items.studentAnswer }}</p>
-                                <p><strong>Score:</strong> {{ items.score }}/{{items.maxMarks}}</p>
-                                <!-- <p><strong>Missing Elements</strong> {{ items.keyMissed }}</p> -->
-                                 
-                                <div *ngIf="items.keyMissed && items.keyMissed.length > 0 && !(items.keyMissed.length === 1 && items.keyMissed[0] === '')" class="missing-elements">
-                                    <strong class="missing-elements-title">Missing Elements</strong>
-                                    <span class="missing-elements-list">
-                                      {{ items.keyMissed }}
-                                    </span>
-                                  </div>
-                                  
-                                  <div *ngIf="!items.keyMissed || items.keyMissed.length === 0 || (items.keyMissed.length === 1 && items.keyMissed[0] === '')" class="no-missing-elements">
-                                    <strong class="no-missing-title">Great Work!</strong>
-                                    <span class="no-missing-message">
-                                      No Suggestions
-                                    </span>
-                                  </div>
 
-                              </div>
-                            </mat-card-content>
-                          </mat-card>
-                          <mat-divider></mat-divider>
+                        <div *ngFor="let groups of theoryAnswer">
+                            <mat-card>
+                                <mat-card-header>
+                                    <mat-card-title class="prefix-title">
+                                        {{ groups.prefix }}
+                                        <em class="prefix-totals">( Marks: {{ getTotalMarksByPrefix(theoryAnswer)}})
+                                        </em>
+                                    </mat-card-title>
+                                </mat-card-header>
+                                <mat-card-content>
+                                    <div class="data" *ngFor="let items of groups.questions">
+                                        <div class="question-block">
+                                            <p class="question-title">
+                                                <strong>{{ items.quesO }}:</strong> {{ items.question }}
+                                            </p>
+
+                                            <p class="question-answer">
+                                                <strong>Your Answer:</strong> {{ items.studentAnswer }}
+                                            </p>
+
+                                            <p class="question-score">
+                                                <strong>Score:</strong>
+                                                <span class="score-value">{{ items.score }}</span>/<span
+                                                    class="max-marks">{{ items.maxMarks }}</span>
+                                            </p>
+                                        </div>
+
+                                        <!-- <p><strong>Missing Elements</strong> {{ items.keyMissed }}</p> -->
+
+                                        <div *ngIf="items.keyMissed && items.keyMissed.length > 0 && !(items.keyMissed.length === 1 && items.keyMissed[0] === '')"
+                                            class="missing-elements">
+                                            <strong class="missing-elements-title">Missing Elements:</strong>
+                                            <span class="missing-elements-list">
+                                                {{ items.keyMissed }}
+                                            </span>
+                                        </div>
+
+                                        <div *ngIf="!items.keyMissed || items.keyMissed.length === 0 || (items.keyMissed.length === 1 && items.keyMissed[0] === '')"
+                                            class="no-missing-elements">
+                                            <strong class="no-missing-title">Great Work!</strong>
+                                            <span class="no-missing-message">
+                                                No Suggestions
+                                            </span>
+                                        </div>
+
+                                    </div>
+                                </mat-card-content>
+                            </mat-card>
+                            <mat-divider></mat-divider>
                         </div>
-                      </div>
-                      
+                    </div>
+
 
                     <!-- <h2>=================================================</h2> -->
 

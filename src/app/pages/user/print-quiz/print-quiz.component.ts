@@ -10,11 +10,9 @@ import { Router, NavigationStart, NavigationEnd, NavigationError, NavigationCanc
 import Swal from 'sweetalert2';
 import { ReportServiceService } from 'src/app/services/report-service.service';
 import { ChangeDetectorRef } from '@angular/core';
-
-
-
+import { AnswerService } from 'src/app/services/answer.service';
 interface QuestionResponse {
-  questionNumber: string;
+  quesO: string;
   question: string;
   studentAnswer: string;
   score: number;
@@ -33,8 +31,6 @@ interface PrefixScores {
   totalMaxMarks: number;
   percentage: number;
 }
-
-
 
 @Component({
   selector: 'app-print-quiz',
@@ -61,25 +57,23 @@ export class PrintQuizComponent implements OnInit {
   reportData;
   sectionB: any[] = [];
   answeredQuestions: any[] = [];
-  isPrintDisabled = false;
   geminiResponse;
-  geminiRawResponse
   groupedQuestions
   objectKeys = Object.keys;
   transformedData: any[];
+  theoryAnswer: any[];
+
   value
-
   qId
-
   timeAllowed
 
 
 
-loadTimeFromLocalStorage() {
-  const quizTimes = localStorage.getItem('totalTime');
-  this.timeAllowed = quizTimes ? JSON.parse(quizTimes) : 0;
-  this.cdr.detectChanges(); // Force UI update
-}
+  loadTimeFromLocalStorage() {
+    const quizTimes = localStorage.getItem('totalTime');
+    this.timeAllowed = quizTimes ? JSON.parse(quizTimes) : 0;
+    this.cdr.detectChanges(); // Force UI update
+  }
 
   constructor(private _quiz: QuizService,
     private cdr: ChangeDetectorRef,
@@ -87,16 +81,14 @@ loadTimeFromLocalStorage() {
     private _route: ActivatedRoute,
     private _questions: QuestionService,
     private router: Router,
-    private _report: ReportServiceService
+    private _report: ReportServiceService,
+    private _answer: AnswerService
   ) { }
 
   refreshUser = new BehaviorSubject<Boolean>(true)
 
   @HostListener('window:beforeunload', ['$event'])
   beforeUnloadHandler(event: Event): void {
-    // this.loadResults();
-    // event.preventDefault();
-    // event.returnValue = '' as any; // This is required for some older browsers
   }
   @HostListener('window:unload', ['$event'])
   unloadHandler(event: Event): void {
@@ -105,18 +97,18 @@ loadTimeFromLocalStorage() {
 
   ngOnInit(): void {
     this.qid = this._route.snapshot.params['qid'];
-   const userDetails = localStorage.getItem('user');
+    const userDetails = localStorage.getItem('user');
     const Object = JSON.parse(userDetails);
     this.username = Object.username;
 
 
     const quizTimes = localStorage.getItem('totalTime');
-    this.timeAllowed = (JSON.parse(quizTimes)) *1 /60;
+    this.timeAllowed = (JSON.parse(quizTimes)) * 1 / 60;
     // this.timeAllowed = Object.username;
-   console.log( typeof(this.timeAllowed));
+    console.log(typeof (this.timeAllowed));
     console.log(localStorage.getItem('totalTime'));
     console.log(this.timeAllowed);
-
+    this.loadTheoryAnswers();
     console.log(this.qid);
 
     this._questions.getQuestionsOfQuiz(this.qid).subscribe((data: any) => {
@@ -131,17 +123,19 @@ loadTimeFromLocalStorage() {
       }
     );
     this.loadSubjective();
-    this.loadSubjectiveAIEval();
     // this.loadReport();
 
 
     console.log(this.qid);
+
+
     // this.refreshPage();
     this.refreshContent();
     this.loadQuestionsWithAnswers();
 
     // this.loadResults();
     this.loadQuestions();
+
 
     this.saveDataInBrowser();
 
@@ -162,126 +156,98 @@ loadTimeFromLocalStorage() {
       }
     );
 
+  }
 
+  loadTheoryAnswers() {
+    this._answer.getTheoryReport(this.qid).subscribe((answers: any) => {
+      this.theoryAnswer = this.groupByPrefix(answers);
 
+      // console.log("The total for each prefix is :", this.getTotalMarksByPrefix(this.theoryAnswer));
+
+      // console.log("Grand score : ", this.getGrandTotalMarks());
+      // console.log("helllllllllllllllllllllllllllll");
+      // console.log(answers);
+      // console.log(this.qid);
+    })
   }
 
 
   loadSubjective() {
-    const questions = localStorage.getItem( this.qid + "answeredQuestions");
+    const questions = localStorage.getItem(this.qid + "answeredQuestions");
     this.answeredQuestions = JSON.parse(questions);
-    console.log(this.answeredQuestions);
-    console.log(this.qid);
-  }
-
-
-
-  loadSubjectiveAIEval() {
-    // const geminiResponse = localStorage.getItem("answeredAIQuestions");
-    this.geminiRawResponse = JSON.parse(localStorage.getItem("answeredAIQuestions" + this.qid));
-
-    const geminiResponse = localStorage.getItem("answeredAIQuestions" + this.qid);
-    // const data = geminiResponse.trim();
-    console.log(geminiResponse);
-    // const data = geminiResponse.replace("json\n", "");
-    const data1 = JSON.parse(geminiResponse);
-    // this.geminiResponse = this.groupByPrefix(data1);
-    this.geminiResponse = this.groupByPrefix(data1);
-
-    // this.transformedData = this.geminiResponse;
-
-    console.log(this.getTotalMarksForPrefix(this.geminiResponse));
-
-    this.value = this.geminiResponse[0].questions[0].studentAnswer
-
-
-    // this.value = this.transformedData[0].questions[0].Marks
-
-    console.log('This is the geminiResponse groupedByPrefixes', this.geminiResponse);
-    console.log("CHECKING ...")
+    // console.log(this.answeredQuestions);
+    // console.log(this.qid);
   }
 
   groupByPrefix(data: QuestionResponse[]): GroupedQuestions[] {
-    // Handle edge cases
-    if (!Array.isArray(data)) {
-      throw new Error('Input must be an array');
-    }
-    if (data.length === 0) {
-      return [];
-    }
-    // Initialize a map to group questions by prefix
-    const prefixMap: Record<string, QuestionResponse[]> = {};
-    // Iterate over each question response
-    data.forEach((questionResponse) => {
-      // Validate the question number exists
-      if (!questionResponse.questionNumber) {
-        console.warn('Question missing questionNumber:', questionResponse);
-        return; // Skip this entry
-      }
-  
-      // Extract the prefix (e.g., "Q1" from "Q1a" or "Q3ai")
-      const prefixMatch = questionResponse.questionNumber.match(/^(Q\d+)/i);
-      const prefix = prefixMatch ? prefixMatch[0].toUpperCase() : 'UNCATEGORIZED';
-  
-      // Initialize the group if it doesn't exist
-      if (!prefixMap[prefix]) {
-        prefixMap[prefix] = [];
-      }
-      // Add the current question to its prefix group
-      prefixMap[prefix].push(questionResponse);
-    });
-  
-    // Convert the map to an array of grouped data
-    return Object.entries(prefixMap).map(([prefix, questions]) => ({
-      prefix,
-      questions
-    }));
+  // Handle edge cases
+  if (!Array.isArray(data)) {
+    throw new Error('Input must be an array');
+  }
+  if (data.length === 0) {
+    return [];
   }
 
-   // Function to calculate the grand total marks across all prefixes
-   getGrandTotalMarks(): number {
-    if (!this.geminiResponse || this.geminiResponse.length === 0) {
-      return 0;
+  // Initialize a map to group questions by prefix
+  const prefixMap: Record<string, QuestionResponse[]> = {};
+
+  // Iterate over each question response
+  data.forEach((questionResponse) => {
+    // Validate quesO exists
+    if (!questionResponse.quesO) {
+      console.warn('Question missing quesO:', questionResponse);
+      return; // Skip this entry
     }
-    return this.geminiResponse.reduce((grandTotal, group) => {
-      return grandTotal + this.getTotalMarksForPrefix(group.questions);
-    }, 0);
-  }
-  
 
+    // Extract prefix (e.g., "Q1" from "Q1a" or "Q3ai")
+    const prefixMatch = questionResponse.quesO.match(/^(Q\d+)/i);
+    const prefix = prefixMatch ? prefixMatch[0].toUpperCase() : 'UNCATEGORIZED';
 
-  getTotalMarksForPrefix(questions: any[]): number {
-    if (!questions || questions.length === 0) {
-      return 0;
+    // Initialize the group if it doesn't exist
+    if (!prefixMap[prefix]) {
+      prefixMap[prefix] = [];
     }
-  
-    return questions.reduce((total, question) => {
-      return total + (question.score || 0);
-    }, 0);
+
+    // Add current question to its prefix group
+    prefixMap[prefix].push(questionResponse);
+  });
+
+  // Convert map to array of grouped data
+  return Object.entries(prefixMap).map(([prefix, questions]) => ({
+    prefix,
+    questions
+  }));
+}
+
+getGrandTotalMarks(): number {
+  if (!this.theoryAnswer || this.theoryAnswer.length === 0) {
+    return 0;
   }
-  
+  return this.theoryAnswer.reduce((grandTotal, group) => {
+    if (!group.questions || group.questions.length === 0) {
+      return grandTotal;
+    }
+    // Sum scores for this group
+    const groupTotal = group.questions.reduce((sum, q) => sum + (q.score || 0), 0);
+    return grandTotal + groupTotal;
+  }, 0);
+}
 
+getTotalMarksByPrefix(groupedData: { prefix: string; questions: QuestionResponse[] }[]): number {
+  if (!Array.isArray(groupedData) || groupedData.length === 0) {
+    return 0;
+  }
 
-  // SECTION B
-  // getPrefixes(): string[] {
-  //   const prefixes = new Set<string>();
-  //   this.answeredQuestions.forEach(question => {
-  //     const prefix = question.quesNo.match(/^Q\d+/)?.[0];
-  //     if (prefix) {
-  //       prefixes.add(prefix);
-  //     }
-  //   });
-  //   return Array.from(prefixes);
-  // }
+  return groupedData.reduce((total, group) => {
+    if (!group.prefix || !Array.isArray(group.questions)) {
+      return total; // skip invalid groups
+    }
+    // Sum scores in this group and add to total
+    const groupTotal = group.questions.reduce((sum, q) => sum + (q.score || 0), 0);
 
-
-  // getGroupedQuestions(prefix: string) {
-  //   return this.answeredQuestions.filter(q => q.quesNo.startsWith(prefix));
-  // }
-
-
-
-
+    return total + groupTotal;
+  }, 0);
+}
 
 
   // SECTION B
@@ -297,12 +263,6 @@ loadTimeFromLocalStorage() {
       console.log(report);
     });
   }
-
-
-
-
-
-
   refreshContent() {
     // Use HttpClient to fetch updated content
     const userDetails = localStorage.getItem('user');
@@ -373,7 +333,7 @@ loadTimeFromLocalStorage() {
     // this.loadResults();
     // this.loadReport();
     // this.router.navigate(['./print_quiz/' + this.qid]);
-   
+
   }
 
   loadResults() {
@@ -382,9 +342,7 @@ loadTimeFromLocalStorage() {
     this.correct_answer = JSON.parse(localStorage.getItem("CorrectAnswer"));
     this.marksGot = JSON.parse(localStorage.getItem("MarksGot"));
     // this.page();
-
   }
-
   evalQuiz() {
     //Evaluate questions
     this._questions.evalQuiz(this.qid, this.questionss).subscribe((data: any) => {
@@ -398,18 +356,14 @@ loadTimeFromLocalStorage() {
     },
       (error) => {
         console.log("Error !")
-
       }
     );
-
-
   }
   printPage() {
     document.title = this.username;
     window.print();
-    localStorage.removeItem(this.qid + "answeredQuestions");
-    localStorage.removeItem("answeredAIQuestions" + this.qid);
-
+    // localStorage.removeItem(this.qid + "answeredQuestions");
+    // localStorage.removeItem("answeredAIQuestions" + this.qid);
   }
 
   saveDataInBrowser(): void {
@@ -434,10 +388,4 @@ loadTimeFromLocalStorage() {
     console.log(this.questionss[0]);
 
   }
-
-
-
-
-
-
 };

@@ -173,14 +173,8 @@ export class LoadQuizComponent implements OnInit {
   }
 
   onPrintClick(event: MouseEvent, qId: number): void {
-    if (this.disabledButtons[qId]) {
       event.preventDefault();
       event.stopPropagation();
-      return;
-    }
-    
-    this.disabledButtons[qId] = true;
-    localStorage.setItem('disabledButtons', JSON.stringify(this.disabledButtons));
     this.router.navigate(['/print_quiz/', qId]);
   }
 
