@@ -162,7 +162,9 @@
                                             </p>
 
                                             <p class="question-answer">
-                                                <strong>Your Answer:</strong> {{ items.studentAnswer }}
+                                                <!-- <strong>Your Answer:</strong> {{ items.studentAnswer }} -->
+                                                <strong>Your Answer:</strong> {{ items.studentAnswer || 'No answer provided' }}
+
                                             </p>
 
                                             <p class="question-score">
