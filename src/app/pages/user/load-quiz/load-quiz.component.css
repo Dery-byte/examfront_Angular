@@ -1,10 +1,17 @@
 /* Main card styling */
-.quiz-summary-card {
-      max-width: 1000px;
+/* .quiz-summary-card {
+    margin: 24px auto;
+    max-width: 1000px;
+    border-radius: 8px;
+    box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+} */
 
-  margin: 24px;
-  border-radius: 8px;
-  overflow: hidden;
+
+.quiz-summary-card {
+   margin: 24px auto;
+    max-width: 1000px;
+    border-radius: 8px;
+    box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
   
   .header-section {
     padding: 16px 24px;

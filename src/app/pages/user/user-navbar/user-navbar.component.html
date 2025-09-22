@@ -1,20 +1,4 @@
-<!-- <div class="navbar">
 
-    <div  *ngIf="isloggedIn && hasAuthority('NORMAL')">
-        <mat-toolbar color="accent" class="mat-elevation-z8">
-          <button (click)="drawer.toggle()" mat-icon-button>
-            <mat-icon>menu</mat-icon>
-          </button>
-          <span mat-icon-button class="example-icon favorite-icon username "
-            aria-label="Example icon-button with heart icon">
-            {{ user.username | uppercase}}
-          </span>
-          <span mat-icon-button class="tokeExpire" aria-label="Example icon-button with heart icon">
-            <span [ngClass]="timeLeftDisplay.className">Your session expires in : {{ timeLeftDisplay.display }}</span>
-          </span>
-          <button *ngIf="!isloggedIn" mat-raised-button color="primary" routerLink="/login">Logout</button>
-        </mat-toolbar>
-</div> -->
 
 
 <div class="">
@@ -22,27 +6,44 @@
   <div class="container-fluid sticky-top" style="position: sticky; top: 0; z-index: 1000;">
     <div class="row">
       <div class="col-md-12">
-        <mat-toolbar color="accent" class="mat-elevation-z8 toolbar-responsive" *ngIf="isloggedIn && hasAuthority('NORMAL')">
-          <button (click)="drawer.toggle()" mat-icon-button>
-            <mat-icon>menu</mat-icon>
-          </button>
-          <span mat-icon-button class="example-icon favorite-icon username username-responsive" aria-label="Username">
-            {{ user.username | uppercase }}
-          </span>
-          <span mat-icon-button class="tokeExpire session-timer-responsive" aria-label="Session timer">
-            <span [ngClass]="timeLeftDisplay.className">Your session expires in: {{ timeLeftDisplay.display }}</span>
-          </span>
-          <button *ngIf="!isloggedIn" mat-raised-button color="primary" routerLink="/login">Logout</button>
-        </mat-toolbar>
+
+
+       <mat-toolbar color="accent" class="mat-elevation-z8 toolbar-responsive">
+  <button (click)="drawer.toggle()" mat-icon-button>
+    <mat-icon>menu</mat-icon>
+  </button>
+  <span mat-icon-button class="example-icon favorite-icon username username-responsive" aria-label="Username">
+    {{ user.username | uppercase }}
+  </span>
+  <span mat-icon-button class="tokeExpire session-timer-responsive" aria-label="Session timer">
+    <span [ngClass]="timeLeftDisplay?.className">Your session expires in: {{ timeLeftDisplay?.display }}</span>
+  </span>
+</mat-toolbar>
+
       </div>
     </div>
   </div>
 
   <!-- Main content area with drawer - Added fixed positioning -->
   <mat-drawer-container autosize class="" style="margin-top: -5px; ">
+
+
+
     <!-- Navigation drawer (3 columns) - Made fixed -->
-   <mat-drawer #drawer opened="true" mode="side" class="elegant-drawer" 
-            style="position: fixed; top: 58px; height: calc(100vh - 64px); width: 240px;">
+   <!-- <mat-drawer #drawer opened="true" mode="side" class="elegant-drawer" 
+            style="position: fixed; top: 58px; height: calc(100vh - 64px); width: 240px;"> -->
+
+            <mat-drawer
+    #drawer
+    [mode]="isMobile ? 'over' : 'side'"
+    [opened]="!isMobile"
+    class="elegant-drawer"
+    style="position: fixed; top: 58px; height: calc(100vh - 64px); width: 240px;"
+  >
+
+
+
+
   <mat-nav-list>
     <!-- Header Section -->
     <div class="drawer-header">
@@ -98,6 +99,152 @@
 
   </mat-drawer-container>
 
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
   <!-- Email dialog template (unchanged) -->
   <ng-template #updateDialog let-data="data">
     <h1 mat-dialog-title>Send your inquiry or complaint</h1>

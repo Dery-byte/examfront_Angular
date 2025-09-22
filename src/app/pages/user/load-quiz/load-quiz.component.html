@@ -1,4 +1,4 @@
-<mat-card class="quiz-summary-card mat-elevation-z8">
+<mat-card class="quiz-summary-card">
   <!-- Loading indicator for initial report data -->
   <div *ngIf="isLoadingReports" class="loading-container">
     <mat-card class="loading-card">
@@ -17,7 +17,7 @@
         <h2 class="section-title mat-headline-5">Quiz Summary Dashboard</h2>
         <p class="section-subtitle mat-subtitle-1">Review your exam performance and results</p>
       </div>
-      
+
       <div class="dashboard-container">
         <!-- Course selection column -->
         <div class="course-selection">
@@ -42,7 +42,7 @@
             </mat-card-content>
           </mat-card>
         </div>
-        
+
         <!-- Quizzes display column -->
         <div class="quizzes-display">
           <div *ngIf="isLoadingQuizzes" class="loading-container">
@@ -66,21 +66,22 @@
                 </mat-card-content>
               </mat-card>
             </div>
-            
+
             <!-- Quiz cards -->
             <div class="quiz-grid">
-              <mat-card class="quiz-card mat-elevation-z2" *ngFor="let q of availablequizzes" [class.closed-quiz]="q.status === 'CLOSED'">
+              <mat-card class="quiz-card mat-elevation-z2" *ngFor="let q of availablequizzes"
+                [class.closed-quiz]="q.status === 'CLOSED'">
                 <mat-card-header>
                   <div mat-card-avatar class="quiz-avatar">
                     <mat-icon class="avatar-icon">assignment</mat-icon>
                   </div>
                   <mat-card-title class="mat-subtitle-1">{{q.title}}</mat-card-title>
                   <mat-card-subtitle>
-                    <span class="course-code">{{q.category.courseCode}}</span> • 
+                    <span class="course-code">{{q.category.courseCode}}</span> •
                     <span class="course-title">{{q.category.title}}</span>
                   </mat-card-subtitle>
                 </mat-card-header>
-                
+
                 <mat-card-content>
                   <p class="quiz-description mat-body-2">{{q.description || 'No description available'}}</p>
                   <div class="quiz-status">
@@ -91,25 +92,21 @@
                     </mat-chip-list>
                   </div>
                 </mat-card-content>
-                
+
                 <mat-card-actions align="end">
-                  <button mat-stroked-button color="primary" 
-                          matTooltip="View detailed summary" 
-                          aria-label="View summary"
-                          (click)="openNew(q.qId)">
+                  <button mat-stroked-button color="primary" matTooltip="View detailed summary"
+                    aria-label="View summary" (click)="openNew(q.qId)">
                     <mat-icon>visibility</mat-icon>
                     Summary
                   </button>
-                  
-                  <button mat-stroked-button color="accent" 
-                          (click)="onPrintClick($event, q.qId)"
-                          [disabled]="q.status !== 'CLOSED'"
-                          matTooltip="Print quiz results">
+
+                  <button mat-stroked-button color="accent" (click)="onPrintClick($event, q.qId)"
+                    [disabled]="q.status !== 'CLOSED'" matTooltip="Print quiz results">
                     <mat-icon>print</mat-icon>
                     Print
                   </button>
                 </mat-card-actions>
-                
+
                 <div *ngIf="q.status !== 'CLOSED'" class="print-notice mat-caption">
                   <mat-icon class="notice-icon" color="warn">lock</mat-icon>
                   Printing available after quiz closure
@@ -121,7 +118,7 @@
       </div>
     </div>
   </div>
-  
+
   <!-- No quizzes taken block -->
   <ng-template #noQuizzesBlock>
     <mat-card class="empty-state-card">
@@ -129,13 +126,86 @@
         <mat-icon class="empty-icon" color="primary">assignment</mat-icon>
         <h2 class="mat-headline-5">No Quiz History</h2>
         <p class="mat-body-1">You haven't taken any quizzes yet. Check your courses for available exams.</p>
-        <button mat-raised-button color="primary" class="action-button">
+        <button mat-raised-button color="primary" class="action-button" routerLink="/user-dashboard/register">
           Browse Courses
         </button>
       </mat-card-content>
     </mat-card>
   </ng-template>
 </mat-card>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 <!-- Quiz summary dialog -->
 <p-dialog [(visible)]="productDialog" [style]="{width: '450px'}" [modal]="true" class="quiz-dialog"
@@ -145,7 +215,7 @@
       <mat-card-title>Detailed Results</mat-card-title>
       <mat-card-subtitle>Objective vs Theory Performance</mat-card-subtitle>
     </mat-card-header>
-    
+
     <mat-card-content>
       <table class="summary-table mat-elevation-z1">
         <thead>
@@ -169,7 +239,7 @@
           </tr>
         </tbody>
       </table>
-      
+
       <!-- <div class="performance-chart" *ngIf="reportData.length > 0">
         <div class="chart-placeholder">
           <mat-icon class="chart-icon">bar_chart</mat-icon>
@@ -177,7 +247,7 @@
         </div>
       </div> -->
     </mat-card-content>
-    
+
     <mat-card-actions align="end">
       <button mat-button (click)="productDialog = false">Close</button>
       <button mat-button color="primary" (click)="onPrintDialogClick()">
@@ -185,7 +255,7 @@
       </button>
     </mat-card-actions>
   </mat-card>
-  
+
   <div class="no-results" *ngIf="reports.length === 0">
     <mat-card class="empty-card">
       <mat-card-content class="empty-content">

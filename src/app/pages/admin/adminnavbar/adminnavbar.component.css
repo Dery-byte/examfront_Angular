@@ -46,47 +46,6 @@ body {
   margin-right: auto;
 }
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 .brand-icon {
   margin-right: 8px;
   font-size: 28px;
@@ -156,14 +115,19 @@ body {
 /* Drawer Styles */
 .drawer-container {
   flex: 1;
-  margin-top: 15px;
+  margin-top: 20px;
+}
+
+.elegant-drawer{
+  color: rgb(9, 3, 43);
+  margin-top: -10px;
 }
 
 
 
-.fixed-nav {  /*PROBLEMATIC CLASS*/
+.fixed-nav { 
   position: fixed;
-  top: 5px; /* Height of the toolbar */
+  top: 5px;
   bottom: 0;
   left: 0;
   z-index: 1;
@@ -171,9 +135,7 @@ body {
 }
 
 .side-nav {
-   top: 63px; /* Height of the toolbar */
-  /* bottom: 0; */
-  /* left: 0; */
+   top: 63px; 
   position: fixed;
   float: inline-end;
   width: 240px;
@@ -195,30 +157,22 @@ body {
 }
 
 .nav-title {
-  margin: 0;
+  /* margin: 0; */
   font-size: 1.1rem;
   font-weight: 500;
 }
 
-.nav-item {
-  display: flex;
-  align-items: center;
-  padding: 0 16px;
-  cursor: pointer;
-  transition: background-color 0.3s;
+
+
+/* Shrink the icon spacing */
+.mat-mdc-list-item-icon {
+  font-size: 20px;               /* adjust icon size if needed */
 }
 
 
-
-
-
-
-
-
-
-
 .nav-item:hover {
-  background-color: rgba(0,0,0,0.04);
+  background-color: rgba(35, 187, 15, 0.04);
+  color: rgb(47, 5, 199);
 }
 
 .nav-item mat-icon {
@@ -365,140 +319,6 @@ body {
   font-weight: 500;
 }
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 /* Add these styles to your existing CSS */
 
 .dashboard-container {
@@ -514,93 +334,11 @@ body {
   overflow: hidden;
 }
 
-
-
-
-
-
 .fixed-header {
   position: sticky;
   top: 0;
   z-index: 2;
 }
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 
 .scrollable-content {
   margin-left: 240px; /* Same as drawer width */
@@ -610,141 +348,6 @@ body {
   padding-top: 64px; /* Height of the toolbar */
   box-sizing: border-box;
 }
-
-
-
-
-
-
-
-/* Adjust for mobile view */
-/* @media (max-width: 959px) {
-  .fixed-nav {
-    transform: translateX(-100%);
-    transition: transform 0.3s ease;
-  }
-  
-  .fixed-nav.opened {
-    transform: translateX(0);
-  }
-  
-  .scrollable-content {
-    margin-left: 0;
-    width: 100%;
-  }
-} */
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 
 
 
@@ -798,7 +401,7 @@ body {
   .fixed-header {
     height: var(--mobile-header-height);
   }
-  
+
   .dashboard-content-wrapper {
     margin-top: var(--mobile-header-height);
     height: calc(100vh - var(--mobile-header-height));
@@ -819,13 +422,25 @@ body {
   }
 }
 
-/* Small screens (phones) */
-@media (max-width: 599px) {
-  .session-timer span {
+
+
+
+
+/* On really small screens, let timer move below username */
+@media (max-width: 600px) {
+  .session-timer {
+    margin-top: 2px;
+    font-size: 8px;
+  }
+
+  .admin-icon{
     display: none;
   }
-  
-  .session-timer mat-icon {
-    margin-right: 0;
-  }
+
+.user-divider {
+  height: 24px; /* same height as icons/text */
+  margin: 0 8px;
+  border-color: rgba(255, 252, 252, 0.89);
+}
+
 }

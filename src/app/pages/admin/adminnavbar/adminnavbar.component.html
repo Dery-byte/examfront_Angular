@@ -1,15 +1,9 @@
 <!-- Loading spinner with better visual integration -->
-<ngx-ui-loader
-  fgsColor="#3f51b5"
-  pbColor="#3f51b5"
-  textColor="#3f51b5"
-  pbThickness="4"
-  text="Loading..."
-></ngx-ui-loader>
+<ngx-ui-loader fgsColor="#3f51b5" pbColor="#3f51b5" textColor="#3f51b5" pbThickness="4"
+  text="Loading..."></ngx-ui-loader>
 
 <div class="app-container">
-  <!-- Public header for non-logged in users -->
-  <header @fadeIn *ngIf="!isloggedIn">
+  <!-- <header @fadeIn *ngIf="!isloggedIn">
     <mat-toolbar color="primary" class="main-toolbar">
       <div class="toolbar-content">
         <div class="branding">
@@ -32,69 +26,10 @@
         </nav>
       </div>
     </mat-toolbar>
-  </header>
-
-  <!-- Normal User Dashboard -->
-  <!-- <div @fadeIn *ngIf="isloggedIn && hasAuthority('NORMAL')" class="dashboard-container">
-    <mat-toolbar color="primary" class="user-toolbar">
-      <button (click)="drawer.toggle()" mat-icon-button class="menu-btn">
-        <mat-icon>menu</mat-icon>
-      </button>
-      <div class="user-info">
-        <mat-icon class="user-icon">account_circle</mat-icon>
-        <span class="username">{{ user.username | uppercase }}</span>
-      </div>
-      <div class="session-timer" [ngClass]="timeLeftDisplay.className">
-        <mat-icon>timer</mat-icon>
-        <span>Session expires: {{ timeLeftDisplay.display }}</span>
-      </div>
-    </mat-toolbar>
-
-    <mat-drawer-container autosize class="drawer-container">
-      <mat-drawer #drawer mode="side" position="start" class="side-nav">
-        <div class="nav-header">
-          <mat-icon class="nav-icon">dashboard</mat-icon>
-          <h3 class="nav-title">User Dashboard</h3>
-        </div>
-        <mat-nav-list>
-          <mat-list-item routerLink="/user-dashboard/0" class="nav-item">
-            <mat-icon>home</mat-icon>
-            <span>Home</span>
-          </mat-list-item>
-          <mat-list-item routerLink="/user-dashboard/register" class="nav-item">
-            <mat-icon>app_registration</mat-icon>
-            <span>Register Courses</span>
-          </mat-list-item>
-          <mat-list-item routerLink="/user-dashboard/courses" class="nav-item">
-            <mat-icon>library_books</mat-icon>
-            <span>Available Courses</span>
-          </mat-list-item>
-          <mat-list-item routerLink="/user-dashboard/quizzes" class="nav-item">
-            <mat-icon>quiz</mat-icon>
-            <span>Available Quizzes</span>
-          </mat-list-item>
-          <mat-divider></mat-divider>
-          <mat-list-item (click)="openUpdateDialog(updateDialog)" class="nav-item">
-            <mat-icon>contact_mail</mat-icon>
-            <span>Contact Support</span>
-          </mat-list-item>
-          <mat-list-item (click)="logout()" class="nav-item logout-item">
-            <mat-icon>logout</mat-icon>
-            <span>Logout</span>
-          </mat-list-item>
-        </mat-nav-list>
-      </mat-drawer>
-
-      <mat-drawer-content class="main-content">
-        <div class="content-container">
-          <router-outlet></router-outlet>
-        </div>
-      </mat-drawer-content>
-    </mat-drawer-container>
-  </div> -->
+  </header> -->
 
   <!-- Admin Dashboard -->
-  <div @fadeIn *ngIf="isloggedIn && hasAuthority('ADMIN')" class="dashboard-container">
+  <div @fadeIn class="dashboard-container">
     <mat-toolbar color="primary" class="user-toolbar fixed-header">
       <button (click)="drawer.toggle()" mat-icon-button class="menu-btn">
         <mat-icon>menu</mat-icon>
@@ -103,63 +38,71 @@
         <mat-icon class="admin-icon">admin_panel_settings</mat-icon>
         <span class="username">{{ user.username | uppercase }}</span>
       </div>
+      <mat-divider vertical class="user-divider"></mat-divider>
+
       <div class="session-timer" [ngClass]="timeLeftDisplay.className">
         <mat-icon>timer</mat-icon>
-        <span>Session expires: {{ timeLeftDisplay.display }}</span>
+        <span>Session expires: {{ timeLeftDisplay?.display }}</span>
       </div>
     </mat-toolbar>
 
 
-    <div class="dashboard-content"> 
-    <mat-drawer-container autosize class="drawer-container">
-      <mat-drawer #drawer mode="side" opened="true" position="start" class="side-nav  mat-elevation-z2">   <!-- fixed-nav here causing problems with display-->
+    <div class="dashboard-content">
+      <mat-drawer-container autosize class="drawer-container">
+        <!-- <mat-drawer #drawer mode="side" opened="true" position="start" class="side-nav  mat-elevation-z2">   fixed-nav here causing problems with display -->
 
-        <div class="nav-header">
-          <mat-icon class="nav-icon">admin_panel_settings</mat-icon>
-          <h3 class="nav-title">Admin Dashboard</h3>
-        </div>
-        <mat-nav-list>
-          <mat-list-item routerLink="/admin/" class="nav-item">
-            <mat-icon>home</mat-icon>
-            <span>Dashboard</span>
-          </mat-list-item>
-          <mat-list-item routerLink="/admin/profile" class="nav-item">
-            <mat-icon>account_circle</mat-icon>
-            <span>Profile</span>
-          </mat-list-item>
-          <mat-divider></mat-divider>
-          <mat-list-item routerLink="/admin/categories" class="nav-item">
-            <mat-icon>category</mat-icon>
-            <span>Manage Courses</span>
-          </mat-list-item>
-          <mat-list-item routerLink="/admin/add-category" class="nav-item">
-            <mat-icon>add_circle</mat-icon>
-            <span>Add Course</span>
-          </mat-list-item>
-          <mat-divider></mat-divider>
-          <mat-list-item routerLink="/admin/quizzes" class="nav-item">
-            <mat-icon>assignment</mat-icon>
-            <span>View Quizzes</span>
-          </mat-list-item>
-          <mat-list-item routerLink="/admin/add-quiz" class="nav-item">
-            <mat-icon>post_add</mat-icon>
-            <span>Create Quiz</span>
-          </mat-list-item>
-          <mat-divider></mat-divider>
-          <mat-list-item (click)="logout()" class="nav-item logout-item">
-            <mat-icon>logout</mat-icon>
-            <span>Logout</span>
-          </mat-list-item>
-        </mat-nav-list>
-      </mat-drawer>
+        <mat-drawer #drawer [mode]="isMobile ? 'over' : 'side'" [opened]="!isMobile" class="elegant-drawer"
+          style="position: fixed; top: 58px; height: calc(100vh - 64px); width: 240px;">
 
-      <mat-drawer-content class="main-content">
-        <div class="content-container">
-          <router-outlet></router-outlet>
-        </div>
-      </mat-drawer-content>
-    </mat-drawer-container>
-  </div>
+
+          <div class="nav-header">
+            <mat-icon class="nav-icon">admin_panel_settings</mat-icon>
+            <h3 class="nav-title">ADMIN DASHBOARD</h3>
+          </div>
+          <mat-divider></mat-divider>
+
+          <mat-nav-list>
+            <mat-list-item routerLink="/admin/" class="nav-item" (click)="closeDrawerOnMobile()">
+              <mat-icon matListItemIcon>home</mat-icon>
+              <span matLine>Dashboard</span>
+            </mat-list-item>
+
+            <mat-list-item routerLink="/admin/profile" class="nav-item" (click)="closeDrawerOnMobile()">
+              <mat-icon matListItemIcon>account_circle</mat-icon>
+              <span matLine>Profile</span>
+            </mat-list-item>
+            <mat-list-item routerLink="/admin/categories" class="nav-item" (click)="closeDrawerOnMobile()">
+              <mat-icon matListItemIcon>category</mat-icon>
+              <span matLine>Manage Courses</span>
+            </mat-list-item>
+            <mat-list-item routerLink="/admin/add-category" class="nav-item" (click)="closeDrawerOnMobile()">
+              <mat-icon matListItemIcon>add_circle</mat-icon>
+              <span matLine>Add Course</span>
+            </mat-list-item>
+            <!-- <mat-divider></mat-divider> -->
+            <mat-list-item routerLink="/admin/quizzes" class="nav-item" (click)="closeDrawerOnMobile()">
+              <mat-icon matListItemIcon>assignment</mat-icon>
+              <span matLine>View Quizzes</span>
+            </mat-list-item>
+            <mat-list-item routerLink="/admin/add-quiz" class="nav-item" (click)="closeDrawerOnMobile()">
+              <mat-icon matListItemIcon>post_add</mat-icon>
+              <span matLine>Create Quiz</span>
+            </mat-list-item>
+            <mat-divider></mat-divider>
+            <mat-list-item (click)="logout()" class="nav-item logout-item" (click)="closeDrawerOnMobile()">
+              <mat-icon matListItemIcon>logout</mat-icon>
+              <span matLine>Logout</span>
+            </mat-list-item>
+          </mat-nav-list>
+        </mat-drawer>
+
+        <mat-drawer-content class="main-content">
+          <div class="content-container">
+            <router-outlet></router-outlet>
+          </div>
+        </mat-drawer-content>
+      </mat-drawer-container>
+    </div>
   </div>
 
   <!-- Contact Support Dialog -->
@@ -180,8 +123,8 @@
 
         <mat-form-field appearance="outline" class="form-field">
           <mat-label>Your Email</mat-label>
-          <input matInput placeholder="your@email.com" [formControl]="emailFormControl" 
-                 [(ngModel)]="mailInfo.mailFrom" name="mailFrom" required>
+          <input matInput placeholder="your@email.com" [formControl]="emailFormControl" [(ngModel)]="mailInfo.mailFrom"
+            name="mailFrom" required>
           <mat-icon matSuffix>email</mat-icon>
           <mat-error *ngIf="emailFormControl.hasError('email') && !emailFormControl.hasError('required')">
             Please enter a valid email address
@@ -200,9 +143,8 @@
 
         <mat-form-field appearance="outline" class="form-field">
           <mat-label>Your Message</mat-label>
-          <textarea matInput cdkTextareaAutosize #autosize="cdkTextareaAutosize" 
-                    name="mailContent" [(ngModel)]="mailInfo.mailContent" required
-                    cdkAutosizeMinRows="5" cdkAutosizeMaxRows="10"></textarea>
+          <textarea matInput cdkTextareaAutosize #autosize="cdkTextareaAutosize" name="mailContent"
+            [(ngModel)]="mailInfo.mailContent" required cdkAutosizeMinRows="5" cdkAutosizeMaxRows="10"></textarea>
         </mat-form-field>
 
         <div mat-dialog-actions class="dialog-actions">

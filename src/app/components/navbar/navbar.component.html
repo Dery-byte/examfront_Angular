@@ -6,20 +6,23 @@
 <div class="navbar">
 
 
-  <header @fadeIn *ngIf="!isloggedIn">
+  <header @fadeIn >
     <mat-toolbar color="primary" class="mat-elevation-z8">
       <span>OTC LTD</span>
       <span class="example-spacer"></span>
-      <!-- <a mat-button routerLink="/">Home</a> -->
+      <!-- <a mat-button routerLink="/">
+                    <mat-icon>home</mat-icon>
+        Home</a> -->
     
 
-      <a *ngIf="!isloggedIn" [routerLink]="'/signup'" mat-button aria-label="Example icon-button with heart icon">
+      <a  [routerLink]="'/signup'" mat-button aria-label="Example icon-button with heart icon">
+                    <mat-icon>person_add</mat-icon>
         Register </a>
-      <button *ngIf="!isloggedIn" mat-raised-button color="primary" routerLink="/login">Login</button>
+      <button  mat-raised-button color="accent" routerLink="/login">
+                    <mat-icon>login</mat-icon>
+        Login</button>
     </mat-toolbar>
   </header>
-
-  <!-- IF LOGGED IN NAVBAR FOR NORMAL USER-->
 
 
 
