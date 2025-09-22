@@ -1,14 +1,16 @@
 <app-navbar></app-navbar>
+<div class="page-container">
+  <main class="main-content">
 
 <div class="login-container">
   <div class="login-background"></div>
   <div class="login-card-wrapper">
     <mat-card class="login-card">
-      <div class="logo-container">
+      <!-- <div class="logo-container">
         <div class="logo-frame">
           <img class="logo" src="../../../assets/logo1.jpg" alt="Company Logo">
         </div>
-      </div>
+      </div> -->
 
       <mat-card class="form-card">
         <form (ngSubmit)="formSubmit()">
@@ -66,87 +68,13 @@
 
 
 
-<!-- Password Reset Dialog -->
-<!--  
-<ng-template #updateDialog let-data="data">
-  <div class="dialog-container">
-    <div class="dialog-header">
-      <h1 mat-dialog-title>Reset Password</h1>
-      <div class="dialog-divider"></div>
-    </div>
-    
-    <div mat-dialog-content class="dialog-content">
-      <mat-form-field appearance="fill" class="full-width-field">
-        <mat-label>Username</mat-label>
-        <input [(ngModel)]="resetData.username" required name="username" type="text" matInput required
-          placeholder="Enter your username">
-        <mat-icon matPrefix>person_outline</mat-icon>
-      </mat-form-field>
-      
-      <mat-form-field appearance="fill" class="full-width-field">
-        <mat-label>Email</mat-label>
-        <input [(ngModel)]="resetData.email" name="email" type="email" matInput placeholder="Enter your email">
-        <mat-icon matPrefix>email</mat-icon>
-      </mat-form-field>
-      
-      <mat-form-field appearance="fill" class="full-width-field">
-        <mat-label>New Password</mat-label>
-        <input [(ngModel)]="resetData.password" required name="newpassword" 
-          [type]="hideNewPassword ? 'password' : 'text'" matInput
-          placeholder="Enter new password">
-        <mat-icon matPrefix>lock_reset</mat-icon>
-        <button type="button" mat-icon-button matSuffix (click)="hideNewPassword = !hideNewPassword" class="password-toggle">
-          <mat-icon>{{hideNewPassword ? 'visibility_off' : 'visibility'}}</mat-icon>
-        </button>
-      </mat-form-field>
-      
-      <mat-form-field appearance="fill" class="full-width-field">
-        <mat-label>Confirm Password</mat-label>
-        <input [(ngModel)]="resetData.confirmPassword" required name="confirmPassword" 
-          [type]="hideConfirmPassword ? 'password' : 'text'" matInput
-          placeholder="Confirm new password">
-        <mat-icon matPrefix>lock_reset</mat-icon>
-        <button type="button" mat-icon-button matSuffix (click)="hideConfirmPassword = !hideConfirmPassword" class="password-toggle">
-          <mat-icon>{{hideConfirmPassword ? 'visibility_off' : 'visibility'}}</mat-icon>
-        </button>
-      </mat-form-field>
-    </div>
-    
-    <div mat-dialog-actions class="dialog-actions">
-      <button mat-stroked-button (click)="dialogRef.close()">
-        <mat-icon>close</mat-icon>
-        Cancel
-      </button>
-      <button mat-raised-button class="update-button" (click)="passwordChange()">
-        <mat-icon>lock_reset</mat-icon>
-        Update Password
-      </button>
-    </div>
-  </div>
-</ng-template>
-
-<footer class="footer">
-  <div class="footer-content">
-    <p class="copyright">&copy; 2024 ACL. All rights reserved.</p>
-    <div class="footer-divider"></div>
-    <nav class="footer-links">
-      <a mat-button routerLink="/privacy">
-        <mat-icon>privacy_tip</mat-icon>
-        Privacy Policy
-      </a>
-      <a mat-button routerLink="/terms">
-        <mat-icon>description</mat-icon>
-        Terms of Service
-      </a>
-    </nav>
-  </div>
-</footer> -->
-
 
 
 
 
 <!-- MODAL TO SEND RESET PASSWORD LINK -->
+
+
 <ng-template #updateDialog let-data="data">
   <div class="dialog-container">
     <div class="dialog-header">
@@ -191,13 +119,13 @@
         <div mat-dialog-actions class="dialog-actions">
           <button mat-stroked-button type="button" (click)="dialogRef.close()">
             <mat-icon>close</mat-icon>
-            Cancel
+            Close
           </button>
 
           <button mat-raised-button color="primary" type="submit" [disabled]="isSubmitting"
             style="display: flex; align-items: center; gap: 8px;">
             <mat-icon *ngIf="!isSubmitting">lock_reset</mat-icon>
-            <span>{{ isSubmitting ? 'Sending...' : 'Send Reset Link' }}</span>
+            <span>{{ isSubmitting ? 'Sending...' : 'Send Link' }}</span>
           </button>
         </div>
       </form>
@@ -216,6 +144,7 @@
 
 
 
+  </main>
 
 
 
@@ -225,7 +154,7 @@
 
 <footer class="footer">
   <div class="footer-content">
-    <p class="copyright">&copy; 2024 ACL. All rights reserved.</p>
+    <p class="copyright">&copy; 2025 OTC. All rights reserved.</p>
     <div class="footer-divider"></div>
     <nav class="footer-links">
       <a mat-button routerLink="/privacy">
@@ -239,3 +168,4 @@
     </nav>
   </div>
 </footer>
+</div>

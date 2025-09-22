@@ -28,9 +28,9 @@ export class LoginComponent implements OnInit {
 
 
 
-hidePassword = true;
-hideNewPassword = true;
-hideConfirmPassword = true;
+  hidePassword = true;
+  hideNewPassword = true;
+  hideConfirmPassword = true;
 
 
 
@@ -85,11 +85,16 @@ hideConfirmPassword = true;
   dialogRef!: MatDialogRef<any>;
 
 
+
+
   //  ============================OPEN DIALOGY FANCY=======================================
   openUpdateDialog(templateRef: TemplateRef<any>): void {
     // Fetch question details based on ID
     this.dialogRef = this.dialog.open(templateRef, {
+      disableClose: true,  // ⬅️ prevents closing on backdrop click or ESC
       width: '350px',
+        panelClass: 'custom-dialog-container'
+
     });
 
     this.dialogRef.afterClosed().subscribe(result => {
@@ -196,7 +201,7 @@ hideConfirmPassword = true;
   }
 
   deleteSelectedProducts() { }
-  
+
   loading = false;
 
 
@@ -214,7 +219,7 @@ hideConfirmPassword = true;
       });
       return;
     }
-   
+
     if (this.loginData.username.trim() == ' ' || this.loginData.password == null) {
       this.isLogingIn = true;
 
@@ -278,8 +283,8 @@ hideConfirmPassword = true;
   }
 
 
-   showSuccessMessage = false;
-    isSubmitting = false;
+  showSuccessMessage = false;
+  isSubmitting = false;
   loginError = '';
   passwordVisible = false;
 
@@ -290,58 +295,58 @@ hideConfirmPassword = true;
 
 
 
-onForgotPasswordSubmit(form?: NgForm) {
-  // Validate email: empty or invalid format
-  if (!this.resetData.email || !this.isValidEmail(this.resetData.email)) {
-    if (form) form.control.markAllAsTouched(); // show validation errors
-    return;
-  }
+  onForgotPasswordSubmit(form?: NgForm) {
+    // Validate email: empty or invalid format
+    if (!this.resetData.email || !this.isValidEmail(this.resetData.email)) {
+      if (form) form.control.markAllAsTouched(); // show validation errors
+      return;
+    }
 
-  this.isSubmitting = true;
-  this.showSuccessMessage = false;
-  this.apiError = null;
+    this.isSubmitting = true;
+    this.showSuccessMessage = false;
+    this.apiError = null;
 
-  const email = this.resetData.email;
-  console.log(email);
+    const email = this.resetData.email;
+    console.log(email);
 
-  this.login.requestPasswordResetLink(email).subscribe({
-    next: () => {
-       this.successEmail = email;      
+    this.login.requestPasswordResetLink(email).subscribe({
+      next: () => {
+        this.successEmail = email;
 
-  if (form) {
-    form.resetForm();             // reset first
-  }
-  this.resetData.email = '';      // clear model
+        if (form) {
+          form.resetForm();             // reset first
+        }
+        this.resetData.email = '';      // clear model
 
-  this.showSuccessMessage = true; // now hide the form
-    },
-    error: (err) => {
-      console.error('Password reset error:', err);
-      this.apiError = err.error?.message || 'Failed to send reset link. Please try again.';
+        this.showSuccessMessage = true; // now hide the form
+      },
+      error: (err) => {
+        console.error('Password reset error:', err);
+        this.apiError = err.error?.message || 'Failed to send reset link. Please try again.';
         this.isSubmitting = false;
 
-    },
-    complete: () => {
-      this.isSubmitting = false;
-    }
-  });
-}
+      },
+      complete: () => {
+        this.isSubmitting = false;
+      }
+    });
+  }
 
-// Helper function to check valid email
-isValidEmail(email: string): boolean {
-  const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
-  return emailRegex.test(email);
-}
+  // Helper function to check valid email
+  isValidEmail(email: string): boolean {
+    const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+    return emailRegex.test(email);
+  }
 
-onCloseDialog() {
+  onCloseDialog() {
     this.dialogRef.close();
-  // reset state so the form shows next time
-  this.showSuccessMessage = false;
-  this.apiError = null;
-  this.successEmail = null;
-  this.resetData.email = '';
+    // reset state so the form shows next time
+    this.showSuccessMessage = false;
+    this.apiError = null;
+    this.successEmail = null;
+    this.resetData.email = '';
 
-}
+  }
 
   resetPasswordForm() {
     this.resetData.username = '',

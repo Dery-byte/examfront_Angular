@@ -1,10 +1,11 @@
 <app-navbar></app-navbar>
 
+<div class="reg_container">
 <div class="registration-container">
   <mat-card class="registration-card">
     <div class="registration-header">
-      <img class="registration-logo" src="../../../assets/logo1.jpg" alt="Company Logo">
-      <h1 class="registration-title">Create Your Account</h1>
+      <!-- <img class="registration-logo" src="../../../assets/logo1.jpg" alt="Company Logo"> -->
+      <h1 class="registration-title">Create an Account</h1>
       <p class="registration-subtitle">Join our platform to get started</p>
     </div>
 
@@ -29,7 +30,7 @@
           <mat-label>Username</mat-label>
           <input [(ngModel)]="user.username" name="username" matInput required>
           <mat-icon matPrefix>alternate_email</mat-icon>
-          <mat-hint align="end">Must be unique</mat-hint>
+          <mat-hint align="end">Must be unique( i.e Student ID)</mat-hint>
         </mat-form-field>
 
         <!-- Contact Fields Row -->
@@ -83,4 +84,6 @@
       </div>
     </form>
   </mat-card>
+</div>
+
 </div>

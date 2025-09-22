@@ -1,59 +1,76 @@
+/* Container */
 
+.reg_container{
+   display: flex;
+  align-items: center; /* center login vertically */
+  justify-content: center;
+    margin: 0;
+  background: linear-gradient(to right, #232423, #393a3a);
+  /* light gray gradient, very professional */
+  font-family: 'Roboto', sans-serif;
+
+}
 .registration-container {
   display: flex;
   justify-content: center;
   align-items: center;
-  min-height: calc(100vh - 64px); 
-  padding: 1rem;
-  background: #f5f7fa;
+  min-height: 100vh;
+  /* background: #f4f6f9; */
+  padding: 20px;
 }
 
+/* Card */
 .registration-card {
+  max-width: 600px;
   width: 100%;
-  max-width: 800px;
-  border-radius: 12px;
-  overflow: hidden;
-  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.08);
-  margin: 1rem;
-  
-  @include mat.elevation(4);
+  padding: 30px 40px;
+  border-radius: 16px;
+  box-shadow: 0 8px 20px rgba(0,0,0,0.08);
+  background: #fff;
+  transition: all 0.3s ease-in-out;
 }
 
+.registration-card:hover {
+  transform: translateY(-3px);
+  box-shadow: 0 12px 28px rgba(0,0,0,0.12);
+}
+
+/* Header */
 .registration-header {
   text-align: center;
-  padding: 2rem 2rem 1rem;
-  background: linear-gradient(135deg, #3f51b5 0%, #2196f3 100%);
-  color: white;
+  margin-bottom: 25px;
 }
 
 .registration-logo {
-  width: 100px;
-  height: 100px;
+  width: 70px;
+  height: 70px;
   border-radius: 50%;
-  object-fit: cover;
-  border: 3px solid rgba(255, 255, 255, 0.2);
-  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+  margin-bottom: 15px;
 }
 
 .registration-title {
   font-size: 1.8rem;
-  font-weight: 500;
-  margin: 1rem 0 0.5rem;
+  font-weight: 600;
+  color: #333;
+  margin: 0;
 }
 
 .registration-subtitle {
-  font-size: 1rem;
-  opacity: 0.9;
-  margin-bottom: 0;
+  font-size: 0.95rem;
+  color: #6c757d;
 }
 
+/* Form Layout */
 .registration-form {
-  padding: 2rem;
-  
-  .form-grid {
-    display: grid;
-    gap: 1.5rem;
-  }
+  display: flex;
+  flex-direction: column;
+  /* gap: 20px; */
+}
+
+.form-grid {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
 }
 
 .name-fields,
@@ -61,69 +78,61 @@
 .password-fields {
   display: grid;
   grid-template-columns: 1fr 1fr;
-  gap: 1rem;
-  
-  @media (max-width: 600px) {
-    grid-template-columns: 1fr;
-  }
+  gap: 15px;
 }
 
+/* Material form field overrides */
 mat-form-field {
   width: 100%;
-  
-  .mat-icon {
-    color: rgba(0, 0, 0, 0.54);
-  }
 }
 
+mat-label {
+  font-weight: 500;
+  color: #0e0c0c;
+}
+
+mat-icon {
+  color: #180a2b;
+}
+
+/* Submit Button */
 .submit-button {
-  width: 100%;
-  padding: 12px;
-  margin-top: 1rem;
+  /* margin-top: 15px; */
+  padding: 12px 20px;
   font-size: 1rem;
+  font-weight: 600;
   border-radius: 8px;
-  height: 48px;
-  
-  .button-content {
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    gap: 8px;
-  }
+  text-transform: none;
+  display: flex;
+  justify-content: center;
+  align-items: center;
 }
 
+.button-content {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.submit-button span {
+  letter-spacing: 0.5px;
+}
+
+/* Login Redirect */
 .login-redirect {
+  /* margin-top: 20px; */
   text-align: center;
-  margin-top: 1.5rem;
-  color: #666;
-  
-  a {
-    text-decoration: none;
-    padding: 0 4px;
-  }
+  font-size: 0.95rem;
+  color: #555;
 }
 
-@media (max-width: 960px) {
-  .registration-card {
-    margin: 1rem;
-  }
+.login-redirect a {
+  font-weight: 600;
+  text-decoration: none;
+  color: #1976d2;
+  transition: color 0.2s ease-in-out;
 }
 
-@media (max-width: 600px) {
-  .registration-header {
-    padding: 1.5rem 1rem;
-  }
-  
-  .registration-form {
-    padding: 1.5rem;
-  }
-  
-  .registration-logo {
-    width: 80px;
-    height: 80px;
-  }
-  
-  .registration-title {
-    font-size: 1.5rem;
-  }
+.login-redirect a:hover {
+  color: #0d47a1;
 }
