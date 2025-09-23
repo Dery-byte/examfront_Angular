@@ -1,6 +1,3 @@
-
-
-
 <div class="">
   <!-- Full-width header (12 columns) - Made sticky -->
   <div class="container-fluid sticky-top" style="position: sticky; top: 0; z-index: 1000;">
@@ -8,17 +5,17 @@
       <div class="col-md-12">
 
 
-       <mat-toolbar color="accent" class="mat-elevation-z8 toolbar-responsive">
-  <button (click)="drawer.toggle()" mat-icon-button>
-    <mat-icon>menu</mat-icon>
-  </button>
-  <span mat-icon-button class="example-icon favorite-icon username username-responsive" aria-label="Username">
-    {{ user.username | uppercase }}
-  </span>
-  <span mat-icon-button class="tokeExpire session-timer-responsive" aria-label="Session timer">
-    <span [ngClass]="timeLeftDisplay?.className">Your session expires in: {{ timeLeftDisplay?.display }}</span>
-  </span>
-</mat-toolbar>
+        <mat-toolbar color="accent" class="mat-elevation-z8 toolbar-responsive">
+          <button (click)="drawer.toggle()" mat-icon-button>
+            <mat-icon>menu</mat-icon>
+          </button>
+          <span mat-icon-button class="example-icon favorite-icon username username-responsive" aria-label="Username">
+            {{ user.username | uppercase }}
+          </span>
+          <span mat-icon-button class="tokeExpire session-timer-responsive" aria-label="Session timer">
+            <span [ngClass]="timeLeftDisplay?.className">Your session expires in: {{ timeLeftDisplay?.display }}</span>
+          </span>
+        </mat-toolbar>
 
       </div>
     </div>
@@ -30,74 +27,65 @@
 
 
     <!-- Navigation drawer (3 columns) - Made fixed -->
-   <!-- <mat-drawer #drawer opened="true" mode="side" class="elegant-drawer" 
+    <!-- <mat-drawer #drawer opened="true" mode="side" class="elegant-drawer" 
             style="position: fixed; top: 58px; height: calc(100vh - 64px); width: 240px;"> -->
 
-            <mat-drawer
-    #drawer
-    [mode]="isMobile ? 'over' : 'side'"
-    [opened]="!isMobile"
-    class="elegant-drawer"
-    style="position: fixed; top: 58px; height: calc(100vh - 64px); width: 240px;"
-  >
+    <mat-drawer #drawer [mode]="isMobile ? 'over' : 'side'" [opened]="!isMobile" class="elegant-drawer"
+      style="position: fixed; top: 58px; height: calc(100vh - 64px); width: 240px;">
 
 
 
 
-  <mat-nav-list>
-    <!-- Header Section -->
-    <div class="drawer-header">
-      <mat-icon class="header-icon">account_circle</mat-icon>
-      <h3 class="user-name">{{ user.username | uppercase }}</h3>
-    </div>
-    
-    <mat-divider></mat-divider>
-    
-    <!-- Navigation Items -->
-    <mat-list-item class="nav-item" routerLink="/user-dashboard/0" (click)="closeDrawerOnMobile()">
-      <mat-icon class="nav-icon">home</mat-icon>
-      <span class="nav-text">Home</span>
-    </mat-list-item>
-    
-    <mat-list-item class="nav-item" routerLink="/user-dashboard/register" (click)="closeDrawerOnMobile()">
-      <mat-icon class="nav-icon">explore</mat-icon>
-      <span class="nav-text">Register Courses</span>
-    </mat-list-item>
-    
-    <mat-list-item class="nav-item" routerLink="/user-dashboard/courses" (click)="closeDrawerOnMobile()">
-      <mat-icon class="nav-icon">table_chart</mat-icon>
-      <span class="nav-text">Available Courses</span>
-    </mat-list-item>
-    
-    <mat-list-item class="nav-item" routerLink="/user-dashboard/quizzes" (click)="closeDrawerOnMobile()">
-      <mat-icon class="nav-icon">quiz</mat-icon>
-      <span class="nav-text">Available Quizzes</span>
-    </mat-list-item>
-    
-    <mat-divider></mat-divider>
-    
-    <!-- Logout Item -->
-    <mat-list-item class="nav-item logout-item" (click)="logout(); closeDrawerOnMobile()">
-      <mat-icon class="nav-icon">logout</mat-icon>
-      <span class="nav-text" >Logout</span>
-    </mat-list-item>
-  </mat-nav-list>
-</mat-drawer>
+      <mat-nav-list>
+        <!-- Header Section -->
+        <div class="drawer-header">
+          <mat-icon class="header-icon">account_circle</mat-icon>
+          <h3 class="user-name">{{ user.username | uppercase }}</h3>
+        </div>
+
+        <mat-divider></mat-divider>
+
+        <!-- Navigation Items -->
+        <mat-list-item class="nav-item" routerLink="/user-dashboard/0" (click)="closeDrawerOnMobile()">
+          <mat-icon class="nav-icon" matListItemIcon>home</mat-icon>
+          <span class="nav-text">Home</span>
+        </mat-list-item>
+
+        <mat-list-item class="nav-item" routerLink="/user-dashboard/register" (click)="closeDrawerOnMobile()">
+          <mat-icon matListItemIcon class="nav-icon">explore</mat-icon>
+          <span class="nav-text">Register Courses</span>
+        </mat-list-item>
+
+        <mat-list-item class="nav-item" routerLink="/user-dashboard/courses" (click)="closeDrawerOnMobile()">
+          <mat-icon matListItemIcon class="nav-icon">table_chart</mat-icon>
+          <span class="nav-text">My Courses</span>
+        </mat-list-item>
+
+        <mat-list-item class="nav-item" routerLink="/user-dashboard/quizzes" (click)="closeDrawerOnMobile()">
+          <mat-icon matListItemIcon class="nav-icon">quiz</mat-icon>
+          <span class="nav-text">Available Quizzes</span>
+        </mat-list-item>
+
+        <mat-divider></mat-divider>
+
+        <!-- Logout Item -->
+        <mat-list-item class="nav-item logout-item" (click)="logout(); closeDrawerOnMobile()">
+          <mat-icon class="nav-icon" matListItemIcon>logout</mat-icon>
+          <span class="nav-text">Logout</span>
+        </mat-list-item>
+      </mat-nav-list>
+    </mat-drawer>
     <!-- Main content (9 columns) - Added scrollable area -->
 
 
-    
+
     <mat-drawer-content class="col-md-10">
       <div style="min-height: calc(100vh - 160px); padding: 4px;">
         <router-outlet></router-outlet>
       </div>
     </mat-drawer-content>
-
-
-
-
-
   </mat-drawer-container>
+</div>
 
 
 
@@ -124,128 +112,10 @@
 
 
 
+<!-- Email dialog template (unchanged) -->
 
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-  
-  <!-- Email dialog template (unchanged) -->
+<!--   
   <ng-template #updateDialog let-data="data">
     <h1 mat-dialog-title>Send your inquiry or complaint</h1>
     <div mat-dialog-content>
@@ -276,5 +146,4 @@
         <button mat-button (click)="sendEmail()">Send Mail</button>
       </div>
     </div>
-  </ng-template>
-</div>
+  </ng-template> -->

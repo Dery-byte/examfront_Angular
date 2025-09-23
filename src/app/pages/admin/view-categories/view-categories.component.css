@@ -35,6 +35,8 @@
 .add-course-btn {
   border-radius: 8px;
   padding: 8px 16px;
+
+  margin-left: 90px;
   font-weight: 500;
   transition: all 0.3s ease;
 }
@@ -272,6 +274,8 @@ mat-form-field {
   
   .add-course-btn {
     width: 100%;
+      margin-left: 0px;
+
   }
   
   .elegant-table th, 

@@ -4,3 +4,64 @@
 
     font-size: 23px;
 }
+
+
+/* Alternatively, target the mat-form-field directly */
+@media (max-width: 768px) {
+  .mat-form-field {
+    width: 100%;
+  }
+}
+
+.responsive-select {
+  width: 100%;
+}
+
+
+
+
+
+
+
+
+
+
+.info-card {
+  background: #ffffff;
+  border: 1px solid #e5e7eb;   /* light gray border */
+  border-radius: 0.75rem;      /* rounded corners */
+  padding: 2rem;
+  max-width: 600px;
+  margin: 2rem auto;           /* center in container */
+  box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1); /* soft shadow */
+  text-align: center;
+}
+
+.info-card h2 {
+  margin-bottom: 0.5rem;
+  color: #1e293b;  /* slate color */
+}
+
+.info-card p {
+  color: #475569;  /* softer gray-blue text */
+  font-size: 1rem;
+}
+
+
+/* Prevent bottom whitespace */
+.bootstrap-wrapper {
+  min-height: 100vh;
+  display: flex;
+  flex-direction: column;
+}
+
+/* Main content should not hide behind footer */
+.container-fluid {
+  flex: 1; /* take remaining height */
+  padding-bottom: 80px; /* same or slightly more than footer height */
+}
+
+/* Remove extra margin from last mat-card */
+.container-fluid .mat-card:last-child {
+  margin-bottom: 0;
+}

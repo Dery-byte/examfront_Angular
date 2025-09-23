@@ -73,11 +73,11 @@ const routes: Routes = [
         component: ProfileComponent,
       },
       {
-        path: 'categories',
+        path: 'courses',
         component: ViewCategoriesComponent,
       },
       {
-        path: 'add-category',
+        path: 'add-course',
         component: AddCategoryComponent,
       },
       // {

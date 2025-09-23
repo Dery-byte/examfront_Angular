@@ -36,12 +36,11 @@
           <mat-select name="level" [(ngModel)]="category.level" required>
             <mat-option *ngFor="let level of levels" [value]="level">
               <div class="level-option">
-                <mat-icon class="level-icon">school</mat-icon>
+                <mat-icon>school</mat-icon>
                 <span>{{level}}</span>
               </div>
             </mat-option>
           </mat-select>
-          <mat-icon matSuffix>arrow_drop_down</mat-icon>
         </mat-form-field>
 
         <!-- Description -->

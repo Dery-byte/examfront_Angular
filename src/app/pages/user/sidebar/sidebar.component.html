@@ -4,35 +4,38 @@
     <mat-nav-list>
       <mat-list-item>
         <button mat-button routerLink="/user-dashboard/0">
-          <mat-icon>home</mat-icon> Home
+          <mat-icon matListItemIcon>home</mat-icon> 
+          
+                        <span matLine>Home</span>
+
         </button>
       </mat-list-item>
       <mat-list-item>
         <button mat-button routerLink="/user-dashboard/register">
-          <mat-icon>explore</mat-icon> Register Courses
+          <mat-icon matListItemIcon>explore</mat-icon> Register Courses
         </button>
       </mat-list-item>
 
       <mat-list-item>
         <button mat-button routerLink="/user-dashboard/courses">
-          <mat-icon>table</mat-icon> Available Courses
+          <mat-icon matListItemIcon>table</mat-icon> My Courses
         </button>
       </mat-list-item>
       <mat-list-item>
         <button mat-button routerLink="/user-dashboard/quizzes">
-          <mat-icon>settings</mat-icon> Available Quizzes
+          <mat-icon matListItemIcon>settings</mat-icon> Available Quizzes
         </button>
       </mat-list-item>
 
       <mat-list-item>
         <button mat-button (click)="openUpdateDialog(updateDialog)">
-          <mat-icon class="icon-position">email</mat-icon> Send us a Mail
+          <mat-icon matListItemIcon class="icon-position">email</mat-icon> Send us a Mail
         </button>
       </mat-list-item>
 
       <mat-list-item>
         <button mat-button (click)="logout()">
-          <mat-icon>logout</mat-icon> Logout
+          <mat-icon matListItemIcon>logout</mat-icon> Logout
         </button>
       </mat-list-item>
     </mat-nav-list>

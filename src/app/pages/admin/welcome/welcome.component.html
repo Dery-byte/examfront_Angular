@@ -102,25 +102,16 @@
         </div>
 
 
-
         <div class="col-md-4">
           <mat-card-content align="right">
-            <mat-form-field>
+            <mat-form-field class="responsive-select">
               <mat-label>Select Course</mat-label>
-
-
               <mat-select name="category" [(ngModel)]="selectedCategoryId"
                 (selectionChange)="selectCategory(selectedCategoryId)">
                 <mat-option *ngFor="let c of cateGory" [value]="c.cid">
                   {{c.title}}
                 </mat-option>
               </mat-select>
-
-
-
-
-
-
             </mat-form-field>
           </mat-card-content>
         </div>
@@ -128,7 +119,7 @@
 
         <div class="col-md-4">
           <mat-card-content align="right">
-            <mat-form-field>
+            <mat-form-field class="responsive-select">
               <mat-label>Select Quiz</mat-label>
               <mat-select name="category" [(ngModel)]="qId" (selectionChange)="onQuizOptionSelected()">
                 <mat-option *ngFor="let q of associatedQuizzes" [value]="q.qId">
@@ -150,7 +141,7 @@
               <mat-card-header>
                 <mat-card-title>
                   <mat-icon mat-list-icon class="icon-position">people</mat-icon>
-                  No. of Participants
+                  Participants
                   <p>{{ totalQuizTakers }}</p>
                 </mat-card-title>
               </mat-card-header>
@@ -252,66 +243,21 @@
 
 
 
-      <div class="container text-center" *ngIf="reportsData.length == 0">
+      <!-- <div class="container text-center" *ngIf="reportsData.length == 0">
         <h1>Select Course and quiz to load results here</h1>
+      </div> -->
+
+      <mat-divider></mat-divider>
+
+      <div class="container" *ngIf="reportsData.length == 0">
+        <div class="info-card text-center">
+          <h2>Select Course and Quiz</h2>
+          <p>Please select a course and quiz to load results here.</p>
+        </div>
       </div>
 
+
       <div class="row">
-        <!-- <div class="col-md-4">
-
-          <mat-card class="mt20">
-
-            <mat-card-header>
-              <div mat-card-avatar class="example-header-image"></div>
-              <mat-card-title>
-                Unique Participants
-              </mat-card-title>
-
-              <mat-card-subtitle>
-                Number of participants over time.
-              </mat-card-subtitle>
-            </mat-card-header>
-            <mat-card-content>
-
-
-
-              <mat-form-field class="example-form-field">
-                <mat-label>Start Date</mat-label>
-                <input matInput [matDatepicker]="datepicker">
-                <mat-datepicker-toggle matIconSuffix [for]="datepicker"></mat-datepicker-toggle>
-                <mat-datepicker #datepicker>
-                  <mat-datepicker-actions>
-                    <button mat-button matDatepickerCancel>Cancel</button>
-                    <button mat-raised-button color="primary" matDatepickerApply>Apply</button>
-                  </mat-datepicker-actions>
-                </mat-datepicker>
-              </mat-form-field>
-
-              <mat-form-field class="example-form-field">
-                <mat-label>End Date</mat-label>
-                <input matInput [matDatepicker]="picker">
-                <mat-datepicker-toggle matIconSuffix [for]="picker"></mat-datepicker-toggle>
-                <mat-datepicker #picker></mat-datepicker>
-                <mat-date-range-picker #rangePicker>
-                  <mat-date-range-picker-actions>
-                    <button mat-button matDateRangePickerCancel>Cancel</button>
-                    <button mat-raised-button color="primary" matDateRangePickerApply>Apply</button>
-                  </mat-date-range-picker-actions>
-                </mat-date-range-picker>
-              </mat-form-field>
-
-            </mat-card-content>
-            <mat-card-actions>
-              <button mat-flat-button color="accent">Load Data</button>
-
-            </mat-card-actions>
-          </mat-card>
-        </div> -->
-
-
-
-
-
         <div class="col-md-12">
           <mat-card class="mt20">
             <mat-card-content>

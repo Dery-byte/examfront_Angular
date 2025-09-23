@@ -1,14 +1,4 @@
-/* #second{
-    font-size: 34px;
-    color:red;
-    margin-left: 20px;
-    float: left;
-    text-align: center;
-}
- */
 
-
- /* home.component.css */
 .home-container {
     text-align: center;
     font-family: 'Roboto', sans-serif;
@@ -16,7 +6,8 @@
    
   
   .footer  {
-    background-color: #3f51b5;
+   /* background: linear-gradient(180deg, #160150 0%, #053a6e 100%); */
+   background: white;
     color: white;
     padding: 1rem;
   }
