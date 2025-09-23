@@ -372,7 +372,9 @@ body {
   right: 0;
   height: var(--header-height);
   z-index: 100;
-  box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+  /* box-shadow: 0 2px 5px rgba(0,0,0,0.1); */
+    background: #021f4d; /* dark slate background */
+
 }
 
 /* Dashboard Content Wrapper */

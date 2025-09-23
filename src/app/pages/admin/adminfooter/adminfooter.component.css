@@ -3,7 +3,9 @@
   bottom: 0;
   left: 0;
   width: 100%;
-  background-color: #021f4d; /* dark slate background */
+  background-color: #020a16; /* dark slate background */
+    box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+
   color: #fff;
   padding: 0.8rem 2rem;
   display: flex;
@@ -12,14 +14,27 @@
   z-index: 1000;
 }
 
-.footer-content {
+/* .footer-content {
   display: flex;
-  flex-direction: row;  /* content arranged in a row */
+  flex-direction: row;  
   justify-content: space-between;
   align-items: center;
   width: 100%;
-  max-width: 1200px;  /* keeps it neat */
+  max-width: 1200px;  
+} */
+
+
+
+.footer-content {
+  display: flex;
+  flex-direction: row;  
+  justify-content: space-between; /* pushes text left, links right */
+  align-items: center;
+  width: 100%;
+  max-width: 1200px;  
+  margin: 0 auto; /* centers the whole block */
 }
+
 
 .footer-links {
   display: flex;

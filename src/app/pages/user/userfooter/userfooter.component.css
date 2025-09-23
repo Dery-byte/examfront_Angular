@@ -1,14 +1,104 @@
+.footer {
+  position: fixed;
+  bottom: 0;
+  left: 0;
+  width: 100%;
+  background: linear-gradient(135deg, #021f4d 0%, #021f4d 90%); /* gradient background */
+  color: #fff;
+  padding: 1.5rem 2rem;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  z-index: 1000;
+  border-top: 3px solid #9b925e; /* gold accent line */
+  box-shadow: 0 -4px 12px rgba(0, 0, 0, 0.15); /* subtle shadow above footer */
+  font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+}
 
-.home-container {
-    text-align: center;
-    font-family: 'Roboto', sans-serif;
-  } 
-   
-  
-  .footer  {
-   /* background: linear-gradient(180deg, #160150 0%, #053a6e 100%); */
-   background: white;
-    color: white;
-    padding: 1rem;
+.footer-content {
+  display: flex;
+  flex-direction: row;
+  justify-content: space-between;
+  align-items: center;
+  width: 100%;
+  max-width: 1200px;
+}
+
+.footer p {
+  margin: 0;
+  font-size: 0.95rem;
+  font-weight: 400;
+  opacity: 0.9;
+}
+
+.footer nav {
+  display: flex;
+  gap: 2rem;
+}
+
+.footer nav a {
+  color: #fff;
+  text-decoration: none;
+  font-weight: 500;
+  font-size: 0.9rem;
+  padding: 0.5rem 0;
+  position: relative;
+  transition: all 0.3s ease;
+  opacity: 0.85;
+}
+
+.footer nav a:hover {
+  opacity: 1;
+  transform: translateY(-1px);
+}
+
+.footer nav a::after {
+  content: '';
+  position: absolute;
+  width: 0;
+  height: 2px;
+  bottom: 0;
+  left: 50%;
+  transition: all 0.3s ease;
+  transform: translateX(-50%);
+}
+
+.footer nav a:hover::after {
+  width: 100%;
+}
+
+/* Responsive design for mobile */
+@media (max-width: 768px) {
+  .footer {
+    padding: 1rem 1.5rem;
   }
   
+  .footer-content {
+    flex-direction: column;
+    gap: 1rem;
+    text-align: center;
+  }
+  
+  .footer nav {
+    gap: 1.5rem;
+  }
+  
+  .footer p {
+    font-size: 0.9rem;
+  }
+  
+  .footer nav a {
+    font-size: 0.85rem;
+  }
+}
+
+/* Optional: Add a subtle pattern or texture */
+.footer::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  height: 1px;
+  background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.2), transparent);
+}
