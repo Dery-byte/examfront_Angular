@@ -6,7 +6,6 @@
   justify-content: center;
     margin: 0;
   background: linear-gradient(to right, #232423, #393a3a);
-  /* light gray gradient, very professional */
   font-family: 'Roboto', sans-serif;
 
 }
@@ -15,7 +14,6 @@
   justify-content: center;
   align-items: center;
   min-height: 100vh;
-  /* background: #f4f6f9; */
   padding: 20px;
 }
 
@@ -35,30 +33,66 @@
   box-shadow: 0 12px 28px rgba(0,0,0,0.12);
 }
 
+
+
+
+
+
+
+
 /* Header */
 .registration-header {
   text-align: center;
-  margin-bottom: 25px;
+  border-radius: 12px;
+  max-width: 600px;
+  margin: 25px auto;
 }
 
-.registration-logo {
-  width: 70px;
-  height: 70px;
-  border-radius: 50%;
-  margin-bottom: 15px;
+.registration-header h1 {
+  font-family: 'Poppins', sans-serif;
+  font-size: 2.5rem;
+  font-weight: 700;
+  margin-bottom: 10px;
+  letter-spacing: 1px;
+  background: linear-gradient(135deg, #4e73df, #1cc88a);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text; /* For Firefox */
+  color: transparent;
 }
 
-.registration-title {
-  font-size: 1.8rem;
-  font-weight: 600;
-  color: #333;
-  margin: 0;
+
+.typing-cursor {
+  display: inline-block;
+  font-weight: bold;
+  animation: blink 0.7s infinite;
+  /* force color instead of transparent */
+  -webkit-text-fill-color: #cea10e; 
+  background: none; 
+  color: #cea10e; 
 }
 
-.registration-subtitle {
-  font-size: 0.95rem;
-  color: #6c757d;
+
+@keyframes blink {
+  0%, 50%, 100% { opacity: 1; }
+  25%, 75% { opacity: 0; }
 }
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 /* Form Layout */
 .registration-form {
@@ -136,3 +170,16 @@ mat-icon {
 .login-redirect a:hover {
   color: #0d47a1;
 }
+
+
+/* put in global styles.css to avoid scoping issues */
+.typing-cursor {
+  display: inline-block;
+  margin-left: 6px;
+  animation: typing-blink 1s steps(2, start) infinite;
+}
+
+@keyframes typing-blink {
+  50% { opacity: 0; }
+}
+

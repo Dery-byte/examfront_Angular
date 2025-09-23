@@ -3,7 +3,9 @@
   bottom: 0;
   left: 0;
   width: 100%;
-  background: linear-gradient(135deg, #021f4d 0%, #021f4d 90%); /* gradient background */
+  background: linear-gradient(135deg, #021f4d 0%, #021f4d 90%); 
+   /* background: linear-gradient(135deg, #0b3b2a, #4e73df ) !important; */
+  color: white !important;
   color: #fff;
   padding: 1.5rem 2rem;
   display: flex;
@@ -101,4 +103,10 @@
   right: 0;
   height: 1px;
   background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.2), transparent);
+}
+
+
+.home-container {
+  background: linear-gradient(135deg, #4e73df, #1cc88a) !important;
+  color: white !important;
 }

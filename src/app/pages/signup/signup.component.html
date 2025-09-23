@@ -1,89 +1,89 @@
 <app-navbar></app-navbar>
 
 <div class="reg_container">
-<div class="registration-container">
-  <mat-card class="registration-card">
-    <div class="registration-header">
-      <!-- <img class="registration-logo" src="../../../assets/logo1.jpg" alt="Company Logo"> -->
-      <h1 class="registration-title">Create an Account</h1>
-      <p class="registration-subtitle">Join our platform to get started</p>
-    </div>
-
-    <form (ngSubmit)="formSubmit()" class="registration-form">
-      <div class="form-grid">
-        <!-- Name Fields Row -->
-        <div class="name-fields">
-          <mat-form-field appearance="outline">
-            <mat-label>First Name</mat-label>
-            <input [(ngModel)]="user.firstname" name="firstname" matInput required>
-            <mat-icon matPrefix>person_outline</mat-icon>
-          </mat-form-field>
-
-          <mat-form-field appearance="outline">
-            <mat-label>Last Name</mat-label>
-            <input [(ngModel)]="user.lastname" name="lastname" matInput required>
-          </mat-form-field>
-        </div>
-
-        <!-- Username Field -->
-        <mat-form-field appearance="outline">
-          <mat-label>Username</mat-label>
-          <input [(ngModel)]="user.username" name="username" matInput required>
-          <mat-icon matPrefix>alternate_email</mat-icon>
-          <mat-hint align="end">Must be unique( i.e Student ID)</mat-hint>
-        </mat-form-field>
-
-        <!-- Contact Fields Row -->
-        <div class="contact-fields">
-          <mat-form-field appearance="outline">
-            <mat-label>Email</mat-label>
-            <input [(ngModel)]="user.email" name="email" type="email" matInput required>
-            <mat-icon matPrefix>mail_outline</mat-icon>
-          </mat-form-field>
-
-          <mat-form-field appearance="outline">
-            <mat-label>Phone Number</mat-label>
-            <input [(ngModel)]="user.phone" name="phone" type="tel" matInput>
-            <mat-icon matPrefix>phone</mat-icon>
-          </mat-form-field>
-        </div>
-
-        <!-- Password Fields Row -->
-        <div class="password-fields">
-          <mat-form-field appearance="outline">
-            <mat-label>Password</mat-label>
-            <input [(ngModel)]="user.password" name="password" [type]="hidePassword ? 'password' : 'text'" matInput required>
-            <mat-icon matPrefix>lock_outline</mat-icon>
-            <button type="button" mat-icon-button matSuffix (click)="hidePassword = !hidePassword">
-              <mat-icon>{{hidePassword ? 'visibility_off' : 'visibility'}}</mat-icon>
-            </button>
-          </mat-form-field>
-
-          <mat-form-field appearance="outline">
-            <mat-label>Confirm Password</mat-label>
-            <input [type]="hideConfirmPassword ? 'password' : 'text'" matInput required>
-            <mat-icon matPrefix>lock_outline</mat-icon>
-            <button type="button" mat-icon-button matSuffix (click)="hideConfirmPassword = !hideConfirmPassword">
-              <mat-icon>{{hideConfirmPassword ? 'visibility_off' : 'visibility'}}</mat-icon>
-            </button>
-          </mat-form-field>
-        </div>
+  <div class="registration-container">
+    <mat-card class="registration-card">
+      <div class="registration-header">
+            <h1 [appTyping]="['Create an Account', 'Join our platform', 'Get started today!']" [speed]="100"
+          [eraseSpeed]="100" [delayBetween]="1500">
+        </h1>
       </div>
+      <form (ngSubmit)="formSubmit()" class="registration-form">
+        <div class="form-grid">
+          <!-- Name Fields Row -->
+          <div class="name-fields">
+            <mat-form-field appearance="outline">
+              <mat-label>First Name</mat-label>
+              <input [(ngModel)]="user.firstname" name="firstname" matInput required>
+              <mat-icon matPrefix>person_outline</mat-icon>
+            </mat-form-field>
 
-      <!-- Submit Button -->
-      <button type="submit" [disabled]="loading" mat-raised-button color="primary" class="submit-button">
-        <div class="button-content">
-          <mat-spinner *ngIf="loading" diameter="20" strokeWidth="3" color="accent"></mat-spinner>
-          <span>{{ loading ? 'Creating Account...' : 'Register Now' }}</span>
+            <mat-form-field appearance="outline">
+              <mat-label>Last Name</mat-label>
+              <input [(ngModel)]="user.lastname" name="lastname" matInput required>
+            </mat-form-field>
+          </div>
+
+          <!-- Username Field -->
+          <mat-form-field appearance="outline">
+            <mat-label>Username</mat-label>
+            <input [(ngModel)]="user.username" name="username" matInput required>
+            <mat-icon matPrefix>alternate_email</mat-icon>
+            <mat-hint align="end">Must be unique( i.e Student ID)</mat-hint>
+          </mat-form-field>
+
+          <!-- Contact Fields Row -->
+          <div class="contact-fields">
+            <mat-form-field appearance="outline">
+              <mat-label>Email</mat-label>
+              <input [(ngModel)]="user.email" name="email" type="email" matInput required>
+              <mat-icon matPrefix>mail_outline</mat-icon>
+            </mat-form-field>
+
+            <mat-form-field appearance="outline">
+              <mat-label>Phone Number</mat-label>
+              <input [(ngModel)]="user.phone" name="phone" type="tel" matInput>
+              <mat-icon matPrefix>phone</mat-icon>
+            </mat-form-field>
+          </div>
+
+          <!-- Password Fields Row -->
+          <div class="password-fields">
+            <mat-form-field appearance="outline">
+              <mat-label>Password</mat-label>
+              <input [(ngModel)]="user.password" name="password" [type]="hidePassword ? 'password' : 'text'" matInput
+                required>
+              <mat-icon matPrefix>lock_outline</mat-icon>
+              <button type="button" mat-icon-button matSuffix (click)="hidePassword = !hidePassword">
+                <mat-icon>{{hidePassword ? 'visibility_off' : 'visibility'}}</mat-icon>
+              </button>
+            </mat-form-field>
+
+            <mat-form-field appearance="outline">
+              <mat-label>Confirm Password</mat-label>
+              <input [type]="hideConfirmPassword ? 'password' : 'text'" matInput required>
+              <mat-icon matPrefix>lock_outline</mat-icon>
+              <button type="button" mat-icon-button matSuffix (click)="hideConfirmPassword = !hideConfirmPassword">
+                <mat-icon>{{hideConfirmPassword ? 'visibility_off' : 'visibility'}}</mat-icon>
+              </button>
+            </mat-form-field>
+          </div>
         </div>
-      </button>
 
-      <!-- Login Redirect -->
-      <div class="login-redirect">
-        Already have an account? <a mat-button routerLink="/login">Sign In</a>
-      </div>
-    </form>
-  </mat-card>
-</div>
+        <!-- Submit Button -->
+        <button type="submit" [disabled]="loading" mat-raised-button color="primary" class="submit-button">
+          <div class="button-content">
+            <mat-spinner *ngIf="loading" diameter="20" strokeWidth="3" color="accent"></mat-spinner>
+            <span>{{ loading ? 'Creating Account...' : 'Register Now' }}</span>
+          </div>
+        </button>
+
+        <!-- Login Redirect -->
+        <div class="login-redirect">
+          Already have an account? <a mat-button routerLink="/login">Sign In</a>
+        </div>
+      </form>
+    </mat-card>
+  </div>
 
 </div>

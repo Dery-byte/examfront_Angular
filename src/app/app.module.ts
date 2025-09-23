@@ -55,6 +55,8 @@ import {MatCheckboxModule} from '@angular/material/checkbox';
 import {MatDialog, MAT_DIALOG_DATA, MatDialogRef, MatDialogModule} from '@angular/material/dialog';
 import { MatTableExporterModule } from 'mat-table-exporter';
 
+import { TypingDirective } from './pages/utilities/typing.directive';
+
 // PRIMENG
 import { DialogModule } from 'primeng/dialog';
 import { InputTextModule } from 'primeng/inputtext';
@@ -121,7 +123,10 @@ import { AdminfooterComponent } from './pages/admin/adminfooter/adminfooter.comp
     AdminnavbarComponent,
     ResetPasswordComponent,
     AdminfooterComponent,
+    TypingDirective,
   ],
+exports:[TypingDirective],
+
   imports: [
     BrowserModule, 
     AppRoutingModule,

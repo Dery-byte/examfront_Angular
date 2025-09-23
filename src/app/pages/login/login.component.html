@@ -2,136 +2,135 @@
 <div class="page-container">
   <main class="main-content">
 
-<div class="login-container">
-  <div class="login-background"></div>
-  <div class="login-card-wrapper">
-    <mat-card class="login-card">
-      <!-- <div class="logo-container">
+    <div class="login-container">
+      <div class="login-background"></div>
+      <div class="login-card-wrapper">
+        <mat-card class="login-card">
+          <!-- <div class="logo-container">
         <div class="logo-frame">
           <img class="logo" src="../../../assets/logo1.jpg" alt="Company Logo">
         </div>
       </div> -->
+          <mat-card class="form-card">
+            <form (ngSubmit)="formSubmit()">
+              <div class="form-header">
+                <h1 class="login-title">Welcome Back</h1>
+                <p class="login-subtitle"
+                  [appTyping]="['Please enter your credentials to continue', 'Login to access your account']"
+                  [speed]="70" [eraseSpeed]="40" [delayBetween]="2000">
+                </p>
+              </div>
+              <mat-card-content>
+                <mat-form-field appearance="fill" class="full-width-field">
+                  <mat-label>Username</mat-label>
+                  <input [(ngModel)]="loginData.username" name="username" required type="text" matInput
+                    placeholder="Enter your username">
+                  <mat-icon matPrefix>person_outline</mat-icon>
+                  <mat-icon matSuffix class="decorative-icon">fiber_manual_record</mat-icon>
+                </mat-form-field>
+                <mat-form-field appearance="fill" class="full-width-field">
+                  <mat-label>Password</mat-label>
+                  <input [(ngModel)]="loginData.password" required name="password"
+                    [type]="hidePassword ? 'password' : 'text'" matInput placeholder="Enter your password" />
+                  <mat-icon matPrefix>lock_outline</mat-icon>
+                  <button type="button" mat-icon-button matSuffix (click)="hidePassword = !hidePassword"
+                    class="password-toggle">
+                    <mat-icon>{{hidePassword ? 'visibility_off' : 'visibility'}}</mat-icon>
+                  </button>
+                </mat-form-field>
+              </mat-card-content>
+              <button type="submit" [disabled]="loading" class="login-button" mat-raised-button>
+                <div class="button-content">
+                  <mat-spinner *ngIf="loading" diameter="20" strokeWidth="3" color="accent"
+                    class="spinner-left"></mat-spinner>
+                  <span>
+                    {{ loading ? 'Authenticating...' : 'Sign In' }}
+                  </span>
+                </div>
+              </button>
+            </form>
+            <div class="forgot-password">
+              <button mat-button (click)="openUpdateDialog(updateDialog)">
+                Forgot Password?
+                <mat-icon>arrow_forward</mat-icon>
+              </button>
+            </div>
+          </mat-card>
+        </mat-card>
+      </div>
+    </div>
 
-      <mat-card class="form-card">
-        <form (ngSubmit)="formSubmit()">
-          <div class="form-header">
-            <h1 class="login-title">Welcome Back</h1>
-            <p class="login-subtitle">Please enter your credentials to continue</p>
+
+
+
+
+
+
+
+
+
+
+    <!-- MODAL TO SEND RESET PASSWORD LINK -->
+
+
+    <ng-template #updateDialog let-data="data">
+      <div class="dialog-container">
+        <div class="dialog-header">
+          <h1 mat-dialog-title>Reset Password</h1>
+          <div class="dialog-divider"></div>
+        </div>
+
+        <div mat-dialog-content class="dialog-content">
+          <!-- Show success message if email sent -->
+          <div *ngIf="showSuccessMessage" style="text-align: center;">
+            <mat-icon color="primary" style="">check_circle</mat-icon>
+            <!-- {{resetData.email}} -->
+            <p style="margin-top: 10px; color: green;">Reset link sent to your email: <strong>{{ successEmail
+                }}</strong>
+            </p>
+            <button mat-stroked-button type="button" (click)="onCloseDialog()">
+              <mat-icon>close</mat-icon>
+              Close
+            </button>
+
           </div>
 
-          <mat-card-content>
-            <mat-form-field appearance="fill" class="full-width-field">
-              <mat-label>Username</mat-label>
-              <input [(ngModel)]="loginData.username" name="username" required type="text" matInput
-                placeholder="Enter your username">
-              <mat-icon matPrefix>person_outline</mat-icon>
-              <mat-icon matSuffix class="decorative-icon">fiber_manual_record</mat-icon>
-            </mat-form-field>
+          <!-- Show form if email not sent yet -->
+          <form *ngIf="!showSuccessMessage" #resetForm="ngForm" (ngSubmit)="onForgotPasswordSubmit(resetForm)">
+            <h6 style="font-size: 13px;">Enter your email to receive a password reset link</h6>
 
             <mat-form-field appearance="fill" class="full-width-field">
-              <mat-label>Password</mat-label>
-              <input [(ngModel)]="loginData.password" required name="password"
-                [type]="hidePassword ? 'password' : 'text'" matInput placeholder="Enter your password" />
-              <mat-icon matPrefix>lock_outline</mat-icon>
-              <button type="button" mat-icon-button matSuffix (click)="hidePassword = !hidePassword"
-                class="password-toggle">
-                <mat-icon>{{hidePassword ? 'visibility_off' : 'visibility'}}</mat-icon>
-              </button>
-            </mat-form-field>
-          </mat-card-content>
+              <mat-label>Email</mat-label>
+              <input [(ngModel)]="resetData.email" name="email" type="email" matInput placeholder="Enter your email"
+                #email="ngModel" required email>
+              <mat-icon matPrefix>email</mat-icon>
 
-          <button type="submit" [disabled]="loading" class="login-button" mat-raised-button>
-            <div class="button-content">
-              <mat-spinner *ngIf="loading" diameter="20" strokeWidth="3" color="accent"
-                class="spinner-left"></mat-spinner>
-              <span>
-                {{ loading ? 'Authenticating...' : 'Sign In' }}
-              </span>
+              <mat-error *ngIf="email.invalid && (email.dirty || email.touched)">
+                <span *ngIf="email.errors?.['required']">Email is required.</span>
+                <span *ngIf="email.errors?.['email']">Please enter a valid email.</span>
+              </mat-error>
+            </mat-form-field>
+
+            <div *ngIf="apiError" style="color: red; margin-bottom: 10px;">
+              {{ apiError }}
             </div>
-          </button>
 
-        </form>
-        <div class="forgot-password">
-          <button mat-button (click)="openUpdateDialog(updateDialog)">
-            Forgot Password?
-            <mat-icon>arrow_forward</mat-icon>
-          </button>
+            <div mat-dialog-actions class="dialog-actions">
+              <button mat-stroked-button type="button" (click)="dialogRef.close()">
+                <mat-icon>close</mat-icon>
+                Close
+              </button>
+
+              <button mat-raised-button color="primary" type="submit" [disabled]="isSubmitting"
+                style="display: flex; align-items: center; gap: 8px;">
+                <mat-icon *ngIf="!isSubmitting">lock_reset</mat-icon>
+                <span>{{ isSubmitting ? 'Sending...' : 'Send Link' }}</span>
+              </button>
+            </div>
+          </form>
         </div>
-      </mat-card>
-    </mat-card>
-  </div>
-</div>
-
-
-
-
-
-
-
-
-
-
-
-<!-- MODAL TO SEND RESET PASSWORD LINK -->
-
-
-<ng-template #updateDialog let-data="data">
-  <div class="dialog-container">
-    <div class="dialog-header">
-      <h1 mat-dialog-title>Reset Password</h1>
-      <div class="dialog-divider"></div>
-    </div>
-
-    <div mat-dialog-content class="dialog-content">
-      <!-- Show success message if email sent -->
-      <div *ngIf="showSuccessMessage" style="text-align: center;">
-        <mat-icon color="primary" style="">check_circle</mat-icon>
-        <!-- {{resetData.email}} -->
-        <p style="margin-top: 10px; color: green;">Reset link sent to your email: <strong>{{ successEmail }}</strong>
-        </p>
-        <button mat-stroked-button type="button" (click)="onCloseDialog()">
-          <mat-icon>close</mat-icon>
-          Close
-        </button>
-
       </div>
-
-      <!-- Show form if email not sent yet -->
-      <form *ngIf="!showSuccessMessage" #resetForm="ngForm" (ngSubmit)="onForgotPasswordSubmit(resetForm)">
-        <h6 style="font-size: 13px;">Enter your email to receive a password reset link</h6>
-
-        <mat-form-field appearance="fill" class="full-width-field">
-          <mat-label>Email</mat-label>
-          <input [(ngModel)]="resetData.email" name="email" type="email" matInput placeholder="Enter your email"
-            #email="ngModel" required email>
-          <mat-icon matPrefix>email</mat-icon>
-
-          <mat-error *ngIf="email.invalid && (email.dirty || email.touched)">
-            <span *ngIf="email.errors?.['required']">Email is required.</span>
-            <span *ngIf="email.errors?.['email']">Please enter a valid email.</span>
-          </mat-error>
-        </mat-form-field>
-
-        <div *ngIf="apiError" style="color: red; margin-bottom: 10px;">
-          {{ apiError }}
-        </div>
-
-        <div mat-dialog-actions class="dialog-actions">
-          <button mat-stroked-button type="button" (click)="dialogRef.close()">
-            <mat-icon>close</mat-icon>
-            Close
-          </button>
-
-          <button mat-raised-button color="primary" type="submit" [disabled]="isSubmitting"
-            style="display: flex; align-items: center; gap: 8px;">
-            <mat-icon *ngIf="!isSubmitting">lock_reset</mat-icon>
-            <span>{{ isSubmitting ? 'Sending...' : 'Send Link' }}</span>
-          </button>
-        </div>
-      </form>
-    </div>
-  </div>
-</ng-template>
+    </ng-template>
 
 
 
@@ -152,20 +151,20 @@
 
 
 
-<footer class="footer">
-  <div class="footer-content">
-    <p class="copyright">&copy; 2025 OTC. All rights reserved.</p>
-    <div class="footer-divider"></div>
-    <nav class="footer-links">
-      <a mat-button routerLink="/privacy">
-        <mat-icon>privacy_tip</mat-icon>
-        Privacy Policy
-      </a>
-      <a mat-button routerLink="/terms">
-        <mat-icon>description</mat-icon>
-        Terms of Service
-      </a>
-    </nav>
-  </div>
-</footer>
+  <footer class="footer">
+    <div class="footer-content">
+      <p class="copyright">&copy; 2025 OTC. All rights reserved.</p>
+      <div class="footer-divider"></div>
+      <nav class="footer-links">
+        <a mat-button routerLink="/privacy">
+          <mat-icon>privacy_tip</mat-icon>
+          Privacy Policy
+        </a>
+        <a mat-button routerLink="/terms">
+          <mat-icon>description</mat-icon>
+          Terms of Service
+        </a>
+      </nav>
+    </div>
+  </footer>
 </div>
