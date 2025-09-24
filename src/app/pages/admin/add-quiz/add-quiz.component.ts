@@ -71,32 +71,32 @@ quizFormSubmitted = false;
     console.log(this.quizData);
     //validation...
 
-    // this._quiz.addQuiz(this.quizData).subscribe(
-    //   (data) => {
-    //     this.quizData = {
-    //       title: "",
-    //       description: "",
-    //       maxMarks: "",
-    //       quizpassword: "",
-    //       numberOfQuestions: "",
-    //       quizTime: "",
-    //       startTime: "",
-    //       quizDate: "",
-    //       attempted: false,
-    //       active: true,
-    //       quizType:"",
-    //       category:
-    //       {
-    //         cid: ""
-    //       }
-    //     },
-    //       Swal.fire("Success", "Quiz is added", "success");
+    this._quiz.addQuiz(this.quizData).subscribe(
+      (data) => {
+        this.quizData = {
+          title: "",
+          description: "",
+          maxMarks: "",
+          quizpassword: "",
+          numberOfQuestions: "",
+          quizTime: "",
+          startTime: "",
+          quizDate: "",
+          attempted: false,
+          active: true,
+          quizType:"",
+          category:
+          {
+            cid: ""
+          }
+        },
+          Swal.fire("Success", "Quiz is added", "success");
 
-    //   },
-    //   (error) => {
-    //     Swal.fire("Error !! ", "An error occurred while adding quiz", "error");
-    //   }
-    // );
+      },
+      (error) => {
+        Swal.fire("Error !! ", "An error occurred while adding quiz", "error");
+      }
+    );
   }
 
 
