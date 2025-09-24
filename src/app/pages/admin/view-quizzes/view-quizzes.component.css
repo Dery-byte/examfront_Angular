@@ -149,25 +149,17 @@
   padding: 0 12px;
 }
 
-/* Dialog Styles */
-.dialog-container {
-  min-width: 600px;
-}
-
 .dialog-header {
+  background-color: #b5cce2;
   display: flex;
   align-items: center;
-  padding: 16px 24px 8px;
+  padding: 0px 10px 0px;
 }
 
 .dialog-header mat-icon {
-  margin-right: 12px;
+  margin-right: 20px;
   color: #3f51b5;
   font-size: 28px;
-}
-
-.dialog-content {
-  padding: 16px 24px;
 }
 
 .quiz-form {
@@ -190,11 +182,11 @@
 }
 
 .publish-toggle {
-  margin-top: 8px;
+  margin-top: 10px;
 }
 
 .publish-toggle mat-icon {
-  font-size: 18px;
+  /* font-size: 18px; */
   margin-right: 8px;
 }
 
@@ -211,18 +203,33 @@
     grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
   }
   
-  .dialog-container {
+  /* .dialog-container {
     min-width: auto;
     width: 90vw;
-  }
+  } */
   
   .form-row {
     flex-direction: column;
     gap: 16px;
   }
+
+
+  .dialog-actions {
+  /* display: flex; */
+  /* justify-content: flex-end; */
+  /* padding: 16px 24px;
+  gap: 12px; */
+}
 }
 
 @media (max-width: 600px) {
+
+.dialog-actions {
+  display: flex;
+  justify-content: flex-end; /* aligns to the right */
+  gap: 10px; /* space between buttons */
+}
+
   .dashboard-header {
     flex-direction: column;
     align-items: flex-start;
@@ -260,3 +267,65 @@
 .quiz-card:nth-child(3) { animation-delay: 0.3s; }
 .quiz-card:nth-child(4) { animation-delay: 0.4s; }
 /* Continue pattern as needed */
+
+
+
+
+
+
+.form-section {
+  margin-bottom: 10px;
+  padding-bottom: 10px;
+  border-bottom: 1px solid #a02d2d;
+}
+
+.form-section:last-child {
+  border-bottom: none;
+  margin-bottom: 0;
+  padding-bottom: 0;
+}
+
+.section-title {
+  display: flex;
+  align-items: center;
+  font-size: 18px;
+  font-weight: 500;
+  color: #3f51b5;
+  margin: 0 0 16px 0;
+}
+
+.section-title mat-icon {
+  margin-right: 8px;
+  font-size: 22px;
+  width: 22px;
+  height: 22px;
+}
+
+::ng-deep .mat-button-toggle-checked {
+  background: linear-gradient(135deg, #4e73df, #1cc88a) !important;
+  color: #fff !important;
+  font-weight: bold;
+  border-radius: 8px;
+}
+
+::ng-deep .mat-button-toggle {
+  margin-right: 10px;
+  border: 1px;
+  min-width: 8px;
+  /* Make them look like option cards */
+}
+
+
+.error-msg {
+  display: flex;
+  align-items: center;
+  color: #d32f2f;
+  /* Material Red 700 */
+  font-size: 13px;
+  margin-top: 4px;
+}
+
+.error-icon {
+  font-size: 18px;
+  margin-right: 4px;
+}

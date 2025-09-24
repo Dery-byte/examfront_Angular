@@ -32,6 +32,7 @@ export class AddQuizComponent implements OnInit {
 
   }
 quizFormSubmitted = false;
+hide = true; // default: password hidden
 
     // quizType is only for controlling UI, not saved
   // quizType: 'theory' | 'obj' | 'both' | '' = '';
