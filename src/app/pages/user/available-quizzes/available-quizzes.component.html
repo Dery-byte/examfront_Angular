@@ -1,3 +1,4 @@
+<!-- {{availablequizzes| json}} -->
 <div class="quiz-dashboard-container">
   <!-- Loading State -->
   <div *ngIf="isLoadingUserRecords" class="loading-overlay">
@@ -78,29 +79,45 @@
                   {{q.category.title}} • {{q.category.courseCode}}
                 </mat-card-subtitle>
               </mat-card-header>
-              
+
               <mat-card-content>
                 <p class="quiz-description">{{q.description}}</p>
-                <div class="quiz-meta">
-                  <span class="meta-item">
+
+
+                <!-- Show meta if we have numberOfQuestions or maxMarks -->
+                <div class="quiz-meta" *ngIf="q.numberOfQuestions || q.maxMarks">
+                  <span class="meta-item" *ngIf="q.numberOfQuestions">
                     <mat-icon>help_outline</mat-icon>
                     {{q.numberOfQuestions}} Questions
                   </span>
-                  <span class="meta-item">
+
+                  <span class="meta-item" *ngIf="q.maxMarks">
                     <mat-icon>star</mat-icon>
                     {{q.maxMarks}} Points
                   </span>
                 </div>
+
+                <!-- Show quizType if both are missing -->
+                <div class="quiz-type" *ngIf="!q.numberOfQuestions && !q.maxMarks">
+                  <mat-icon color="warn">description</mat-icon>
+                  <span>{{q.quizType}}</span>
+                </div>
               </mat-card-content>
-              
+
               <mat-card-actions class="quiz-actions">
-                <button mat-stroked-button color="primary" matTooltip="View Summary" 
-                        (click)="openNew(q.qId)" class="action-button">
-                  <mat-icon>visibility</mat-icon>
-                  Results
-                </button>
-                <button mat-raised-button color="accent" 
-                        [routerLink]="'/user-dashboard/instructions/'+q.qId" class="action-button">
+                <!-- New Quiz Schedule Section -->
+                <div class="quiz-schedule">
+                  <div class="schedule-item">
+                    <mat-icon color="primary">event</mat-icon>
+                    <span class="schedule-text">Date: <strong>{{q.quizDate}}</strong></span>
+                  </div>
+                  <div class="schedule-item">
+                    <mat-icon color="accent">schedule</mat-icon>
+                    <span class="schedule-text">Time: <strong>{{q.startTimeAMPM}}</strong></span>
+                  </div>
+                </div>
+                <button mat-raised-button color="accent" [routerLink]="'/user-dashboard/instructions/'+q.qId"
+                  class="action-button">
                   <mat-icon>play_arrow</mat-icon>
                   Start Quiz
                 </button>
@@ -113,8 +130,8 @@
   </div>
 
   <!-- Results Dialog -->
-  <p-dialog [(visible)]="productDialog" [style]="{width: '450px'}" header="Quiz Results Summary" 
-            [modal]="true" [draggable]="false" [resizable]="false">
+  <p-dialog [(visible)]="productDialog" [style]="{width: '450px'}" header="Quiz Results Summary" [modal]="true"
+    [draggable]="false" [resizable]="false">
     <div *ngIf="isLoadingReportData" class="dialog-loading">
       <mat-spinner diameter="40"></mat-spinner>
       <p>Loading results...</p>
@@ -147,8 +164,8 @@
                 <td>{{r.quiz.title}}</td>
                 <td class="score-cell">{{r.marks}}</td>
                 <td>
-                  <span class="status-badge" [class.passed]="r.progress === 'Completed'" 
-                        [class.failed]="r.progress !== 'Completed'">
+                  <span class="status-badge" [class.passed]="r.progress === 'Completed'"
+                    [class.failed]="r.progress !== 'Completed'">
                     {{r.progress}}
                   </span>
                 </td>
