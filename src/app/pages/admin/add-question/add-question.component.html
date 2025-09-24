@@ -14,7 +14,7 @@
   </div>
 
   <!-- Main Question Form Card -->
-  <mat-card class="question-form-card mat-elevation-z8" *ngIf="specificQuiz?.quizType === 'OBJ'">
+  <mat-card class="question-form-card mat-elevation-z8" *ngIf="specificQuiz?.quizType === 'OBJ' || specificQuiz?.quizType === 'BOTH'">
     <mat-card-header class="form-card-header">
       <mat-icon class="form-icon">create</mat-icon>
       <h2 class="form-title">Question Details</h2>
@@ -130,7 +130,7 @@
         <div class="upload-options">
           <!-- Objective Questions -->
 
-          <div class="upload-option" *ngIf="specificQuiz?.quizType === 'OBJ'">
+          <div class="upload-option" *ngIf="specificQuiz?.quizType === 'OBJ' || specificQuiz?.quizType === 'BOTH'">
             <h3 class="option-title">
               <mat-icon>check_box</mat-icon>
               Objective Questions
@@ -170,7 +170,7 @@
             </div>
           </div>
           <!-- Theory Questions -->
-          <div class="upload-option" *ngIf="specificQuiz?.quizType === 'THEORY'">
+          <div class="upload-option" *ngIf="specificQuiz?.quizType === 'THEORY' || specificQuiz?.quizType === 'BOTH'">
             <h3 class="option-title">
               <mat-icon>subject</mat-icon>
               Theory Questions
