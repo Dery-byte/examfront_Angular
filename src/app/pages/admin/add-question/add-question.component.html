@@ -2,7 +2,7 @@
   <!-- Header Section -->
   <div class="creator-header">
     <h1 class="page-title">
-      Add Questions to 
+      Add Questions to
       <span class="quiz-title-highlight">{{qTitle}}</span>
     </h1>
     <p class="page-subtitle">Create new assessment items for your quiz</p>
@@ -26,11 +26,8 @@
             Question Content
           </h3>
           <div class="editor-container">
-            <ckeditor [editor]="Editor" 
-                     [(ngModel)]="question.content"
-                     name="content"
-                     class="question-editor"
-                     placeholder="Type your question here..."></ckeditor>
+            <ckeditor [editor]="Editor" [(ngModel)]="question.content" name="content" class="question-editor"
+              placeholder="Type your question here..."></ckeditor>
           </div>
         </div>
 
@@ -40,45 +37,35 @@
             <mat-icon>format_list_numbered</mat-icon>
             Answer Options
           </h3>
-          
+
           <div class="options-grid">
             <!-- Option 1 -->
             <mat-form-field appearance="outline" class="option-field">
               <mat-label>Option 1</mat-label>
-              <input matInput required
-                    [(ngModel)]="question.option1"
-                    name="option1"
-                    placeholder="Enter first answer choice">
+              <input matInput required [(ngModel)]="question.option1" name="option1"
+                placeholder="Enter first answer choice">
               <mat-icon matSuffix>looks_one</mat-icon>
             </mat-form-field>
 
             <!-- Option 2 -->
             <mat-form-field appearance="outline" class="option-field">
               <mat-label>Option 2</mat-label>
-              <input matInput required
-                    [(ngModel)]="question.option2"
-                    name="option2"
-                    placeholder="Enter second answer choice">
+              <input matInput required [(ngModel)]="question.option2" name="option2"
+                placeholder="Enter second answer choice">
               <mat-icon matSuffix>looks_two</mat-icon>
             </mat-form-field>
 
             <!-- Option 3 -->
             <mat-form-field appearance="outline" class="option-field">
               <mat-label>Option 3 (Optional)</mat-label>
-              <input matInput
-                    [(ngModel)]="question.option3"
-                    name="option3"
-                    placeholder="Enter third answer choice">
+              <input matInput [(ngModel)]="question.option3" name="option3" placeholder="Enter third answer choice">
               <mat-icon matSuffix>looks_3</mat-icon>
             </mat-form-field>
 
             <!-- Option 4 -->
             <mat-form-field appearance="outline" class="option-field">
               <mat-label>Option 4 (Optional)</mat-label>
-              <input matInput
-                    [(ngModel)]="question.option4"
-                    name="option4"
-                    placeholder="Enter fourth answer choice">
+              <input matInput [(ngModel)]="question.option4" name="option4" placeholder="Enter fourth answer choice">
               <mat-icon matSuffix>looks_4</mat-icon>
             </mat-form-field>
           </div>
@@ -90,13 +77,10 @@
             <mat-icon>check_circle</mat-icon>
             Correct Answer(s)
           </h3>
-          
+
           <mat-form-field appearance="outline" class="answer-select">
             <mat-label>Select correct answer(s)</mat-label>
-            <mat-select [(ngModel)]="question.correct_answer" 
-                       name="correct_answer" 
-                       multiple 
-                       required>
+            <mat-select [(ngModel)]="question.correct_answer" name="correct_answer" multiple required>
               <mat-option *ngIf="question.option1" [value]="question.option1">
                 <span class="option-badge">1</span> {{question.option1}}
               </mat-option>
@@ -134,7 +118,7 @@
         <mat-icon class="upload-icon">cloud_upload</mat-icon>
         <h2 class="upload-title">Bulk Upload Questions</h2>
       </mat-card-header>
-      
+
       <mat-card-content>
         <div class="upload-options">
           <!-- Objective Questions -->
@@ -144,15 +128,14 @@
               Objective Questions
             </h3>
             <p class="option-description">Upload multiple choice questions in JSON format</p>
-            
+
             <div class="upload-controls">
-              <button mat-button color="primary" class="format-btn"
-                      matTooltip="The accepted quiz format is JSON"
-                      matTooltipPosition="above">
+              <button mat-button color="primary" class="format-btn" matTooltip="The accepted quiz format is JSON"
+                matTooltipPosition="above">
                 <mat-icon>help_outline</mat-icon>
                 View Format Requirements
               </button>
-              
+
               <div class="file-upload-wrapper">
                 <label class="file-upload-label">
                   <input type="file" (change)="onFileSelected($event)" class="file-upload-input">
@@ -168,7 +151,66 @@
               </div>
             </div>
           </div>
-          
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
           <!-- Theory Questions -->
           <div class="upload-option">
             <h3 class="option-title">
@@ -176,29 +218,25 @@
               Theory Questions
             </h3>
             <p class="option-description">Upload essay questions with assessment parameters</p>
-            
+
             <div class="theory-controls">
               <div class="theory-params">
                 <mat-form-field appearance="outline" class="param-field">
                   <mat-label>Questions to Answer</mat-label>
-                  <input matInput required
-                        [(ngModel)]="theoryQuesToAnswer.totalQuestToAnswer"
-                        name="totalQuestToAnswer"
-                        type="number">
+                  <input matInput required [(ngModel)]="theoryQuesToAnswer.totalQuestToAnswer" name="totalQuestToAnswer"
+                    type="number">
                   <mat-icon matSuffix>format_list_numbered</mat-icon>
                 </mat-form-field>
-                
+
                 <mat-form-field appearance="outline" class="param-field">
                   <mat-label>Time Allowed (minutes)</mat-label>
-                  <input matInput required
-                        [(ngModel)]="theoryQuesToAnswer.timeAllowed"
-                        name="timeAllowed"
-                        type="number">
+                  <input matInput required [(ngModel)]="theoryQuesToAnswer.timeAllowed" name="timeAllowed"
+                    type="number">
                   <mat-icon matSuffix>timer</mat-icon>
                 </mat-form-field>
               </div>
-              
-              <div class="file-upload-wrapper">
+
+              <!-- <div class="file-upload-wrapper">
                 <label class="file-upload-label">
                   <input type="file" (change)="onFileSelected($event)" class="file-upload-input">
                   <span class="file-upload-button" mat-raised-button>
@@ -206,11 +244,40 @@
                     Select JSON File
                   </span>
                 </label>
-                <button mat-raised-button color="accent" (click)="uploadTheoryQuestionss()" class="upload-action-btn">
+                
+                <button mat-raised-button color="accent" (click)="uploadTheoryQuestionss()" class="upload-action-btn"
+                  [disabled]="!selectedFile || !theoryQuesToAnswer?.totalQuestToAnswer">
+                  <mat-icon>publish</mat-icon>
+                  Upload Questions
+                </button>
+
+              </div> -->
+
+              <div class="file-upload-wrapper">
+                <label class="file-upload-label" *ngIf="!selectedFile">
+                  <input type="file" (change)="onFileSelected($event)" class="file-upload-input" accept=".json" hidden>
+                  <span class="file-upload-button" mat-raised-button>
+                    <mat-icon>attach_file</mat-icon>
+                    Select JSON File
+                  </span>
+                </label>
+
+                <!-- Show selected file -->
+                <div class="selected-file" *ngIf="selectedFile">
+                  <mat-icon color="primary">description</mat-icon>
+                  <span>{{ selectedFile.name }}</span>
+                  <button mat-icon-button color="warn" (click)="clearSelectedFile()">
+                    <mat-icon>close</mat-icon>
+                  </button>
+                </div>
+
+                <button mat-raised-button color="accent" (click)="uploadTheoryQuestionss()" class="upload-action-btn"
+                  [disabled]="!selectedFile || !theoryQuesToAnswer?.totalQuestToAnswer|| !theoryQuesToAnswer.timeAllowed">
                   <mat-icon>publish</mat-icon>
                   Upload Questions
                 </button>
               </div>
+
             </div>
           </div>
         </div>

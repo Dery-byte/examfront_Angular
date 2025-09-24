@@ -194,11 +194,6 @@
   margin-bottom: 16px;
 }
 
-.file-upload-wrapper {
-  display: flex;
-  flex-direction: column;
-  gap: 12px;
-}
 
 .file-upload-label {
   display: inline-block;
@@ -276,4 +271,24 @@
   .form-actions {
     padding: 0 16px;
   }
+}
+
+
+
+
+.file-upload-wrapper {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.selected-file {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  font-size: 14px;
+  color: #444;
+  background: #f5f5f5;
+  padding: 6px 10px;
+  border-radius: 6px;
 }

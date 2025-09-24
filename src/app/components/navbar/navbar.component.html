@@ -5,17 +5,28 @@
     <mat-toolbar color="primary" class="mat-elevation-z8">
       <span>OTC LTD</span>
       <span class="example-spacer"></span>
-      <!-- <a mat-button routerLink="/">
-                    <mat-icon>home</mat-icon>
-        Home</a> -->
+      <a mat-button >
+        <mat-icon>home</mat-icon>
+        Home</a>
+      <!-- <a mat-button routerLink="/contact">
+  <mat-icon>contact_mail</mat-icon>
+  Contact
+</a> -->
+
+      <a mat-button routerLink="/contact">
+        <mat-icon>contact_page</mat-icon>
+        Contact
+      </a>
+
+
 
 
       <a [routerLink]="'/signup'" mat-button aria-label="Example icon-button with heart icon">
         <mat-icon>person_add</mat-icon>
         Register </a>
-      <button mat-raised-button color="accent" routerLink="/login">
+      <a mat-raised-button color="accent" [routerLink]="'/login'">
         <mat-icon>login</mat-icon>
-        Login</button>
+        Login</a>
     </mat-toolbar>
   </header>
 

@@ -9,6 +9,21 @@
                 <button mat-raised-button color="accent" [routerLink]="'/admin/add-question/' + qId +'/' + qTitle">Add
                     Question</button>
             </div>
+            <mat-card *ngIf="questions.length === 0 && getPrefixes().length === 0" class="empty-state-card mt20">
+                <mat-card-content class="text-center">
+                    <mat-icon class="empty-icon" color="warn">info</mat-icon>
+                    <h3>No questions available yet</h3>
+                    <p>Click <b>"Add Question"</b> above to add questions.</p>
+                </mat-card-content>
+            </mat-card>
+
+
+
+
+
+
+
+
             <div *ngIf="questions.length>0">
                 <h1 style="text-align: center;">Section A</h1>
                 <mat-card *ngFor="let q of questions; let i= index" class="mt20">

@@ -80,9 +80,14 @@
 
 
     <mat-drawer-content class="col-md-10">
-      <div style="min-height: calc(100vh - 160px); padding: 4px;">
+      <!-- <div style="min-height: calc(100vh - 160px); padding: 4px;">
+        <router-outlet></router-outlet>
+      </div> -->
+
+      <div style="min-height: calc(100vh - 160px); max-height: calc(100vh - 160px); overflow-y: auto; padding: 4px;">
         <router-outlet></router-outlet>
       </div>
+
     </mat-drawer-content>
   </mat-drawer-container>
 </div>

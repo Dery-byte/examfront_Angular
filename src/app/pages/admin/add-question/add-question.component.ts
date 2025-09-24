@@ -122,9 +122,17 @@ export class AddQuestionComponent implements OnInit {
 
 
   // upload file
-  onFileSelected(event: any): void {
-    this.selectedFile = event.target.files[0];
+  onFileSelected(event: Event): void {
+  const input = event.target as HTMLInputElement;
+  if (input.files && input.files.length > 0) {
+    this.selectedFile = input.files[0];
+  } else {
+    this.selectedFile = null;
   }
+}
+  // onFileSelected(event: any): void {
+  //   this.selectedFile = event.target.files[0];
+  // }
 
 
   uploadQuiz(): void {
@@ -154,30 +162,58 @@ export class AddQuestionComponent implements OnInit {
   }
 
 
-
-
-  uploadTheoryQuestionss(): void {
-    if (!this.selectedFile && (this.theoryQuesToAnswer.totalQuestToAnswer == "")) {
-
-      this._snack.open("Selected a file and specify No. of questions to answer! ", "",{
-        duration:3000,
-      });
-      // Swal.fire("Error", "Selected a file and specify No. of questions to answer.", "error");
-      console.error('No file selected.');
-      return;
-    } this._question.uploadTheoryQuestions(this.qId, this.selectedFile).subscribe(
-      response => {
-
-        console.log(this.qId);
-        console.log(this.selectedFile);
-        Swal.fire("Error", "Error uploading questions", "error");
-      }, (error) => {
-        this.addNumberOfTheoryToAnswer();
-        // Swal.fire('Success', "Theory Questions uploaded successfully", "success");
-        this._router.navigate(["/admin/quizzes"]);
-      }
+uploadTheoryQuestionss(): void {
+  if (!this.selectedFile || !this.theoryQuesToAnswer.totalQuestToAnswer) {
+    this._snack.open(
+      "Select a file and specify No. of questions to answer!", 
+      "", 
+      { duration: 3000 }
     );
+    console.error("File or number of questions missing.");
+    return;
   }
+
+  this._question.uploadTheoryQuestions(this.qId, this.selectedFile).subscribe(
+    response => {
+      console.log(this.qId);
+      console.log(this.selectedFile);
+      Swal.fire("Error", "Error uploading questions", "error");
+    },
+    error => {
+      this.addNumberOfTheoryToAnswer();
+      // Swal.fire("Success", "Theory Questions uploaded successfully", "success");
+      this._router.navigate(["/admin/quizzes"]);
+    }
+  );
+}
+
+
+clearSelectedFile(): void {
+  this.selectedFile = null;
+}
+
+  // uploadTheoryQuestionss(): void {
+  //   if (!this.selectedFile && (this.theoryQuesToAnswer.totalQuestToAnswer == "")) {
+
+  //     this._snack.open("Selected a file and specify No. of questions to answer! ", "",{
+  //       duration:3000,
+  //     });
+  //     // Swal.fire("Error", "Selected a file and specify No. of questions to answer.", "error");
+  //     console.error('No file selected.');
+  //     return;
+  //   } this._question.uploadTheoryQuestions(this.qId, this.selectedFile).subscribe(
+  //     response => {
+
+  //       console.log(this.qId);
+  //       console.log(this.selectedFile);
+  //       Swal.fire("Error", "Error uploading questions", "error");
+  //     }, (error) => {
+  //       this.addNumberOfTheoryToAnswer();
+  //       // Swal.fire('Success', "Theory Questions uploaded successfully", "success");
+  //       this._router.navigate(["/admin/quizzes"]);
+  //     }
+  //   );
+  // }
 
 
 
