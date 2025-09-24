@@ -19,7 +19,7 @@
           <mat-icon>info</mat-icon>
           Basic Information
         </h3>
-        
+
         <div class="form-row">
           <mat-form-field appearance="outline" class="form-field">
             <mat-label>Quiz Title</mat-label>
@@ -47,8 +47,112 @@
         </mat-form-field>
       </div>
 
+
+
+
+
+
+
+
+
+
+
+
+      <!-- Quiz Type Section -->
+      <div class="form-section">
+  <h3 class="section-title">
+    <mat-icon>assignment</mat-icon>
+    Quiz Type
+  </h3>
+
+  <mat-button-toggle-group [(ngModel)]="quizData.quizType" name="quizType" appearance="legacy">
+    <mat-button-toggle value="THEORY">THEORY</mat-button-toggle>
+    <mat-button-toggle value="OBJ">OBJ</mat-button-toggle>
+    <mat-button-toggle value="BOTH">BOTH</mat-button-toggle>
+  </mat-button-toggle-group>
+</div>
+
+<div *ngIf="!quizData.quizType && quizFormSubmitted" class="error-msg">
+  <mat-icon color="warn">error</mat-icon>
+  Quiz Type is required!
+</div>
+
+
+
+
       <!-- Quiz Configuration Section -->
       <div class="form-section">
+        <h3 class="section-title">
+          <mat-icon>settings</mat-icon>
+          Quiz Configuration
+        </h3>
+
+        <!-- Show these ONLY for OBJ or BOTH -->
+        <div class="form-row" *ngIf="quizData.quizType !== 'THEORY' && quizData.quizType">
+          <mat-form-field appearance="outline" class="form-field">
+            <mat-label>Max Marks</mat-label>
+            <input matInput type="number" [(ngModel)]="quizData.maxMarks" name="maxMarks">
+            <mat-icon matSuffix>score</mat-icon>
+          </mat-form-field>
+
+          <mat-form-field appearance="outline" class="form-field">
+            <mat-label>Total Questions</mat-label>
+            <input matInput type="number" [(ngModel)]="quizData.numberOfQuestions" name="numberOfQuestions">
+            <mat-icon matSuffix>help_outline</mat-icon>
+          </mat-form-field>
+        </div>
+
+        <div class="form-row" >
+          <div *ngIf="quizData.quizType !== 'THEORY' && quizData.quizType">
+          <mat-form-field appearance="outline" class="form-field">
+            <mat-label>Time Limit (minutes)</mat-label>
+            <input matInput type="number" [(ngModel)]="quizData.quizTime" name="quizTime">
+            <mat-icon matSuffix>timer</mat-icon>
+          </mat-form-field>
+          </div>
+       
+
+        <!-- Password Always Visible -->
+        
+          <mat-form-field appearance="outline" class="form-field">
+            <mat-label>Quiz Password</mat-label>
+            <input matInput [(ngModel)]="quizData.quizpassword" name="quizpassword" type="password">
+            <mat-icon matSuffix>vpn_key</mat-icon>
+            <mat-hint>Optional password protection</mat-hint>
+          </mat-form-field>
+        </div>
+      </div>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+      <!-- Quiz Configuration Section -->
+      <!-- <div class="form-section">
         <h3 class="section-title">
           <mat-icon>settings</mat-icon>
           Quiz Configuration
@@ -82,7 +186,7 @@
             <mat-icon matSuffix>timer</mat-icon>
           </mat-form-field>
         </div>
-      </div>
+      </div> -->
 
       <!-- Schedule & Publishing Section -->
       <div class="form-section">
@@ -90,11 +194,11 @@
           <mat-icon>schedule</mat-icon>
           Schedule & Publishing
         </h3>
-        
+
         <div class="form-row">
           <mat-form-field appearance="outline" class="form-field">
             <mat-label>Quiz Date</mat-label>
-            <input matInput [matDatepicker]="picker" [(ngModel)]="quizData.quizDate">
+            <input matInput [matDatepicker]="picker" [(ngModel)]="quizData.quizDate" name="quizDate">
             <mat-datepicker-toggle matSuffix [for]="picker"></mat-datepicker-toggle>
             <mat-datepicker #picker></mat-datepicker>
             <mat-icon matSuffix>event</mat-icon>
@@ -119,10 +223,15 @@
           <mat-icon>close</mat-icon>
           Cancel
         </button>
-        <button mat-raised-button color="primary" type="submit" class="submit-btn">
-          <mat-icon>add</mat-icon>
-          Create Quiz
-        </button>
+        <button 
+  mat-raised-button 
+  color="primary" 
+  type="submit" 
+  class="submit-btn"
+  [disabled]="!quizData.quizType">
+  <mat-icon>add</mat-icon>
+  Create Quiz
+</button>
       </div>
     </form>
   </mat-card-content>

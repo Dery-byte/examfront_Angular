@@ -142,41 +142,92 @@ mat-hint {
   .form-card {
     margin: 16px;
   }
-  
+
   .form-row {
     grid-template-columns: 1fr;
   }
-  
+
   .full-width {
     grid-column: span 1;
   }
-  
+
   .form-actions {
     flex-direction: column-reverse;
     gap: 12px;
   }
-  
-  .cancel-btn, .submit-btn {
+
+  .cancel-btn,
+  .submit-btn {
     width: 100%;
   }
 }
 
 /* Animation */
 @keyframes fadeIn {
-  from { opacity: 0; transform: translateY(10px); }
-  to { opacity: 1; transform: translateY(0); }
+  from {
+    opacity: 0;
+    transform: translateY(10px);
+  }
+
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
 }
 
 .form-section {
   animation: fadeIn 0.3s ease-out forwards;
 }
 
-.form-section:nth-child(1) { animation-delay: 0.1s; }
-.form-section:nth-child(2) { animation-delay: 0.2s; }
-.form-section:nth-child(3) { animation-delay: 0.3s; }
+.form-section:nth-child(1) {
+  animation-delay: 0.1s;
+}
+
+.form-section:nth-child(2) {
+  animation-delay: 0.2s;
+}
+
+.form-section:nth-child(3) {
+  animation-delay: 0.3s;
+}
 
 
 
 .full-width {
   width: 100%;
+}
+
+
+::ng-deep .mat-button-toggle-checked {
+
+  /* background: linear-gradient(135deg, #4e73df, #1cc88a) !important; */
+
+  background-color: #010508 !important;
+  color: #fff !important;
+  /* White text */
+  font-weight: bold;
+  border-radius: 8px;
+  /* box-shadow: 0 0 6px rgba(25, 118, 210, 0.6); */
+}
+
+::ng-deep .mat-button-toggle {
+  margin-right: 8px;
+  border: 1px;
+  min-width: 100px;
+  /* Make them look like option cards */
+}
+
+
+.error-msg {
+  display: flex;
+  align-items: center;
+  color: #d32f2f;
+  /* Material Red 700 */
+  font-size: 13px;
+  margin-top: 4px;
+}
+
+.error-icon {
+  font-size: 18px;
+  margin-right: 4px;
 }

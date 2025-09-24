@@ -1,3 +1,8 @@
+<!-- {{specificQuiz|json}} -->
+
+
+
+
 <div class="question-creator-container">
   <!-- Header Section -->
   <div class="creator-header">
@@ -9,7 +14,7 @@
   </div>
 
   <!-- Main Question Form Card -->
-  <mat-card class="question-form-card mat-elevation-z8">
+  <mat-card class="question-form-card mat-elevation-z8" *ngIf="specificQuiz?.quizType === 'OBJ'">
     <mat-card-header class="form-card-header">
       <mat-icon class="form-icon">create</mat-icon>
       <h2 class="form-title">Question Details</h2>
@@ -110,6 +115,8 @@
     </mat-card-content>
   </mat-card>
 
+
+  
   <!-- Bulk Upload Section -->
   <div class="upload-section">
     <!-- Objective Questions Upload -->
@@ -118,11 +125,12 @@
         <mat-icon class="upload-icon">cloud_upload</mat-icon>
         <h2 class="upload-title">Bulk Upload Questions</h2>
       </mat-card-header>
-
+      <mat-divider></mat-divider>
       <mat-card-content>
         <div class="upload-options">
           <!-- Objective Questions -->
-          <div class="upload-option">
+
+          <div class="upload-option" *ngIf="specificQuiz?.quizType === 'OBJ'">
             <h3 class="option-title">
               <mat-icon>check_box</mat-icon>
               Objective Questions
@@ -136,83 +144,33 @@
                 View Format Requirements
               </button>
 
-              <div class="file-upload-wrapper">
-                <label class="file-upload-label">
-                  <input type="file" (change)="onFileSelected($event)" class="file-upload-input">
+             <div class="file-upload-wrapper">
+                <label class="file-upload-label" *ngIf="!selectedFile">
+                  <input type="file" (change)="onFileSelected($event)" class="file-upload-input" accept=".json" hidden>
                   <span class="file-upload-button" mat-raised-button>
                     <mat-icon>attach_file</mat-icon>
                     Select JSON File
                   </span>
                 </label>
-                <button mat-raised-button color="accent" (click)="uploadQuiz()" class="upload-action-btn">
+
+                <!-- Show selected file -->
+                <div class="selected-file" *ngIf="selectedFile">
+                  <mat-icon color="primary">description</mat-icon>
+                  <span>{{ selectedFile.name }}</span>
+                  <button mat-icon-button color="warn" (click)="clearSelectedFile()">
+                    <mat-icon>close</mat-icon>
+                  </button>
+                </div>
+                 <button mat-raised-button color="accent" (click)="uploadQuiz()" class="upload-action-btn"
+                  [disabled]="!selectedFile">
                   <mat-icon>publish</mat-icon>
                   Upload Questions
                 </button>
               </div>
             </div>
           </div>
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
           <!-- Theory Questions -->
-          <div class="upload-option">
+          <div class="upload-option" *ngIf="specificQuiz?.quizType === 'THEORY'">
             <h3 class="option-title">
               <mat-icon>subject</mat-icon>
               Theory Questions

@@ -5,6 +5,7 @@ import Swal from 'sweetalert2';
 import * as ClassisEditor from '@ckeditor/ckeditor5-build-classic';
 import { QuizService } from 'src/app/services/quiz.service';
 import { MatSnackBar } from '@angular/material/snack-bar';
+import { switchMap, tap } from 'rxjs/operators';
 
 
 @Component({
@@ -15,13 +16,14 @@ import { MatSnackBar } from '@angular/material/snack-bar';
 export class AddQuestionComponent implements OnInit {
   selectedFile: File | null = null;
 
+  specificQuiz: any;
   public Editor = ClassisEditor;
 
   theoryQuesToAnswer = {
     totalQuestToAnswer: "",
-    timeAllowed:"",
-   quiz: {
-      qId:""
+    timeAllowed: "",
+    quiz: {
+      qId: ""
     }
   };
 
@@ -41,8 +43,8 @@ export class AddQuestionComponent implements OnInit {
   constructor(private _route: ActivatedRoute,
     private _router: Router,
     private _question: QuestionService,
-    private _snack:MatSnackBar,
-  private _quiz: QuizService) { }
+    private _snack: MatSnackBar,
+    private _quiz: QuizService) { }
 
 
   ngOnInit(): void {
@@ -50,37 +52,27 @@ export class AddQuestionComponent implements OnInit {
     this.qTitle = this._route.snapshot.params['title'];
     this.question.quiz['qId'] = this.qId;
     this.theoryQuesToAnswer.quiz['qId'] = this.qId;
-
     console.log(this.theoryQuesToAnswer)
+
+    this.getQuizById();
 
   }
 
-  // THIS FUNCTION SUBMIT THE NUMBER OF QUESTIONS TO ANSWER
+  // FETCH THE ENTIRE QUIZ
 
-
-
-
-
-
-
-
-
-  addNumberOfTheoryToAnswer() {
-    const value = this.theoryQuesToAnswer.totalQuestToAnswer;
-    if (value == null || String(value).trim() === '') {
-      return;
-    }
-    // forms submit
-    this._quiz.addNumberOfTheoryQuestions(this.theoryQuesToAnswer).subscribe(
-      (data: any) => {
-
-        Swal.fire("Success", "Theory Questions uploaded successfully", "success"); // This is display when theory added succefully
+  getQuizById() {
+    this._quiz.getQuiz(this.qId).subscribe(
+      (quiz: any) => {
+        this.specificQuiz = quiz; // now you have the entire quiz object
+        // this.theoryQuesToAnswer.quiz = quiz;
+        this.qTitle = quiz.title; // if you still want to display title
+        console.log("Full Quiz Object:", quiz);
       },
       (error) => {
-        Swal.fire("Error", "Couldn't add question Number", "error");
+        console.error("Error fetching quiz:", error);
+        this._snack.open("Could not load quiz", "", { duration: 3000 });
       }
-    )
-
+    );
   }
 
 
@@ -123,13 +115,13 @@ export class AddQuestionComponent implements OnInit {
 
   // upload file
   onFileSelected(event: Event): void {
-  const input = event.target as HTMLInputElement;
-  if (input.files && input.files.length > 0) {
-    this.selectedFile = input.files[0];
-  } else {
-    this.selectedFile = null;
+    const input = event.target as HTMLInputElement;
+    if (input.files && input.files.length > 0) {
+      this.selectedFile = input.files[0];
+    } else {
+      this.selectedFile = null;
+    }
   }
-}
   // onFileSelected(event: any): void {
   //   this.selectedFile = event.target.files[0];
   // }
@@ -140,13 +132,13 @@ export class AddQuestionComponent implements OnInit {
       Swal.fire("Error", "No file selected.", "error");
       console.error('No file selected.');
       return;
-    }    else if(this.selectedFile){
+    } else if (this.selectedFile) {
       this._question.uploadQuestions(this.qId, this.selectedFile).subscribe(
         response => {
           Swal.fire("Error", "Error uploading questions", "error");
           console.log("Done");
         },
-        
+
         (error) => {
           Swal.fire('Success', "Questions uploaded successfully", "success");
           this._router.navigate(["/admin/quizzes"]);
@@ -155,66 +147,64 @@ export class AddQuestionComponent implements OnInit {
         }
       );
     }
-    // const formData = new FormData();
-    // formData.append('file', this.selectedFile);
-
-   
   }
 
 
-uploadTheoryQuestionss(): void {
-  if (!this.selectedFile || !this.theoryQuesToAnswer.totalQuestToAnswer) {
-    this._snack.open(
-      "Select a file and specify No. of questions to answer!", 
-      "", 
-      { duration: 3000 }
-    );
-    console.error("File or number of questions missing.");
-    return;
-  }
-
-  this._question.uploadTheoryQuestions(this.qId, this.selectedFile).subscribe(
-    response => {
-      console.log(this.qId);
-      console.log(this.selectedFile);
-      Swal.fire("Error", "Error uploading questions", "error");
-    },
-    error => {
-      this.addNumberOfTheoryToAnswer();
-      // Swal.fire("Success", "Theory Questions uploaded successfully", "success");
-      this._router.navigate(["/admin/quizzes"]);
+  uploadTheoryQuestionss(): void {
+    if (!this.selectedFile || !this.theoryQuesToAnswer.totalQuestToAnswer) {
+      this._snack.open(
+        "Select a file and specify No. of questions to answer!",
+        "",
+        { duration: 3000 }
+      );
+      // console.error("File or number of questions missing.");
+      return;
     }
-  );
-}
 
+    // console.log("Starting upload process...");
+    // console.log("Theory questions data:", this.theoryQuesToAnswer);
+    // console.log("Quiz ID:", this.qId);
+    // console.log("Selected file:", this.selectedFile);
 
-clearSelectedFile(): void {
-  this.selectedFile = null;
-}
+    this._quiz.addNumberOfTheoryQuestions(this.theoryQuesToAnswer)
+      .pipe(
+        tap(response => {
+          // console.log("First API response (addNumberOfTheoryQuestions):", response);
+        }),
+        switchMap((data: any) => {
+          // console.log("Starting file upload...");
+          return this._question.uploadTheoryQuestions(this.qId, this.selectedFile);
+        }),
+        tap(response => {
+          // console.log("Second API response (uploadTheoryQuestions):", response);
+        })
+      )
+      .subscribe(
+        response => {
+          console.log("Final success response:", response);
+          Swal.fire("Success", "Theory Questions uploaded successfully", "success");
+          this.clearSelectedFile();
+          this.theoryQuesToAnswer.totalQuestToAnswer = "";
+          this.theoryQuesToAnswer.timeAllowed = "";
+        },
+        error => {
+          // console.error("Full error object:", error);
+          // console.error("Error status:", error.status);
+          // console.error("Error message:", error.message);
+          // console.error("Error response body:", error.error);
 
-  // uploadTheoryQuestionss(): void {
-  //   if (!this.selectedFile && (this.theoryQuesToAnswer.totalQuestToAnswer == "")) {
-
-  //     this._snack.open("Selected a file and specify No. of questions to answer! ", "",{
-  //       duration:3000,
-  //     });
-  //     // Swal.fire("Error", "Selected a file and specify No. of questions to answer.", "error");
-  //     console.error('No file selected.');
-  //     return;
-  //   } this._question.uploadTheoryQuestions(this.qId, this.selectedFile).subscribe(
-  //     response => {
-
-  //       console.log(this.qId);
-  //       console.log(this.selectedFile);
-  //       Swal.fire("Error", "Error uploading questions", "error");
-  //     }, (error) => {
-  //       this.addNumberOfTheoryToAnswer();
-  //       // Swal.fire('Success', "Theory Questions uploaded successfully", "success");
-  //       this._router.navigate(["/admin/quizzes"]);
-  //     }
-  //   );
-  // }
-
+          // Check if it's actually a success but with wrong status code
+          if (error.status === 200 || error.status === 201) {
+            Swal.fire("Success", "Theory Questions uploaded successfully", "success");
+          } else {
+            Swal.fire("Error", "Error uploading questions", "error");
+          }
+        }
+      );
+  }
+  clearSelectedFile(): void {
+    this.selectedFile = null;
+  }
 
 
 

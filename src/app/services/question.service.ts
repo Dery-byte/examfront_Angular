@@ -138,17 +138,27 @@ public getReport(){
         return this._http.post(`${baseUrl}/upload/${qid}`, questions, {headers})
   }
 
-
-  uploadTheoryQuestions(qid: number, questions): Observable<any> {
-    const headers = new HttpHeaders({
-      'Content-Type': 'application/json',
-      // 'Content-Type': 'multipart/form-data',
-      
-    });
-    console.log('Payload being sent:', JSON.stringify(questions));
-
-      return this._http.post(`${baseUrl}/theoryupload/${qid}`, questions, {headers})
+uploadTheoryQuestions(qid: number, questions): Observable<any> {
+  const headers = new HttpHeaders({
+    'Content-Type': 'application/json',
+    // 'Content-Type': 'multipart/form-data',
+  });
+  console.log('Payload being sent:', JSON.stringify(questions));
+  return this._http.post(`${baseUrl}/theoryupload/${qid}`, questions, {
+    headers,
+    responseType: 'text' // This tells Angular to expect text, not JSON
+  });
 }
+
+
+//   uploadTheoryQuestions(qid: number, questions): Observable<any> {
+//     const headers = new HttpHeaders({
+//       'Content-Type': 'application/json',
+//       // 'Content-Type': 'multipart/form-data',
+//     });
+//     console.log('Payload being sent:', JSON.stringify(questions));
+//       return this._http.post(`${baseUrl}/theoryupload/${qid}`, questions, {headers})
+// }
 
 public getNumerOfQuesToAnswerBy(qId){
   return this._http.get(`${baseUrl}/numberOfTheoryQuestion/${qId}`);

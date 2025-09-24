@@ -78,6 +78,8 @@ import { UserfooterComponent } from './pages/user/userfooter/userfooter.componen
 import { AdminnavbarComponent } from './pages/admin/adminnavbar/adminnavbar.component';
 import { ResetPasswordComponent } from './pages/reset-password/reset-password.component';
 import { AdminfooterComponent } from './pages/admin/adminfooter/adminfooter.component';
+import { MatRadioModule } from '@angular/material/radio';   // 👈 add this
+import { MatButtonToggleModule } from '@angular/material/button-toggle'; // 👈 if using toggle
 
 
 
@@ -168,6 +170,8 @@ exports:[TypingDirective],
     MatMenuModule,
     MatBadgeModule,
     CarouselModule,
+     MatRadioModule,         // 👈 needed for mat-radio-button
+    MatButtonToggleModule,  
     NgxUiLoaderHttpModule.forRoot({
       showForeground:true,
     }),

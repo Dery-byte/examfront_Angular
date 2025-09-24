@@ -28,7 +28,13 @@ export class AddQuizComponent implements OnInit {
     {
       cid: ""
     },
+      quizType: ''   // 👈 Add this
+
   }
+quizFormSubmitted = false;
+
+    // quizType is only for controlling UI, not saved
+  // quizType: 'theory' | 'obj' | 'both' | '' = '';
 
   constructor(private _cat: CategoryService,
     private _snackbar: MatSnackBar,
@@ -46,40 +52,51 @@ export class AddQuizComponent implements OnInit {
       }
     )
   }
-
   addQuiz() {
+      this.quizFormSubmitted = true;
     if (this.quizData.title.trim() == '' || this.quizData.title == null) {
       this._snackbar.open("Title is required !!", "", {
         duration: 3000,
       })
       return;
     }
-    //validation...
-    this._quiz.addQuiz(this.quizData).subscribe(
-      (data) => {
-        this.quizData = {
-          title: "",
-          description: "",
-          maxMarks: "",
-          quizpassword: "",
-          numberOfQuestions: "",
-          quizTime: "",
-          startTime: "",
-          quizDate: "",
-          attempted: false,
-          active: true,
-          category:
-          {
-            cid: ""
-          }
-        },
-          Swal.fire("Success", "Quiz is added", "success");
 
-      },
-      (error) => {
-        Swal.fire("Error !! ", "An error occurred while adding quiz", "error");
-      }
-    );
+      if (!this.quizData.quizType) {
+          this._snackbar.open("Select Quiz Type !!", "", {
+        duration: 3000,
+      })
+    return; // stop submission until user selects quizType
+  }
+
+    console.log(this.quizData);
+    //validation...
+
+    // this._quiz.addQuiz(this.quizData).subscribe(
+    //   (data) => {
+    //     this.quizData = {
+    //       title: "",
+    //       description: "",
+    //       maxMarks: "",
+    //       quizpassword: "",
+    //       numberOfQuestions: "",
+    //       quizTime: "",
+    //       startTime: "",
+    //       quizDate: "",
+    //       attempted: false,
+    //       active: true,
+    //       quizType:"",
+    //       category:
+    //       {
+    //         cid: ""
+    //       }
+    //     },
+    //       Swal.fire("Success", "Quiz is added", "success");
+
+    //   },
+    //   (error) => {
+    //     Swal.fire("Error !! ", "An error occurred while adding quiz", "error");
+    //   }
+    // );
   }
 
 

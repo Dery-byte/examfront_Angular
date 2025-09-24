@@ -157,18 +157,6 @@
   margin: 0;
 }
 
-.upload-options {
-  display: grid;
-  grid-template-columns: repeat(2, 1fr);
-  gap: 24px;
-  padding: 16px;
-}
-
-.upload-option {
-  padding: 16px;
-  border-radius: 8px;
-  background-color: #fafafa;
-}
 
 .option-title {
   display: flex;
@@ -292,3 +280,41 @@
   padding: 6px 10px;
   border-radius: 6px;
 }
+
+
+.upload-options {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 2rem; /* spacing between OBJ and THEORY */
+  justify-content: center; /* ensures center alignment */
+  align-items: stretch; /* equal height if both visible */
+}
+
+.upload-option {
+  flex: 1 1 350px; /* each card takes min 350px, grows equally */
+  max-width: 500px; /* prevent too wide */
+}
+
+.upload-card mat-card-header {
+  display: flex;
+  flex-direction: column;  /* stack icon above text */
+  justify-content: center;
+  align-items: center;
+  text-align: center;
+  gap: 0.5rem;       /* spacing between icon & text */
+  margin-bottom: 1rem;  /* space below header */
+}
+
+/* 
+.upload-options {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: 24px;
+  padding: 16px;
+}
+
+.upload-option {
+  padding: 16px;
+  border-radius: 8px;
+  background-color: #fafafa;
+} */
