@@ -646,11 +646,15 @@ export class StartComponent implements OnInit {
             icon: 'success',
             title: 'Evaluated!',
             text: `Your results for "${this.courseTitle}" is available for print on the dashboard.`,
+          }).then(()=>{
+            window.close();
           });
 
         }, 3000); // You can remove this delay or wait for async logic instead
       }
     });
+
+    // window.close();
   }
 
 
@@ -712,18 +716,20 @@ export class StartComponent implements OnInit {
             icon: 'success',
             title: 'Evaluated!',
             text: `Your results for ${this.courseTitle} is available for print on the dashboard.`,
+          }).then(()=>{
+            window.close();
           });
 
         }, 8000); // You can remove this delay or wait for async logic instead
       }
     });
+
   }
 
 
 
   waitNavigateFunction() {
     setTimeout(() => {
-
       this.printQuiz();
     }, 3000); // 3000 milliseconds = 3 seconds delay
   }
@@ -848,6 +854,8 @@ export class StartComponent implements OnInit {
         duration: 3000,
       });
     }
+                  // window.close();
+
   }
 
 
