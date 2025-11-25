@@ -243,12 +243,12 @@ export class StartComponent implements OnInit {
 
 
   ngOnInit(): void {
-      this.isLoading = true; // Set loading to true when starting
+    this.isLoading = true; // Set loading to true when starting
 
 
     this.qid = this._route.snapshot.params['qid'];
-            
-console.log(this.qid)
+
+    console.log(this.qid)
     // this.qid = this._route.snapshot.params['qid'];
     this._quiz.getQuiz(this.qid).subscribe((data: any) => {
       console.log(data.title);
@@ -261,13 +261,15 @@ console.log(this.qid)
 
 
       this.timeO = this.quiz.quizTime * 1;
-      // this.timerAll = (this.timeT + this.timeO) * 60;
+      this.timerAll = (this.timeT + this.timeO) * 60;
 
+      console.log(this.timerAll);
+      console.log(this.timeO * 60);
 
       // return this.timeO = parseInt(this.quiz.quizTime);
     },
       (error) => {
-            this.isLoading = false;
+        this.isLoading = false;
         this._snack.open("You're Session has expired! ", "", {
           duration: 3000,
         });
@@ -277,7 +279,7 @@ console.log(this.qid)
       }
     );
 
-  this.loadQuestions();
+    this.loadQuestions();
 
 
 
@@ -330,15 +332,17 @@ console.log(this.qid)
       console.log(" Both time for theory and objectives", this.timerAll)
 
 
-    this.loadTheory();
-    // this.loadSavedAnswers();
-    // this.loadSubjective();
+
+      this.loadTheory();
+      // this.loadSavedAnswers();
+      // this.loadSubjective();
+
     },
-    (error)=>{
-          this.isLoading = false;
+      (error) => {
+        this.isLoading = false;
 
 
-    });
+      });
 
     // console.log(this.timerAll);
 
@@ -382,14 +386,14 @@ console.log(this.qid)
 
 
       // Only set loading to false if this is the last API call
-    if (!this.isLoading) {
-      this.isLoading = false;
-    }
+      if (!this.isLoading) {
+        this.isLoading = false;
+      }
 
     },
       (error) => {
         console.log("Could not load data from server");
-            this.isLoading = false;
+        this.isLoading = false;
       });
   }
   getQuestionsGroupedByPrefix(questions) {
@@ -648,7 +652,7 @@ console.log(this.qid)
             icon: 'success',
             title: 'Evaluated!',
             text: `Your results for "${this.courseTitle}" is available for print on the dashboard.`,
-          }).then(()=>{
+          }).then(() => {
             window.close();
           });
 
@@ -718,7 +722,7 @@ console.log(this.qid)
             icon: 'success',
             title: 'Evaluated!',
             text: `Your results for ${this.courseTitle} is available for print on the dashboard.`,
-          }).then(()=>{
+          }).then(() => {
             window.close();
           });
 
@@ -858,7 +862,7 @@ console.log(this.qid)
         duration: 3000,
       });
     }
-                  // window.close();
+    // window.close();
 
   }
 
@@ -1289,15 +1293,17 @@ console.log(this.qid)
         });
 
 
-         // Set loading to false when questions are loaded
-      this.isLoading = false;
+        // Set loading to false when questions are loaded
+        this.isLoading = false;
         // 🔍 Final questions array check
         console.log("✅ Final loaded questions:", this.questions);
+              this.startTimer();
+
       },
       (error) => {
         console.log("Error Loading questions");
-         // Set loading to false when questions are loaded
-      this.isLoading = false;
+        // Set loading to false when questions are loaded
+        this.isLoading = false;
         Swal.fire("Error", "Error loading questions", "error");
       }
     );

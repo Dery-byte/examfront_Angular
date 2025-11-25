@@ -1,6 +1,6 @@
-{{currentQuestions|json}}
+<!-- {{currentQuestions|json}}
 
-{{ qid| json}}
+{{ qid| json}} -->
 <div class="bootstrap-wrapper">
     <!-- Loading Spinner -->
     <div *ngIf="isLoading" class="loading-overlay">
@@ -126,7 +126,7 @@
 
 
 
-                {{quiz|json}}
+                <!-- {{quiz|json}} -->
 
                 <div *ngIf="quiz.quizType=='OBJ'">
                     <div *ngIf="questions?.length>0">
@@ -136,7 +136,6 @@
                                 <mat-label> SECTION A -{{(timeO * 60)/60}} minutes </mat-label>
                             </mat-card>
                         </div>
-
                         <mat-card
                             *ngFor="let q of questions| paginate:{itemsPerPage: tableSize, currentPage:page, totalItems:count}; let i = index"
                             class="mt10">
@@ -180,7 +179,6 @@
                                 </span>
                             </mat-card-content>
                         </mat-card>
-
                         <!-- PAGINATION -->
                         <div>
                             <pagination-controls previousLabel="Prev" nextLabel="Next"
@@ -363,7 +361,6 @@
                                 </mat-card-content>
                             </div>
                         </form>
-
                         <mat-card-actions>
                             <mat-card>
                                 <div class="container navselect">
