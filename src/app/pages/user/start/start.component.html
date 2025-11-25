@@ -1,6 +1,6 @@
 {{currentQuestions|json}}
 
-{{  qid| json}}
+{{ qid| json}}
 <div class="bootstrap-wrapper">
     <!-- Loading Spinner -->
     <div *ngIf="isLoading" class="loading-overlay">
@@ -126,64 +126,67 @@
 
 
 
+                {{quiz|json}}
 
+                <div *ngIf="quiz.quizType=='OBJ'">
+                    <div *ngIf="questions?.length>0">
+                        <div *ngIf="questions">
+                            <mat-card class="cards"
+                                style="font-family: 'Times New Roman', Times, serif; font-size:18px; color: white;text-align: center; background-color: purple;">
+                                <mat-label> SECTION A -{{(timeO * 60)/60}} minutes </mat-label>
+                            </mat-card>
+                        </div>
 
-                <div *ngIf="questions?.length>0">
-                    <div *ngIf="questions">
-                        <mat-card class="cards"
-                            style="font-family: 'Times New Roman', Times, serif; font-size:18px; color: white;text-align: center; background-color: purple;">
-                            <mat-label> SECTION A -{{(timeO * 60)/60}} minutes </mat-label>
+                        <mat-card
+                            *ngFor="let q of questions| paginate:{itemsPerPage: tableSize, currentPage:page, totalItems:count}; let i = index"
+                            class="mt10">
+                            <mat-card-content>
+                                <span class="no-select">
+                                    <div class="row">
+                                        <div class="col-md-12">
+                                            <p> <b> Q {{q.count}} </b> <span class="ml10"
+                                                    [innerHTML]="q.content"></span>
+                                            </p>
+                                        </div>
+                                    </div>
+                                    <mat-divider></mat-divider>
+                                    <br />
+                                    <div class="row mt20">
+                                        <div class="col-md-6">
+                                            <mat-checkbox [checked]="q.givenAnswer.includes(q.option1)"
+                                                (change)="updateSelectedAnswers(q, q.option1, $event.checked)">
+                                                {{q.option1}}
+                                            </mat-checkbox>
+                                        </div>
+                                        <div class="col-md-6">
+                                            <mat-checkbox [checked]="q.givenAnswer.includes(q.option2)"
+                                                (change)="updateSelectedAnswers(q, q.option2, $event.checked)">
+                                                {{q.option2}}
+                                            </mat-checkbox>
+                                        </div>
+                                        <div class="col-md-6">
+                                            <mat-checkbox [checked]="q.givenAnswer.includes(q.option3)"
+                                                (change)="updateSelectedAnswers(q, q.option3, $event.checked)">
+                                                {{q.option3}}
+                                            </mat-checkbox>
+                                        </div>
+                                        <div class="col-md-6">
+                                            <mat-checkbox [checked]="q.givenAnswer.includes(q.option4)"
+                                                (change)="updateSelectedAnswers(q, q.option4, $event.checked)">
+                                                {{q.option4}}
+                                            </mat-checkbox>
+                                        </div>
+                                    </div>
+                                </span>
+                            </mat-card-content>
                         </mat-card>
-                    </div>
 
-                    <mat-card
-                        *ngFor="let q of questions| paginate:{itemsPerPage: tableSize, currentPage:page, totalItems:count}; let i = index"
-                        class="mt10">
-                        <mat-card-content>
-                            <span class="no-select">
-                                <div class="row">
-                                    <div class="col-md-12">
-                                        <p> <b> Q {{q.count}} </b> <span class="ml10" [innerHTML]="q.content"></span>
-                                        </p>
-                                    </div>
-                                </div>
-                                <mat-divider></mat-divider>
-                                <br />
-                                <div class="row mt20">
-                                    <div class="col-md-6">
-                                        <mat-checkbox [checked]="q.givenAnswer.includes(q.option1)"
-                                            (change)="updateSelectedAnswers(q, q.option1, $event.checked)">
-                                            {{q.option1}}
-                                        </mat-checkbox>
-                                    </div>
-                                    <div class="col-md-6">
-                                        <mat-checkbox [checked]="q.givenAnswer.includes(q.option2)"
-                                            (change)="updateSelectedAnswers(q, q.option2, $event.checked)">
-                                            {{q.option2}}
-                                        </mat-checkbox>
-                                    </div>
-                                    <div class="col-md-6">
-                                        <mat-checkbox [checked]="q.givenAnswer.includes(q.option3)"
-                                            (change)="updateSelectedAnswers(q, q.option3, $event.checked)">
-                                            {{q.option3}}
-                                        </mat-checkbox>
-                                    </div>
-                                    <div class="col-md-6">
-                                        <mat-checkbox [checked]="q.givenAnswer.includes(q.option4)"
-                                            (change)="updateSelectedAnswers(q, q.option4, $event.checked)">
-                                            {{q.option4}}
-                                        </mat-checkbox>
-                                    </div>
-                                </div>
-                            </span>
-                        </mat-card-content>
-                    </mat-card>
-
-                    <!-- PAGINATION -->
-                    <div>
-                        <pagination-controls previousLabel="Prev" nextLabel="Next"
-                            (pageChange)="onTableDataChange($event)">
-                        </pagination-controls>
+                        <!-- PAGINATION -->
+                        <div>
+                            <pagination-controls previousLabel="Prev" nextLabel="Next"
+                                (pageChange)="onTableDataChange($event)">
+                            </pagination-controls>
+                        </div>
                     </div>
                 </div>
 
@@ -331,20 +334,17 @@
 
 
 
-
                 <!-- subjective questions here -->
-                <div *ngIf="currentQuestions; else elseBlock">
+                <div *ngIf="currentQuestions.length>0; else elseBlock">
                     <mat-card>
                         <mat-card class="cards"
                             style="font-family: 'Times New Roman', Times, serif; font-size:18px; color: white;text-align: center; background-color: purple;">
                             <mat-label> SECTION B -{{(timeT * 60)/60}} minutes </mat-label>
                         </mat-card>
-
                         <form>
                             <mat-card class="cards"
                                 style=" margin: 20px;font-size:18px; color: white;text-align: center; background-color: rgb(86, 82, 82);">
                             </mat-card>
-
                             <div *ngFor="let question of currentQuestions; let i = index">
                                 <mat-card-content class="mat-card-content">
                                     <input type="checkbox" [checked]="question.selected"

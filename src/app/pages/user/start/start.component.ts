@@ -247,8 +247,8 @@ export class StartComponent implements OnInit {
 
 
     this.qid = this._route.snapshot.params['qid'];
-              this.loadQuestions();
-console.log(this.qid);
+            
+console.log(this.qid)
     // this.qid = this._route.snapshot.params['qid'];
     this._quiz.getQuiz(this.qid).subscribe((data: any) => {
       console.log(data.title);
@@ -277,6 +277,7 @@ console.log(this.qid);
       }
     );
 
+  this.loadQuestions();
 
 
 
@@ -331,7 +332,6 @@ console.log(this.qid);
 
     this.loadTheory();
     // this.loadSavedAnswers();
-
     // this.loadSubjective();
     },
     (error)=>{
@@ -781,6 +781,8 @@ console.log(this.qid);
     let hr = Math.floor(this.timerAll / 3600);
     let mm = Math.floor((this.timerAll % 3600) / 60);
     let ss = this.timerAll % 60;
+
+    console.log(hr, mm, ss)
 
     let formattedTime = '';
     if (hr > 0) {
