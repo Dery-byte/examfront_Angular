@@ -1,24 +1,32 @@
 <app-navbar></app-navbar>
+
 <div class="page-container">
   <main class="main-content">
-
     <div class="login-container">
       <div class="login-background"></div>
       <div class="login-card-wrapper">
+        <div class="form-headers">
+          <p class="login-subtitle"
+            [appTyping]="['Please enter your credentials to continue', 'Login to access your account']" [speed]="70"
+            [eraseSpeed]="40" [delayBetween]="2000">
+          </p>
+        </div>
         <mat-card class="login-card">
           <!-- <div class="logo-container">
         <div class="logo-frame">
           <img class="logo" src="../../../assets/logo1.jpg" alt="Company Logo">
         </div>
       </div> -->
+
+
           <mat-card class="form-card">
             <form (ngSubmit)="formSubmit()">
               <div class="form-header">
                 <h1 class="login-title">Welcome Back</h1>
-                <p class="login-subtitle"
+                <!-- <p class="login-subtitle"
                   [appTyping]="['Please enter your credentials to continue', 'Login to access your account']"
                   [speed]="70" [eraseSpeed]="40" [delayBetween]="2000">
-                </p>
+                </p> -->
               </div>
               <mat-card-content>
                 <mat-form-field appearance="fill" class="full-width-field">

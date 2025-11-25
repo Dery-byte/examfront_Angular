@@ -207,6 +207,8 @@ startQuiz(): void {
           showConfirmButton: false,
           timerProgressBar: true
         }).then(() => {
+          //  this._router.navigate(['./start/' + this.qid]);
+
           this.openQuizInNewWindow();
         });
       } 

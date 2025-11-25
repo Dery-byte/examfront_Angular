@@ -86,10 +86,21 @@
   color: transparent;
 }
 
-.login-subtitle {
-  font-size: 0.9rem;
-  color: #6b7a90;
-  margin-top: 6px;
+.form-headers {
+  text-align: center;
+   font-size: 2.9rem;
+  color: #f6f8fa;
+  margin-bottom: 30px;
+}
+
+p.login-subtitle {
+  font-size: 1rem;
+  color: #f6f8fa;
+  text-transform: capitalize;
+  font-weight: bolder;
+  font-family: 'Times New Roman', Times, serif;
+  text-decoration: underline;
+  /* margin-top: 6px; */
 }
 
 /* Form fields */

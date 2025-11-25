@@ -245,7 +245,10 @@ export class StartComponent implements OnInit {
   ngOnInit(): void {
       this.isLoading = true; // Set loading to true when starting
 
+
     this.qid = this._route.snapshot.params['qid'];
+              this.loadQuestions();
+console.log(this.qid);
     // this.qid = this._route.snapshot.params['qid'];
     this._quiz.getQuiz(this.qid).subscribe((data: any) => {
       console.log(data.title);
@@ -330,7 +333,6 @@ export class StartComponent implements OnInit {
     // this.loadSavedAnswers();
 
     // this.loadSubjective();
-    this.loadQuestions();
     },
     (error)=>{
           this.isLoading = false;
@@ -524,9 +526,9 @@ export class StartComponent implements OnInit {
 
   // loadQuestions(): void {
   //   this._questions.getQuestionsOfQuiz(this.qid).subscribe((data: any) => {
-  //     // this._questions.getQuestionsOfQuizForText(this.qid).subscribe((data: any) => {  // this does the question shuffle on start of quiz
+  //     this._questions.getQuestionsOfQuizForText(this.qid).subscribe((data: any) => {  
   //     // this._questions.getQuestionsOfQuizForText(1).subscribe((data: any) => {  // this does the question shuffle on start of quiz
-  //     // console.log(data[0].answer);
+  //     console.log(data[0].answer);
   //     console.log("This is quest data",data);
   //     this.questions = data.map((q, index) => {
   //       q.count = index + 1;
@@ -537,7 +539,7 @@ export class StartComponent implements OnInit {
 
   //     });
 
-
+  //   });
   //   },
   //     (error) => {
   //       console.log("Error Loading questions");
@@ -1258,6 +1260,9 @@ export class StartComponent implements OnInit {
 
 
   //PESISTING OBJ EVEN ON PAGE REFRESH
+
+
+
   loadQuestions(): void {
     this._questions.getQuestionsOfQuiz(this.qid).subscribe(
       (data: any) => {
