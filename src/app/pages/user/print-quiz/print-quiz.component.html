@@ -1,42 +1,13 @@
 <!-- {{questions[0].quiz|json}} -->
-<!-- {{questions[0].quiz.category.title |json}}
-{{questions[0].quiz.maxMarks |json}} -->
 
-
-<!-- <h1>======================Raw Response From BackEnd=======================================</h1>
-{{geminiRawResponse | json }}
-<h1>=============================================================</h1>
-
-{{geminiResponse | json}}
-<h6>==================================================================</h6>
-
-{{transformedData| json}} -->
-<!-- {{questionWithAnswers| json}} -->
-
-<!-- <h1>=============================</h1> -->
-<!-- {{answeredQuestions | json}} -->
-
-<!-- {{questions | json}}
-<hr> -->
-<!-- {{sectionB | json}} -->
-<!-- {{questionWithAnswers | json}} -->
-
-<!-- {{geminiResponse | json}} -->
-
-
-<!-- {{reportData|json}} -->
 <ngx-ui-loader fgsColor="#ff4081" pbColor="#ff4081" textColor="#ff4081" pbThickness="6"
     text="Preparing results please wait...!"></ngx-ui-loader>
-<div ngxUiLoaderBlurred (blur)="10">
 
-    <!-- {{theoryAnswer | json}} -->
+<div ngxUiLoaderBlurred (blur)="10">
 
     <div class="bootstrap-wrapper">
         <div class="row mt20">
             <div class="col-md-6 offset-md-3">
-                <ng-container>
-                    <!-- <h1 class="mt20" id="quiztitle">Quiz <b>{{questions[0].quiz.title}}</b></h1> -->
-                </ng-container>
 
                 <div class="watermark">
 
@@ -49,61 +20,85 @@
                                 Technology<br>
                                 <b>{{answeredQuestions[0].quiz.category.title}}</b>
                                 {{answeredQuestions[0].quiz.title}}. Time Allowed:
-                                <i>
-                                    <b>{{timeAllowed}} minutes</b>
-                                </i> <br>
+                                <i><b>{{timeAllowed}} minutes</b></i>
+                                <br>
                                 <label> Index Number:<b>{{username | uppercase}}</b></label>
                             </p>
                         </div>
 
                         <ng-template #elseBlock>
                             <!-- DISPLAYS IF QUESTIONS ARE ONLY OBJ -->
-                            <p *ngIf="questionWithAnswers.length >0" id="cape">
-
+                            <p *ngIf="questionWithAnswers.length > 0" id="cape">
                                 University of Cape Coast.<br>
-                                School of Physical Sciences. <br>Department of Computer Science and Information
-                                Technology<br>
+                                School of Physical Sciences.<br>
+                                Department of Computer Science and Information Technology<br>
                                 <b>{{questionWithAnswers[0].quiz.category.title}}</b>
-                                {{questionWithAnswers[0].quiz.title}}. Time Allowed:
-                                <i>
-                                    <b> {{questionWithAnswers[0].quiz.quizTime * 1}} minutes</b>
-
-
-                                </i>
-
+                                {{questionWithAnswers[0].quiz.title}}.
+                                Time Allowed:
+                                <i><b>{{questionWithAnswers[0].quiz.quizTime * 1}} minutes</b></i>
                                 <br>
-                                <label> Index Number:<b>{{username | uppercase}}</b></label>
+                                <label>Index Number:<b>{{username | uppercase}}</b></label>
                             </p>
                         </ng-template>
-
                     </div>
 
 
-                    <div *ngIf="reportData !=null">
+                    <!-- REPORT -->
+                    <!-- <div *ngIf="reportData != null">
                         <div id="marks" *ngFor="let r of reportData">
                             <p>Total Marks A & B : <span id="marksU">{{r.marks + getGrandTotalMarks()}}</span></p>
                             <p>Marks : <span id="marksU">{{r.marks}}/{{ r.quiz.maxMarks}}</span></p>
-                            <p> Correct Answers : {{r.marks}}</p>
+                            <p>Correct Answers : {{r.marks}}</p>
                             <p>Attempted questions : {{attempted}}</p>
-                            <!-- YOU MAY ADD THIS ATTEMPTED OPTION IN THE BACKEND REPORT CLASS THEN FETCH REPORT AND SHOW ON THE INTERFACE -->
-                            <!-- <p>Attempted questions : {{attempted}}</p> -->
+                        </div>
+                    </div> -->
+
+                    <div *ngIf="reportData != null">
+                        <div id="marks" *ngFor="let r of reportData">
+
+                            <!-- QUIZ TYPE: OBJ or THEORY -->
+                            <ng-container
+                                *ngIf="questions[0].quiz.quizType === 'OBJ' || questions[0].quiz.quizType === 'THEORY'; else bothReport">
+                                <p>Total Marks :
+                                    <span id="marksU">{{ r.marks + getGrandTotalMarks() }}/{{ r.quiz.maxMarks }}</span>
+                                </p>
+                                <!-- <p>Marks :
+                                    <span id="marksU">{{ r.marks }}/{{ r.quiz.maxMarks }}</span>
+                                </p> -->
+                                <!-- <p>Correct Answers : {{ r.marks }}</p> -->
+                                <p>Attempted questions : {{ attempted }}</p>
+                            </ng-container>
+
+                            <!-- QUIZ TYPE: BOTH -->
+                            <ng-template #bothReport>
+                                <p>Total Marks A & B :
+                                    <span id="marksU">{{ r.marks + getGrandTotalMarks() }}</span>
+                                </p>
+                                <p>Marks :
+                                    <span id="marksU">{{ r.marks }}/{{ r.quiz.maxMarks }}</span>
+                                </p>
+                                <p>Correct Answers : {{ r.marks }}</p>
+                                <p>Attempted questions : {{ attempted }}</p>
+                            </ng-template>
+
                         </div>
                     </div>
 
 
 
-
-                    <!-- </div> -->
-                    <!-- BEGIN SECTION A -->
-                    <div *ngIf="questionWithAnswers.length>0">
+                    <!-- ================= SECTION A (OBJ) ================= -->
+                    <div
+                        *ngIf="(questions[0].quiz.quizType === 'OBJ' || questions[0].quiz.quizType === 'BOTH') && questionWithAnswers.length > 0">
                         <h1 style="text-align: center;">Section A</h1>
+
                         <mat-card *ngFor="let qA of questionWithAnswers; let i = index" class="mt10">
                             <mat-card-content>
-                                <p> <b> Q {{ i + 1}} </b> <span class="ml10" [innerHTML]="qA.content"></span></p>
+                                <p><b>Q {{ i + 1 }}</b>
+                                    <span class="ml10" [innerHTML]="qA.content"></span>
+                                </p>
+
                                 <mat-divider></mat-divider>
                                 <br />
-
-                                <!-- Worked like magic -->
 
                                 <div class="row mt20">
                                     <div class="col-md-6">
@@ -113,10 +108,11 @@
                                     </div>
 
                                     <div class="col-md-6">
-                                        <input type="checkbox" [name]="i"
-                                            [checked]="qA.correct_answer.includes(qA.option2)" disabled />
+                                        <input type="checkbox" [checked]="qA.correct_answer.includes(qA.option2)"
+                                            disabled />
                                         {{qA.option2}}
                                     </div>
+
                                     <div class="col-md-6">
                                         <input type="checkbox" [checked]="qA.correct_answer.includes(qA.option3)"
                                             disabled />
@@ -127,17 +123,19 @@
                                         <input type="checkbox" [checked]="qA.correct_answer.includes(qA.option4)"
                                             disabled />
                                         {{qA.option4}}
-
                                     </div>
                                 </div>
                             </mat-card-content>
                         </mat-card>
                     </div>
-                    <!-- {{value | json}} -->
 
-                    <!-- <h2>==============================</h2> -->
+
                     <div class="watermarkss">{{username | uppercase}}</div>
-                    <div *ngIf="theoryAnswer != null">
+
+
+                    <!-- ================= SECTION B (THEORY) ================= -->
+                    <div
+                        *ngIf="(questions[0].quiz.quizType === 'THEORY' || questions[0].quiz.quizType === 'BOTH') && theoryAnswer.length > 0">
                         <h1 class="section-header">
                             Section B
                             <b class="section-total">
@@ -150,33 +148,33 @@
                                 <mat-card-header>
                                     <mat-card-title class="prefix-title">
                                         {{ groups.prefix }}
-                                        <em class="prefix-totals">( Marks: {{ getTotalMarksByPrefix(theoryAnswer)}})
-                                        </em>
+                                        <em class="prefix-totals">( Marks: {{ getTotalMarksByPrefix(theoryAnswer)
+                                            }})</em>
                                     </mat-card-title>
                                 </mat-card-header>
+
                                 <mat-card-content>
                                     <div class="data" *ngFor="let items of groups.questions">
+
                                         <div class="question-block">
                                             <p class="question-title">
                                                 <strong>{{ items.quesO }}:</strong> {{ items.question }}
                                             </p>
 
                                             <p class="question-answer">
-                                                <!-- <strong>Your Answer:</strong> {{ items.studentAnswer }} -->
-                                                <strong>Your Answer:</strong> {{ items.studentAnswer || 'No answer provided' }}
-
+                                                <strong>Your Answer:</strong>
+                                                {{ items.studentAnswer || 'No answer provided' }}
                                             </p>
 
                                             <p class="question-score">
                                                 <strong>Score:</strong>
-                                                <span class="score-value">{{ items.score }}</span>/<span
-                                                    class="max-marks">{{ items.maxMarks }}</span>
+                                                <span class="score-value">{{ items.score }}</span>/
+                                                <span class="max-marks">{{ items.maxMarks }}</span>
                                             </p>
                                         </div>
 
-                                        <!-- <p><strong>Missing Elements</strong> {{ items.keyMissed }}</p> -->
-
-                                        <div *ngIf="items.keyMissed && items.keyMissed.length > 0 && !(items.keyMissed.length === 1 && items.keyMissed[0] === '')"
+                                        <div *ngIf="items.keyMissed && items.keyMissed.length > 0 
+                                            && !(items.keyMissed.length === 1 && items.keyMissed[0] === '')"
                                             class="missing-elements">
                                             <strong class="missing-elements-title">Missing Elements:</strong>
                                             <span class="missing-elements-list">
@@ -184,23 +182,22 @@
                                             </span>
                                         </div>
 
-                                        <div *ngIf="!items.keyMissed || items.keyMissed.length === 0 || (items.keyMissed.length === 1 && items.keyMissed[0] === '')"
+                                        <div *ngIf="!items.keyMissed 
+                                            || items.keyMissed.length === 0 
+                                            || (items.keyMissed.length === 1 && items.keyMissed[0] === '')"
                                             class="no-missing-elements">
                                             <strong class="no-missing-title">Great Work!</strong>
-                                            <span class="no-missing-message">
-                                                No Suggestions
-                                            </span>
+                                            <span class="no-missing-message">No Suggestions</span>
                                         </div>
 
                                     </div>
                                 </mat-card-content>
                             </mat-card>
+
                             <mat-divider></mat-divider>
                         </div>
                     </div>
 
-
-                    <!-- <h2>=================================================</h2> -->
 
                     <mat-card-actions>
                         <div class="container text-center">
@@ -211,7 +208,9 @@
                                 routerLink="/user-dashboard/0">Home</button>
                         </div>
                     </mat-card-actions>
+
                 </div>
             </div>
         </div>
     </div>
+</div>
