@@ -1,3 +1,5 @@
+<!-- {{availablequizzes | json}} -->
+
 <mat-card class="quiz-summary-card">
   <!-- Loading indicator for initial report data -->
   <div *ngIf="isLoadingReports" class="loading-container">
@@ -17,6 +19,158 @@
         <h2 class="section-title mat-headline-5">Quiz Summary Dashboard</h2>
         <p class="section-subtitle mat-subtitle-1">Review your exam performance and results</p>
       </div>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
       <div class="dashboard-container">
         <!-- Course selection column -->
@@ -116,6 +270,57 @@
           </div>
         </div>
       </div>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+      
     </div>
   </div>
 
@@ -205,32 +410,30 @@
 
 
 
-
-
-<!-- Quiz summary dialog -->
-<p-dialog [(visible)]="productDialog" [style]="{width: '450px'}" [modal]="true" class="quiz-dialog"
+<!-- Overlay backdrop -->
+ <div class="dialog-overlay" *ngIf="productDialog" (click)="productDialog = false"></div>
+<p-dialog [(visible)]="productDialog" [style]="{width: '500px'}" [modal]="true" class="quiz-dialog custom-overlay"
   header="Quiz Performance Summary">
   <mat-card *ngIf="reportData" class="summary-card">
     <mat-card-header>
-      <mat-card-title>Detailed Results</mat-card-title>
-      <mat-card-subtitle>Objective vs Theory Performance</mat-card-subtitle>
+      <mat-card-title>Results Summary</mat-card-title>
     </mat-card-header>
-
     <mat-card-content>
       <table class="summary-table mat-elevation-z1">
         <thead>
           <tr>
             <th>Section</th>
-            <th>Objective</th>
-            <th>Theory</th>
+            <th *ngIf="showObjectiveColumn()">Objective</th>
+            <th *ngIf="showTheoryColumn()">Theory</th>
             <th>Status</th>
           </tr>
         </thead>
         <tbody>
-          <tr *ngFor="let r of reportData">
-            <td>Section {{$index + 1}}</td>
-            <td>{{r.marks}}/100</td>
-            <td>{{r.marksB}}/100</td>
+          <tr *ngFor="let r of reportData; let i = index">
+            <!-- {{reportData | json}} -->
+            <td>Section {{i + 1}}</td>
+            <td *ngIf="showObjectiveColumn()">{{r.marks}}/{{r.quiz.maxMarks}}</td>
+            <td *ngIf="showTheoryColumn()">{{r.marksB}}/100</td>
             <td>
               <mat-chip [color]="r.progress === 'Completed' ? 'primary' : 'warn'" selected>
                 {{r.progress}}
@@ -239,23 +442,8 @@
           </tr>
         </tbody>
       </table>
-
-      <!-- <div class="performance-chart" *ngIf="reportData.length > 0">
-        <div class="chart-placeholder">
-          <mat-icon class="chart-icon">bar_chart</mat-icon>
-          <p>Performance visualization</p>
-        </div>
-      </div> -->
     </mat-card-content>
-
-    <mat-card-actions align="end">
-      <button mat-button (click)="productDialog = false">Close</button>
-      <button mat-button color="primary" (click)="onPrintDialogClick()">
-        <mat-icon>print</mat-icon> Print
-      </button>
-    </mat-card-actions>
   </mat-card>
-
   <div class="no-results" *ngIf="reports.length === 0">
     <mat-card class="empty-card">
       <mat-card-content class="empty-content">
@@ -266,6 +454,9 @@
     </mat-card>
   </div>
 </p-dialog>
+
+
+
 
 
 

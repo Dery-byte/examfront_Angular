@@ -73,8 +73,21 @@ public getActieQuizzesOfCategory(cid){
   return this._http.get(`${baseUrl}/category/active/${cid}`)
 }
 
-//get single quiz to facilitate update
 
+
+
+// GET QUIZZES TAKEN BY SPECIFIC STUDENT BY CATEGORY 
+public getTakenQuizzesOfCategoryByUser(cid){
+  return this._http.get(`${baseUrl}/category/takenByUser/${cid}`)
+}
+
+
+
+
+
+
+
+//get single quiz to facilitate update
 public getNumerOfQuesToAnswer(qId){
   return this._http.get(`${baseUrl}/numberOfTheoryQuestion/${qId}`);
 }

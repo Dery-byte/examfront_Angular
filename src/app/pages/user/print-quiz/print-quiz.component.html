@@ -90,16 +90,13 @@
                     <div
                         *ngIf="(questions[0].quiz.quizType === 'OBJ' || questions[0].quiz.quizType === 'BOTH') && questionWithAnswers.length > 0">
                         <h1 style="text-align: center;">Section A</h1>
-
                         <mat-card *ngFor="let qA of questionWithAnswers; let i = index" class="mt10">
                             <mat-card-content>
                                 <p><b>Q {{ i + 1 }}</b>
                                     <span class="ml10" [innerHTML]="qA.content"></span>
                                 </p>
-
                                 <mat-divider></mat-divider>
                                 <br />
-
                                 <div class="row mt20">
                                     <div class="col-md-6">
                                         <input type="checkbox" [checked]="qA.correct_answer.includes(qA.option1)"
@@ -112,13 +109,11 @@
                                             disabled />
                                         {{qA.option2}}
                                     </div>
-
                                     <div class="col-md-6">
                                         <input type="checkbox" [checked]="qA.correct_answer.includes(qA.option3)"
                                             disabled />
                                         {{qA.option3}}
                                     </div>
-
                                     <div class="col-md-6">
                                         <input type="checkbox" [checked]="qA.correct_answer.includes(qA.option4)"
                                             disabled />
@@ -128,7 +123,6 @@
                             </mat-card-content>
                         </mat-card>
                     </div>
-
 
                     <div class="watermarkss">{{username | uppercase}}</div>
 
@@ -142,7 +136,6 @@
                                 Total Marks: <em class="grand-totals">{{ getGrandTotalMarks() }}</em>
                             </b>
                         </h1>
-
                         <div *ngFor="let groups of theoryAnswer">
                             <mat-card>
                                 <mat-card-header>
@@ -152,27 +145,22 @@
                                             }})</em>
                                     </mat-card-title>
                                 </mat-card-header>
-
                                 <mat-card-content>
                                     <div class="data" *ngFor="let items of groups.questions">
-
                                         <div class="question-block">
                                             <p class="question-title">
                                                 <strong>{{ items.quesO }}:</strong> {{ items.question }}
                                             </p>
-
                                             <p class="question-answer">
                                                 <strong>Your Answer:</strong>
                                                 {{ items.studentAnswer || 'No answer provided' }}
                                             </p>
-
                                             <p class="question-score">
                                                 <strong>Score:</strong>
                                                 <span class="score-value">{{ items.score }}</span>/
                                                 <span class="max-marks">{{ items.maxMarks }}</span>
                                             </p>
                                         </div>
-
                                         <div *ngIf="items.keyMissed && items.keyMissed.length > 0 
                                             && !(items.keyMissed.length === 1 && items.keyMissed[0] === '')"
                                             class="missing-elements">
@@ -181,7 +169,6 @@
                                                 {{ items.keyMissed }}
                                             </span>
                                         </div>
-
                                         <div *ngIf="!items.keyMissed 
                                             || items.keyMissed.length === 0 
                                             || (items.keyMissed.length === 1 && items.keyMissed[0] === '')"
@@ -189,16 +176,12 @@
                                             <strong class="no-missing-title">Great Work!</strong>
                                             <span class="no-missing-message">No Suggestions</span>
                                         </div>
-
                                     </div>
                                 </mat-card-content>
                             </mat-card>
-
                             <mat-divider></mat-divider>
                         </div>
                     </div>
-
-
                     <mat-card-actions>
                         <div class="container text-center">
                             <button (click)="printPage()" mat-raised-button color="accent"

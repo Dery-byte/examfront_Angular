@@ -138,11 +138,27 @@ export class LoadQuizComponent implements OnInit {
     return [];
   }
 
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
   onQuizOptionSelected(): void {
     if (!this.categories?.cid) return;
     
     this.isLoadingQuizzes = true;
-    this._quiz.getActieQuizzesOfCategory(this.categories.cid).subscribe({
+        // this._quiz.getActieQuizzesOfCategory(this.categories.cid).subscribe({
+    this._quiz.getTakenQuizzesOfCategoryByUser(this.categories.cid).subscribe({
       next: (quiz: any) => {
         this.availablequizzes = quiz;
         this.isLoadingQuizzes = false;
@@ -153,6 +169,28 @@ export class LoadQuizComponent implements OnInit {
       }
     });
   }
+
+showObjectiveColumn(): boolean {
+  // Show Objective column if ANY quiz has type OBJ or BOTH
+  return this.reportData?.some(r => r.quiz.quizType === 'OBJ' || r.quiz.quizType === 'BOTH') || false;
+}
+showTheoryColumn(): boolean {
+  // Show Theory column if ANY quiz has type THEORY or BOTH
+  return this.reportData?.some(r => r.quiz.quizType === 'THEORY' || r.quiz.quizType === 'BOTH') || false;
+}
+
+
+
+
+
+
+
+
+
+
+
+
+  
 
   hideDialog(): void {
     this.productDialog = false;
