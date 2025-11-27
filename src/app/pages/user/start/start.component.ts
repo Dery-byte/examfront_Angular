@@ -10,6 +10,7 @@ import { LoginService } from 'src/app/services/login.service';
 import { MatSnackBar } from '@angular/material/snack-bar';
 
 import Swal from 'sweetalert2';
+import { ScreenshotPreventionService } from 'src/app/services/ScreenshotPreventionService ';
 
 interface QuizAnswers {
   [prefix: string]: {
@@ -193,7 +194,10 @@ export class StartComponent implements OnInit {
     private _route: ActivatedRoute,
     private _snack: MatSnackBar,
     private _questions: QuestionService,
-    private router: Router) {
+    private router: Router,
+        private screenshotPrevention: ScreenshotPreventionService,
+
+  ) {
   }
 
   @HostListener('window:beforeunload', ['$event'])
@@ -243,6 +247,7 @@ export class StartComponent implements OnInit {
 
 
   ngOnInit(): void {
+        this.screenshotPrevention.enableProtection();
     this.isLoading = true; // Set loading to true when starting
 
 

@@ -3,6 +3,7 @@ import { UserService } from 'src/app/services/user.service';
 import { MatSnackBar } from '@angular/material/snack-bar'
 import { Router } from '@angular/router';
 import swal from 'sweetalert2'
+import { ScreenshotPreventionService } from 'src/app/services/ScreenshotPreventionService ';
 
 @Component({
   selector: 'app-signup',
@@ -12,7 +13,9 @@ import swal from 'sweetalert2'
 export class SignupComponent implements OnInit {
 
 
-  constructor(private userService: UserService, private snack: MatSnackBar,private router: Router) { }
+  constructor(private userService: UserService, private snack: MatSnackBar,private router: Router,
+    private screenshotPrevention: ScreenshotPreventionService,
+  ) { }
   isLogingIn = false;
   public user = {
     username: '',
@@ -23,7 +26,9 @@ export class SignupComponent implements OnInit {
     phone: '',
 
   };
-  ngOnInit(): void { }
+  ngOnInit(): void {
+        // this.screenshotPrevention.enableProtection();
+   }
 
 // Add these to your component class
 hidePassword = true;
