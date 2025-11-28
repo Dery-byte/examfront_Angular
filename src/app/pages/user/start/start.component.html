@@ -10,20 +10,43 @@
     <div class="container-fluid" *ngIf="!isSubmit && !isLoading">
         <div class="row">
             <div class="hideInstruct col-md-2">
+
+
+
+
+
+
+
+
+
+
+
+
+
+
                 <!-- instructions -->
                 <mat-card class="cards staticCard">
                     <mat-card-content>
                         <h1><b>Instructions</b></h1>
                         <ul>
-                            <li style="color: brown;">Answers all questions in Section A and
-                                <b>{{numberOfQuestionsToAnswer}}</b> questions from section B.
+                            <li style="color: brown;">
+                                
+                                <span *ngIf="quiz.quizType=='OBJ'">Answer all questions in Section A.</span>
+                                <span *ngIf="quiz.quizType=='THEORY'"> Answer <b>{{numberOfQuestionsToAnswer}}</b> questions from section B.</span>
+                                <span *ngIf="quiz.quizType=='BOTH'"> Answer all questions in Section A and <b>{{numberOfQuestionsToAnswer}}</b> questions from section B.</span>
                             </li>
+
+                                             
+
                             <li>Do not refresh the page. You might get new questions</li>
                             <li>Do not switch tabs</li>
                             <li>Also do not minimize the window</li>
                         </ul>
                     </mat-card-content>
                 </mat-card>
+
+
+
             </div>
 
             <!-- Timer counter on small devices -->
@@ -127,7 +150,7 @@
 
                 <!-- {{quiz|json}} -->
 
-                <div *ngIf="quiz.quizType=='OBJ'">
+                <!-- <div *ngIf="quiz.quizType=='OBJ'"> -->
                     <div *ngIf="questions?.length>0">
                         <div *ngIf="questions">
                             <mat-card class="cards"
@@ -185,7 +208,7 @@
                             </pagination-controls>
                         </div>
                     </div>
-                </div>
+                <!-- </div> -->
 
 
 
@@ -411,13 +434,13 @@
                 </ng-template>
             </div>
 
-            <div class="large-devices col-md-2 fixed-card">
-                <mat-card class="cards">
+            <!-- <div class="large-devices col-md-2 fixed-card"> -->
+                <!-- <mat-card class="cards"> -->
                     <mat-card-content>
                         <h1 class="text-center"> Time Left: <i>{{ getFormmatedTime() }} </i></h1>
                     </mat-card-content>
-                </mat-card>
-            </div>
+                <!-- </mat-card> -->
+            <!-- </div> -->
         </div>
     </div>
 </div>

@@ -57,28 +57,68 @@ export class LoadQuizComponent implements OnInit {
     this.loadRegisteredCourses();
   }
 
-  private loadInitialData(): void {
-    this.isLoadingCourses=true;
-    const userDetails = localStorage.getItem('user');
-    if (userDetails) {
-      const userObject = JSON.parse(userDetails);
-      this.u_id = userObject.id;
+  // private loadInitialData(): void {
+  //   this.isLoadingCourses=true;
+  //   const userDetails = localStorage.getItem('user');
+  //   if (userDetails) {
+  //     const userObject = JSON.parse(userDetails);
+  //     this.u_id = userObject.id;
       
-      this.isLoadingReports = true;
-      this._report.getReportsByUserID(this.u_id).subscribe({
-        next: (data:any) => {
-          this.reports = data;
-          this.isLoadingReports = false;
-        },
-        error: (error) => {
-          console.error('Error loading reports:', error);
-          this.isLoadingReports = false;
-        }
-      });
-    }
+  //     this.isLoadingReports = true;
+  //     this._report.getReportsByUserID(this.u_id).subscribe({
+  //       next: (data:any) => {
+  //         this.reports = data;
+  //         this.isLoadingReports = false;
+  //       },
+  //       error: (error) => {
+  //         console.error('Error loading reports:', error);
+  //         this.isLoadingReports = false;
+  //       }
+  //     });
+  //   }
 
-    this.getButtonState();
+  //   this.getButtonState();
+  // }
+uniqueCategories;
+
+private loadInitialData(): void {
+  this.isLoadingCourses = true;
+  const userDetails = localStorage.getItem('user');
+
+  if (userDetails) {
+    const userObject = JSON.parse(userDetails);
+    this.u_id = userObject.id;
+
+    this.isLoadingReports = true;
+
+    this._report.getReportsByUserID(this.u_id).subscribe({
+      next: (data: any) => {
+        this.reports = data;
+
+        // ✅ Extract unique categories based on cid
+        this.uniqueCategories = [
+          ...new Map(
+            this.reports.map((item: any) => [
+              item.quiz.category.cid,
+              item.quiz.category
+            ])
+          ).values()
+        ];
+
+        this.isLoadingReports = false;
+      },
+
+      error: (error) => {
+        console.error('Error loading reports:', error);
+        this.isLoadingReports = false;
+      }
+    });
   }
+
+  this.getButtonState();
+}
+
+
 
   private loadQuizzesBasedOnRoute(): void {
     this._route.params.subscribe((params) => {

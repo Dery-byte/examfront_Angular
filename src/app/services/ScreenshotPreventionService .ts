@@ -74,15 +74,20 @@ export class ScreenshotPreventionService {
         45deg,
         transparent,
         transparent 100px,
-        rgba(255, 0, 0, 0.1) 100px,
-        rgba(255, 0, 0, 0.1) 200px
+        rgba(32, 7, 250, 0.1) 100px,
+        rgba(199, 3, 133, 0.1) 200px
       )`
     );
 
+
+    
+
     // Add user ID/timestamp to watermark
-    const userId = localStorage.getItem('userId') || 'ANONYMOUS';
+    const userId = localStorage.getItem('user') || 'CONFIDENTIAL';
+
+    const username = this.getUsername();
     const timestamp = new Date().toISOString();
-    const text = `${userId} - ${timestamp}`;
+    const text = `${username} - ${timestamp}`;
     
     for (let i = 0; i < 20; i++) {
       const textElement = this.renderer.createElement('div');
@@ -98,6 +103,21 @@ export class ScreenshotPreventionService {
     }
 
     this.renderer.appendChild(document.body, watermark);
+  }
+
+
+  private getUsername(): string {
+    try {
+      const userData = localStorage.getItem('user');
+      if (userData) {
+        const user = JSON.parse(userData);
+        return user.username || 'ANONYMOUS';
+      }
+      return 'ANONYMOUS';
+    } catch (error) {
+      console.error('Error getting username from localStorage:', error);
+      return 'ANONYMOUS';
+    }
   }
 
   private preventScreenshotShortcuts(): void {
