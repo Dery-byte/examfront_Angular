@@ -189,42 +189,115 @@
         </div>
       </div>
 
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
       <div *ngIf="reportsData.length>0">
         <div>
           &nbsp;&nbsp;<button mat-flat-button color="accent" (click)="exportexcel()">Export as Excel </button>
-
         </div>
-        <table mat-table [dataSource]="reportsData" class="mat-elevation-z8" id="reportdata">
 
-          <ng-container matColumnDef="index">
-            <th mat-header-cell *matHeaderCellDef> Index Number</th>
-            <td mat-cell *matCellDef="let element">{{ element.user.username }}</td>
-          </ng-container>
+        <!-- {{reportsData | json}} -->
+<table mat-table [dataSource]="reportsData" class="mat-elevation-z8" id="reportdata">
 
-          <!-- Name Column -->
-          <ng-container matColumnDef="name">
-            <th mat-header-cell *matHeaderCellDef> Name </th>
-            <td mat-cell *matCellDef="let element">{{ element.user.firstname }} {{ element.user.lastname }}</td>
-          </ng-container>
+  <!-- Index Number -->
+  <ng-container matColumnDef="index">
+    <th mat-header-cell *matHeaderCellDef> Index Number </th>
+    <td mat-cell *matCellDef="let element"> {{ element.user.username }} </td>
+  </ng-container>
 
-          <ng-container matColumnDef="marks">
-            <th mat-header-cell *matHeaderCellDef> OBJ Marks </th>
-            <td mat-cell *matCellDef="let element">{{ element.marks }}</td>
-          </ng-container>
+  <!-- Student Name -->
+  <ng-container matColumnDef="name">
+    <th mat-header-cell *matHeaderCellDef> Name </th>
+    <td mat-cell *matCellDef="let element">
+      {{ element.user.firstname }} {{ element.user.lastname }}
+    </td>
+  </ng-container>
 
-          <ng-container matColumnDef="theory">
-            <th mat-header-cell *matHeaderCellDef> Theory Marks </th>
-            <td mat-cell *matCellDef="let element">{{ element.marksB }}</td>
-          </ng-container>
+  <!-- OBJ Marks -->
+  <ng-container matColumnDef="marks" *ngIf="quizType !== 'THEORY'">
+    <th mat-header-cell *matHeaderCellDef> OBJ Marks </th>
+    <td mat-cell *matCellDef="let element"> {{ element.marks }} </td>
+  </ng-container>
 
-          <ng-container matColumnDef="total">
-            <th mat-header-cell *matHeaderCellDef> Total Marks </th>
-            <td mat-cell *matCellDef="let element">{{ (element.marksB + element.marks) }}</td>
-          </ng-container>
+  <!-- Theory Marks -->
+  <ng-container matColumnDef="theory" *ngIf="quizType !== 'OBJ'">
+    <th mat-header-cell *matHeaderCellDef> Theory Marks </th>
+    <td mat-cell *matCellDef="let element"> {{ element.marksB }} </td>
+  </ng-container>
 
-          <tr mat-header-row *matHeaderRowDef="displayColumn"></tr>
-          <tr mat-row *matRowDef="let row; columns: displayColumn;"></tr>
-        </table>
+  <!-- Total Marks -->
+  <ng-container matColumnDef="total">
+    <th mat-header-cell *matHeaderCellDef> Total Marks </th>
+    <td mat-cell *matCellDef="let element">
+      {{ element.marks + element.marksB }}
+    </td>
+  </ng-container>
+
+  <!-- Table Headers + Rows -->
+  <tr mat-header-row *matHeaderRowDef="displayColumn"></tr>
+  <tr mat-row *matRowDef="let row; columns: displayColumn;"></tr>
+
+</table>
+
+
+        
       </div>
 
 

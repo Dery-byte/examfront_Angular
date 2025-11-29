@@ -46,7 +46,9 @@ export class WelcomeComponent implements OnInit {
 	selectedCategoryId;
 	associatedQuizzes: any[];
 	cateGory;
-	allUsers
+	allUsers;
+	quizType: string = '';
+
 
 
 	public displayColumn: string[] = ['index', 'name', 'marks', 'theory', 'total'];
@@ -86,7 +88,11 @@ export class WelcomeComponent implements OnInit {
 			});
 		this.allReports();
 
+
+
 	}
+
+
 
 	// =========================
 	allReports() {
@@ -96,6 +102,9 @@ export class WelcomeComponent implements OnInit {
 
 		});
 	}
+
+
+
 	// =========================
 	getQuizTitlesByCategory(categoryId: any) {
 		const category = this.cateGory.find((c) => c.cid === categoryId);
@@ -122,6 +131,9 @@ export class WelcomeComponent implements OnInit {
 
 
 	//SELECTING A QUIZ DISPLAY RESULTS FOR EACH STUDENT
+
+
+
 	onQuizOptionSelected() {
 		this.totalMarks = 0;
 		this.sectionAmarks = 0;
@@ -135,19 +147,44 @@ export class WelcomeComponent implements OnInit {
 				this.totalMarks += parseFloat(item.marks);
 				this.sectionAmarks += parseFloat(item.marksB);
 
-
 				// this.sectionB = parseFloat(item.marks);
 				// this.theoryMarks = parseFloat(item.marksB);
 				this.averageScore = (this.totalMarks + this.sectionAmarks) / this.totalQuizTakers;
 			});
+			console.log('Report Data:', report);
+			if (this.reportsData.length > 0) {
+				this.quizType = this.reportsData[0].quiz.quizType;  // OBJ | THEORY | BOTH
+			}
+			this.buildColumns();
 			console.log(this.averageScore);
-
-
 			// this.AandB = (this.totalMarks + this.theoryMarks)
 			// Output the total marks
 			console.log("Total Marks:", this.totalMarks);
 		});
 	}
+
+
+	buildColumns() {
+		// Always visible
+		this.displayColumn = ['index', 'name'];
+		if (this.quizType === 'OBJ') {
+			this.displayColumn.push('marks'); // OBJ only
+		}
+		else if (this.quizType === 'THEORY') {
+			this.displayColumn.push('theory'); // THEORY only
+		}
+		else if (this.quizType === 'BOTH') {
+			this.displayColumn.push('marks', 'theory'); // BOTH
+		}
+		// Always show total
+		this.displayColumn.push('total');
+	}
+
+
+
+
+
+
 	extractForChart() {
 		var maxOfTotalScore = 0;
 		// Extracting names and marks
