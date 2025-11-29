@@ -195,7 +195,7 @@ export class StartComponent implements OnInit {
     private _snack: MatSnackBar,
     private _questions: QuestionService,
     private router: Router,
-        private screenshotPrevention: ScreenshotPreventionService,
+    private screenshotPrevention: ScreenshotPreventionService,
 
   ) {
   }
@@ -247,7 +247,7 @@ export class StartComponent implements OnInit {
 
 
   ngOnInit(): void {
-        this.screenshotPrevention.enableProtection();
+    this.screenshotPrevention.enableProtection();
     this.isLoading = true; // Set loading to true when starting
 
 
@@ -358,7 +358,7 @@ export class StartComponent implements OnInit {
 
     // this.startTimer();
     // this.printQuiz();
-        this.startTimer();
+    this.startTimer();
 
     this.initForm();
     this.preventBackButton();
@@ -623,6 +623,9 @@ export class StartComponent implements OnInit {
   //     };
   //   });
   // }
+
+
+
   submitQuiz() {
     Swal.fire({
       title: "Do you want to submit the quiz?",
@@ -660,8 +663,13 @@ export class StartComponent implements OnInit {
             title: 'Evaluated!',
             text: `Your results for "${this.courseTitle}" is available for print on the dashboard.`,
           }).then(() => {
-            window.close();
-                this.router.navigate(['/user-dashboard/0']); // Better than window.location
+            // Navigate the MAIN window (correct)
+              window.close();
+            if (window.opener) {
+              window.opener.location.href = '/user-dashboard/0';
+            }
+            // Close the limited browser window
+          
 
           });
 
@@ -1308,7 +1316,7 @@ export class StartComponent implements OnInit {
         this.isLoading = false;
         // 🔍 Final questions array check
         console.log("✅ Final loaded questions:", this.questions);
-              this.startTimer();
+        this.startTimer();
 
       },
       (error) => {
