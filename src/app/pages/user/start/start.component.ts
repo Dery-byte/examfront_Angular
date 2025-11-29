@@ -746,11 +746,19 @@ export class StartComponent implements OnInit {
             icon: 'success',
             title: 'Evaluated!',
             text: `Your results for ${this.courseTitle} is available for print on the dashboard.`,
-          }).then(() => {
-            window.close();
-            this.router.navigate(['/user-dashboard/0']); // Better than window.location
-
           });
+          
+          // .then(() => {
+          //   window.close();
+          //   this.router.navigate(['/user-dashboard/0']); // Better than window.location
+          // });
+
+            setTimeout(() => {
+            window.close();
+            if (window.opener) {
+              window.opener.location.href = '/user-dashboard/0';
+            }
+          }, 1200); // wait slightly longer than success popup duration
 
         }, 8000); // You can remove this delay or wait for async logic instead
       }
