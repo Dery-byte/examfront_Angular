@@ -443,20 +443,26 @@ confirmCloseBrowser(): void {
     
       // Optional: Monitor when window is closed
       const checkWindowClosed = setInterval(() => {
-        if (this.quizWindow && this.quizWindow.closed) {
-          clearInterval(checkWindowClosed);
+         window.close();
 
-          console.log('Quiz window was closed');
+            if (window.opener) {
+              window.opener.location.href = '/user-dashboard/0';
+            }
+
+        // if (this.quizWindow && this.quizWindow.closed) {
+        //   clearInterval(checkWindowClosed);
+
+        //   console.log('Quiz window was closed');
           
-          // Optional: Show a message when quiz window closes
-          Swal.fire({
-            title: 'Quiz Window Closed',
-            text: 'The quiz window has been closed',
-            icon: 'info',
-            timer: 2000,
-            showConfirmButton: false
-          });
-        }
+        //   // Optional: Show a message when quiz window closes
+        //   Swal.fire({
+        //     title: 'Quiz Window Closed',
+        //     text: 'The quiz window has been closed',
+        //     icon: 'info',
+        //     timer: 2000,
+        //     showConfirmButton: false
+        //   });
+        // }
       }, 1000);
     }
   }

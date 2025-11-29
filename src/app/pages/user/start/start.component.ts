@@ -662,16 +662,23 @@ export class StartComponent implements OnInit {
             icon: 'success',
             title: 'Evaluated!',
             text: `Your results for "${this.courseTitle}" is available for print on the dashboard.`,
-          }).then(() => {
-            // Navigate the MAIN window (correct)
-              window.close();
+            timer: 1000,        // ⬅ auto-close after 1.2 seconds
+            showConfirmButton: false
+          });
+          // // then(() => {
+          //   // Navigate the MAIN window (correct)
+          //     window.close();
+          //   if (window.opener) {
+          //     window.opener.location.href = '/user-dashboard/0';
+          //   }
+          //   // Close the limited browser window
+          // });
+          setTimeout(() => {
+            window.close();
             if (window.opener) {
               window.opener.location.href = '/user-dashboard/0';
             }
-            // Close the limited browser window
-          
-
-          });
+          }, 1200); // wait slightly longer than success popup duration
 
         }, 3000); // You can remove this delay or wait for async logic instead
       }
