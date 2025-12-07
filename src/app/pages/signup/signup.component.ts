@@ -27,7 +27,7 @@ export class SignupComponent implements OnInit {
 
   };
   ngOnInit(): void {
-        // this.screenshotPrevention.enableProtection();
+        this.screenshotPrevention.enableProtection();
    }
 
 // Add these to your component class

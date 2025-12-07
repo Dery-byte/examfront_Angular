@@ -384,15 +384,14 @@ export class LoginComponent implements OnInit {
     return state;
   }
 
+  
   // const stateValue = generateState();
-
   signInWithGoogle() {
     // const clientId = '1006167054424-vgf13e2d85q918umpdku10un40613m1v.apps.googleusercontent.com'; // Replace with your actual Google client ID
     // const responseType = 'code'; // Use 'code' if you are using server-side authorization
     // const scope = 'email profile'; // Define the scopes you need
     // // const state = this.generateState(); // Optional: State parameter to protect against cross-site request forgery
     // const redirectUri='/login'
-
     const googleOAuthUrl = `https://accounts.google.com/o/oauth2/authorization`;
     window.location.href = googleOAuthUrl;
   }

@@ -247,7 +247,7 @@ export class StartComponent implements OnInit {
 
 
   ngOnInit(): void {
-    this.screenshotPrevention.enableProtection();
+        this.screenshotPrevention.enableProtection();
     this.isLoading = true; // Set loading to true when starting
 
 
@@ -364,6 +364,7 @@ export class StartComponent implements OnInit {
     this.preventBackButton();
 
 
+        this.screenshotPrevention.enableProtection();
 
   }
 
