@@ -11,6 +11,7 @@ import { take } from 'rxjs/operators';
 import { MailServiceService } from 'src/app/services/mail-service.service';
 import { BreakpointObserver, Breakpoints } from '@angular/cdk/layout';
 import { MatDrawer } from '@angular/material/sidenav';
+import { trigger, style, animate, transition } from '@angular/animations';
 
 
 
@@ -22,7 +23,15 @@ interface TimeDisplay {
 @Component({
   selector: 'app-adminnavbar',
   templateUrl: './adminnavbar.component.html',
-  styleUrls: ['./adminnavbar.component.css']
+  styleUrls: ['./adminnavbar.component.css'],
+ animations: [
+    trigger('fadeIn', [
+      transition(':enter', [
+        style({ opacity: 0 }),
+        animate('300ms ease-out', style({ opacity: 1 }))
+      ])
+    ])
+  ]
 })
 export class AdminnavbarComponent {
   	@ViewChild('drawer') drawer!: MatDrawer;

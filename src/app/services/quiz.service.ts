@@ -35,9 +35,12 @@ return this._http.post(`${baseUrl}/addQuiz`, quiz);
 }
 
 
-public deleteQuizs(qId){
-return this._http.delete(`${baseUrl}/quiz/${qId}`);
+// public deleteQuizs(qId){
+// return this._http.delete(`${baseUrl}/quiz/${qId}`);
+// }
 
+public deleteQuizs(qId){
+return this._http.delete(`${baseUrl}/delete/quiz/${qId}`);
 }
 
 //get single quiz to facilitate update
@@ -123,13 +126,17 @@ public evalTheory(questions){
 }
 
 
-
-
-
 public updateQuizStatus(qId: number, status: string) {
   const body = { status };
   return this._http.put(`${baseUrl}/quiz/status/${qId}`, body);
 }
+
+
+
+
+
+
+
 
 }
  

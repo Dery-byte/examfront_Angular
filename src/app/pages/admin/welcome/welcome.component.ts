@@ -75,11 +75,11 @@ export class WelcomeComponent implements OnInit {
 		this._quiz.loadQuizzes().subscribe(
 			(data: any) => {
 				this.allQuizzes = data;
-				console.log(this.allQuizzes);
-				console.log(this.allQuizzes[0].category.title)
+				// console.log(this.allQuizzes);
+				// console.log(this.allQuizzes[0].category.title)
 			},
 			(error) => {
-				console.table(error);
+				// console.table(error);
 				// Swal.fire('Error !!', 'Server Error', 'error');
 				this._snackbar.open("You're Session has expired! ", "", {
 					duration: 3000,
@@ -142,24 +142,28 @@ export class WelcomeComponent implements OnInit {
 			this.reportsData = report;
 			this.extractForChart();
 			this.totalQuizTakers = this.reportsData.length;
-			console.log(this.reportsData);
+			// console.log(this.reportsData);
 			this.reportsData.forEach(item => {
 				this.totalMarks += parseFloat(item.marks);
 				this.sectionAmarks += parseFloat(item.marksB);
 
 				// this.sectionB = parseFloat(item.marks);
 				// this.theoryMarks = parseFloat(item.marksB);
-				this.averageScore = (this.totalMarks + this.sectionAmarks) / this.totalQuizTakers;
+
+this.averageScore = parseFloat(((this.totalMarks + this.sectionAmarks) / this.totalQuizTakers).toFixed(2)
+);
+
+				// this.averageScore = (this.totalMarks + this.sectionAmarks) / this.totalQuizTakers;
 			});
-			console.log('Report Data:', report);
+			// console.log('Report Data:', report);
 			if (this.reportsData.length > 0) {
 				this.quizType = this.reportsData[0].quiz.quizType;  // OBJ | THEORY | BOTH
 			}
 			this.buildColumns();
-			console.log(this.averageScore);
-			// this.AandB = (this.totalMarks + this.theoryMarks)
-			// Output the total marks
-			console.log("Total Marks:", this.totalMarks);
+			// console.log(this.averageScore);
+			// // this.AandB = (this.totalMarks + this.theoryMarks)
+			// // Output the total marks
+			// console.log("Total Marks:", this.totalMarks);
 		});
 	}
 
@@ -231,7 +235,7 @@ export class WelcomeComponent implements OnInit {
 		chart.render();
 		;
 		// });
-		console.log(this.chartDataPoints);
+		// console.log(this.chartDataPoints);
 	}
 }
 

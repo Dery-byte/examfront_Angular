@@ -129,7 +129,7 @@ this.quizzes = this.quizzes.filter((quiz)=> quiz.qId != qId);
   },
   (error)=>
   {
-    Swal.fire("Error", "Quiz could not be deleted", "error");
+    Swal.fire("Error", "Quiz could not be deleteddddddddd", "error");
 
   }
 );
