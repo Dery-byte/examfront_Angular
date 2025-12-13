@@ -109,8 +109,6 @@ this.login.logout();
         });
       });
   }
-
-
   deleteQuiz(qId){
    Swal.fire({ 
     icon:"info",
@@ -129,7 +127,7 @@ this.quizzes = this.quizzes.filter((quiz)=> quiz.qId != qId);
   },
   (error)=>
   {
-    Swal.fire("Error", "Quiz could not be deleteddddddddd", "error");
+    Swal.fire("Error", "Quiz could not be deleted", "error");
 
   }
 );
