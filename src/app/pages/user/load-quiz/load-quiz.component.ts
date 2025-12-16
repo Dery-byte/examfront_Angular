@@ -94,7 +94,8 @@ private loadInitialData(): void {
     this._report.getReportsByUserID(this.u_id).subscribe({
       next: (data: any) => {
         this.reports = data;
-
+        console.log("This is the report ", this.reports);
+console.log("This is the reportData ", this.reportData);
         // ✅ Extract unique categories based on cid
         this.uniqueCategories = [
           ...new Map(

@@ -1,6 +1,8 @@
 <!-- {{availablequizzes | json}}
 
 {{reports| json}} -->
+<!-- {{categories | json}} -->
+<!-- {{uniqueCategories | json}} -->
 
 <mat-card class="quiz-summary-card">
   <!-- Loading indicator for initial report data -->
@@ -435,7 +437,7 @@
             <!-- {{reportData | json}} -->
             <td>{{r.quiz.title}}</td>
             <td *ngIf="showObjectiveColumn()">{{r.marks}}/{{r.quiz.maxMarks}}</td>
-            <td *ngIf="showTheoryColumn()">{{r.marksB}}/100</td>
+            <td *ngIf="showTheoryColumn()">{{r.marksB}}/{{r.maxScoreSectionB}}</td>
             <td>
               <mat-chip [color]="r.progress === 'Completed' ? 'primary' : 'warn'" selected>
                 {{r.progress}}

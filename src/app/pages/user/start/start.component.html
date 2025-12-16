@@ -377,9 +377,10 @@
                                         </mat-label>
                                         <textarea class="input" [name]="'givenAnswer' + i"
                                             [(ngModel)]="question.givenAnswer" matInput rows="2"
-                                            (ngModelChange)="saveAnswers()" (paste)="disablePaste($event)">
+                                            (ngModelChange)="saveAnswers()" >
                                         </textarea>
                                     </mat-form-field>
+                                    <!-- (paste)="disablePaste($event)" -->
                                 </mat-card-content>
                             </div>
                         </form>

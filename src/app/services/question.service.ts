@@ -115,7 +115,6 @@ public getReport(){
 //   })
 // )};
 
-
   //eval-quiz
   public evalQuiz(qid,question){
     return this._http.post(`${baseUrl}/question/eval-quiz/${qid}`, question)
@@ -124,6 +123,7 @@ public getReport(){
         this.refreshNeeded.next();
       })
     )};
+
 
 
     private jwtToken = localStorage.getItem('token')

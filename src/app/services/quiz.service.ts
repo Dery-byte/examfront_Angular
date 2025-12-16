@@ -121,9 +121,21 @@ public addSectionBMarks(questions){
 // }
 
 
+// GEMINI API EVALUATION
+// public evalTheory(questions){
+//   return this._http.post(`${baseUrl}/quizEval`, questions);
+// }
+
+
+
+
+
+// GPT EVALUATION
 public evalTheory(questions){
-  return this._http.post(`${baseUrl}/quizEval`, questions);
+  return this._http.post(`${baseUrl}/quizGPT/evaluate`, questions);
 }
+
+
 
 
 public updateQuizStatus(qId: number, status: string) {

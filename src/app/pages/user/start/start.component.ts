@@ -247,7 +247,7 @@ export class StartComponent implements OnInit {
 
 
   ngOnInit(): void {
-        this.screenshotPrevention.enableProtection();
+        // this.screenshotPrevention.enableProtection();
     this.isLoading = true; // Set loading to true when starting
 
 
@@ -822,7 +822,6 @@ export class StartComponent implements OnInit {
     let ss = this.timerAll % 60;
 
     console.log(hr, mm, ss)
-
     let formattedTime = '';
     if (hr > 0) {
       formattedTime += `${hr} hr(s) : `;
