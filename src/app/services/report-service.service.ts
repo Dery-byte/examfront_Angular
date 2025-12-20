@@ -31,6 +31,10 @@ public getReportsByUserID(uid){
   return this._http.get(`${baseUrl}/getReportsByUser/${uid}`);
 }
 
+public getReportsByUserAndId(qid){
+  return this._http.get(`${baseUrl}/quiz-results/my-quiz/${qid}`);
+}
+
 
 
 

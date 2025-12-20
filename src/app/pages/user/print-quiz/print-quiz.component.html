@@ -1,16 +1,15 @@
 <!-- {{questions[0].quiz|json}} -->
 
+<!-- {{report|json}} -->
+
+
 <ngx-ui-loader fgsColor="#ff4081" pbColor="#ff4081" textColor="#ff4081" pbThickness="6"
     text="Preparing results please wait...!"></ngx-ui-loader>
-
 <div ngxUiLoaderBlurred (blur)="10">
-
     <div class="bootstrap-wrapper">
         <div class="row mt20">
             <div class="col-md-6 offset-md-3">
-
                 <div class="watermark">
-
                     <div class="caption">
                         <!--DISPLAY IF ONLY THEORY -->
                         <div *ngIf="geminiResponse; else elseBlock">
@@ -42,17 +41,6 @@
                         </ng-template>
                     </div>
 
-
-                    <!-- REPORT -->
-                    <!-- <div *ngIf="reportData != null">
-                        <div id="marks" *ngFor="let r of reportData">
-                            <p>Total Marks A & B : <span id="marksU">{{r.marks + getGrandTotalMarks()}}</span></p>
-                            <p>Marks : <span id="marksU">{{r.marks}}/{{ r.quiz.maxMarks}}</span></p>
-                            <p>Correct Answers : {{r.marks}}</p>
-                            <p>Attempted questions : {{attempted}}</p>
-                        </div>
-                    </div> -->
-
                     <div *ngIf="reportData != null">
                         <div id="marks" *ngFor="let r of reportData">
 
@@ -67,6 +55,7 @@
                                 </p> -->
                                 <!-- <p>Correct Answers : {{ r.marks }}</p> -->
                                 <p>Attempted questions : {{ attempted }}</p>
+                                <p>Submission Date: {{ r.submissionDate }}</p>
                             </ng-container>
 
                             <!-- QUIZ TYPE: BOTH -->
@@ -79,8 +68,8 @@
                                 </p>
                                 <p>Correct Answers : {{ r.marks }}</p>
                                 <p>Attempted questions : {{ attempted }}</p>
+                                <p style="color:rgb(80, 80, 80); font-weight: bolder;"> Submission Date: {{ r.submissionDate | date:'medium' }}</p>
                             </ng-template>
-
                         </div>
                     </div>
 
@@ -137,12 +126,12 @@
                             </b>
                         </h1>
                         <div *ngFor="let groups of theoryAnswer">
+                            <!-- {{theoryAnswer| json}} -->
                             <mat-card>
                                 <mat-card-header>
                                     <mat-card-title class="prefix-title">
                                         {{ groups.prefix }}
-                                        <em class="prefix-totals">( Marks: {{ getTotalMarksByPrefix(theoryAnswer)
-                                            }})</em>
+                                        <em class="prefix-totals">( Marks: {{ getTotalMarksForGroup(groups)}})</em>
                                     </mat-card-title>
                                 </mat-card-header>
                                 <mat-card-content>

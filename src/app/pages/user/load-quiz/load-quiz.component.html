@@ -4,6 +4,7 @@
 <!-- {{categories | json}} -->
 <!-- {{uniqueCategories | json}} -->
 
+
 <mat-card class="quiz-summary-card">
   <!-- Loading indicator for initial report data -->
   <div *ngIf="isLoadingReports" class="loading-container">
@@ -15,6 +16,8 @@
       </mat-card-content>
     </mat-card>
   </div>
+
+
 
   <!-- Main content when reports are loaded -->
   <div *ngIf="!isLoadingReports">
@@ -324,7 +327,7 @@
 
 
 
-      
+
     </div>
   </div>
 
@@ -415,7 +418,7 @@
 
 
 <!-- Overlay backdrop -->
- <div class="dialog-overlay" *ngIf="productDialog" (click)="productDialog = false"></div>
+<div class="dialog-overlay" *ngIf="productDialog" (click)="productDialog = false"></div>
 <p-dialog [(visible)]="productDialog" [style]="{width: '500px'}" [modal]="true" class="quiz-dialog custom-overlay"
   header="Quiz Performance Summary">
   <mat-card *ngIf="reportData" class="summary-card">
@@ -429,6 +432,7 @@
             <th>Quiz Title</th>
             <th *ngIf="showObjectiveColumn()">Objective</th>
             <th *ngIf="showTheoryColumn()">Theory</th>
+            <th>Total</th>
             <th>Status</th>
           </tr>
         </thead>
@@ -438,6 +442,8 @@
             <td>{{r.quiz.title}}</td>
             <td *ngIf="showObjectiveColumn()">{{r.marks}}/{{r.quiz.maxMarks}}</td>
             <td *ngIf="showTheoryColumn()">{{r.marksB}}/{{r.maxScoreSectionB}}</td>
+            <!-- <td>{{r.marks + r.marksB }}/{{r.quiz.maxMarks + r.maxScoreSectionB }}</td> -->
+            <td>{{ getTotalMarks(r) }}/{{ getTotalMaxMarks(r) }}</td>
             <td>
               <mat-chip [color]="r.progress === 'Completed' ? 'primary' : 'warn'" selected>
                 {{r.progress}}

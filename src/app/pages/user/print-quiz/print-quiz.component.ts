@@ -32,6 +32,7 @@ interface PrefixScores {
   percentage: number;
 }
 
+
 @Component({
   selector: 'app-print-quiz',
   templateUrl: './print-quiz.component.html',
@@ -62,10 +63,11 @@ export class PrintQuizComponent implements OnInit {
   objectKeys = Object.keys;
   transformedData: any[];
   theoryAnswer: any[];
-
   value
   qId
   timeAllowed
+   report;
+
 
 
 
@@ -97,6 +99,7 @@ export class PrintQuizComponent implements OnInit {
 
   ngOnInit(): void {
     this.qid = this._route.snapshot.params['qid'];
+     this.getReportById();
     const userDetails = localStorage.getItem('user');
     const Object = JSON.parse(userDetails);
     this.username = Object.username;
@@ -155,8 +158,26 @@ export class PrintQuizComponent implements OnInit {
         alert("Error loading quiz data")
       }
     );
-
   }
+
+
+
+  // LOAD ONLY SUBJECTIVE REPORTS
+  getReportById(): void {
+    this._report.getReportsByUserAndId(this.qid).subscribe({
+      next: (data: any) => {
+        this.report = data;
+        console.log("This is the theory results ", this.report);
+      },
+      error: (error) => {
+        console.error('Error loading reports:', error);
+
+      }
+    });
+  }
+
+
+
 
   loadTheoryAnswers() {
     this._answer.getTheoryReport(this.qid).subscribe((answers: any) => {
@@ -233,21 +254,29 @@ getGrandTotalMarks(): number {
   }, 0);
 }
 
-getTotalMarksByPrefix(groupedData: { prefix: string; questions: QuestionResponse[] }[]): number {
-  if (!Array.isArray(groupedData) || groupedData.length === 0) {
-    return 0;
-  }
 
-  return groupedData.reduce((total, group) => {
-    if (!group.prefix || !Array.isArray(group.questions)) {
-      return total; // skip invalid groups
-    }
-    // Sum scores in this group and add to total
-    const groupTotal = group.questions.reduce((sum, q) => sum + (q.score || 0), 0);
 
-    return total + groupTotal;
-  }, 0);
+
+// getTotalMarksByPrefix(groupedData: { prefix: string; questions: QuestionResponse[] }[]): number {
+//   if (!Array.isArray(groupedData) || groupedData.length === 0) {
+//     return 0;
+//   }
+//   return groupedData.reduce((total, group) => {
+//     if (!group.prefix || !Array.isArray(group.questions)) {
+//       return total; // skip invalid groups
+//     }
+//     // Sum scores in this group and add to total
+//     const groupTotal = group.questions.reduce((sum, q) => sum + (q.score || 0), 0);
+//     return total + groupTotal;
+//   }, 0);
+// }
+
+
+getTotalMarksForGroup(group: { prefix: string; questions: QuestionResponse[] }): number {
+  if (!group || !Array.isArray(group.questions)) return 0;
+  return group.questions.reduce((sum, q) => sum + (q.score || 0), 0);
 }
+
 
 
   // SECTION B

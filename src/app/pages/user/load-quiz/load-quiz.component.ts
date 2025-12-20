@@ -15,7 +15,7 @@ import { RegCoursesService } from 'src/app/services/reg-courses.service';
 export class LoadQuizComponent implements OnInit {
   // Dialog control
   productDialog: boolean = false;
-  
+
   // Data variables
   userRecords: any[] = [];
   availablequizzes: any[] = [];
@@ -23,18 +23,18 @@ export class LoadQuizComponent implements OnInit {
   reports: any[] = [];
   reportData: any;
   categories: any;
-  
+
   // ID variables
   catId: any;
   qId: any;
   pqId: any;
   currentQID: any;
   u_id: any;
-  
+
   // State management
   disabledButtons: { [key: number]: boolean } = {};
   isPrintDisabled: boolean = false;
-  
+
   // Loading states
   isLoadingCourses: boolean = true;
   isLoadingQuizzes: boolean = false;
@@ -63,7 +63,7 @@ export class LoadQuizComponent implements OnInit {
   //   if (userDetails) {
   //     const userObject = JSON.parse(userDetails);
   //     this.u_id = userObject.id;
-      
+
   //     this.isLoadingReports = true;
   //     this._report.getReportsByUserID(this.u_id).subscribe({
   //       next: (data:any) => {
@@ -79,52 +79,54 @@ export class LoadQuizComponent implements OnInit {
 
   //   this.getButtonState();
   // }
-uniqueCategories;
 
-private loadInitialData(): void {
-  this.isLoadingCourses = true;
-  const userDetails = localStorage.getItem('user');
 
-  if (userDetails) {
-    const userObject = JSON.parse(userDetails);
-    this.u_id = userObject.id;
 
-    this.isLoadingReports = true;
 
-    this._report.getReportsByUserID(this.u_id).subscribe({
-      next: (data: any) => {
-        this.reports = data;
-        console.log("This is the report ", this.reports);
-console.log("This is the reportData ", this.reportData);
-        // ✅ Extract unique categories based on cid
-        this.uniqueCategories = [
-          ...new Map(
-            this.reports.map((item: any) => [
-              item.quiz.category.cid,
-              item.quiz.category
-            ])
-          ).values()
-        ];
+  uniqueCategories;
+  private loadInitialData(): void {
+    this.isLoadingCourses = true;
+    const userDetails = localStorage.getItem('user');
+    if (userDetails) {
+      const userObject = JSON.parse(userDetails);
+      this.u_id = userObject.id;
 
-        this.isLoadingReports = false;
-      },
+      this.isLoadingReports = true;
 
-      error: (error) => {
-        console.error('Error loading reports:', error);
-        this.isLoadingReports = false;
-      }
-    });
+      this._report.getReportsByUserID(this.u_id).subscribe({
+        next: (data: any) => {
+          this.reports = data;
+          console.log("This is the report ", this.reports);
+          console.log("This is the reportData ", this.reportData);
+          // ✅ Extract unique categories based on cid
+          this.uniqueCategories = [
+            ...new Map(
+              this.reports.map((item: any) => [
+                item.quiz.category.cid,
+                item.quiz.category
+              ])
+            ).values()
+          ];
+
+          this.isLoadingReports = false;
+        },
+
+        error: (error) => {
+          console.error('Error loading reports:', error);
+          this.isLoadingReports = false;
+        }
+      });
+    }
+
+    this.getButtonState();
   }
-
-  this.getButtonState();
-}
 
 
 
   private loadQuizzesBasedOnRoute(): void {
     this._route.params.subscribe((params) => {
       this.catId = params['catId'];
-      
+
       if (this.catId == 0) {
         this._quiz.actieQuizzes().subscribe({
           next: (data: any) => {
@@ -196,9 +198,9 @@ console.log("This is the reportData ", this.reportData);
 
   onQuizOptionSelected(): void {
     if (!this.categories?.cid) return;
-    
+
     this.isLoadingQuizzes = true;
-        // this._quiz.getActieQuizzesOfCategory(this.categories.cid).subscribe({
+    // this._quiz.getActieQuizzesOfCategory(this.categories.cid).subscribe({
     this._quiz.getTakenQuizzesOfCategoryByUser(this.categories.cid).subscribe({
       next: (quiz: any) => {
         this.availablequizzes = quiz;
@@ -211,13 +213,22 @@ console.log("This is the reportData ", this.reportData);
     });
   }
 
-showObjectiveColumn(): boolean {
-  // Show Objective column if ANY quiz has type OBJ or BOTH
-  return this.reportData?.some(r => r.quiz.quizType === 'OBJ' || r.quiz.quizType === 'BOTH') || false;
+  showObjectiveColumn(): boolean {
+    // Show Objective column if ANY quiz has type OBJ or BOTH
+    return this.reportData?.some(r => r.quiz.quizType === 'OBJ' || r.quiz.quizType === 'BOTH') || false;
+  }
+  showTheoryColumn(): boolean {
+    // Show Theory column if ANY quiz has type THEORY or BOTH
+    return this.reportData?.some(r => r.quiz.quizType === 'THEORY' || r.quiz.quizType === 'BOTH') || false;
+  }
+
+
+getTotalMarks(r: any): number {
+  return (Number(r.marks) || 0) + (Number(r.marksB) || 0);
 }
-showTheoryColumn(): boolean {
-  // Show Theory column if ANY quiz has type THEORY or BOTH
-  return this.reportData?.some(r => r.quiz.quizType === 'THEORY' || r.quiz.quizType === 'BOTH') || false;
+
+getTotalMaxMarks(r: any): number {
+  return (Number(r.quiz?.maxMarks) || 0) + (Number(r.maxScoreSectionB) || 0);
 }
 
 
@@ -230,8 +241,6 @@ showTheoryColumn(): boolean {
 
 
 
-
-  
 
   hideDialog(): void {
     this.productDialog = false;
@@ -252,15 +261,15 @@ showTheoryColumn(): boolean {
   }
 
   onPrintClick(event: MouseEvent, qId: number): void {
-      event.preventDefault();
-      event.stopPropagation();
+    event.preventDefault();
+    event.stopPropagation();
     this.router.navigate(['/print_quiz/', qId]);
   }
 
   loadReport(): void {
     const userDetails = localStorage.getItem('user');
     if (!userDetails || !this.pqId) return;
-    
+
     const userObject = JSON.parse(userDetails);
     this._report.getReport(userObject.id, this.pqId).subscribe({
       next: (report) => {
