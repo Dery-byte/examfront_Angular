@@ -1,137 +1,131 @@
-<!-- {{questions[0].quiz|json}} -->
-
-<!-- {{report|json}} -->
-
-
+<!-- {{theoryAnswer|json}} -->
 <ngx-ui-loader fgsColor="#ff4081" pbColor="#ff4081" textColor="#ff4081" pbThickness="6"
     text="Preparing results please wait...!"></ngx-ui-loader>
+
 <div ngxUiLoaderBlurred (blur)="10">
     <div class="bootstrap-wrapper">
         <div class="row mt20">
             <div class="col-md-6 offset-md-3">
                 <div class="watermark">
+
+                    <!-- HEADER SECTION -->
                     <div class="caption">
-                        <!--DISPLAY IF ONLY THEORY -->
-                        <div *ngIf="geminiResponse; else elseBlock">
+                        <ng-container *ngIf="reportData && reportData.length > 0; else alternateHeader">
                             <p id="cape">
                                 University of Cape Coast.<br>
-                                School of Physical Sciences. <br>Department of Computer Science and Information
-                                Technology<br>
-                                <b>{{answeredQuestions[0].quiz.category.title}}</b>
-                                {{answeredQuestions[0].quiz.title}}. Time Allowed:
-                                <i><b>{{timeAllowed}} minutes</b></i>
-                                <br>
-                                <label> Index Number:<b>{{username | uppercase}}</b></label>
-                            </p>
-                        </div>
+                                School of Physical Sciences.<br>
+                                Department of Computer Science and Information Technology<br><br>
 
-                        <ng-template #elseBlock>
-                            <!-- DISPLAYS IF QUESTIONS ARE ONLY OBJ -->
-                            <p *ngIf="questionWithAnswers.length > 0" id="cape">
+                                <b>{{ reportData[0]?.quiz?.category?.title }}</b><br>
+                                {{ reportData[0]?.quiz?.title }}<br>
+                                Time Allowed: <i><b>{{ reportData[0]?.quiz?.quizTime }} minutes</b></i><br><br>
+
+                                <label>Index Number: <b>{{ username | uppercase }}</b></label>
+                            </p>
+                        </ng-container>
+
+                        <ng-template #alternateHeader>
+                            <p *ngIf="questionWithAnswers && questionWithAnswers.length > 0" id="cape">
                                 University of Cape Coast.<br>
                                 School of Physical Sciences.<br>
-                                Department of Computer Science and Information Technology<br>
-                                <b>{{questionWithAnswers[0].quiz.category.title}}</b>
-                                {{questionWithAnswers[0].quiz.title}}.
-                                Time Allowed:
-                                <i><b>{{questionWithAnswers[0].quiz.quizTime * 1}} minutes</b></i>
-                                <br>
-                                <label>Index Number:<b>{{username | uppercase}}</b></label>
+                                Department of Computer Science and Information Technology<br><br>
+
+                                <b>{{ questionWithAnswers[0]?.quiz?.category?.title }}</b><br>
+                                {{ questionWithAnswers[0]?.quiz?.title }}<br>
+                                Time Allowed: <i><b>{{ questionWithAnswers[0]?.quiz?.quizTime }} minutes</b></i><br><br>
+
+                                <label>Index Number: <b>{{ username | uppercase }}</b></label>
                             </p>
                         </ng-template>
                     </div>
 
-                    <div *ngIf="reportData != null">
+                    <!-- MARKS SUMMARY SECTION -->
+                    <div *ngIf="reportData && reportData.length > 0">
                         <div id="marks" *ngFor="let r of reportData">
-
-                            <!-- QUIZ TYPE: OBJ or THEORY -->
-                            <ng-container
-                                *ngIf="questions[0].quiz.quizType === 'OBJ' || questions[0].quiz.quizType === 'THEORY'; else bothReport">
-                                <p>Total Marks :
+                            <ng-container *ngIf="questions && questions.length > 0 && 
+                                (questions[0].quiz.quizType === 'OBJ' || questions[0].quiz.quizType === 'THEORY'); 
+                                else bothReport">
+                                <p>Total Marks:
                                     <span id="marksU">{{ r.marks + getGrandTotalMarks() }}/{{ r.quiz.maxMarks }}</span>
                                 </p>
-                                <!-- <p>Marks :
-                                    <span id="marksU">{{ r.marks }}/{{ r.quiz.maxMarks }}</span>
-                                </p> -->
-                                <!-- <p>Correct Answers : {{ r.marks }}</p> -->
-                                <p>Attempted questions : {{ attempted }}</p>
-                                <p>Submission Date: {{ r.submissionDate }}</p>
+                                <p>Attempted Questions: {{ attempted }}</p>
+                                <p style="color:rgb(80, 80, 80); font-weight: bolder;">
+                                    Submission Date: {{ r.submissionDate | date:'medium' }}
+                                </p>
                             </ng-container>
 
-                            <!-- QUIZ TYPE: BOTH -->
                             <ng-template #bothReport>
-                                <p>Total Marks A & B :
-                                    <span id="marksU">{{ r.marks + getGrandTotalMarks() }}</span>
+                                <p>Total Marks A & B:
+                                    <span id="marksU">{{ r.marks + getGrandTotalMarks() }}/{{ r.quiz.maxMarks }}</span>
                                 </p>
-                                <p>Marks :
-                                    <span id="marksU">{{ r.marks }}/{{ r.quiz.maxMarks }}</span>
+                                <p>Attempted Questions: {{ attempted }}</p>
+                                <p style="color:rgb(80, 80, 80); font-weight: bolder;">
+                                    Submission Date: {{ r.submissionDate | date:'medium' }}
                                 </p>
-                                <p>Correct Answers : {{ r.marks }}</p>
-                                <p>Attempted questions : {{ attempted }}</p>
-                                <p style="color:rgb(80, 80, 80); font-weight: bolder;"> Submission Date: {{ r.submissionDate | date:'medium' }}</p>
                             </ng-template>
                         </div>
                     </div>
 
-
-
-                    <!-- ================= SECTION A (OBJ) ================= -->
-                    <div
-                        *ngIf="(questions[0].quiz.quizType === 'OBJ' || questions[0].quiz.quizType === 'BOTH') && questionWithAnswers.length > 0">
+                    <!-- SECTION A (OBJECTIVE QUESTIONS) -->
+                    <div *ngIf="questions && questions.length > 0 && questionWithAnswers && questionWithAnswers.length > 0 &&
+                        (questions[0].quiz.quizType === 'OBJ' || questions[0].quiz.quizType === 'BOTH')">
                         <h1 style="text-align: center;">Section A</h1>
                         <mat-card *ngFor="let qA of questionWithAnswers; let i = index" class="mt10">
                             <mat-card-content>
-                                <p><b>Q {{ i + 1 }}</b>
+                                <p>
+                                    <b>Q {{ i + 1 }}</b>
                                     <span class="ml10" [innerHTML]="qA.content"></span>
                                 </p>
                                 <mat-divider></mat-divider>
                                 <br />
                                 <div class="row mt20">
                                     <div class="col-md-6">
-                                        <input type="checkbox" [checked]="qA.correct_answer.includes(qA.option1)"
+                                        <input type="checkbox"
+                                            [checked]="qA.correct_answer && qA.correct_answer.includes(qA.option1)"
                                             disabled />
-                                        {{qA.option1}}
-                                    </div>
-
-                                    <div class="col-md-6">
-                                        <input type="checkbox" [checked]="qA.correct_answer.includes(qA.option2)"
-                                            disabled />
-                                        {{qA.option2}}
+                                        {{ qA.option1 }}
                                     </div>
                                     <div class="col-md-6">
-                                        <input type="checkbox" [checked]="qA.correct_answer.includes(qA.option3)"
+                                        <input type="checkbox"
+                                            [checked]="qA.correct_answer && qA.correct_answer.includes(qA.option2)"
                                             disabled />
-                                        {{qA.option3}}
+                                        {{ qA.option2 }}
                                     </div>
                                     <div class="col-md-6">
-                                        <input type="checkbox" [checked]="qA.correct_answer.includes(qA.option4)"
+                                        <input type="checkbox"
+                                            [checked]="qA.correct_answer && qA.correct_answer.includes(qA.option3)"
                                             disabled />
-                                        {{qA.option4}}
+                                        {{ qA.option3 }}
+                                    </div>
+                                    <div class="col-md-6">
+                                        <input type="checkbox"
+                                            [checked]="qA.correct_answer && qA.correct_answer.includes(qA.option4)"
+                                            disabled />
+                                        {{ qA.option4 }}
                                     </div>
                                 </div>
                             </mat-card-content>
                         </mat-card>
                     </div>
 
-                    <div class="watermarkss">{{username | uppercase}}</div>
+                    <!-- Username Watermark -->
+                    <div class="watermarkss">{{ username | uppercase }}</div>
 
-
-                    <!-- ================= SECTION B (THEORY) ================= -->
-                    <div
-                        *ngIf="(questions[0].quiz.quizType === 'THEORY' || questions[0].quiz.quizType === 'BOTH') && theoryAnswer.length > 0">
+                    <!-- SECTION B (THEORY QUESTIONS) -->
+                    <div *ngIf="theoryAnswer && theoryAnswer.length > 0 && isTheoryQuiz()">
                         <h1 class="section-header">
                             Section B
                             <b class="section-total">
                                 Total Marks: <em class="grand-totals">{{ getGrandTotalMarks() }}</em>
                             </b>
                         </h1>
+
                         <div *ngFor="let groups of theoryAnswer">
-                            <!-- {{theoryAnswer| json}} -->
                             <mat-card>
                                 <mat-card-header>
                                     <mat-card-title class="prefix-title">
                                         {{ groups.prefix }}
-                                        <em class="prefix-totals">( Marks: {{ getTotalMarksForGroup(groups)}})</em>
+                                        <em class="prefix-totals">(Marks: {{ getTotalMarksForGroup(groups) }})</em>
                                     </mat-card-title>
                                 </mat-card-header>
                                 <mat-card-content>
@@ -150,17 +144,18 @@
                                                 <span class="max-marks">{{ items.maxMarks }}</span>
                                             </p>
                                         </div>
-                                        <div *ngIf="items.keyMissed && items.keyMissed.length > 0 
-                                            && !(items.keyMissed.length === 1 && items.keyMissed[0] === '')"
+
+                                        <!-- Missing Elements Feedback -->
+                                        <div *ngIf="items.keyMissed && items.keyMissed.length > 0 && 
+                                            !(items.keyMissed.length === 1 && items.keyMissed[0] === '')"
                                             class="missing-elements">
                                             <strong class="missing-elements-title">Missing Elements:</strong>
-                                            <span class="missing-elements-list">
-                                                {{ items.keyMissed }}
-                                            </span>
+                                            <span class="missing-elements-list">{{ items.keyMissed }}</span>
                                         </div>
-                                        <div *ngIf="!items.keyMissed 
-                                            || items.keyMissed.length === 0 
-                                            || (items.keyMissed.length === 1 && items.keyMissed[0] === '')"
+
+                                        <!-- Positive Feedback -->
+                                        <div *ngIf="!items.keyMissed || items.keyMissed.length === 0 || 
+                                            (items.keyMissed.length === 1 && items.keyMissed[0] === '')"
                                             class="no-missing-elements">
                                             <strong class="no-missing-title">Great Work!</strong>
                                             <span class="no-missing-message">No Suggestions</span>
@@ -171,13 +166,18 @@
                             <mat-divider></mat-divider>
                         </div>
                     </div>
+
+                    <!-- ACTION BUTTONS -->
                     <mat-card-actions>
                         <div class="container text-center">
-                            <button (click)="printPage()" mat-raised-button color="accent"
-                                id="homePrintbtn">Print</button>
+                            <button (click)="printPage()" mat-raised-button color="accent" id="homePrintbtn">
+                                Print
+                            </button>
 
                             <button mat-raised-button color="primary" class="ml10" id="homePrintbtn"
-                                routerLink="/user-dashboard/0">Home</button>
+                                routerLink="/user-dashboard/0">
+                                Home
+                            </button>
                         </div>
                     </mat-card-actions>
 

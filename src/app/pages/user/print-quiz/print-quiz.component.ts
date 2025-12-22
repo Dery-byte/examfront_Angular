@@ -55,7 +55,8 @@ export class PrintQuizComponent implements OnInit {
   count_timer: any;
   username: any;
   quiz
-  reportData;
+  reportData: any[] = []; // Initialize as empty array
+
   sectionB: any[] = [];
   answeredQuestions: any[] = [];
   geminiResponse;
@@ -66,7 +67,7 @@ export class PrintQuizComponent implements OnInit {
   value
   qId
   timeAllowed
-   report;
+  report;
 
 
 
@@ -99,7 +100,7 @@ export class PrintQuizComponent implements OnInit {
 
   ngOnInit(): void {
     this.qid = this._route.snapshot.params['qid'];
-     this.getReportById();
+    this.getReportById();
     const userDetails = localStorage.getItem('user');
     const Object = JSON.parse(userDetails);
     this.username = Object.username;
@@ -177,18 +178,9 @@ export class PrintQuizComponent implements OnInit {
   }
 
 
-
-
   loadTheoryAnswers() {
     this._answer.getTheoryReport(this.qid).subscribe((answers: any) => {
       this.theoryAnswer = this.groupByPrefix(answers);
-
-      // console.log("The total for each prefix is :", this.getTotalMarksByPrefix(this.theoryAnswer));
-
-      // console.log("Grand score : ", this.getGrandTotalMarks());
-      // console.log("helllllllllllllllllllllllllllll");
-      // console.log(answers);
-      // console.log(this.qid);
     })
   }
 
@@ -201,89 +193,86 @@ export class PrintQuizComponent implements OnInit {
   }
 
   groupByPrefix(data: QuestionResponse[]): GroupedQuestions[] {
-  // Handle edge cases
-  if (!Array.isArray(data)) {
-    throw new Error('Input must be an array');
-  }
-  if (data.length === 0) {
-    return [];
-  }
-
-  // Initialize a map to group questions by prefix
-  const prefixMap: Record<string, QuestionResponse[]> = {};
-
-  // Iterate over each question response
-  data.forEach((questionResponse) => {
-    // Validate quesO exists
-    if (!questionResponse.quesO) {
-      console.warn('Question missing quesO:', questionResponse);
-      return; // Skip this entry
+    // Handle edge cases
+    if (!Array.isArray(data)) {
+      throw new Error('Input must be an array');
+    }
+    if (data.length === 0) {
+      return [];
     }
 
-    // Extract prefix (e.g., "Q1" from "Q1a" or "Q3ai")
-    const prefixMatch = questionResponse.quesO.match(/^(Q\d+)/i);
-    const prefix = prefixMatch ? prefixMatch[0].toUpperCase() : 'UNCATEGORIZED';
+    // Initialize a map to group questions by prefix
+    const prefixMap: Record<string, QuestionResponse[]> = {};
 
-    // Initialize the group if it doesn't exist
-    if (!prefixMap[prefix]) {
-      prefixMap[prefix] = [];
-    }
+    // Iterate over each question response
+    data.forEach((questionResponse) => {
+      // Validate quesO exists
+      if (!questionResponse.quesO) {
+        console.warn('Question missing quesO:', questionResponse);
+        return; // Skip this entry
+      }
 
-    // Add current question to its prefix group
-    prefixMap[prefix].push(questionResponse);
-  });
+      // Extract prefix (e.g., "Q1" from "Q1a" or "Q3ai")
+      const prefixMatch = questionResponse.quesO.match(/^(Q\d+)/i);
+      const prefix = prefixMatch ? prefixMatch[0].toUpperCase() : 'UNCATEGORIZED';
 
-  // Convert map to array of grouped data
-  return Object.entries(prefixMap).map(([prefix, questions]) => ({
-    prefix,
-    questions
-  }));
-}
+      // Initialize the group if it doesn't exist
+      if (!prefixMap[prefix]) {
+        prefixMap[prefix] = [];
+      }
 
-getGrandTotalMarks(): number {
-  if (!this.theoryAnswer || this.theoryAnswer.length === 0) {
-    return 0;
+      // Add current question to its prefix group
+      prefixMap[prefix].push(questionResponse);
+    });
+
+    // Convert map to array of grouped data
+    return Object.entries(prefixMap).map(([prefix, questions]) => ({
+      prefix,
+      questions
+    }));
   }
-  return this.theoryAnswer.reduce((grandTotal, group) => {
-    if (!group.questions || group.questions.length === 0) {
-      return grandTotal;
+
+  getGrandTotalMarks(): number {
+    if (!this.theoryAnswer || this.theoryAnswer.length === 0) {
+      return 0;
     }
-    // Sum scores for this group
-    const groupTotal = group.questions.reduce((sum, q) => sum + (q.score || 0), 0);
-    return grandTotal + groupTotal;
-  }, 0);
-}
+    return this.theoryAnswer.reduce((grandTotal, group) => {
+      if (!group.questions || group.questions.length === 0) {
+        return grandTotal;
+      }
+      // Sum scores for this group
+      const groupTotal = group.questions.reduce((sum, q) => sum + (q.score || 0), 0);
+      return grandTotal + groupTotal;
+    }, 0);
+  }
+
+
+  getTotalMarksForGroup(group: { prefix: string; questions: QuestionResponse[] }): number {
+    if (!group || !Array.isArray(group.questions)) return 0;
+    return group.questions.reduce((sum, q) => sum + (q.score || 0), 0);
+  }
 
 
 
-
-// getTotalMarksByPrefix(groupedData: { prefix: string; questions: QuestionResponse[] }[]): number {
-//   if (!Array.isArray(groupedData) || groupedData.length === 0) {
-//     return 0;
-//   }
-//   return groupedData.reduce((total, group) => {
-//     if (!group.prefix || !Array.isArray(group.questions)) {
-//       return total; // skip invalid groups
-//     }
-//     // Sum scores in this group and add to total
-//     const groupTotal = group.questions.reduce((sum, q) => sum + (q.score || 0), 0);
-//     return total + groupTotal;
-//   }, 0);
-// }
-
-
-getTotalMarksForGroup(group: { prefix: string; questions: QuestionResponse[] }): number {
-  if (!group || !Array.isArray(group.questions)) return 0;
-  return group.questions.reduce((sum, q) => sum + (q.score || 0), 0);
-}
-
-
+  // In your component.ts
+  isTheoryQuiz(): boolean {
+    if (this.questions && this.questions.length > 0) {
+      return this.questions[0].quiz.quizType === 'THEORY' ||
+        this.questions[0].quiz.quizType === 'BOTH';
+    }
+    if (this.reportData && this.reportData.length > 0) {
+      return this.reportData[0].quiz.quizType === 'THEORY' ||
+        this.reportData[0].quiz.quizType === 'BOTH';
+    }
+    // If we have theoryAnswer data, assume it's a theory quiz
+    return this.theoryAnswer && this.theoryAnswer.length > 0;
+  }
 
   // SECTION B
   loadReport() {
     const userDetails = localStorage.getItem('user');
     const Object = JSON.parse(userDetails);
-    this._report.getReport(Object.id, this.qid).subscribe((report) => {
+    this._report.getReport(Object.id, this.qid).subscribe((report: any) => {
       this.reportData = report;
       console.log(this.reportData[0].marks);
       console.log(this.reportData[0].progress);
@@ -362,7 +351,6 @@ getTotalMarksForGroup(group: { prefix: string; questions: QuestionResponse[] }):
     // this.loadResults();
     // this.loadReport();
     // this.router.navigate(['./print_quiz/' + this.qid]);
-
   }
 
   loadResults() {
