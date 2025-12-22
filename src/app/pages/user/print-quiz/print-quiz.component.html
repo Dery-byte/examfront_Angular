@@ -11,30 +11,29 @@
                     <!-- HEADER SECTION -->
                     <div class="caption">
                         <ng-container *ngIf="reportData && reportData.length > 0; else alternateHeader">
-                            <p id="cape">
+                          <p id="cape">
                                 University of Cape Coast.<br>
                                 School of Physical Sciences.<br>
-                                Department of Computer Science and Information Technology<br><br>
-
-                                <b>{{ reportData[0]?.quiz?.category?.title }}</b><br>
-                                {{ reportData[0]?.quiz?.title }}<br>
-                                Time Allowed: <i><b>{{ reportData[0]?.quiz?.quizTime }} minutes</b></i><br><br>
-
-                                <label>Index Number: <b>{{ username | uppercase }}</b></label>
+                                Department of Computer Science and Information Technology<br>
+                                <b>{{ reportData[0]?.quiz?.category?.title }}</b>
+                                {{ reportData[0]?.quiz?.title }}. Time Allowed:
+                                <i><b>{{ reportData[0]?.quiz?.quizTime }} minutes</b></i><br>
+                                <label>Index Number:
+                                    <b>{{ username | uppercase }}</b>
+                                </label>
                             </p>
                         </ng-container>
-
                         <ng-template #alternateHeader>
-                            <p *ngIf="questionWithAnswers && questionWithAnswers.length > 0" id="cape">
+                            <p *ngIf="questionWithAnswers?.length > 0" id="cape">
                                 University of Cape Coast.<br>
                                 School of Physical Sciences.<br>
-                                Department of Computer Science and Information Technology<br><br>
-
-                                <b>{{ questionWithAnswers[0]?.quiz?.category?.title }}</b><br>
-                                {{ questionWithAnswers[0]?.quiz?.title }}<br>
-                                Time Allowed: <i><b>{{ questionWithAnswers[0]?.quiz?.quizTime }} minutes</b></i><br><br>
-
-                                <label>Index Number: <b>{{ username | uppercase }}</b></label>
+                                Department of Computer Science and Information Technology<br>
+                                <b>{{ questionWithAnswers[0]?.quiz?.category?.title }}</b>
+                                {{ questionWithAnswers[0]?.quiz?.title }}. Time Allowed:
+                                <i><b>{{ questionWithAnswers[0]?.quiz?.quizTime }} minutes</b></i><br>
+                                <label>Index Number:
+                                    <b>{{ username | uppercase }}</b>
+                                </label>
                             </p>
                         </ng-template>
                     </div>
@@ -53,7 +52,6 @@
                                     Submission Date: {{ r.submissionDate | date:'medium' }}
                                 </p>
                             </ng-container>
-
                             <ng-template #bothReport>
                                 <p>Total Marks A & B:
                                     <span id="marksU">{{ r.marks + getGrandTotalMarks() }}/{{ r.quiz.maxMarks }}</span>
