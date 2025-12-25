@@ -202,8 +202,7 @@
 
 
 
-
-    .missing-elements {
+.missing-elements {
         background-color: #ffebee;
         border-left: 4px solid #f44336;
         border-radius: 4px;
@@ -215,20 +214,18 @@
         align-items: baseline;
       }
       
-      .missing-elements-title {
+.missing-elements-title {
         color: #d32f2f;
         font-weight: 600;
         font-size: 1.1rem;
         margin-right: 10px;
         min-width: 140px;
       }
-      
-      .missing-elements-list {
+.missing-elements-list {
         color: #424242;
         line-height: 1.5;
       }
-      
-      .no-missing-elements {
+.no-missing-elements {
         background-color: #e8f5e9;
         border-left: 4px solid #4caf50;
         border-radius: 4px;
@@ -240,7 +237,7 @@
         align-items: baseline;
       }
       
-      .no-missing-title {
+.no-missing-title {
         color: #2e7d32;
         font-weight: 600;
         font-size: 1.1rem;
@@ -248,24 +245,22 @@
         min-width: 140px;
       }
       
-      .no-missing-message {
-        color: #424242;
-        line-height: 1.5;
+.no-missing-message {
+        color: #3e014b;
+        /* line-height: 1.5; */
       }
 
-
-
-
-      .student-selected {
-  font-weight: bold;
+.student-selected {
+  /* font-weight: bold; */
+  color: rgb(75, 130, 233);
 }
 
 .wrong-selected {
-  color: rgb(172, 30, 30);
+  color: rgb(247, 84, 84);
 }
 
 .text-success {
-  color: green;
+  color: rgb(66, 243, 66);
   font-weight: bold;
 }
 
@@ -275,6 +270,7 @@
 }
 
 .text-warning {
-  color: orange;
+  color: rgb(139, 93, 6);
   font-style: italic;
+  font-weight: bolder;
 }

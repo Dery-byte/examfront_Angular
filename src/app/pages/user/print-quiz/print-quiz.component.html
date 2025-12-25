@@ -5,10 +5,10 @@
 <!-- {{questions | json}} -->
 
 <!-- <hr> -->
-{{questionWithAnswers | json}}
+<!-- {{questionWithAnswers | json}} -->
 
-<hr>
-{{resultsOBJ | json}}
+<!-- <hr> -->
+<!-- {{resultsOBJ | json}} -->
 <ngx-ui-loader fgsColor="#ff4081" pbColor="#ff4081" textColor="#ff4081" pbThickness="6"
     text="Preparing results please wait...!"></ngx-ui-loader>
 
@@ -91,135 +91,89 @@
 
 
 
-<mat-card *ngFor="let qA of resultsOBJ.results; let i = index" class="mt10">
-  <mat-card-content>
 
-    <p>
-      <b>Q {{ i + 1 }}</b>
-      <span class="ml10" [innerHTML]="qA.content"></span>
 
-      <!-- Status -->
-      <span class="ml10" [ngClass]="{
+
+
+
+
+
+
+
+
+
+
+
+
+                        <mat-card *ngFor="let qA of resultsOBJ.results; let i = index" class="mt10">
+                            <mat-card-content>
+                                <p>
+                                    <b>Q {{ i + 1 }}</b>
+                                    <span class="ml10" [innerHTML]="qA.content"></span>
+                                    <!-- Status with symbol -->
+                                    <span class="ml10" [ngClass]="{
         'text-success': qA.status === 'CORRECT',
         'text-warning': qA.status === 'PARTIAL',
         'text-danger': qA.status === 'WRONG',
         'text-muted': qA.status === 'SKIPPED'
       }">
-        ({{ qA.status }})
-      </span>
-    </p>
-
-    <mat-divider></mat-divider>
-    <br />
-
-    <div class="row mt20">
-      <!-- OPTION 1 -->
-      <div class="col-md-6">
-        <input type="checkbox" [checked]="qA.correct_answer?.includes(qA.option1)" disabled />
-        <span [ngClass]="{
-          'student-selected': qA.selectedAnswers?.includes(qA.option1),
-          'wrong-selected': qA.selectedAnswers?.includes(qA.option1) && !qA.correct_answer?.includes(qA.option1)
-        }">
-          {{ qA.option1 }}
-        </span>
-      </div>
-
-      <!-- OPTION 2 -->
-      <div class="col-md-6">
-        <input type="checkbox" [checked]="qA.correct_answer?.includes(qA.option2)" disabled />
-        <span [ngClass]="{
-          'student-selected': qA.selectedAnswers?.includes(qA.option2),
-          'wrong-selected': qA.selectedAnswers?.includes(qA.option2) && !qA.correct_answer?.includes(qA.option2)
-        }">
-          {{ qA.option2 }}
-        </span>
-      </div>
-
-      <!-- OPTION 3 -->
-      <div class="col-md-6">
-        <input type="checkbox" [checked]="qA.correct_answer?.includes(qA.option3)" disabled />
-        <span [ngClass]="{
-          'student-selected': qA.selectedAnswers?.includes(qA.option3),
-          'wrong-selected': qA.selectedAnswers?.includes(qA.option3) && !qA.correct_answer?.includes(qA.option3)
-        }">
-          {{ qA.option3 }}
-        </span>
-      </div>
-
-      <!-- OPTION 4 -->
-      <div class="col-md-6">
-        <input type="checkbox" [checked]="qA.correct_answer?.includes(qA.option4)" disabled />
-        <span [ngClass]="{
-          'student-selected': qA.selectedAnswers?.includes(qA.option4),
-          'wrong-selected': qA.selectedAnswers?.includes(qA.option4) && !qA.correct_answer?.includes(qA.option4)
-        }">
-          {{ qA.option4 }}
-        </span>
-      </div>
-    </div>
-
-    <!-- SKIPPED -->
-    <div *ngIf="qA.status === 'SKIPPED'" class="mt10 text-warning">
-      Skipped
-    </div>
-
-  </mat-card-content>
-</mat-card>
-
-
-
-
-
-
-
-
-
-
-
-
-                        <!-- <mat-card *ngFor="let qA of questionWithAnswers; let i = index" class="mt10">
-                            <mat-card-content>
-                                <p>
-                                    <b>Q {{ i + 1 }}</b>
-                                    <span class="ml10" [innerHTML]="qA.content"></span>
+                                        <ng-container [ngSwitch]="qA.status">
+                                            <span *ngSwitchCase="'CORRECT'">✅ Correct</span>
+                                            <span *ngSwitchCase="'PARTIAL'">⚠️ Partial</span>
+                                            <span *ngSwitchCase="'WRONG'">❌ Wrong</span>
+                                            <span *ngSwitchCase="'SKIPPED'">⏸️ Skipped</span>
+                                        </ng-container>
+                                    </span>
                                 </p>
                                 <mat-divider></mat-divider>
                                 <br />
                                 <div class="row mt20">
+                                    <!-- OPTION 1 -->
                                     <div class="col-md-6">
-                                        <input type="checkbox"
-                                            [checked]="qA.correct_answer && qA.correct_answer.includes(qA.option1)"
+                                        <input type="checkbox" [checked]="qA.correct_answer?.includes(qA.option1)"
                                             disabled />
-                                        {{ qA.option1 }}
+                                        <span [ngClass]="{
+          'student-selected': qA.selectedAnswers?.includes(qA.option1),
+          'wrong-selected': qA.selectedAnswers?.includes(qA.option1) && !qA.correct_answer?.includes(qA.option1)
+        }">{{ qA.option1 }}
+                                        </span>
                                     </div>
+                                    <!-- OPTION 2 -->
                                     <div class="col-md-6">
-                                        <input type="checkbox"
-                                            [checked]="qA.correct_answer && qA.correct_answer.includes(qA.option2)"
+                                        <input type="checkbox" [checked]="qA.correct_answer?.includes(qA.option2)"
                                             disabled />
-                                        {{ qA.option2 }}
+                                        <span [ngClass]="{
+          'student-selected': qA.selectedAnswers?.includes(qA.option2),
+          'wrong-selected': qA.selectedAnswers?.includes(qA.option2) && !qA.correct_answer?.includes(qA.option2)
+        }">
+                                            {{ qA.option2 }}
+                                        </span>
                                     </div>
+                                    <!-- OPTION 3 -->
                                     <div class="col-md-6">
-                                        <input type="checkbox"
-                                            [checked]="qA.correct_answer && qA.correct_answer.includes(qA.option3)"
+                                        <input type="checkbox" [checked]="qA.correct_answer?.includes(qA.option3)"
                                             disabled />
-                                        {{ qA.option3 }}
+                                        <span [ngClass]="{
+          'student-selected': qA.selectedAnswers?.includes(qA.option3),
+          'wrong-selected': qA.selectedAnswers?.includes(qA.option3) && !qA.correct_answer?.includes(qA.option3)
+        }">
+                                            {{ qA.option3 }}
+                                        </span>
                                     </div>
+                                    <!-- OPTION 4 -->
                                     <div class="col-md-6">
-                                        <input type="checkbox"
-                                            [checked]="qA.correct_answer && qA.correct_answer.includes(qA.option4)"
+                                        <input type="checkbox" [checked]="qA.correct_answer?.includes(qA.option4)"
                                             disabled />
-                                        {{ qA.option4 }}
+                                        <span [ngClass]="{
+          'student-selected': qA.selectedAnswers?.includes(qA.option4),
+          'wrong-selected': qA.selectedAnswers?.includes(qA.option4) && !qA.correct_answer?.includes(qA.option4)
+        }">
+                                            {{ qA.option4 }}
+                                        </span>
                                     </div>
                                 </div>
                             </mat-card-content>
-                        </mat-card> -->
-
-
-
-
-
-
-
+                        </mat-card>
                     </div>
 
                     <!-- Username Watermark -->
