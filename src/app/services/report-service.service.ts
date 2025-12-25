@@ -35,6 +35,15 @@ public getReportsByUserAndId(qid){
   return this._http.get(`${baseUrl}/quiz-results/my-quiz/${qid}`);
 }
 
+public getTheoryDetails(qid){
+  return this._http.get(`${baseUrl}/quiz/${qid}`);
+}
+
+public getResultsDetails(qid){
+  return this._http.get(`${baseUrl}/quiz/result/${qid}`);
+}
+
+
 
 
 

@@ -56,6 +56,7 @@ import {MatDialog, MAT_DIALOG_DATA, MatDialogRef, MatDialogModule} from '@angula
 import { MatTableExporterModule } from 'mat-table-exporter';
 
 import { TypingDirective } from './pages/utilities/typing.directive';
+import { MinutesToDurationPipe } from './custome-pipes/minutes-to-duration.pipe';
 
 // PRIMENG
 import { DialogModule } from 'primeng/dialog';
@@ -126,6 +127,7 @@ import { MatButtonToggleModule } from '@angular/material/button-toggle'; // 👈
     ResetPasswordComponent,
     AdminfooterComponent,
     TypingDirective,
+    MinutesToDurationPipe
   ],
 exports:[TypingDirective],
 

@@ -252,3 +252,29 @@
         color: #424242;
         line-height: 1.5;
       }
+
+
+
+
+      .student-selected {
+  font-weight: bold;
+}
+
+.wrong-selected {
+  color: rgb(172, 30, 30);
+}
+
+.text-success {
+  color: green;
+  font-weight: bold;
+}
+
+.text-danger {
+  color: rgb(216, 13, 13);
+  font-weight: bold;
+}
+
+.text-warning {
+  color: orange;
+  font-style: italic;
+}

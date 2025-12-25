@@ -68,6 +68,8 @@ export class PrintQuizComponent implements OnInit {
   qId
   timeAllowed
   report;
+  theoryDetails;
+  resultsOBJ;
 
 
 
@@ -101,6 +103,8 @@ export class PrintQuizComponent implements OnInit {
   ngOnInit(): void {
     this.qid = this._route.snapshot.params['qid'];
     this.getReportById();
+    this.getTheoryDetails();
+    this.getResultsDetails();
     const userDetails = localStorage.getItem('user');
     const Object = JSON.parse(userDetails);
     this.username = Object.username;
@@ -172,10 +176,46 @@ export class PrintQuizComponent implements OnInit {
       },
       error: (error) => {
         console.error('Error loading reports:', error);
-
       }
     });
   }
+
+
+  getTheoryDetails(): void{
+     this._report.getTheoryDetails(this.qid).subscribe({
+      next: (data: any) => {
+        this.theoryDetails = data;
+        console.log("This is the theory results ", this.theoryDetails);
+      },
+      error: (error) => {
+        console.error('Error loading reports:', error);
+      }
+    });
+  }
+
+    getResultsDetails(): void{
+     this._report.getResultsDetails(this.qid).subscribe({
+      next: (data: any) => {
+        this.resultsOBJ = data;
+        console.log("This is the theory results ", this.resultsOBJ);
+      },
+      error: (error) => {
+        console.error('Error loading reports:', error);
+      }
+    });
+  }
+
+  
+  totalTime(): number {
+    return (parseInt(this.reportData?.[0]?.quiz?.quizTime || 0))
+         + (this.theoryDetails?.[0]?.timeAllowed || 0);
+  }
+
+
+  totalTimeInMinutes(): number {
+  return (parseInt(this.reportData?.[0]?.quiz?.quizTime || 0))
+       + (this.theoryDetails?.[0]?.timeAllowed || 0);
+}
 
 
   loadTheoryAnswers() {
