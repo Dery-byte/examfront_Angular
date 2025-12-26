@@ -18,21 +18,6 @@ export class LoginService {
 
   constructor(private http:HttpClient, private router: Router) { }
 
-
-  // public getAllUsers(){
-  //   return this.http.get(`${baseUrl}/users`);
-  // }
-
-  // //get the current logged in user
-  // public getCurrentUser(){
-  //   return this.http.get(`${baseUrl}/current-user`);
-  // }
-
-  // //Generate Token
-  // public generateToken(loginData: any){
-  //   return this.http.post(`${baseUrl}/authenticate`, loginData);
-  // } 
-
   public getCurrentUser() {
   return this.http.get(`${baseUrl}/current-user`, { 
     withCredentials: true 
@@ -58,19 +43,6 @@ public getAllUsers() {
     this.loginStatusSubject.next(true)
     return true;
   }
-  //isLogin: user logged in or not
-  public isLoggedIn(){
-    let tokenStr = localStorage.getItem("token");
-    if(tokenStr == undefined || tokenStr == ' ' || tokenStr ==null){
-      return false;
-    }
-    else{
-      return true;
-    }
-  }
- 
-
-
 
   // get token
   public getToken(){
@@ -114,20 +86,38 @@ public getAllUsers() {
     }
 
 
-  // Logout: remove  token from local storage
-  public logout(){
+
+  
+  logout(): Observable<any> {
+    console.log(`${baseUrl}/logout`)
+    return this.http.post(`${baseUrl}/logout`, {}, {
+      withCredentials: true  // ⭐ Important: sends cookies to backend
+    });
+  }
+
+
+
+
+  // // Logout: remove  token from local storage
+  public clearLocalSession(){
     localStorage.removeItem("token");
     localStorage.removeItem("user");
     localStorage.removeItem("exam");
     localStorage.removeItem("tokenExpiratioTime");
     // window.location.href="/login/";
     // this.router.navigate(["/login"]);
-    // this.router.navigate(["user-dashboard"]);
-
-
+    // this.router.navigate(["user-dashboard"])
+    sessionStorage.clear()
     return true;
   }
  
+   /**
+   * Check if user is logged in
+   */
+  isLoggedIn(): boolean {
+    // Your logic to check if user is logged in
+    return !!localStorage.getItem('user');
+  }
 
 
   // SENT PASSWORD RESET link

@@ -29,7 +29,7 @@ export class UserNavbarComponent {
 	dialogRef!: MatDialogRef<any>;
 
 
-	
+
 
 	isloggedIn = false;
 	hasAuthority(authority: string): boolean {
@@ -42,11 +42,8 @@ export class UserNavbarComponent {
 	isNormalUser = false;   // ✅ precomputed flag
 	isMobile = false;
 	private subscription?: Subscription;
-
-//   @ViewChild('drawer') drawer!: MatDrawer;
-
-
-
+ isLoggingOut = false;  // Prevent multiple logout calls
+	//   @ViewChild('drawer') drawer!: MatDrawer;
 
 	constructor(public login: LoginService,
 		private _snack: MatSnackBar,
@@ -67,18 +64,18 @@ export class UserNavbarComponent {
 
 
 	ngOnDestroy(): void {
-		 if (this.expirationSubscription) {
-      this.expirationSubscription.unsubscribe();
-    }
+		if (this.expirationSubscription) {
+			this.expirationSubscription.unsubscribe();
+		}
 		// Clear the interval when the component is destroyed to prevent memory leaks
 		if (this.intervalId) {
 			clearInterval(this.intervalId);
 		}
 	}
 
-	
+
 	ngOnInit(): void {
-    this.startCountdown();
+		this.startCountdown();
 		this.isloggedIn = this.login.isLoggedIn();
 		this.user = this.login.getUser();
 		this.isNormalUser = this.checkAuthority('NORMAL');  // ✅ compute once
@@ -90,34 +87,24 @@ export class UserNavbarComponent {
 			this.isNormalUser = this.checkAuthority('NORMAL');  // ✅ recompute
 		});
 
-
-		// this.isloggedIn = this.login.isLoggedIn();
-		// this.startCountdown();
-		// this.user = this.login.getUser();
-		// this.login.loginStatusSubject.asObservable().subscribe(data => {
-		// 	this.isloggedIn = this.login.isLoggedIn();
-		// });
-
-
-		 this.breakpointObserver.observe([Breakpoints.Handset]).subscribe(result => {
-      this.isMobile = result.matches;
-
-      if (this.isMobile) {
-        // On mobile: close drawer
-        this.drawer?.close();
-      } else {
-        // On desktop: open drawer
-        this.drawer?.open();
-      }
-    });
+		this.breakpointObserver.observe([Breakpoints.Handset]).subscribe(result => {
+			this.isMobile = result.matches;
+			if (this.isMobile) {
+				// On mobile: close drawer
+				this.drawer?.close();
+			} else {
+				// On desktop: open drawer
+				this.drawer?.open();
+			}
+		});
 
 	}
 
-	 closeDrawerOnMobile() {
-    if (this.isMobile) {
-      this.drawer.close();
-    }
-  }
+	closeDrawerOnMobile() {
+		if (this.isMobile) {
+			this.drawer.close();
+		}
+	}
 
 
 
@@ -128,94 +115,157 @@ export class UserNavbarComponent {
 	}
 
 	//TRYING THE TIMER
-	
+
 	private hasLoggedOut = false;
- timeDisplay: TimeDisplay = { display: '00 min : 00 sec', className: 'normal-minutes' };
-  private expirationSubscription?: Subscription;
-  
+	timeDisplay: TimeDisplay = { display: '00 min : 00 sec', className: 'normal-minutes' };
+	private expirationSubscription?: Subscription;
 
 
+	startCountdown(): void {
+		this.tokenExpirationService.startCountdownFromBackend();
 
-  startCountdown(): void {
-    this.tokenExpirationService.startCountdownFromBackend();
-    
-    // Subscribe to the countdown updates
-    this.expirationSubscription = this.tokenExpirationService.expiration$.subscribe(
-      (seconds) => {
-        if (seconds === 0) {
-          // Token expired - auto logout
-          this.handleTokenExpiration();
-        } else {
-          // Update the display
-          const minutesLeft = Math.floor(seconds / 60);
-          this.timeDisplay = this.formatTime(seconds, minutesLeft);
+		this.expirationSubscription = this.tokenExpirationService.expiration$.subscribe(
+			(seconds) => {
+				console.log("⏱️ Countdown seconds:", seconds);
 
-		  console.log("This is the time to display ", this.timeDisplay)
-          
-          // Trigger alert effect when less than 1 minute left
-          if (minutesLeft === 0 && seconds <= 60) {
-            this.triggerAlertEffect();
-          }
-        }
+				if (seconds === 0) {
+					// Token expired - show expired state then trigger modal
+					this.timeDisplay = { display: 'Session Expired', className: 'expired' };
+					console.log("🚨 Token expired! Showing modal...");
+
+					// Small delay to let the UI update before showing modal
+					setTimeout(() => {
+						this.handleTokenExpiration();
+					}, 500);
+				} else {
+					// Update the display
+					const minutesLeft = Math.floor(seconds / 60);
+					this.timeDisplay = this.formatTime(seconds, minutesLeft);
+					console.log("⏰ Time display:", this.timeDisplay);
+
+					// Trigger alert effect when less than 1 minute left
+					if (minutesLeft === 0 && seconds <= 60 && seconds > 0) {
+						this.triggerAlertEffect();
+					}
+
+					// Optional: Show warning at 5 minutes
+					if (seconds === 300) {
+						console.log("⚠️ Warning: 5 minutes remaining!");
+						// You could show a toast notification here
+					}
+
+					// Optional: Show critical warning at 1 minute
+					if (seconds === 60) {
+						console.log("🔴 Critical: 1 minute remaining!");
+						// You could show another notification here
+					}
+				}
+			},
+			(error) => {
+				console.error("❌ Error in countdown subscription:", error);
+			},
+			() => {
+				console.log("✅ Countdown completed");
+			}
+		);
+	}
+
+	private handleTokenExpiration(): void {
+		console.log("🔒 Handling token expiration - showing modal");
+		// this.logout();
+		//   this.showExpirationModal = true;
+	}
+
+	onModalConfirm(): void {
+		console.log("👋 User confirmed logout");
+		//   this.showExpirationModal = false;
+
+		// Small delay for better UX
+		setTimeout(() => {
+			this.logout();
+		}, 300);
+	}
+
+	public logout(): void {
+    // Prevent multiple simultaneous logout calls
+    if (this.isLoggingOut) {
+      console.log("⏳ Logout already in progress...");
+      return;
+    }
+
+    this.isLoggingOut = true;
+    console.log("🚪 Logging out user...");
+
+    // Unsubscribe from countdown
+    if (this.expirationSubscription) {
+      this.expirationSubscription.unsubscribe();
+    }
+
+    // Call backend logout endpoint
+    this.login.logout().subscribe({
+      next: (response) => {
+        console.log("✅ Backend logout successful:", response);
+        
+        // Clear local session
+        this.login.clearLocalSession();
+        this.isloggedIn = false;
+        this.user = null;
+        
+        // Redirect to login page
+        console.log("🔄 Redirecting to login...");
+        window.location.href = '/login';
+      },
+      error: (error) => {
+        console.error("❌ Logout error:", error);
+        
+        // Even if backend fails, clear local session and redirect
+        this.login.clearLocalSession();
+        this.isloggedIn = false;
+        this.user = null;
+        
+        // Still redirect to login
+        window.location.href = '/login';
       }
-    );
-  }
+	});
+	}
+	
 
-  private handleTokenExpiration(): void {
-    // this.timeDisplay = { display: 'Session Expired', className: 'expired' };
-    
-    // // Optional: Show a notification before auto-logout
-    // alert('Your session has expired. You will be logged out.');
-    
-    // // Auto logout after a short delay
-    // setTimeout(() => {
-    //   this.logout();
-    // }, 2000);
-  }
+	private formatTime(timeInSeconds: number, minutesLeft: number): TimeDisplay {
+		const hr = Math.floor(timeInSeconds / 3600);
+		const mm = Math.floor((timeInSeconds % 3600) / 60);
+		const ss = Math.floor(timeInSeconds % 60);
 
-  public logout(): void {
-    this.login.logout();
-    this.isloggedIn = false;
-    this.user = null;
-    window.location.reload();
-  }
+		// Format the time string
+		let formattedTime = '';
+		if (hr > 0) {
+			formattedTime += `${this.formatNumber(hr)} hr : `;
+		}
+		formattedTime += `${this.formatNumber(mm)} min : ${this.formatNumber(ss)} sec`;
 
-  private formatTime(timeInSeconds: number, minutesLeft: number): TimeDisplay {
-    const hr = Math.floor(timeInSeconds / 3600);
-    const mm = Math.floor((timeInSeconds % 3600) / 60);
-    const ss = Math.floor(timeInSeconds % 60);
-    
-    // Format the time string
-    let formattedTime = '';
-    if (hr > 0) {
-      formattedTime += `${this.formatNumber(hr)} hr : `;
-    }
-    formattedTime += `${this.formatNumber(mm)} min : ${this.formatNumber(ss)} sec`;
-    
-    // Determine the CSS class based on time left
-    let minutesClass = 'normal-minutes';
-    if (timeInSeconds <= 60) {
-      minutesClass = 'critical-minutes'; // Less than 1 minute
-    } else if (minutesLeft <= 5) {
-      minutesClass = 'warning-minutes'; // Less than 5 minutes
-    }
-    
-    return { display: formattedTime, className: minutesClass };
-  }
+		// Determine the CSS class based on time left
+		let minutesClass = 'normal-minutes';
+		if (timeInSeconds <= 60) {
+			minutesClass = 'critical-minutes'; // Less than 1 minute
+		} else if (minutesLeft <= 5) {
+			minutesClass = 'warning-minutes'; // Less than 5 minutes
+		}
 
-  private formatNumber(num: number): string {
-    return num < 10 ? `0${num}` : num.toString();
-  }
+		return { display: formattedTime, className: minutesClass };
+	}
 
-  private triggerAlertEffect(): void {
-    const minutesElement = document.querySelector('.token-expiration-display');
-    if (minutesElement) {
-      minutesElement.classList.add('alert');
-      setTimeout(() => {
-        minutesElement.classList.remove('alert');
-      }, 1000);
-    }
-  }
+	private formatNumber(num: number): string {
+		return num < 10 ? `0${num}` : num.toString();
+	}
+
+	private triggerAlertEffect(): void {
+		const minutesElement = document.querySelector('.token-expiration-display');
+		if (minutesElement) {
+			minutesElement.classList.add('alert');
+			setTimeout(() => {
+				minutesElement.classList.remove('alert');
+			}, 1000);
+		}
+	}
 
 
 

@@ -60,6 +60,8 @@ export class AdminnavbarComponent {
   	isMobile = false;
  timeDisplay: TimeDisplay = { display: '00 min : 00 sec', className: 'normal-minutes' };
   private expirationSubscription?: Subscription;
+   isLoggingOut = false;  // Prevent multiple logout calls
+
 
 
   categories;
@@ -150,52 +152,124 @@ export class AdminnavbarComponent {
 
 
 
-  public logout() {
-    this.login.logout();
-    this.isloggedIn = false;
-    this.user = null;
-    window.location.reload();
-    // window.location.href = "/login";
-  }
+  // public logout() {
+  //   this.login.logout();
+  //   this.isloggedIn = false;
+  //   this.user = null;
+  //   window.location.reload();
+  //   // window.location.href = "/login";
+  // }
 
 
   
-  startCountdown(): void {
-    this.tokenExpirationService.startCountdownFromBackend();
-    
-    // Subscribe to the countdown updates
-    this.expirationSubscription = this.tokenExpirationService.expiration$.subscribe(
-      (seconds) => {
-        if (seconds === 0) {
-          // Token expired - auto logout
-          this.handleTokenExpiration();
-        } else {
-          // Update the display
-          const minutesLeft = Math.floor(seconds / 60);
-          this.timeDisplay = this.formatTime(seconds, minutesLeft);
+	startCountdown(): void {
+		this.tokenExpirationService.startCountdownFromBackend();
 
-		  console.log("This is the time to display ", this.timeDisplay)
-          
-          // Trigger alert effect when less than 1 minute left
-          if (minutesLeft === 0 && seconds <= 60) {
-            this.triggerAlertEffect();
-          }
-        }
+		this.expirationSubscription = this.tokenExpirationService.expiration$.subscribe(
+			(seconds) => {
+				console.log("⏱️ Countdown seconds:", seconds);
+
+				if (seconds === 0) {
+					// Token expired - show expired state then trigger modal
+					this.timeDisplay = { display: 'Session Expired', className: 'expired' };
+					console.log("🚨 Token expired! Showing modal...");
+
+					// Small delay to let the UI update before showing modal
+					setTimeout(() => {
+						this.handleTokenExpiration();
+					}, 500);
+				} else {
+					// Update the display
+					const minutesLeft = Math.floor(seconds / 60);
+					this.timeDisplay = this.formatTime(seconds, minutesLeft);
+					console.log("⏰ Time display:", this.timeDisplay);
+
+					// Trigger alert effect when less than 1 minute left
+					if (minutesLeft === 0 && seconds <= 60 && seconds > 0) {
+						this.triggerAlertEffect();
+					}
+
+					// Optional: Show warning at 5 minutes
+					if (seconds === 300) {
+						console.log("⚠️ Warning: 5 minutes remaining!");
+						// You could show a toast notification here
+					}
+
+					// Optional: Show critical warning at 1 minute
+					if (seconds === 60) {
+						console.log("🔴 Critical: 1 minute remaining!");
+						// You could show another notification here
+					}
+				}
+			},
+			(error) => {
+				console.error("❌ Error in countdown subscription:", error);
+			},
+			() => {
+				console.log("✅ Countdown completed");
+			}
+		);
+	}
+
+	private handleTokenExpiration(): void {
+		console.log("🔒 Handling token expiration - showing modal");
+		//this.logout();
+		//   this.showExpirationModal = true;
+	}
+
+	onModalConfirm(): void {
+		console.log("👋 User confirmed logout");
+		//   this.showExpirationModal = false;
+
+		// Small delay for better UX
+		setTimeout(() => {
+			this.logout();
+		}, 300);
+	}
+
+	public logout(): void {
+    // Prevent multiple simultaneous logout calls
+    if (this.isLoggingOut) {
+      console.log("⏳ Logout already in progress...");
+      return;
+    }
+
+    this.isLoggingOut = true;
+    console.log("🚪 Logging out user...");
+
+    // Unsubscribe from countdown
+    if (this.expirationSubscription) {
+      this.expirationSubscription.unsubscribe();
+    }
+
+    // Call backend logout endpoint
+    this.login.logout().subscribe({
+      next: (response) => {
+        console.log("✅ Backend logout successful:", response);
+        
+        // Clear local session
+        this.login.clearLocalSession();
+        this.isloggedIn = false;
+        this.user = null;
+        
+        // Redirect to login page
+        console.log("🔄 Redirecting to login...");
+        window.location.href = '/login';
+      },
+      error: (error) => {
+        console.error("❌ Logout error:", error);
+        
+        // Even if backend fails, clear local session and redirect
+        this.login.clearLocalSession();
+        this.isloggedIn = false;
+        this.user = null;
+        
+        // Still redirect to login
+        window.location.href = '/login';
       }
-    );
-  }
-
-  private handleTokenExpiration(): void {
-    // this.timeDisplay = { display: 'Session Expired', className: 'expired' };
-    
-    // // Optional: Show a notification before auto-logout
-    // alert('Your session has expired. You will be logged out.');
-    
-    // // Auto logout after a short delay
-    // setTimeout(() => {
-    //   this.logout();
-    // }, 2000);
-  }
+	});
+	}
+	
 
   // Add a method to handle alert effect
   private triggerAlertEffect(): void {
