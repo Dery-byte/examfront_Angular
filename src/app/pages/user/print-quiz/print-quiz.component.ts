@@ -138,7 +138,7 @@ export class PrintQuizComponent implements OnInit {
 
 
     // this.refreshPage();
-    this.refreshContent();
+    // this.refreshContent();
     this.loadQuestionsWithAnswers();
 
     // this.loadResults();
@@ -149,7 +149,7 @@ export class PrintQuizComponent implements OnInit {
 
     this.loadQuestionsFromLocalStorage();
 
-    this.evalQuiz();
+    // this.evalQuiz();
     // this.printQuiz();
     this.preventBackButton();
 
@@ -321,19 +321,21 @@ export class PrintQuizComponent implements OnInit {
       console.log(report);
     });
   }
-  refreshContent() {
-    // Use HttpClient to fetch updated content
-    const userDetails = localStorage.getItem('user');
-    const Object = JSON.parse(userDetails);
-    this._report.getReport(Object.id, this.qid)
-      .subscribe(
-        (data: any) => {
-          // Update the content of the element with the new data
-          document.getElementById('marks').innerHTML = data;
-        },
-        error => console.error('Error fetching data:', error)
-      );
-  }
+  // refreshContent() {
+  //   // Use HttpClient to fetch updated content
+  //   const userDetails = localStorage.getItem('user');
+  //   const Object = JSON.parse(userDetails);
+  //   this._report.getReport(Object.id, this.qid)
+  //     .subscribe(
+  //       (data: any) => {
+  //         // Update the content of the element with the new data
+  //         document.getElementById('marks').innerHTML = data;
+
+  //         console.Console("this is some data " ,data)
+  //       },
+  //       error => console.error('Error fetching data:', error)
+  //     );
+  // }
 
   removeResults() {
     localStorage.removeItem("MaxMarks");
@@ -354,7 +356,7 @@ export class PrintQuizComponent implements OnInit {
   loadQuestions(): void {
     this.loadReport();
     this._questions.getQuestionsOfQuizForText(this.qid).subscribe((data: any) => {
-      console.log(data[0].answer);
+      console.log(data[0]?.answer);
       console.log(data);
       this.questions = data.map((q, index) => {
         q.count = index + 1;
@@ -394,28 +396,32 @@ export class PrintQuizComponent implements OnInit {
   }
 
   loadResults() {
-    this.maxMarks = JSON.parse(localStorage.getItem("MaxMarks"));
-    this.attempted = JSON.parse(localStorage.getItem("Attempted"));
-    this.correct_answer = JSON.parse(localStorage.getItem("CorrectAnswer"));
-    this.marksGot = JSON.parse(localStorage.getItem("MarksGot"));
+    // this.maxMarks = JSON.parse(localStorage.getItem("MaxMarks"));
+    // this.attempted = JSON.parse(localStorage.getItem("Attempted"));
+    // this.correct_answer = JSON.parse(localStorage.getItem("CorrectAnswer"));
+    // this.marksGot = JSON.parse(localStorage.getItem("MarksGot"));
     // this.page();
   }
-  evalQuiz() {
-    //Evaluate questions
-    this._questions.evalQuiz(this.qid, this.questionss).subscribe((data: any) => {
-      console.log(data);
-      // this.result=data;
-      this.marksGot = parseFloat(Number(data.marksGot).toFixed(2));
-      this.correct_answer = data.correct_answer;
-      this.attempted = data.attempted;
-      this.maxMarks = data.maxMarks;
-      // this.preventBackButton();
-    },
-      (error) => {
-        console.log("Error !")
-      }
-    );
-  }
+  // evalQuiz() {
+  //   //Evaluate questions
+  //   this._questions.evalQuiz(this.qid, this.questionss).subscribe((data: any) => {
+  //     console.log(data);
+  //     // this.result=data;
+  //     this.marksGot = parseFloat(Number(data.marksGot).toFixed(2));
+  //     this.correct_answer = data.correct_answer;
+  //     this.attempted = data.attempted;
+  //     this.maxMarks = data.maxMarks;
+  //     // this.preventBackButton();
+  //   },
+  //     (error) => {
+  //       console.log("Error !")
+  //     }
+  //   );
+  // }
+
+
+
+
   printPage() {
     document.title = this.username;
     window.print();
@@ -430,19 +436,18 @@ export class PrintQuizComponent implements OnInit {
   }
 
   loadQuestionsFromLocalStorage() {
-    this.loadReport();
-    this.loadResults();
-    this.questionss = JSON.parse(localStorage.getItem("exam"));
-    this.timer = this.questionss.length * 2 * 60;
-
+    // this.loadReport();
+    // this.loadResults();
+    // this.questionss = JSON.parse(localStorage.getItem("exam"));
     // this.timer = this.questionss.length * 2 * 60;
+    // // this.timer = this.questionss.length * 2 * 60;
 
-    this.questions.forEach(q => {
-      q['givenAnswer'] = "";
-    });
-    // this.preventBackButton();
-    // this.startTimer();
-    console.log(this.questionss[0]);
+    // this.questions.forEach(q => {
+    //   q['givenAnswer'] = "";
+    // });
+    // // this.preventBackButton();
+    // // this.startTimer();
+    // console.log(this.questionss[0]);
 
   }
 };

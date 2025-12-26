@@ -31,7 +31,7 @@ export class CoursesRegisteredComponent implements OnInit {
     this.errorLoading = false;
     
     this.regCourse.getRegCourses().subscribe(
-      (data) => {
+      (data:any) => {
         this.userRecords = this.filterUserCourses(data);
         this.isLoading = false;
       },

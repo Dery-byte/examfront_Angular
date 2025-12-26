@@ -14,33 +14,63 @@ export class ReportServiceService {
   constructor( private _http:HttpClient ) { }
 
 public loadResultsSummary(rId){
-  return this._http.get(`${baseUrl}/getReport/${rId}`);
+  return this._http.get(`${baseUrl}/getReport/${rId}`,{
+    withCredentials: true 
+  });
 }
 
 
 public loadReportSummary(): Observable<any> {
-  return this._http.get(`${baseUrl}/getReport`);
+  return this._http.get(`${baseUrl}/getReport`,{
+    withCredentials: true 
+  });
 }
 
 //get Report by userId and QuizId
-public getReport(uId,qId){
-  return this._http.get(`${baseUrl}/getReportByUidAndQid/${uId}/${qId}`);
+// public getReport(uId,qId){
+//   return this._http.get(`${baseUrl}/getReportByUidAndQid/${uId}/${qId}`);
+// }
+
+
+    public getReport(uId,qId) {
+  return this._http.get(`${baseUrl}/getReportByUidAndQid/${uId}/${qId}`, { 
+    withCredentials: true 
+  });
 }
 
-public getReportsByUserID(uid){
-  return this._http.get(`${baseUrl}/getReportsByUser/${uid}`);
+
+
+
+// public getReportsByUserID(uid){
+//   return this._http.get(`${baseUrl}/getReportsByUser/${uid}`);
+// }
+
+
+   public getReportsByUserID(uid) {
+  return this._http.get(`${baseUrl}/getReportsByUser/${uid}`, { 
+    withCredentials: true 
+  });
 }
+
+
+
 
 public getReportsByUserAndId(qid){
-  return this._http.get(`${baseUrl}/quiz-results/my-quiz/${qid}`);
+  return this._http.get(`${baseUrl}/quiz-results/my-quiz/${qid}`,{
+    withCredentials: true 
+  });
 }
 
 public getTheoryDetails(qid){
-  return this._http.get(`${baseUrl}/quiz/${qid}`);
+  return this._http.get(`${baseUrl}/quiz/${qid}`,{
+    withCredentials: true 
+  });
 }
 
 public getResultsDetails(qid){
-  return this._http.get(`${baseUrl}/quiz/result/${qid}`);
+  return this._http.get(`${baseUrl}/quiz/result/${qid}`,{
+    withCredentials: true 
+  });
 }
 
 
@@ -104,7 +134,9 @@ private extractCategoriesAndQuizzes(quizzes: any[]): any[] {
 
 //get Report by  QuizId
 public getReportByQuizId(qId){
-  return this._http.get(`${baseUrl}/getReports/${qId}`);
+  return this._http.get(`${baseUrl}/getReports/${qId}`,{
+    withCredentials: true 
+  });
 }
 
 

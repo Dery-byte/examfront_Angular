@@ -105,18 +105,8 @@ export class LoginComponent implements OnInit {
     });
 
   }
-  //  ============================SUBJECTIVE QUESTIONS=======================================
-
-
-  //  ============================SUBJECTIVE QUESTIONS=======================================
-
 
   ngOnInit(): void {
-
-    //  ============================SUBJECTIVE QUESTIONS=======================================
-
-    //  ============================SUBJECTIVE QUESTIONS=======================================
-
 
     this.route.queryParams.subscribe(params => {
       const token = params['token'];
@@ -131,24 +121,6 @@ export class LoginComponent implements OnInit {
     this.allusers();
     this.preventLoginForm();
   }
-
-
-
-
-
-
-
-
-  //  ============================SUBJECTIVE QUESTIONS=======================================
-
-
-  //  ============================SUBJECTIVE QUESTIONS=======================================
-
-
-
-
-
-
 
 
 
@@ -263,12 +235,8 @@ export class LoginComponent implements OnInit {
             else {
               this.login.logout();
             }
-
-
           }
         );
-
-
       },
       (error) => {
         this.loading = false;
@@ -287,8 +255,6 @@ export class LoginComponent implements OnInit {
   isSubmitting = false;
   loginError = '';
   passwordVisible = false;
-
-
   apiError: string | null = null;
   successEmail: string | null = null;  // store the email that was sent
 
@@ -358,22 +324,6 @@ export class LoginComponent implements OnInit {
   saveProduct() {
   }
 
-
-  // signInWithGoogle() {
-  //   // console.log('Navigating to Google OAuth');
-  //   this.router.navigate(['/oauth2/authorization/google']).then(success => {
-  //     if (success) {
-  //       console.log('Navigation successful');
-  //     } else {
-  //       console.log('Navigation failed');
-  //     }
-  //   });
-  // }
-
-  // signInWithGoogle() {
-  //   const googleOAuthUrl = 'https://accounts.google.com/o/oauth2/authorization'; // Replace with your actual Google OAuth URL
-  //   window.location.href = googleOAuthUrl;
-  // }
 
   generateState(): string {
     const characters = 'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789';

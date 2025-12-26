@@ -15,17 +15,42 @@ export class RegCoursesService {
 
   constructor(private _http: HttpClient) { }
 
-  public getRegCourses(): any{
-    return this._http.get(`${baseUrl}/getRegCourses`)
-  }
+  // public getRegCourses(): any{
+  //   return this._http.get(`${baseUrl}/getRegCourses`)
+  // }
 
-  public regCourses(courses) {
-    return this._http.post(`${baseUrl}/registerCourse`, courses)
-  }
+    public getRegCourses() {
+  return this._http.get(`${baseUrl}/getRegCourses`, { 
+    withCredentials: true 
+  });
+}
 
-  public deleteRegCourse(Rid) {
-    return this._http.delete(`${baseUrl}/regCourse/deleteById/${Rid}`)
-  }
+
+
+  // public regCourses(courses) {
+  //   return this._http.post(`${baseUrl}/registerCourse`, courses)
+  // }
+
+
+      public regCourses(courses) {
+  return this._http.post(`${baseUrl}/registerCourse `, courses, { 
+    withCredentials: true 
+  });
+}
+
+  // public deleteRegCourse(Rid) {
+  //   return this._http.delete(`${baseUrl}/regCourse/deleteById/${Rid}`)
+  // }
+
+
+
+        public deleteRegCourse(Rid) {
+  return this._http.delete(`${baseUrl}/regCourse/deleteById/${Rid}`,{ 
+    withCredentials: true 
+  });
+}
+
+
 
 
 // Method to combine and remove duplicates based on cid

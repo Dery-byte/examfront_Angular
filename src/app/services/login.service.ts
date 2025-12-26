@@ -17,19 +17,39 @@ export class LoginService {
   public loginStatusSubject = new Subject<boolean>();
 
   constructor(private http:HttpClient, private router: Router) { }
-  public getAllUsers(){
-    return this.http.get(`${baseUrl}/users`);
-  }
 
-  //get the current logged in user
-  public getCurrentUser(){
-    return this.http.get(`${baseUrl}/current-user`);
-  }
 
-  //Generate Token
-  public generateToken(loginData: any){
-    return this.http.post(`${baseUrl}/authenticate`, loginData);
-  } 
+  // public getAllUsers(){
+  //   return this.http.get(`${baseUrl}/users`);
+  // }
+
+  // //get the current logged in user
+  // public getCurrentUser(){
+  //   return this.http.get(`${baseUrl}/current-user`);
+  // }
+
+  // //Generate Token
+  // public generateToken(loginData: any){
+  //   return this.http.post(`${baseUrl}/authenticate`, loginData);
+  // } 
+
+  public getCurrentUser() {
+  return this.http.get(`${baseUrl}/current-user`, { 
+    withCredentials: true 
+  });
+}
+
+public generateToken(loginData: any) {
+  return this.http.post(`${baseUrl}/authenticate`, loginData, { 
+    withCredentials: true 
+  });
+}
+
+public getAllUsers() {
+  return this.http.get(`${baseUrl}/users`, { 
+    withCredentials: true 
+  });
+}
 
 
   //Login User : save token in local storage
@@ -112,7 +132,10 @@ export class LoginService {
 
   // SENT PASSWORD RESET link
 resetPassword(token: string, newPassword: string): Observable<any> {
-  return this.http.post(`${baseUrl}/reset-password`, { token, newPassword });
+  return this.http.post(`${baseUrl}/reset-password`, { token, newPassword,
+            withCredentials:true
+
+   });
 }
 
 

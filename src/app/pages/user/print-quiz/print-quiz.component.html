@@ -57,7 +57,7 @@
                                 <p>Total Marks:
                                     <span id="marksU">{{ r.marks + getGrandTotalMarks() }}/{{ r.quiz.maxMarks }}</span>
                                 </p>
-                                <p>Attempted Questions: {{ attempted }}</p>
+                                <p>Attempted Questions: {{ resultsOBJ?.attempted }}</p>
                                 <p style="color:rgb(80, 80, 80); font-weight: bolder;">
                                     Submission Date: {{ r.submissionDate | date:'medium' }}
                                 </p>
@@ -81,7 +81,7 @@
                         <h1 class="section-header">
                             Section A
                             <b class="section-total">
-                                Total Marks: <em class="grand-totals">{{reportData[0].marks}}</em>
+                                Total Marks: <em class="grand-totals">{{reportData[0]?.marks}}</em>
                             </b>
                         </h1>
 
@@ -105,7 +105,7 @@
 
 
 
-                        <mat-card *ngFor="let qA of resultsOBJ.results; let i = index" class="mt10">
+                        <mat-card *ngFor="let qA of resultsOBJ?.results; let i = index" class="mt10">
                             <mat-card-content>
                                 <p>
                                     <b>Q {{ i + 1 }}</b>

@@ -22,6 +22,12 @@ export class LoadQuizComponent implements OnInit {
   quizzes: any[] = [];
   reports: any[] = [];
   reportData: any;
+
+//   categories = {
+//   cid: null
+// };
+selectedCategoryId: number | null = null;
+
   categories: any;
 
   // ID variables
@@ -84,6 +90,10 @@ export class LoadQuizComponent implements OnInit {
 
 
   uniqueCategories;
+
+
+
+  
   private loadInitialData(): void {
     this.isLoadingCourses = true;
     const userDetails = localStorage.getItem('user');
@@ -196,13 +206,34 @@ export class LoadQuizComponent implements OnInit {
 
 
 
-  onQuizOptionSelected(): void {
-    if (!this.categories?.cid) return;
+  // onQuizOptionSelected(): void {
+  //   if (!this.categories?.cid) return;
 
-    this.isLoadingQuizzes = true;
-    // this._quiz.getActieQuizzesOfCategory(this.categories.cid).subscribe({
-    this._quiz.getTakenQuizzesOfCategoryByUser(this.categories.cid).subscribe({
-      next: (quiz: any) => {
+  //   this.isLoadingQuizzes = true;
+  //   // this._quiz.getActieQuizzesOfCategory(this.categories.cid).subscribe({
+  //   this._quiz.getTakenQuizzesOfCategoryByUser(this.categories.cid).subscribe({
+  //     next: (quiz: any) => {
+  //       this.availablequizzes = quiz;
+  //       this.isLoadingQuizzes = false;
+  //     },
+  //     error: (error) => {
+  //       console.error('Error loading quizzes:', error);
+  //       this.isLoadingQuizzes = false;
+  //     }
+  //   });
+  // }
+
+
+
+  onQuizOptionSelected(): void {
+  if (!this.selectedCategoryId) return;
+
+  this.isLoadingQuizzes = true;
+
+  this._quiz
+    .getTakenQuizzesOfCategoryByUser(this.selectedCategoryId)
+    .subscribe({
+      next: (quiz:any) => {
         this.availablequizzes = quiz;
         this.isLoadingQuizzes = false;
       },
@@ -211,7 +242,8 @@ export class LoadQuizComponent implements OnInit {
         this.isLoadingQuizzes = false;
       }
     });
-  }
+}
+
 
   showObjectiveColumn(): boolean {
     // Show Objective column if ANY quiz has type OBJ or BOTH

@@ -190,14 +190,19 @@
               <form>
                 <mat-form-field appearance="outline" class="full-width">
                   <mat-label>Choose a course</mat-label>
-                  <mat-select name="category" [(ngModel)]="categories.cid" (selectionChange)="onQuizOptionSelected()">
+                  <mat-select name="category" [(ngModel)]="selectedCategoryId"
+                    (selectionChange)="onQuizOptionSelected()">
+
                     <mat-option *ngFor="let c of uniqueCategories" [value]="c.cid">
                       <div class="course-option">
-                        <!-- <span class="course-code">{{c.quiz.category.courseCode}}-> </span> -->
-                        <span class="course-title"> {{ c.courseCode }} : {{ c.title }}</span>
+                        <span class="course-title">
+                          {{ c.courseCode }} : {{ c.title }}
+                        </span>
                       </div>
                     </mat-option>
+
                   </mat-select>
+
                 </mat-form-field>
               </form>
             </mat-card-content>

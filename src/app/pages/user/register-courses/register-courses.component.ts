@@ -96,7 +96,7 @@ export class RegisterCoursesComponent implements OnInit {
 		  }));
 	  
 		  // After transforming registered courses, fetch available courses
-		  this._cat.getCategories().subscribe(categories => {
+		  this._cat.getCategories().subscribe((categories:any) => {
 			// Combine available and registered courses and remove duplicates
 			this.categories = categories;
 			this.unRegCourse = this.combineAndRemoveDuplicates(this.categories, this.transformedData);
@@ -196,7 +196,7 @@ export class RegisterCoursesComponent implements OnInit {
 		});
 	}
 	getCourses() {
-		this._cat.getCategories().subscribe(data => {
+		this._cat.getCategories().subscribe((data :any) => {
 			this.courses = data;
 			this.getUniqueLevels();
 			// this.filterCourses();

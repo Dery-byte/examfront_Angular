@@ -16,6 +16,6 @@ return this.http.post(`${baseUrl}/register`, user);
   }
 
   public alluser(){
-    return this.http.get(`${baseUrl}/users`)
+    return this.http.get(`${baseUrl}/users`,)
   }
 }

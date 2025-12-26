@@ -21,7 +21,10 @@ public getTheoryReport(qId: number): Observable<any> {
   const headers = {
     Authorization: `Bearer ${token}`
   };
-  return this._http.get(`${baseUrl}/answers/quiz/${qId}`, { headers });
+  return this._http.get(`${baseUrl}/answers/quiz/${qId}`, { 
+    headers,
+  withCredentials: true 
+  });
 }
 
 // public getTheoryReport(qId){
