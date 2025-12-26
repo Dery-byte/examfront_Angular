@@ -3,31 +3,6 @@
   text="Loading..."></ngx-ui-loader>
 
 <div class="app-container">
-  <!-- <header @fadeIn *ngIf="!isloggedIn">
-    <mat-toolbar color="primary" class="main-toolbar">
-      <div class="toolbar-content">
-        <div class="branding">
-          <mat-icon class="brand-icon">school</mat-icon>
-          <span class="brand-name">Exam Portal</span>
-        </div>
-        <nav class="nav-links">
-          <a mat-button routerLink="/" class="nav-link">
-            <mat-icon>home</mat-icon>
-            <span>Home</span>
-          </a>
-          <a *ngIf="!isloggedIn" [routerLink]="'/signup'" mat-button class="nav-link">
-            <mat-icon>person_add</mat-icon>
-            <span>Register</span>
-          </a>
-          <button *ngIf="!isloggedIn" mat-raised-button color="accent" routerLink="/login" class="login-btn">
-            <mat-icon>login</mat-icon>
-            <span>Login</span>
-          </button>
-        </nav>
-      </div>
-    </mat-toolbar>
-  </header> -->
-
   <!-- Admin Dashboard -->
   <div @fadeIn class="dashboard-container">
     <mat-toolbar color="primary" class="user-toolbar fixed-header">
@@ -40,9 +15,9 @@
       </div>
       <mat-divider vertical class="user-divider"></mat-divider>
 
-      <div class="session-timer" [ngClass]="timeLeftDisplay.className">
+      <div class="session-timer" [ngClass]="timeDisplay.className">
         <mat-icon>timer</mat-icon>
-        <span>Session expires: {{ timeLeftDisplay?.display }}</span>
+        <span>Session expires: {{ timeDisplay?.display }}</span>
       </div>
     </mat-toolbar>
 

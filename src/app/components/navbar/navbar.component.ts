@@ -8,7 +8,7 @@ import { MatDialog, MatDialogRef } from '@angular/material/dialog';
 import { FormControl, Validators } from '@angular/forms';
 import { CdkTextareaAutosize } from '@angular/cdk/text-field';
 import { take } from 'rxjs/operators';
-
+import { Subscription } from 'rxjs';
 import { MailServiceService } from 'src/app/services/mail-service.service';
 
 
@@ -46,6 +46,9 @@ export class NavbarComponent implements OnInit, OnDestroy {
 	timeLeftDisplay: TimeDisplay | string;
 	private intervalId: any; // To store the interval reference
 
+	private subscription?: Subscription;
+
+
 	categories;
 
 	mailInfo = {
@@ -77,19 +80,21 @@ export class NavbarComponent implements OnInit, OnDestroy {
 
 
 	ngOnDestroy(): void {
+		this.subscription?.unsubscribe();
+
 		// Clear the interval when the component is destroyed to prevent memory leaks
 		if (this.intervalId) {
 			clearInterval(this.intervalId);
 		}
 	}
+
 	ngOnInit(): void {
 		this.isloggedIn = this.login.isLoggedIn();
-		this.startCountdown();
+		this.tokenExpirationService.startCountdownFromBackend();
+		// this.startCountdown();
 		this.user = this.login.getUser();
 		this.login.loginStatusSubject.asObservable().subscribe(data => {
 			this.isloggedIn = this.login.isLoggedIn();
-
-
 			// this.user = this.login.getUser();
 		});
 
@@ -117,59 +122,61 @@ export class NavbarComponent implements OnInit, OnDestroy {
 	}
 
 
-	//TRYING THE TIMER
-	startCountdown() {
-		const token = this.tokenExpirationService.getTokenFromLocalStorage();
-		if (token) {
-			this.intervalId = setInterval(() => {
-				const timeLeftInSeconds = this.tokenExpirationService.getTimeLeft(token);
-				if (timeLeftInSeconds > 0) {
-					const minutesLeft = Math.floor((timeLeftInSeconds % 3600) / 60);
-					this.timeLeftDisplay = this.formatTime(timeLeftInSeconds, minutesLeft);
+	private hasLoggedOut = false;
 
-					// Check if minutesLeft is 5 or less to trigger alert style
+
+	startCountdown(): void {
+		this.subscription = this.tokenExpirationService.expiration$
+			.subscribe(secondsLeft => {
+
+				if (secondsLeft > 0) {
+					const minutesLeft = Math.floor((secondsLeft % 3600) / 60);
+					this.timeLeftDisplay = this.formatTime(secondsLeft, minutesLeft);
+
 					if (minutesLeft <= 5) {
-						this.triggerAlertEffect(); // Trigger alert effect
+						this.triggerAlertEffect();
 					}
-				} else {
-					// Stop countdown and notify the user that the session has expired
+				} else if (!this.hasLoggedOut) {
+					// 🔐 LOGOUT ONLY ONCE
+					this.hasLoggedOut = true;
+
+					this.timeLeftDisplay = {
+						display: 'Your session has expired.',
+						className: ''
+					};
+
 					this.logout();
-					this.timeLeftDisplay = { display: 'Your session has expired.', className: '' };
-					clearInterval(this.intervalId); // Stop the timer
 				}
-			}, 1000); // Update every second
-		} else {
-			this.timeLeftDisplay = { display: 'No session token found.', className: '' };
-		}
+
+			});
 	}
 
+	//TRYING THE TIMER
 	// Add a method to handle alert effect
 	private triggerAlertEffect(): void {
-		const alertClass = 'alert'; // Define the alert class
-		const minutesElement = document.querySelector('.minutes-display'); // Adjust selector based on your HTML structure
+		const alertClass = 'alert';
+		const minutesElement = document.querySelector('.minutes-display');
 
 		if (minutesElement) {
 			minutesElement.classList.add(alertClass);
 			setTimeout(() => {
-				minutesElement.classList.remove(alertClass); // Remove alert class after 1 second
+				minutesElement.classList.remove(alertClass);
 			}, 1000);
 		}
 	}
+
 
 	private formatTime(timeInSeconds: number, minutesLeft: number): TimeDisplay {
 		const hr = Math.floor(timeInSeconds / 3600);
 		const mm = Math.floor((timeInSeconds % 3600) / 60);
 		const ss = Math.floor(timeInSeconds % 60);
 
-		// Format the time string
 		let formattedTime = '';
 		if (hr > 0) {
 			formattedTime += `${this.formatNumber(hr)} hr(s) : `;
 		}
 
-		// Determine the CSS class based on minutesLeft
 		const minutesClass = minutesLeft <= 5 ? 'warning-minutes' : 'normal-minutes';
-
 		formattedTime += `${this.formatNumber(mm)} min : ${this.formatNumber(ss)} sec`;
 
 		return { display: formattedTime, className: minutesClass };

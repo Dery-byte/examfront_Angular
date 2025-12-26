@@ -8,6 +8,7 @@ import { MatDialog, MatDialogRef } from '@angular/material/dialog';
 import { FormControl, Validators } from '@angular/forms';
 import { CdkTextareaAutosize } from '@angular/cdk/text-field';
 import { take } from 'rxjs/operators';
+import { Subscription } from 'rxjs';
 import { MailServiceService } from 'src/app/services/mail-service.service';
 import { BreakpointObserver, Breakpoints } from '@angular/cdk/layout';
 import { MatDrawer } from '@angular/material/sidenav';
@@ -57,7 +58,8 @@ export class AdminnavbarComponent {
   private intervalId: any; // To store the interval reference
   isAdminUser = false;
   	isMobile = false;
-
+ timeDisplay: TimeDisplay = { display: '00 min : 00 sec', className: 'normal-minutes' };
+  private expirationSubscription?: Subscription;
 
 
   categories;
@@ -91,12 +93,16 @@ export class AdminnavbarComponent {
   }
 
 
-  ngOnDestroy(): void {
-    // Clear the interval when the component is destroyed to prevent memory leaks
-    if (this.intervalId) {
-      clearInterval(this.intervalId);
+	ngOnDestroy(): void {
+		 if (this.expirationSubscription) {
+      this.expirationSubscription.unsubscribe();
     }
-  }
+		// Clear the interval when the component is destroyed to prevent memory leaks
+		if (this.intervalId) {
+			clearInterval(this.intervalId);
+		}
+	}
+
   ngOnInit(): void {
 
 
@@ -121,23 +127,6 @@ export class AdminnavbarComponent {
         this._snack.open("Couldn't load Categories from Server", "", { duration: 3000 });
       }
     );
-    // this.isloggedIn = this.login.isLoggedIn();
-    // this.startCountdown();
-    // this.user = this.login.getUser();
-    // this.login.loginStatusSubject.asObservable().subscribe(data => {
-    //   this.isloggedIn = this.login.isLoggedIn();
-    //   });
-
-    // this._cat.getCategories().subscribe((data: any) => {
-    //   this.categories = data;
-    // },
-    //   (error) => {
-    //     this._snack.open("Couldn't load Categories from Server", "", {
-    //       duration: 3000
-    //     })
-    //   });
-
-
        this.breakpointObserver.observe([Breakpoints.Handset]).subscribe(result => {
           this.isMobile = result.matches;
     
@@ -149,7 +138,6 @@ export class AdminnavbarComponent {
             this.drawer?.open();
           }
         });
-
   }
 
   closeDrawerOnMobile() {
@@ -171,30 +159,42 @@ export class AdminnavbarComponent {
   }
 
 
-  //TRYING THE TIMER
-  startCountdown() {
-    const token = this.tokenExpirationService.getTokenFromLocalStorage();
-    if (token) {
-      this.intervalId = setInterval(() => {
-        const timeLeftInSeconds = this.tokenExpirationService.getTimeLeft(token);
-        if (timeLeftInSeconds > 0) {
-          const minutesLeft = Math.floor((timeLeftInSeconds % 3600) / 60);
-          this.timeLeftDisplay = this.formatTime(timeLeftInSeconds, minutesLeft);
-
-          // Check if minutesLeft is 5 or less to trigger alert style
-          if (minutesLeft <= 5) {
-            this.triggerAlertEffect(); // Trigger alert effect
-          }
+  
+  startCountdown(): void {
+    this.tokenExpirationService.startCountdownFromBackend();
+    
+    // Subscribe to the countdown updates
+    this.expirationSubscription = this.tokenExpirationService.expiration$.subscribe(
+      (seconds) => {
+        if (seconds === 0) {
+          // Token expired - auto logout
+          this.handleTokenExpiration();
         } else {
-          // Stop countdown and notify the user that the session has expired
-          this.logout();
-          this.timeLeftDisplay = { display: 'Your session has expired.', className: '' };
-          clearInterval(this.intervalId); // Stop the timer
+          // Update the display
+          const minutesLeft = Math.floor(seconds / 60);
+          this.timeDisplay = this.formatTime(seconds, minutesLeft);
+
+		  console.log("This is the time to display ", this.timeDisplay)
+          
+          // Trigger alert effect when less than 1 minute left
+          if (minutesLeft === 0 && seconds <= 60) {
+            this.triggerAlertEffect();
+          }
         }
-      }, 1000); // Update every second
-    } else {
-      this.timeLeftDisplay = { display: 'No session token found.', className: '' };
-    }
+      }
+    );
+  }
+
+  private handleTokenExpiration(): void {
+    // this.timeDisplay = { display: 'Session Expired', className: 'expired' };
+    
+    // // Optional: Show a notification before auto-logout
+    // alert('Your session has expired. You will be logged out.');
+    
+    // // Auto logout after a short delay
+    // setTimeout(() => {
+    //   this.logout();
+    // }, 2000);
   }
 
   // Add a method to handle alert effect

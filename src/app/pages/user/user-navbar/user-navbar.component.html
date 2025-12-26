@@ -1,10 +1,11 @@
+
+
 <div class="">
   <!-- Full-width header (12 columns) - Made sticky -->
   <div class="container-fluid sticky-top" style="position: sticky; top: 0; z-index: 1000;">
     <div class="row">
       <div class="col-md-12">
-
-
+ 
         <mat-toolbar color="primary" class="mat-elevation-z8 toolbar-responsive">
           <button (click)="drawer.toggle()" mat-icon-button>
             <mat-icon>menu</mat-icon>
@@ -13,7 +14,7 @@
             {{ user.username | uppercase }}
           </span>
           <span mat-icon-button class="tokeExpire session-timer-responsive" aria-label="Session timer">
-            <span [ngClass]="timeLeftDisplay?.className">Your session expires in: {{ timeLeftDisplay?.display }}</span>
+            <span [ngClass]="timeLeftDisplay?.className">Your session expires in: {{ timeDisplay?.display }}</span>
           </span>
         </mat-toolbar>
 
