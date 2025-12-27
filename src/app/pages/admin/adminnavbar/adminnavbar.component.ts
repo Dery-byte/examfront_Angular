@@ -171,7 +171,7 @@ export class AdminnavbarComponent {
 
 				if (seconds === 0) {
 					// Token expired - show expired state then trigger modal
-					this.timeDisplay = { display: 'Session Expired', className: 'expired' };
+          this.logout();
 					console.log("🚨 Token expired! Showing modal...");
 
 					// Small delay to let the UI update before showing modal

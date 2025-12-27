@@ -64,6 +64,7 @@ export class UserNavbarComponent {
 
 
 	ngOnDestroy(): void {
+		    this.stopCountdown();
 		if (this.expirationSubscription) {
 			this.expirationSubscription.unsubscribe();
 		}
@@ -130,7 +131,7 @@ export class UserNavbarComponent {
 
 				if (seconds === 0) {
 					// Token expired - show expired state then trigger modal
-					this.timeDisplay = { display: 'Session Expired', className: 'expired' };
+					this.logout();
 					console.log("🚨 Token expired! Showing modal...");
 
 					// Small delay to let the UI update before showing modal
@@ -175,6 +176,17 @@ export class UserNavbarComponent {
 		// this.logout();
 		//   this.showExpirationModal = true;
 	}
+
+
+	// Add this method to properly clean up
+private stopCountdown(): void {
+    if (this.expirationSubscription) {
+        this.expirationSubscription.unsubscribe();
+        this.expirationSubscription = null;
+    }
+}
+
+// Call this in ngOnDestroy
 
 	onModalConfirm(): void {
 		console.log("👋 User confirmed logout");
