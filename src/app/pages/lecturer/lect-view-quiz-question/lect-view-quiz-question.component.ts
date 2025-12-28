@@ -131,6 +131,10 @@ export class LectViewQuizQuestionComponent {
   getQuesObj(objId: any): any {
     return this._question.getSpecificObj(objId);
   }
+
+
+
+
   openUpdateObjDialog(objId: any, templateRef: TemplateRef<any>): void {
     console.log(objId);
     // Fetch question details based on ID
@@ -150,6 +154,8 @@ export class LectViewQuizQuestionComponent {
     });
   }
 
+
+  
   // LOGIC TO UPDATE
   public updateQuestionData() {
     this._question.updateQuestion(this.specificObjective).subscribe((data) => {
