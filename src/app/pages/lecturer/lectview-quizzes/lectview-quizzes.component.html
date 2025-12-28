@@ -12,6 +12,23 @@
   </div>
 
   <div class="quiz-grid">
+
+     <!-- Show message if no quizzes -->
+<div *ngIf="quizzes.length === 0" class="empty-state">
+  <mat-card class="empty-state-card mat-elevation-z4">
+    <mat-card-content class="empty-state-content">
+      <mat-icon class="empty-state-icon">quiz</mat-icon>
+      <h3 class="empty-state-title">No Quizzes Yet</h3>
+      <p class="empty-state-description">
+        You haven't created any quizzes. Start by adding your first quiz.
+      </p>
+      <button mat-raised-button color="primary" routerLink="/lect/add-quiz">
+        <mat-icon>add</mat-icon>
+        Create First Quiz
+      </button>
+    </mat-card-content>
+  </mat-card>
+</div>
     <!-- Quiz Card -->
     <mat-card *ngFor="let q of quizzes" class="quiz-card mat-elevation-z4">
       <mat-card-header>
@@ -50,10 +67,32 @@
           Questions
         </button>
 
+
+
+
+
+
+
+
+
+
+        
+
         <button mat-button color="accent" (click)="openUpdateDialog(q.qId, updateObj)" class="action-btn">
           <mat-icon>edit</mat-icon>
           Edit
         </button>
+
+
+
+
+
+
+
+
+
+
+
 
         <button mat-button color="warn" (click)="deleteQuiz(q.qId)" class="action-btn">
           <mat-icon>delete</mat-icon>

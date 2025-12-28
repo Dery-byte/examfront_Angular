@@ -74,11 +74,13 @@ this.login.logout();
       console.log(this.specificQuestion);
       this.quizById = data;
       console.log(this.quizById);
+
+
+
       this.dialogRef = this.dialog.open(templateRef, {
         width: '550px',
         data: this.quizById,
       });
-
       this.dialogRef.afterClosed().subscribe(result => {
         if (result) {
           this.quizById = result;
@@ -86,6 +88,14 @@ this.login.logout();
       });
     });
   }
+
+
+
+
+
+
+
+
   getQuestionById(quizId: any): any {
     return this.quizz.getQuizById(quizId);
   }
@@ -93,13 +103,44 @@ this.login.logout();
 
   // LOGIC TO UPDATE Quiz
   public updateData(){
+    console.log('quizById before update:', this.quizById);
+  // Check if ID exists
+  const quizId = this.quizById.qId;
+  
+  if (!quizId) {
+    console.error('No ID found in quizById:', this.quizById);
+    this._snack.open("Quiz ID is missing", "", {
+      duration: 3000,
+    });
+    return;
+  }
 
-    this.quizz.updateQuiz(this.quizById).subscribe((data)=>
+     const updateRequest = {
+    qId: quizId,
+    title: this.quizById.title,
+    description: this.quizById.description,
+    maxMarks: this.quizById.maxMarks,
+    quizTime: this.quizById.quizTime,
+    numberOfQuestions: this.quizById.numberOfQuestions,
+    active: this.quizById.active,
+    quizpassword: this.quizById.quizpassword,
+    status: this.quizById.status,
+    quizType: this.quizById.quizType,
+    startTime: this.quizById.startTime,
+    quizDate: this.quizById.quizDate,
+    categoryId: this.quizById.category?.cid || this.quizById.category?.id // Only send category ID
+    // Don't include: user, category (full object), questions, reports
+  };
+
+  console.log('Sending quiz update request:', updateRequest);
+
+
+    this.quizz.updateQuiz(updateRequest).subscribe((data)=>
     {
       this._snack.open("Quiz Updated Successfully! ", "", {
         duration: 3000,
       });
-      this.dialogRef.close(this.quizById);
+      this.dialogRef.close(updateRequest);
       this.ngOnInit();
     },
       (error) => {
