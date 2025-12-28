@@ -36,7 +36,7 @@ export class AddCourseComponent {
   
       //add cate
   
-      this.categorys.addCategory(this.category).subscribe(
+      this.categorys.addCategoryAndUser(this.category).subscribe(
         (data: any) => {
           this.category.title = '',
             this.category.courseCode = '',

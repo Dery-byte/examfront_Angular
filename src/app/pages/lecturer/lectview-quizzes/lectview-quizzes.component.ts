@@ -32,7 +32,7 @@ categories;
   ){}
 
   ngOnInit(): void {
-    this.quizz.loadQuizzes().subscribe(
+    this.quizz.loadQuizzesForUser().subscribe(
       (data:any)=>{
         this.quizzes=data;
         console.log(this.quizzes);
@@ -49,7 +49,7 @@ categories;
      });
 
 
-     this._category.getCategories().subscribe((data)=>
+     this._category.getCategoriesForUser().subscribe((data)=>
       {
         this.categories = data;
       },

@@ -33,10 +33,26 @@ public loadQuizzes(){
   });
 }
 
+
+public loadQuizzesForUser(){
+  return this._http.get(`${baseUrl}/user/getQuiz`,{
+            withCredentials:true
+
+  });
+}
+
+
+
 public addQuiz(quiz){
 return this._http.post(`${baseUrl}/addQuiz`, quiz,{
           withCredentials:true
+});
+}
 
+
+public addUserQuiz(quiz){
+return this._http.post(`${baseUrl}/user/addQuiz`, quiz,{
+          withCredentials:true
 });
 }
 

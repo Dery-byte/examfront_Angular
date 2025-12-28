@@ -43,7 +43,7 @@ hide = true; // default: password hidden
     private _quiz: QuizService) { }
 
   ngOnInit(): void {
-    this._cat.getCategories().subscribe(
+    this._cat.getCategoriesForUser().subscribe(
       (data: any) => {
         this.categories = data;
         // console.log(this.categories);
@@ -73,7 +73,7 @@ hide = true; // default: password hidden
     console.log(this.quizData);
     //validation...
 
-    this._quiz.addQuiz(this.quizData).subscribe(
+    this._quiz.addUserQuiz(this.quizData).subscribe(
       (data) => {
         this.quizData = {
           title: "",

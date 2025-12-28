@@ -27,6 +27,15 @@ export class CategoryService {
 
 
 
+  // Categories for a USER
+  public getCategoriesForUser() {
+    return this.http.get(`${baseUrl}/categoriesForUser`, {
+      withCredentials: true
+    });
+  }
+
+
+
 
   //add new category
   public addCategory(category) {
@@ -34,6 +43,16 @@ export class CategoryService {
       withCredentials: true
     });
   }
+
+  //add new category then USER
+  public addCategoryAndUser(category) {
+    return this.http.post(`${baseUrl}/user/addCategory`, category, {
+      withCredentials: true
+    });
+  }
+
+
+
   // Fetch a single category by ID
   public getCategory(cId) {
     return this.http.get(`${baseUrl}/category/${cId}`,
@@ -47,7 +66,7 @@ export class CategoryService {
   public updateCategory(category) {
     return this.http.put(`${baseUrl}/category/updateCategory`, category,
       {
-                withCredentials:true
+        withCredentials: true
 
       }
     );
@@ -55,8 +74,8 @@ export class CategoryService {
 
   //delete category
   public deleteCategory(cId) {
-    return this.http.delete(`${baseUrl}/category/${cId}`,{
-              withCredentials:true
+    return this.http.delete(`${baseUrl}/category/${cId}`, {
+      withCredentials: true
 
     });
 
