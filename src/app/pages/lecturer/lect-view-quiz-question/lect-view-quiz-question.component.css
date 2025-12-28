@@ -1,0 +1,28 @@
+.mt10{
+    margin-top: 10px;
+}
+mat-card {
+    margin: 10px 0;
+  }
+  
+  .mat-card-content p {
+    margin: 5px 0; /* Adjust the margin as needed */
+  }
+  
+  .mat-card-header {
+    padding-bottom: 0; /* Reduce the padding if needed */
+  }
+  
+
+  .w100{
+    width: 100%;
+}
+
+
+.more_verti{
+  margin-bottom: -5px;
+  background-color: rgb(241, 239, 243);
+}
+
+
+

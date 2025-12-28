@@ -80,7 +80,17 @@ import { AdminnavbarComponent } from './pages/admin/adminnavbar/adminnavbar.comp
 import { ResetPasswordComponent } from './pages/reset-password/reset-password.component';
 import { AdminfooterComponent } from './pages/admin/adminfooter/adminfooter.component';
 import { MatRadioModule } from '@angular/material/radio';   // 👈 add this
-import { MatButtonToggleModule } from '@angular/material/button-toggle'; // 👈 if using toggle
+import { MatButtonToggleModule } from '@angular/material/button-toggle';
+import { LecturerLayoutComponent } from './pages/layouts/lecturer-layout/lecturer-layout.component';
+import { LectdashboardComponent } from './pages/lecturer/lectdashboard/lectdashboard.component';
+import { LectnavbarComponent } from './pages/lecturer/lectnavbar/lectnavbar.component';
+import { LectfooterComponent } from './pages/lecturer/lectfooter/lectfooter.component';
+import { LectwelcomeComponent } from './pages/lecturer/lectwelcome/lectwelcome.component';
+import { AddCourseComponent } from './pages/lecturer/add-course/add-course.component';
+import { ViewCourseComponent } from './pages/lecturer/view-course/view-course.component';
+import { LectviewQuizzesComponent } from './pages/lecturer/lectview-quizzes/lectview-quizzes.component';
+import { LectaddQuizComponent } from './pages/lecturer/lectadd-quiz/lectadd-quiz.component';
+import { LectViewQuizQuestionComponent } from './pages/lecturer/lect-view-quiz-question/lect-view-quiz-question.component'; // 👈 if using toggle
 
 
 
@@ -127,7 +137,17 @@ import { MatButtonToggleModule } from '@angular/material/button-toggle'; // 👈
     ResetPasswordComponent,
     AdminfooterComponent,
     TypingDirective,
-    MinutesToDurationPipe
+    MinutesToDurationPipe,
+    LecturerLayoutComponent,
+    LectdashboardComponent,
+    LectnavbarComponent,
+    LectfooterComponent,
+    LectwelcomeComponent,
+    AddCourseComponent,
+    ViewCourseComponent,
+    LectviewQuizzesComponent,
+    LectaddQuizComponent,
+    LectViewQuizQuestionComponent
   ],
 exports:[TypingDirective],
 

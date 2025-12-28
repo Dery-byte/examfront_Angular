@@ -1,0 +1,138 @@
+<!-- Loading spinner with better visual integration -->
+<ngx-ui-loader fgsColor="#3f51b5" pbColor="#3f51b5" textColor="#3f51b5" pbThickness="4"
+  text="Loading..."></ngx-ui-loader>
+
+<div class="app-container">
+  <!-- Admin Dashboard -->
+  <div @fadeIn class="dashboard-container">
+    <mat-toolbar color="primary" class="user-toolbar fixed-header">
+      <button (click)="drawer.toggle()" mat-icon-button class="menu-btn">
+        <mat-icon>menu</mat-icon>
+      </button>
+      <div class="user-info">
+        <mat-icon class="admin-icon">admin_panel_settings</mat-icon>
+        <span class="username">{{ user.username | uppercase }}</span>
+      </div>
+      <mat-divider vertical class="user-divider"></mat-divider>
+
+      <div class="session-timer" [ngClass]="timeDisplay.className">
+        <mat-icon>timer</mat-icon>
+        <span>Session expires: {{ timeDisplay?.display }}</span>
+      </div>
+    </mat-toolbar>
+
+
+    <div class="dashboard-content">
+      <mat-drawer-container autosize class="drawer-container">
+        <!-- <mat-drawer #drawer mode="side" opened="true" position="start" class="side-nav  mat-elevation-z2">   fixed-nav here causing problems with display -->
+
+        <mat-drawer #drawer [mode]="isMobile ? 'over' : 'side'" [opened]="!isMobile" class="elegant-drawer"
+          style="position: fixed; top: 58px; height: calc(100vh - 64px); width: 240px;">
+
+
+          <div class="nav-header">
+            <mat-icon class="nav-icon">admin_panel_settings</mat-icon>
+            <h3 class="nav-title">LECTURER DASHBOARD</h3>
+          </div>
+          <mat-divider></mat-divider>
+
+          <mat-nav-list>
+            <mat-list-item routerLink="/lect/" class="nav-item" (click)="closeDrawerOnMobile()">
+              <mat-icon matListItemIcon>home</mat-icon>
+              <span matLine>Dashboard</span>
+            </mat-list-item>
+
+            <mat-list-item routerLink="/lect/profile" class="nav-item" (click)="closeDrawerOnMobile()">
+              <mat-icon matListItemIcon>account_circle</mat-icon>
+              <span matLine>Profile</span>
+            </mat-list-item>
+            <mat-list-item routerLink="/lect/courses" class="nav-item" (click)="closeDrawerOnMobile()">
+              <mat-icon matListItemIcon>category</mat-icon>
+              <span matLine>Manage Courses</span>
+            </mat-list-item>
+            <mat-list-item routerLink="/lect/add-course" class="nav-item" (click)="closeDrawerOnMobile()">
+              <mat-icon matListItemIcon>add_circle</mat-icon>
+              <span matLine>Add Course</span>
+            </mat-list-item>
+            <!-- <mat-divider></mat-divider> -->
+            <mat-list-item routerLink="/lect/quizes" class="nav-item" (click)="closeDrawerOnMobile()">
+              <mat-icon matListItemIcon>assignment</mat-icon>
+              <span matLine>View Quizzes</span>
+            </mat-list-item>
+            <mat-list-item routerLink="/lect/add-quizes" class="nav-item" (click)="closeDrawerOnMobile()">
+              <mat-icon matListItemIcon>post_add</mat-icon>
+              <span matLine>Create Quiz</span>
+            </mat-list-item>
+            <mat-divider></mat-divider>
+            <mat-list-item (click)="logout()" class="nav-item logout-item" (click)="closeDrawerOnMobile()">
+              <mat-icon matListItemIcon>logout</mat-icon>
+              <span matLine>Logout</span>
+            </mat-list-item>
+          </mat-nav-list>
+        </mat-drawer>
+
+        <mat-drawer-content class="main-content">
+          <div class="content-container">
+            <router-outlet></router-outlet>
+          </div>
+        </mat-drawer-content>
+      </mat-drawer-container>
+    </div>
+  </div>
+
+  <!-- Contact Support Dialog -->
+  <ng-template #updateDialog let-data="data">
+    <div class="dialog-header">
+      <h1 mat-dialog-title>
+        <mat-icon class="dialog-icon">contact_mail</mat-icon>
+        Contact Support
+      </h1>
+    </div>
+    <div mat-dialog-content class="dialog-content">
+      <form>
+        <mat-form-field appearance="outline" class="form-field">
+          <mat-label>Recipient</mat-label>
+          <input matInput [(ngModel)]="mailInfo.mailTo" name="mailTo" disabled>
+          <mat-icon matSuffix>mail</mat-icon>
+        </mat-form-field>
+
+        <mat-form-field appearance="outline" class="form-field">
+          <mat-label>Your Email</mat-label>
+          <input matInput placeholder="your@email.com" [formControl]="emailFormControl" [(ngModel)]="mailInfo.mailFrom"
+            name="mailFrom" required>
+          <mat-icon matSuffix>email</mat-icon>
+          <mat-error *ngIf="emailFormControl.hasError('email') && !emailFormControl.hasError('required')">
+            Please enter a valid email address
+          </mat-error>
+          <mat-error *ngIf="emailFormControl.hasError('required')">
+            Email is required
+          </mat-error>
+        </mat-form-field>
+
+        <mat-form-field appearance="outline" class="form-field">
+          <mat-label>Subject</mat-label>
+          <input matInput placeholder="Subject" [(ngModel)]="mailInfo.mailSubject" name="mailSubject" required>
+          <mat-icon matSuffix>subject</mat-icon>
+          <mat-error>Subject is required</mat-error>
+        </mat-form-field>
+
+        <mat-form-field appearance="outline" class="form-field">
+          <mat-label>Your Message</mat-label>
+          <textarea matInput cdkTextareaAutosize #autosize="cdkTextareaAutosize" name="mailContent"
+            [(ngModel)]="mailInfo.mailContent" required cdkAutosizeMinRows="5" cdkAutosizeMaxRows="10"></textarea>
+        </mat-form-field>
+
+        <div mat-dialog-actions class="dialog-actions">
+          <button mat-button (click)="dialogRef.close()" class="cancel-btn">
+            <mat-icon>cancel</mat-icon>
+            Cancel
+          </button>
+          <button mat-raised-button color="primary" (click)="sendEmail()" class="send-btn">
+            <mat-icon>send</mat-icon>
+            Send Message
+          </button>
+        </div>
+      </form>
+    </div>
+  </ng-template>
+</div>

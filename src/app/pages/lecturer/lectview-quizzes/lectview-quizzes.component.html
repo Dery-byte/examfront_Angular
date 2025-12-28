@@ -1,0 +1,268 @@
+<!-- Quiz List Section -->
+<div class="quiz-dashboard">
+  <div class="dashboard-header">
+    <h1 class="dashboard-title">
+      <mat-icon>quiz</mat-icon>
+      Quiz Management
+    </h1>
+    <button mat-raised-button color="primary" routerLink="/lect/add-quiz" class="add-quiz-btn">
+      <mat-icon>add</mat-icon>
+      Add New Quiz
+    </button>
+  </div>
+
+  <div class="quiz-grid">
+    <!-- Quiz Card -->
+    <mat-card *ngFor="let q of quizzes" class="quiz-card mat-elevation-z4">
+      <mat-card-header>
+        <div mat-card-avatar class="quiz-avatar">
+          <mat-icon>assignment</mat-icon>
+        </div>
+        <mat-card-title class="quiz-title">{{q.title}}</mat-card-title>
+        <mat-card-subtitle class="quiz-category">
+          <mat-icon class="category-icon">category</mat-icon>
+          {{q.category.title}}
+        </mat-card-subtitle>
+      </mat-card-header>
+
+      <mat-divider></mat-divider>
+
+      <mat-card-content class="quiz-content">
+        <p class="quiz-description">{{q.description || 'No description provided'}}</p>
+
+        <div class="quiz-meta">
+          <div class="meta-item">
+            <mat-icon>score</mat-icon>
+            <span>Max Marks: {{q.maxMarks}}</span>
+          </div>
+          <div class="meta-item">
+            <mat-icon>help_outline</mat-icon>
+            <span>Questions: {{q.numberOfQuestions}}</span>
+          </div>
+        </div>
+      </mat-card-content>
+
+      <mat-divider></mat-divider>
+
+      <mat-card-actions class="quiz-actions">
+        <button mat-button color="primary" [routerLink]="'/lect/view-quetions/'+q.qId+'/'+q.title" class="action-btn">
+          <mat-icon>question_answer</mat-icon>
+          Questions
+        </button>
+
+        <button mat-button color="accent" (click)="openUpdateDialog(q.qId, updateObj)" class="action-btn">
+          <mat-icon>edit</mat-icon>
+          Edit
+        </button>
+
+        <button mat-button color="warn" (click)="deleteQuiz(q.qId)" class="action-btn">
+          <mat-icon>delete</mat-icon>
+          Delete
+        </button>
+
+        <div class="status-control">
+          <mat-form-field appearance="outline" class="status-select">
+            <mat-label>Status</mat-label>
+            <mat-select [(value)]="q.selectedStatus">
+              <mat-option value="CLOSED">
+                <mat-icon>lock</mat-icon>
+                Closed
+              </mat-option>
+              <mat-option value="OPEN">
+                <mat-icon>lock_open</mat-icon>
+                Open
+              </mat-option>
+            </mat-select>
+          </mat-form-field>
+
+          <button mat-flat-button [color]="q.selectedStatus === 'OPEN' ? 'primary' : 'warn'"
+            [disabled]="q.updating || !q.selectedStatus" (click)="updateQuizStatus(q)" class="status-btn">
+            <mat-icon *ngIf="!q.updating">sync</mat-icon>
+            <mat-spinner *ngIf="q.updating" diameter="20"></mat-spinner>
+            {{ q.updating ? 'Updating...' : 'Update' }}
+          </button>
+        </div>
+      </mat-card-actions>
+    </mat-card>
+  </div>
+</div>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<!-- Update Quiz Dialog -->
+
+
+<ng-template #updateObj let-data="data">
+  <div class="dialog-container">
+    <div class="dialog-header">
+      <mat-icon>edit_note</mat-icon>
+      <h1 mat-dialog-title>Update Quiz Details</h1>
+    </div>
+    <mat-divider></mat-divider>
+    <div mat-dialog-content class="dialog-content">
+      <form class="quiz-form">
+        <div class="form-row">
+          <mat-form-field appearance="outline" class="form-field">
+            <mat-label>Quiz Title</mat-label>
+            <input matInput [(ngModel)]="quizById.title" name="title" required>
+            <mat-icon matSuffix>title</mat-icon>
+            <mat-hint>Enter a descriptive quiz name</mat-hint>
+          </mat-form-field>
+
+          <mat-form-field appearance="outline" class="form-field">
+            <mat-label>Course</mat-label>
+            <mat-select name="category" [(ngModel)]="quizById.category.cid" required>
+              <mat-option *ngFor="let c of categories" [value]="c.cid">
+                {{c.title}}
+              </mat-option>
+            </mat-select>
+            <mat-icon matSuffix>school</mat-icon>
+          </mat-form-field>
+        </div>
+        <mat-form-field appearance="outline" class="full-width">
+          <mat-label>Description</mat-label>
+          <textarea matInput [(ngModel)]="quizById.description" name="description" rows="4"></textarea>
+          <mat-icon matSuffix>description</mat-icon>
+          <mat-hint>Provide instructions or overview for students</mat-hint>
+        </mat-form-field>
+        <!-- Quiz Type Section -->
+        <div class="form-section">
+          <h3 class="section-title">
+            <mat-icon>assignment</mat-icon>
+            Quiz Type
+          </h3>
+
+          <mat-button-toggle-group [(ngModel)]="quizById.quizType" name="quizType" appearance="accent">
+            <mat-button-toggle value="THEORY">THEORY</mat-button-toggle>
+            <mat-button-toggle value="OBJ">OBJ</mat-button-toggle>
+            <mat-button-toggle value="BOTH">BOTH</mat-button-toggle>
+          </mat-button-toggle-group>
+        </div>
+
+        <div *ngIf="!quizById.quizType && quizFormSubmitted" class="error-msg">
+          <mat-icon color="warn">error</mat-icon>
+          Quiz Type is required!
+        </div>
+        <!-- Quiz Configuration Section -->
+        <div class="form-section">
+          <h3 class="section-title">
+            <mat-icon>settings</mat-icon>
+            Quiz Configuration
+          </h3>
+          <!-- Show these ONLY for OBJ or BOTH -->
+          <div class="form-row" *ngIf="quizById.quizType !== 'THEORY' && quizById.quizType">
+            <mat-form-field appearance="outline" class="form-field">
+              <mat-label>Max Marks</mat-label>
+              <input matInput type="number" [(ngModel)]="quizById.maxMarks" name="maxMarks">
+              <mat-icon matSuffix>score</mat-icon>
+            </mat-form-field>
+
+            <mat-form-field appearance="outline" class="form-field">
+              <mat-label>Total Questions</mat-label>
+              <input matInput type="number" [(ngModel)]="quizById.numberOfQuestions" name="numberOfQuestions">
+              <mat-icon matSuffix>help_outline</mat-icon>
+            </mat-form-field>
+          </div>
+          <div class="form-row">
+            <div *ngIf="quizById.quizType !== 'THEORY' && quizById.quizType">
+              <mat-form-field appearance="outline" class="form-field">
+                <mat-label>Time Limit (minutes)</mat-label>
+                <input matInput type="number" [(ngModel)]="quizById.quizTime" name="quizTime">
+                <mat-icon matSuffix>timer</mat-icon>
+              </mat-form-field>
+            </div>
+            <!-- Password Always Visible -->
+            <mat-form-field appearance="outline" class="form-field">
+              <mat-label>Quiz Password</mat-label>
+              <input matInput [(ngModel)]="quizById.quizpassword" name="quizpassword" type="password"
+                [type]="hide ? 'text' : 'password'">
+              <button mat-icon-button matSuffix type="button" (click)="hide = !hide">
+                <mat-icon>{{ hide ? 'visibility_off' : 'visibility' }}</mat-icon>
+              </button> <mat-hint style="color:blueviolet"> Password Protection</mat-hint>
+            </mat-form-field>
+          </div>
+
+          <!-- Quiz Time and Date -->
+          <div class="form-row">
+            <mat-form-field appearance="outline" class="form-field">
+              <mat-label>Quiz Date</mat-label>
+              <input matInput [matDatepicker]="picker" [(ngModel)]="quizById.quizDate" name="quizDate">
+              <mat-datepicker-toggle matSuffix [for]="picker"></mat-datepicker-toggle>
+              <mat-datepicker #picker></mat-datepicker>
+              <!-- <mat-icon matSuffix>event</mat-icon> -->
+            </mat-form-field>
+
+            <mat-form-field appearance="outline" class="form-field">
+              <mat-label>Start Time</mat-label>
+              <input matInput type="time" [(ngModel)]="quizById.startTime" name="startTime">
+              <mat-icon matSuffix>access_time</mat-icon>
+            </mat-form-field>
+          </div>
+
+
+
+        </div>
+        <mat-slide-toggle [(ngModel)]="quizById.active" name="active" color="primary" class="publish-toggle">
+          <mat-icon>{{quizById.active ? 'visibility' : 'visibility_off'}}</mat-icon>
+          {{quizById.active ? 'Published' : 'Unpublished'}}
+        </mat-slide-toggle>
+      </form>
+    </div>
+
+
+
+
+
+
+
+
+
+    <mat-divider></mat-divider>
+    <div mat-dialog-actions class="dialog-actions">
+      <button mat-stroked-button (click)="dialogRef.close()">
+        <mat-icon>close</mat-icon>
+        Cancel
+      </button>
+      <button mat-raised-button color="primary" (click)="updateData()">
+        <mat-icon>save</mat-icon>
+        Save Changes
+      </button>
+    </div>
+  </div>
+</ng-template>

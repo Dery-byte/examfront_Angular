@@ -89,8 +89,8 @@ public getAllUsers() {
 
   
   logout(): Observable<any> {
-    console.log(`${baseUrl}/logoutssss`)
-    return this.http.post(`${baseUrl}/logoutssss`, {}, {
+    console.log(`${baseUrl}/logout`)
+    return this.http.post(`${baseUrl}/logout`, {}, {
       withCredentials: true  // ⭐ Important: sends cookies to backend
     });
   }

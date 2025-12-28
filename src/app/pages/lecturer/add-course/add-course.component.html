@@ -1,0 +1,67 @@
+<mat-card class="form-card">
+  <mat-card-header class="form-header">
+    <div class="header-content">
+      <mat-icon class="header-icon">add_circle_outline</mat-icon>
+      <div>
+        <h1 class="form-title">Create New Course</h1>
+        <p class="form-subtitle">Fill in the details to add a new course to the system</p>
+      </div>
+    </div>
+  </mat-card-header>
+
+  <mat-divider></mat-divider>
+
+  <mat-card-content>
+    <form (ngSubmit)="formSubmit()" class="course-form">
+      <div class="form-grid">
+        <!-- Course Title -->
+        <mat-form-field appearance="fill" class="form-field">
+          <mat-label>Course Title</mat-label>
+          <input matInput type="text" name="title" [(ngModel)]="category.title" required>
+          <mat-icon matSuffix>title</mat-icon>
+          <mat-hint>Enter the full course name</mat-hint>
+        </mat-form-field>
+
+        <!-- Course Code -->
+        <mat-form-field appearance="fill" class="form-field">
+          <mat-label>Course Code</mat-label>
+          <input matInput type="text" name="courseCode" [(ngModel)]="category.courseCode" required>
+          <mat-icon matSuffix>code</mat-icon>
+          <mat-hint>e.g. CS101, MATH201</mat-hint>
+        </mat-form-field>
+
+        <!-- Level Selector -->
+        <mat-form-field appearance="fill" class="form-field">
+          <mat-label>Academic Level</mat-label>
+          <mat-select name="level" [(ngModel)]="category.level" required>
+            <mat-option *ngFor="let level of levels" [value]="level">
+              <div class="level-option">
+                <mat-icon>school</mat-icon>
+                <span>{{level}}</span>
+              </div>
+            </mat-option>
+          </mat-select>
+        </mat-form-field>
+
+        <!-- Description -->
+        <mat-form-field appearance="fill" class="form-field full-width">
+          <mat-label>Course Description</mat-label>
+          <textarea matInput name="descript" [(ngModel)]="category.description" rows="5" required></textarea>
+          <mat-icon matSuffix>description</mat-icon>
+          <mat-hint>Provide a detailed course overview</mat-hint>
+        </mat-form-field>
+      </div>
+
+      <div class="form-actions">
+        <button mat-stroked-button type="button" class="cancel-btn" routerLink="/admin/categories">
+          <mat-icon>close</mat-icon>
+          Cancel
+        </button>
+        <button mat-raised-button color="primary" type="submit" class="submit-btn">
+          <mat-icon>save</mat-icon>
+          Create Course
+        </button>
+      </div>
+    </form>
+  </mat-card-content>
+</mat-card>

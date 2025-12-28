@@ -27,6 +27,14 @@ import { CoursesRegisteredComponent } from './pages/user/courses-registered/cour
 import { AvailableQuizzesComponent } from './pages/user/available-quizzes/available-quizzes.component';
 import { UserLayoutComponent } from './pages/layouts/user-layout/user-layout.component';
 import { ResetPasswordComponent } from './pages/reset-password/reset-password.component';
+import { LectdashboardComponent } from './pages/lecturer/lectdashboard/lectdashboard.component';
+import { LectwelcomeComponent } from './pages/lecturer/lectwelcome/lectwelcome.component';
+import { LecturerLayoutComponent } from './pages/layouts/lecturer-layout/lecturer-layout.component';
+import { ViewCourseComponent } from './pages/lecturer/view-course/view-course.component';
+import { AddCourseComponent } from './pages/lecturer/add-course/add-course.component';
+import { LectviewQuizzesComponent } from './pages/lecturer/lectview-quizzes/lectview-quizzes.component';
+import { LectaddQuizComponent } from './pages/lecturer/lectadd-quiz/lectadd-quiz.component';
+import { LectViewQuizQuestionComponent } from './pages/lecturer/lect-view-quiz-question/lect-view-quiz-question.component';
 // import { StartQuizComponent } from './pages/user/start-quiz/start-quiz.component';
 
 const routes: Routes = [
@@ -105,6 +113,56 @@ const routes: Routes = [
       },
     ]
   },
+
+
+
+{
+    path: 'lect',
+    component: LectdashboardComponent,
+    // pathMatch:'full',
+    // canActivate: [AdminGuard],
+    children: [
+      {
+        path: '',
+        component: LectwelcomeComponent,
+      }
+      ,
+      {
+        path: 'profile',
+        component: ProfileComponent,
+      },
+      {
+        path: 'courses',
+        component: ViewCourseComponent,
+      },
+        {
+        path: 'quizes',
+        component: LectviewQuizzesComponent,
+      },
+        {
+        path: 'view-quetions/:qId/:qTitle',
+        component: LectViewQuizQuestionComponent,
+      },
+        {
+        path: 'add-course',
+        component: AddCourseComponent,
+      },
+
+        {
+        path: 'add-question/:qId/:title',
+        component: AddQuestionComponent,
+      },
+        {
+        path: 'add-quizes',
+        component: LectaddQuizComponent,
+      }
+    ]
+  },
+
+
+
+
+
 
 
   {

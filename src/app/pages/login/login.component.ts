@@ -128,24 +128,42 @@ export class LoginComponent implements OnInit {
 
 
   preventLoginForm() {
+    const role = this.login.getUserRole();
 
-    if (this.login.getUserRole() == "ADMIN") {
-      //Admin Dasboard
-      window.location.href = "/admin";
-      // this.router.navigate(["admin"])
-      this.login.loginStatusSubject.next(true);
-    }
-    else if (this.login.getUserRole() == "NORMAL") {
-      // NORMAL User-dashboard
-      window.location.href = "/user-dashboard";
+if (role === 'ADMIN') {
+  window.location.href = '/admin';
+}
+else if (role === 'NORMAL') {
+  window.location.href = '/user-dashboard';
+}
+else if (role === 'LECTURER') {
+  window.location.href = '/lect';
+}
+else {
+  console.error('Unknown role:', role);
+  this.login.logout();
+}
 
-      // window.location.href="/register-courses/";
-      // this.router.navigate(["user-dashboard"]);
-      this.login.loginStatusSubject.next(true);
-    }
-    else {
-      this.login.logout();
-    }
+this.login.loginStatusSubject.next(true);
+
+
+    // if (this.login.getUserRole() == "ADMIN") {
+    //   //Admin Dasboard
+    //   window.location.href = "/admin";
+    //   // this.router.navigate(["admin"])
+    //   this.login.loginStatusSubject.next(true);
+    // }
+    // else if (this.login.getUserRole() == "NORMAL") {
+    //   // NORMAL User-dashboard
+    //   window.location.href = "/user-dashboard";
+
+    //   // window.location.href="/register-courses/";
+    //   // this.router.navigate(["user-dashboard"]);
+    //   this.login.loginStatusSubject.next(true);
+    // }
+    // else {
+    //   this.login.logout();
+    // }
 
 
 
@@ -225,6 +243,13 @@ export class LoginComponent implements OnInit {
               // this.router.navigate(["admin"])
               // this.login.loginStatusSubject.next(true);
 
+              
+            }
+              else if (this.login.getUserRole() == "LECTURER") {
+              // NORMAL User-dashboard
+              window.location.href = "/lect";
+              // this.router.navigate(["user-dashboard"]);
+              // this.login.loginStatusSubject.next(true);
             }
             else if (this.login.getUserRole() == "NORMAL") {
               // NORMAL User-dashboard
