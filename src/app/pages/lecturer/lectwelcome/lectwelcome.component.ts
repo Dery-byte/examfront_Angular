@@ -94,7 +94,7 @@ export class LectwelcomeComponent {
 
   // =========================
   allReports() {
-    this._report.getUniqueCategoriesAndQuizzes().subscribe((data) => {
+    this._report.getUniqueCategoriesForLecturer().subscribe((data) => {
       this.cateGory = data;
 
 

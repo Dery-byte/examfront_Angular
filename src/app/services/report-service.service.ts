@@ -76,7 +76,11 @@ public loadReportSummary(): Observable<any> {
   });
 }
 
-
+getUniqueCategoriesForLecturer(): Observable<any[]> {
+  return this.getCategoriesFromReport().pipe(
+    map(quizzes => this.extractCategoriesAndQuizzes(quizzes))
+  );
+}
 
 
 
@@ -89,7 +93,7 @@ public getCategoriesFromReport(): Observable<any>{
 }
 
 getUniqueCategoriesAndQuizzes(): Observable<any[]> {
-  return this.getCategoriesFromReport().pipe(
+  return this.loadReportSummary().pipe(
     map(quizzes => this.extractCategoriesAndQuizzes(quizzes))
   );
 }
