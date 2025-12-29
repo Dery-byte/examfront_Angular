@@ -17,7 +17,7 @@
   <mat-card-content>
     <div *ngIf="categories.length > 0; else emptyState" class="table-container">
       <table mat-table [dataSource]="categories" class="elegant-table mat-elevation-z2">
-        
+
         <!-- Course Code Column -->
         <ng-container matColumnDef="courseCode">
           <th mat-header-cell *matHeaderCellDef>COURSE CODE</th>
@@ -57,6 +57,12 @@
             </button>
 
             <mat-menu #actionMenu="matMenu" class="action-menu">
+
+              <button mat-menu-item (click)="openUpdateObjDialog(element.cid, updateDialogCategory)" class="menu-item">
+                <mat-icon class="menu-icon">assignment</mat-icon>
+                <span>Assign</span>
+              </button>
+              <mat-divider></mat-divider>
               <button mat-menu-item (click)="openUpdateObjDialog(element.cid, updateDialogCategory)" class="menu-item">
                 <mat-icon class="menu-icon">edit</mat-icon>
                 <span>Edit </span>
@@ -66,13 +72,14 @@
                 <mat-icon class="menu-icon">delete</mat-icon>
                 <span>Delete</span>
               </button>
+
             </mat-menu>
           </td>
         </ng-container>
 
         <tr mat-header-row *matHeaderRowDef="['courseCode', 'title', 'level', 'actions']"></tr>
-        <tr mat-row *matRowDef="let row; columns: ['courseCode', 'title', 'level', 'actions'];" 
-            [ngClass]="{'row-hover': true}"></tr>
+        <tr mat-row *matRowDef="let row; columns: ['courseCode', 'title', 'level', 'actions'];"
+          [ngClass]="{'row-hover': true}"></tr>
       </table>
     </div>
 
