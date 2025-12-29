@@ -69,7 +69,7 @@ export class LectViewQuizQuestionComponent {
     this.Tqid = this._route.snapshot.params['tqId'];
 
     this.qTitle = this._route.snapshot.params['qTitle'];
-    this._question.getQuestionsOfQuiz(this.qId).subscribe((data: any) => {
+    this._question.getQuestionsOfQuizforLecturer(this.qId).subscribe((data: any) => {
       console.log(data);
       this.questions = data;
 
@@ -155,7 +155,7 @@ export class LectViewQuizQuestionComponent {
   }
 
 
-  
+
   // LOGIC TO UPDATE
   public updateQuestionData() {
     this._question.updateQuestion(this.specificObjective).subscribe((data) => {

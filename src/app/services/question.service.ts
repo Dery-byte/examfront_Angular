@@ -23,6 +23,13 @@ export class QuestionService {
   }
 
 
+  // GET THE QUESTIONS FOR LECTURERE
+    public getQuestionsOfQuizforLecturer(qid) {
+    return this._http.get(`${baseUrl}/questions/quiz/all/${qid}`, {
+      withCredentials: true
+    });
+  }
+
   public getSubjective(qid) {
     return this._http.get(`${baseUrl}/theoryquestion/quiz/all/${qid}`, {
       withCredentials: true

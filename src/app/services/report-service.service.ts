@@ -20,11 +20,7 @@ public loadResultsSummary(rId){
 }
 
 
-public loadReportSummary(): Observable<any> {
-  return this._http.get(`${baseUrl}/getReport`,{
-    withCredentials: true 
-  });
-}
+
 
 //get Report by userId and QuizId
 // public getReport(uId,qId){
@@ -74,13 +70,26 @@ public getResultsDetails(qid){
 }
 
 
+public loadReportSummary(): Observable<any> {
+  return this._http.get(`${baseUrl}/getReport`,{
+    withCredentials: true 
+  });
+}
 
 
 
 
+
+
+//get catgory from Report
+public getCategoriesFromReport(): Observable<any>{
+  return this._http.get(`${baseUrl}/my-students-reports`,{
+    withCredentials: true 
+  });
+}
 
 getUniqueCategoriesAndQuizzes(): Observable<any[]> {
-  return this.loadReportSummary().pipe(
+  return this.getCategoriesFromReport().pipe(
     map(quizzes => this.extractCategoriesAndQuizzes(quizzes))
   );
 }
@@ -138,6 +147,18 @@ public getReportByQuizId(qId){
     withCredentials: true 
   });
 }
+
+
+//get Report by  USERS
+public getReportByUser_Id(quizId){
+  return this._http.get(`${baseUrl}/getReports/${quizId}`,{
+    withCredentials: true 
+  });
+}
+
+
+
+
 
 
 }

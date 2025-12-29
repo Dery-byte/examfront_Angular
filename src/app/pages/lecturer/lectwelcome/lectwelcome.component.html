@@ -1,17 +1,12 @@
+
+
+<!-- {{cateGory|json}} -->
+
 <div class="bootstrap-wrapper">
   <div class="container-fluid">
-    <!-- <div *ngIf="expirationSeconds">
-        Token will expire in {{ expirationSeconds }} seconds.
-      </div> -->
-
-    <!-- <h3 class="text-center"><i>{{ getFormmatedTime() }} </i></h3> -->
-
-    <!-- {{reportsData|json}} -->
     <div class="row">
       <div class="col-md-4">
-
         <mat-card class="mt20">
-
           <mat-card-header>
             <!-- <div mat-card-avatar class="example-header-image"></div> -->
             <mat-card-title>
@@ -190,64 +185,6 @@
       </div>
 
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
       <div *ngIf="reportsData.length>0">
         <div>
           &nbsp;&nbsp;<button mat-flat-button color="accent" (click)="exportexcel()">Export as Excel </button>
@@ -295,25 +232,7 @@
   <tr mat-row *matRowDef="let row; columns: displayColumn;"></tr>
 
 </table>
-
-
-        
       </div>
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 
 
       <!-- <div class="container text-center" *ngIf="reportsData.length == 0">
@@ -348,10 +267,3 @@
     </mat-card>
   </div>
 </div>
-
-
-
-<!-- {{reportsData | json}} -->
-
-<!-- {{chartDataPoints | json}} -->
-<!-- {{allUsers | json}} -->
