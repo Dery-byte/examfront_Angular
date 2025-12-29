@@ -1,4 +1,11 @@
 <!-- Course List Card -->
+<!-- 
+{{lecturers | json}}
+
+{{category| json}} -->
+
+{{categories|json}}
+
 <mat-card class="elevated-card">
   <mat-card-header class="card-header">
     <div class="header-content">
@@ -48,6 +55,16 @@
           </td>
         </ng-container>
 
+
+
+        <ng-container matColumnDef="lecturer">
+          <th mat-header-cell *matHeaderCellDef>LECTURER</th>
+          <td mat-cell *matCellDef="let element" class="name-cell">
+            <mat-icon class="cell-icon">person</mat-icon>
+            {{element.user?.fullName || 'Not Assigned'}}
+          </td>
+        </ng-container>
+
         <!-- Actions Column -->
         <ng-container matColumnDef="actions">
           <th mat-header-cell *matHeaderCellDef class="actions-header">ACTIONS</th>
@@ -58,7 +75,7 @@
 
             <mat-menu #actionMenu="matMenu" class="action-menu">
 
-              <button mat-menu-item (click)="openUpdateObjDialog(element.cid, updateDialogCategory)" class="menu-item">
+              <button mat-menu-item (click)="openAssignCourse(element.cid, assignCategory)" class="menu-item">
                 <mat-icon class="menu-icon">assignment</mat-icon>
                 <span>Assign</span>
               </button>
@@ -77,8 +94,8 @@
           </td>
         </ng-container>
 
-        <tr mat-header-row *matHeaderRowDef="['courseCode', 'title', 'level', 'actions']"></tr>
-        <tr mat-row *matRowDef="let row; columns: ['courseCode', 'title', 'level', 'actions'];"
+        <tr mat-header-row *matHeaderRowDef="['courseCode', 'title', 'level', 'lecturer','actions']"></tr>
+        <tr mat-row *matRowDef="let row; columns: ['courseCode', 'title', 'level','lecturer', 'actions'];"
           [ngClass]="{'row-hover': true}"></tr>
       </table>
     </div>
@@ -96,6 +113,31 @@
     </ng-template>
   </mat-card-content>
 </mat-card>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 <!-- Edit Course Dialog -->
 <ng-template #updateDialogCategory let-data="data">
@@ -151,6 +193,79 @@
       <button mat-raised-button color="primary" (click)="updateCategoryData()" class="save-btn">
         <mat-icon>save</mat-icon>
         Save Changes
+      </button>
+    </div>
+  </div>
+</ng-template>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<!-- Assign Course To Lecturer -->
+<ng-template #assignCategory>
+  <div class="dialog-container">
+    <div class="dialog-header">
+      <mat-icon class="dialog-icon">edit_note</mat-icon>
+      <h1 mat-dialog-title>Assign Course</h1>
+    </div>
+
+    <mat-divider></mat-divider>
+
+    <div mat-dialog-content class="dialog-content">
+      <form class="course-form">
+        <div class="form-row">
+          <mat-form-field appearance="outline" floatLabel="always">
+            <mat-label>Course Title</mat-label>
+            <input matInput [(ngModel)]="categoryEdit.title" name="title" required readonly>
+            <mat-icon matSuffix>title</mat-icon>
+          </mat-form-field>
+          <mat-form-field appearance="outline" floatLabel="always">
+            <mat-label>Course Code</mat-label>
+            <input matInput [(ngModel)]="categoryEdit.courseCode" name="courseCode" required readonly>
+            <mat-icon matSuffix>code</mat-icon>
+          </mat-form-field>
+        </div>
+
+        <mat-form-field appearance="outline" floatLabel="always">
+          <mat-label>Select Lecturer</mat-label>
+          <mat-select [(ngModel)]="categoryEdit.userId" name="lecturer" required>
+            <mat-option *ngFor="let lec of lecturers" [value]="lec.id">
+              {{ lec.fullName }}
+            </mat-option>
+          </mat-select>
+          <mat-icon matSuffix>school</mat-icon>
+        </mat-form-field>
+      </form>
+    </div>
+
+    <mat-divider></mat-divider>
+
+    <div mat-dialog-actions class="dialog-actions">
+      <button mat-button (click)="dialogRef.close()" class="cancel-btn">
+        <mat-icon>close</mat-icon>
+        Cancel
+      </button>
+      <button mat-raised-button color="primary" (click)="assignCourse()" class="save-btn">
+        <mat-icon>save</mat-icon>
+        Click to Assign
       </button>
     </div>
   </div>

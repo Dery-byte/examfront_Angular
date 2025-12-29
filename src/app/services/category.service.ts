@@ -62,6 +62,26 @@ export class CategoryService {
       }
     );
   }
+
+
+
+    // Fetch a single category by ID
+  public getAllLecturers() {
+    return this.http.get(`${baseUrl}/all/lecturers`,
+      {
+        withCredentials: true
+
+      }
+    );
+  }
+
+
+  // In your category service file
+assignCourseToLecturer(courseId: number, lecturerId: number): Observable<any> {
+  return this.http.put(`${baseUrl}/courses/${courseId}/assign/${lecturerId}`, {});
+}
+
+
   //update category
   public updateCategory(category) {
     return this.http.put(`${baseUrl}/category/updateCategory`, category,
