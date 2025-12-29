@@ -25,13 +25,13 @@
         <!-- Course Code -->
         <mat-form-field appearance="fill" class="form-field">
           <mat-label>Course Code</mat-label>
-          <input matInput type="text" name="courseCode" [(ngModel)]="category.courseCode" required>
+          <input matInput type="text" name="courseCode" [(ngModel)]="category.courseCode" required upperCase>
           <mat-icon matSuffix>code</mat-icon>
           <mat-hint>e.g. CS101, MATH201</mat-hint>
         </mat-form-field>
 
         <!-- Level Selector -->
-        <mat-form-field appearance="fill" class="form-field">
+        <!-- <mat-form-field appearance="fill" class="form-field">
           <mat-label>Academic Level</mat-label>
           <mat-select name="level" [(ngModel)]="category.level" required>
             <mat-option *ngFor="let level of levels" [value]="level">
@@ -41,7 +41,29 @@
               </div>
             </mat-option>
           </mat-select>
-        </mat-form-field>
+        </mat-form-field> -->
+
+        <mat-form-field appearance="fill" class="form-field">
+  <mat-label>Academic Level</mat-label>
+  <mat-select name="level" [(ngModel)]="category.level" required>
+
+    <!-- Custom trigger -->
+    <mat-select-trigger>
+      <mat-icon>school  </mat-icon>
+      <span>{{category.level}}</span>
+    </mat-select-trigger>
+
+    <!-- Options -->
+    <mat-option *ngFor="let level of levels" [value]="level">
+      <div class="level-option">
+        <mat-icon>school  </mat-icon>
+        <span>{{level}}</span>
+      </div>
+    </mat-option>
+
+  </mat-select>
+</mat-form-field>
+
 
         <!-- Description -->
         <mat-form-field appearance="fill" class="form-field full-width">

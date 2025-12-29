@@ -91,6 +91,7 @@ import { ViewCourseComponent } from './pages/lecturer/view-course/view-course.co
 import { LectviewQuizzesComponent } from './pages/lecturer/lectview-quizzes/lectview-quizzes.component';
 import { LectaddQuizComponent } from './pages/lecturer/lectadd-quiz/lectadd-quiz.component';
 import { LectViewQuizQuestionComponent } from './pages/lecturer/lect-view-quiz-question/lect-view-quiz-question.component'; // 👈 if using toggle
+import { UpperCaseDirective } from './pages/utilities/UpperCaseDirective ';
 
 
 
@@ -137,6 +138,7 @@ import { LectViewQuizQuestionComponent } from './pages/lecturer/lect-view-quiz-q
     ResetPasswordComponent,
     AdminfooterComponent,
     TypingDirective,
+    UpperCaseDirective,
     MinutesToDurationPipe,
     LecturerLayoutComponent,
     LectdashboardComponent,

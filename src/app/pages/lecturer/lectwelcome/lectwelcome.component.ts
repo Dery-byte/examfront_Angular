@@ -86,11 +86,7 @@ export class LectwelcomeComponent {
       });
     this.allReports();
 
-
-
   }
-
-
 
   // =========================
   allReports() {
