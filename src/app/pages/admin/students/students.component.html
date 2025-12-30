@@ -143,33 +143,46 @@
 
 
 
-<!-- Edit Course Dialog -->
+<!-- Edit Lecturer Dialog -->
 <ng-template #updateDialogCategory let-data="data">
   <div class="dialog-container">
     <div class="dialog-header">
       <mat-icon class="dialog-icon">edit_note</mat-icon>
-      <h1 mat-dialog-title>Update Course Details</h1>
+      <h1 mat-dialog-title>Update Lecturer Details</h1>
     </div>
 
     <mat-divider></mat-divider>
-
+<!-- {{studentEdit | json}} -->
     <div mat-dialog-content class="dialog-content">
       <form class="course-form">
         <div class="form-row">
           <mat-form-field appearance="outline" floatLabel="always">
-            <mat-label>Course Title</mat-label>
-            <input matInput [(ngModel)]="categoryEdit.title" name="title" required>
+            <mat-label>First Name</mat-label>
+            <input matInput [(ngModel)]="studentEdit.firstname" name="firstname" required>
             <mat-icon matSuffix>title</mat-icon>
           </mat-form-field>
 
           <mat-form-field appearance="outline" floatLabel="always">
-            <mat-label>Course Code</mat-label>
-            <input matInput [(ngModel)]="categoryEdit.courseCode" name="courseCode" required>
-            <mat-icon matSuffix>code</mat-icon>
+            <mat-label>Last Name</mat-label>
+            <input matInput [(ngModel)]="studentEdit.lastname" name="lastname" required>
+            <!-- <mat-icon matSuffix>code</mat-icon> -->
+          </mat-form-field>
+
+            <mat-form-field appearance="outline" floatLabel="always">
+            <mat-label>Email</mat-label>
+            <input matInput [(ngModel)]="studentEdit.email" name="email" required>
+            <!-- <mat-icon matSuffix>code</mat-icon> -->
+          </mat-form-field>
+
+            <mat-form-field appearance="outline" floatLabel="always">
+            <mat-label>Username</mat-label>
+            <input matInput [(ngModel)]="studentEdit.username" name="username" required>
           </mat-form-field>
         </div>
 
-        <mat-form-field appearance="outline" floatLabel="always">
+        
+
+        <!-- <mat-form-field appearance="outline" floatLabel="always">
           <mat-label>Academic Level</mat-label>
           <mat-select [(ngModel)]="categoryEdit.level" name="level" required>
             <mat-option *ngFor="let level of ['Level 100', 'Level 200', 'Level 300', 'Level 400']" [value]="level">
@@ -177,13 +190,13 @@
             </mat-option>
           </mat-select>
           <mat-icon matSuffix>school</mat-icon>
-        </mat-form-field>
+        </mat-form-field> -->
 
-        <mat-form-field appearance="outline" floatLabel="always">
+        <!-- <mat-form-field appearance="outline" floatLabel="always">
           <mat-label>Course Description</mat-label>
           <textarea matInput [(ngModel)]="categoryEdit.description" name="description" rows="5"></textarea>
           <mat-icon matSuffix>description</mat-icon>
-        </mat-form-field>
+        </mat-form-field> -->
       </form>
     </div>
 
@@ -196,7 +209,7 @@
       </button>
       <button mat-raised-button color="primary" (click)="updateCategoryData()" class="save-btn">
         <mat-icon>save</mat-icon>
-        Save Changes
+        Update
       </button>
     </div>
   </div>

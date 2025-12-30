@@ -17,6 +17,7 @@ students = [];
 // students: any[] = [];
   filteredStudents: any[] = [];
   searchText: string = '';
+   studentEdit;
 
 
 
@@ -69,4 +70,37 @@ students = [];
     this.searchText = '';
     this.filteredStudents = [...this.students];
   }
+
+
+
+
+
+
+
+
+
+
+      // UPDATE THE CATEGORY
+    getOneStudent(studentsId: any): any {
+      return this._category.getStudentById(studentsId);
+    }
+    openUpdateStudent(studentsId: any, templateRef: TemplateRef<any>): void {
+      console.log(studentsId);
+      // Fetch question details based on ID
+      this.students = this.getOneStudent(studentsId).subscribe((data) => {
+        // console.log(this.category);
+        this.studentEdit = data;
+        console.log(this.studentEdit);
+        this.dialogRef = this.dialog.open(templateRef, {
+          width: '650px',
+          data: this.studentEdit,
+        })
+      });
+      this.dialogRef.afterClosed().subscribe(result => {
+        if (result) {
+          this.studentEdit = result;
+        }
+      });
+    }
+  
 }
