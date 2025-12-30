@@ -78,7 +78,9 @@ export class CategoryService {
 
   // In your category service file
 assignCourseToLecturer(courseId: number, lecturerId: number): Observable<any> {
-  return this.http.put(`${baseUrl}/courses/${courseId}/assign/${lecturerId}`, {});
+  return this.http.put(`${baseUrl}/courses/${courseId}/assign/${lecturerId}`, {}, {
+     withCredentials: true
+  });
 }
 
 

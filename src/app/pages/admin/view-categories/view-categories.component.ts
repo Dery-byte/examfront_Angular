@@ -102,6 +102,9 @@ assignCourse() {
     return;
   }
 
+
+  console.log("The is the cateGoryID ", this.categoryEdit.cid);
+  console.log(this.categoryEdit.userId);
   // Call the API to assign the course to the lecturer
   this._category.assignCourseToLecturer(this.categoryEdit.cid, this.categoryEdit.userId)
     .subscribe({
