@@ -8,7 +8,7 @@
   <mat-card-header class="card-header">
     <div class="header-content">
       <mat-icon class="header-icon">school</mat-icon>
-      <h1 class="card-title">All Students</h1>
+      <h1 class="card-title">All Lecturers</h1>
       <span class="flex-spacer"></span>
       <button mat-raised-button color="primary" routerLink="/admin/add-student" class="add-course-btn">
         <mat-icon>add</mat-icon>
@@ -43,7 +43,7 @@
 
         <!-- Student Name Column -->
         <ng-container matColumnDef="studentName">
-          <th mat-header-cell *matHeaderCellDef>STUDENT NAME</th>
+          <th mat-header-cell *matHeaderCellDef>LECTURERS NAME</th>
           <td mat-cell *matCellDef="let element" class="code-cell">
             <mat-icon class="cell-icon">person</mat-icon>
             {{element.fullName}}
@@ -52,7 +52,7 @@
 
         <!-- Index Number Column -->
         <ng-container matColumnDef="indexNumber">
-          <th mat-header-cell *matHeaderCellDef>INDEX NUMBER</th>
+          <th mat-header-cell *matHeaderCellDef>USERNAME</th>
           <td mat-cell *matCellDef="let element" class="name-cell">
             <mat-icon class="cell-icon">badge</mat-icon>
             {{element.username}}
