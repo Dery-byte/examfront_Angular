@@ -1,0 +1,154 @@
+.search-container {
+  padding: 20px 0;
+  margin-bottom: 16px;
+}
+
+.search-field {
+  width: 100%;
+  max-width: 500px;
+}
+
+.search-info {
+  margin-top: 8px;
+  color: #666;
+  font-size: 14px;
+  font-style: italic;
+}
+
+/* Existing styles you should keep */
+.elevated-card {
+  margin: 20px;
+  border-radius: 8px;
+}
+
+.card-header {
+  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+  color: white;
+  padding: 20px;
+}
+
+.header-content {
+  display: flex;
+  align-items: center;
+  width: 100%;
+}
+
+.header-icon {
+  margin-right: 12px;
+  font-size: 32px;
+  width: 32px;
+  height: 32px;
+}
+
+.card-title {
+  margin: 0;
+  font-size: 24px;
+  font-weight: 500;
+}
+
+.flex-spacer {
+  flex: 1 1 auto;
+}
+
+.add-course-btn {
+  background-color: white !important;
+  color: #667eea !important;
+}
+
+.table-container {
+  overflow-x: auto;
+}
+
+.elegant-table {
+  width: 100%;
+  background-color: white;
+}
+
+.elegant-table th {
+  background-color: #f5f5f5;
+  font-weight: 600;
+  color: #333;
+  padding: 16px;
+}
+
+.elegant-table td {
+  padding: 16px;
+}
+
+.cell-icon {
+  vertical-align: middle;
+  margin-right: 8px;
+  color: #667eea;
+  font-size: 20px;
+}
+
+.code-cell, .name-cell, .level-cell {
+  font-size: 14px;
+}
+
+.actions-header {
+  text-align: center;
+}
+
+.actions-cell {
+  text-align: center;
+}
+
+.action-btn {
+  color: #667eea;
+}
+
+.action-menu {
+  min-width: 180px;
+}
+
+.menu-item {
+  display: flex;
+  align-items: center;
+  padding: 12px 16px;
+}
+
+.menu-icon {
+  margin-right: 12px;
+  color: #667eea;
+}
+
+.delete-item .menu-icon {
+  color: #f44336;
+}
+
+.delete-item:hover {
+  background-color: #ffebee;
+}
+
+.row-hover:hover {
+  background-color: #f5f5f5;
+  cursor: pointer;
+}
+
+.empty-state {
+  text-align: center;
+  padding: 60px 20px;
+  color: #999;
+}
+
+.empty-icon {
+  font-size: 80px;
+  width: 80px;
+  height: 80px;
+  color: #ccc;
+  margin-bottom: 20px;
+}
+
+.empty-state h3 {
+  margin: 16px 0 8px 0;
+  color: #666;
+}
+
+.empty-state p {
+  margin-bottom: 24px;
+}
+
+.empty-action-btn {
+  margin-top: 16px;
+}

@@ -35,6 +35,8 @@ import { AddCourseComponent } from './pages/lecturer/add-course/add-course.compo
 import { LectviewQuizzesComponent } from './pages/lecturer/lectview-quizzes/lectview-quizzes.component';
 import { LectaddQuizComponent } from './pages/lecturer/lectadd-quiz/lectadd-quiz.component';
 import { LectViewQuizQuestionComponent } from './pages/lecturer/lect-view-quiz-question/lect-view-quiz-question.component';
+import { StudentsComponent } from './pages/admin/students/students.component';
+import { LecturersComponent } from './pages/admin/lecturers/lecturers.component';
 // import { StartQuizComponent } from './pages/user/start-quiz/start-quiz.component';
 
 const routes: Routes = [
@@ -88,10 +90,6 @@ const routes: Routes = [
         path: 'add-course',
         component: AddCategoryComponent,
       },
-      // {
-      //   path:'update-category/:cid',
-      //   component:UpdateCategoryComponent,
-      // },
       {
         path: 'quizzes',
         component: ViewQuizzesComponent,
@@ -99,10 +97,7 @@ const routes: Routes = [
         path: 'add-quiz',
         component: AddQuizComponent,
       },
-      // {
-      //   path:'update-quiz/:qid',
-      //   component:UpdateQuizComponent,
-      // },
+   
       {
         path: 'view-quetions/:qId/:qTitle',
         component: ViewQuizQuestionsComponent,
@@ -111,6 +106,16 @@ const routes: Routes = [
         path: 'add-question/:qId/:title',
         component: AddQuestionComponent,
       },
+
+       {
+        path: 'students',
+        component: StudentsComponent,
+      },
+
+       {
+        path: 'lecturers',
+        component: LecturersComponent,
+      }
     ]
   },
 

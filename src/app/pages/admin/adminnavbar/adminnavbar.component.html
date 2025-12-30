@@ -63,6 +63,22 @@
               <mat-icon matListItemIcon>post_add</mat-icon>
               <span matLine>Create Quiz</span>
             </mat-list-item>
+
+
+
+
+            <mat-list-item routerLink="/admin/students" class="nav-item" (click)="closeDrawerOnMobile()">
+              <mat-icon matListItemIcon>person</mat-icon>
+              <span matLine>Students</span>
+            </mat-list-item>
+
+            <mat-list-item routerLink="/admin/lecturers" class="nav-item" (click)="closeDrawerOnMobile()">
+              <mat-icon matListItemIcon>person</mat-icon>
+              <span matLine>Lecturers</span>
+            </mat-list-item>
+
+
+
             <mat-divider></mat-divider>
             <mat-list-item (click)="logout()" class="nav-item logout-item" (click)="closeDrawerOnMobile()">
               <mat-icon matListItemIcon>logout</mat-icon>

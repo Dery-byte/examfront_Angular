@@ -1,0 +1,203 @@
+
+
+<!-- {{students | json}} -->
+
+
+
+<mat-card class="elevated-card">
+  <mat-card-header class="card-header">
+    <div class="header-content">
+      <mat-icon class="header-icon">school</mat-icon>
+      <h1 class="card-title">All Students</h1>
+      <span class="flex-spacer"></span>
+      <button mat-raised-button color="primary" routerLink="/admin/add-student" class="add-course-btn">
+        <mat-icon>add</mat-icon>
+        Add Lecturer
+      </button>
+    </div>
+  </mat-card-header>
+
+  <mat-divider></mat-divider>
+
+  <mat-card-content>
+    <!-- Search Section -->
+    <div class="search-container">
+      <mat-form-field appearance="outline" class="search-field">
+        <mat-label>Search by name or index number</mat-label>
+        <input matInput 
+               [(ngModel)]="searchText" 
+               (ngModelChange)="applyFilter()"
+               placeholder="Enter student name or index number">
+        <mat-icon matPrefix>search</mat-icon>
+        <button mat-icon-button matSuffix *ngIf="searchText" (click)="clearSearch()" aria-label="Clear">
+          <mat-icon>close</mat-icon>
+        </button>
+      </mat-form-field>
+      <div class="search-info" *ngIf="searchText">
+        <span>Found {{filteredLecturers.length}} of {{lecturers.length}} students</span>
+      </div>
+    </div>
+
+    <div *ngIf="filteredLecturers.length > 0; else emptyState" class="table-container">
+      <table mat-table [dataSource]="filteredLecturers" class="elegant-table mat-elevation-z2">
+
+        <!-- Student Name Column -->
+        <ng-container matColumnDef="studentName">
+          <th mat-header-cell *matHeaderCellDef>STUDENT NAME</th>
+          <td mat-cell *matCellDef="let element" class="code-cell">
+            <mat-icon class="cell-icon">person</mat-icon>
+            {{element.fullName}}
+          </td>
+        </ng-container>
+
+        <!-- Index Number Column -->
+        <ng-container matColumnDef="indexNumber">
+          <th mat-header-cell *matHeaderCellDef>INDEX NUMBER</th>
+          <td mat-cell *matCellDef="let element" class="name-cell">
+            <mat-icon class="cell-icon">badge</mat-icon>
+            {{element.username}}
+          </td>
+        </ng-container>
+
+        <!-- Email Column -->
+        <ng-container matColumnDef="email">
+          <th mat-header-cell *matHeaderCellDef>EMAIL</th>
+          <td mat-cell *matCellDef="let element" class="level-cell">
+            <mat-icon class="cell-icon">email</mat-icon>
+            {{element.email}}
+          </td>
+        </ng-container>
+
+        <!-- Actions Column -->
+        <ng-container matColumnDef="actions">
+          <th mat-header-cell *matHeaderCellDef class="actions-header">ACTIONS</th>
+          <td mat-cell *matCellDef="let element" class="actions-cell">
+            <button mat-icon-button [matMenuTriggerFor]="actionMenu" class="action-btn">
+              <mat-icon>more_vert</mat-icon>
+            </button>
+
+            <mat-menu #actionMenu="matMenu" class="action-menu">
+              <button mat-menu-item (click)="openAssignCourse(element.id, assignCategory)" class="menu-item">
+                <mat-icon class="menu-icon">assignment</mat-icon>
+                <span>Assign Course</span>
+              </button>
+              <mat-divider></mat-divider>
+              <button mat-menu-item (click)="openUpdateStudent(element.id, updateDialogCategory)" class="menu-item">
+                <mat-icon class="menu-icon">edit</mat-icon>
+                <span>Edit Student</span>
+              </button>
+              <mat-divider></mat-divider>
+              <button mat-menu-item (click)="deleteStudent(element.id)" class="menu-item delete-item">
+                <mat-icon class="menu-icon">delete</mat-icon>
+                <span>Delete</span>
+              </button>
+            </mat-menu>
+          </td>
+        </ng-container>
+
+        <tr mat-header-row *matHeaderRowDef="['studentName', 'indexNumber', 'email', 'actions']"></tr>
+        <tr mat-row *matRowDef="let row; columns: ['studentName', 'indexNumber', 'email', 'actions'];"
+          [ngClass]="{'row-hover': true}"></tr>
+      </table>
+    </div>
+
+    <ng-template #emptyState>
+      <div class="empty-state">
+        <mat-icon class="empty-icon">{{ searchText ? 'search_off' : 'folder_off' }}</mat-icon>
+        <h3>{{ searchText ? 'No Students Found' : 'No Students Available' }}</h3>
+        <p>{{ searchText ? 'Try adjusting your search criteria' : 'Get started by adding your first student' }}</p>
+        <button *ngIf="!searchText" mat-raised-button color="primary" routerLink="/admin/add-student" class="empty-action-btn">
+          <mat-icon>add</mat-icon>
+          Add Student
+        </button>
+        <button *ngIf="searchText" mat-raised-button (click)="clearSearch()" class="empty-action-btn">
+          <mat-icon>clear</mat-icon>
+          Clear Search
+        </button>
+      </div>
+    </ng-template>
+  </mat-card-content>
+</mat-card>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<!-- Edit Course Dialog -->
+<ng-template #updateDialogCategory let-data="data">
+  <div class="dialog-container">
+    <div class="dialog-header">
+      <mat-icon class="dialog-icon">edit_note</mat-icon>
+      <h1 mat-dialog-title>Update Course Details</h1>
+    </div>
+
+    <mat-divider></mat-divider>
+
+    <div mat-dialog-content class="dialog-content">
+      <form class="course-form">
+        <div class="form-row">
+          <mat-form-field appearance="outline" floatLabel="always">
+            <mat-label>Course Title</mat-label>
+            <input matInput [(ngModel)]="categoryEdit.title" name="title" required>
+            <mat-icon matSuffix>title</mat-icon>
+          </mat-form-field>
+
+          <mat-form-field appearance="outline" floatLabel="always">
+            <mat-label>Course Code</mat-label>
+            <input matInput [(ngModel)]="categoryEdit.courseCode" name="courseCode" required>
+            <mat-icon matSuffix>code</mat-icon>
+          </mat-form-field>
+        </div>
+
+        <mat-form-field appearance="outline" floatLabel="always">
+          <mat-label>Academic Level</mat-label>
+          <mat-select [(ngModel)]="categoryEdit.level" name="level" required>
+            <mat-option *ngFor="let level of ['Level 100', 'Level 200', 'Level 300', 'Level 400']" [value]="level">
+              <span class="level-option">{{level}}</span>
+            </mat-option>
+          </mat-select>
+          <mat-icon matSuffix>school</mat-icon>
+        </mat-form-field>
+
+        <mat-form-field appearance="outline" floatLabel="always">
+          <mat-label>Course Description</mat-label>
+          <textarea matInput [(ngModel)]="categoryEdit.description" name="description" rows="5"></textarea>
+          <mat-icon matSuffix>description</mat-icon>
+        </mat-form-field>
+      </form>
+    </div>
+
+    <mat-divider></mat-divider>
+
+    <div mat-dialog-actions class="dialog-actions">
+      <button mat-button (click)="dialogRef.close()" class="cancel-btn">
+        <mat-icon>close</mat-icon>
+        Cancel
+      </button>
+      <button mat-raised-button color="primary" (click)="updateCategoryData()" class="save-btn">
+        <mat-icon>save</mat-icon>
+        Save Changes
+      </button>
+    </div>
+  </div>
+</ng-template>

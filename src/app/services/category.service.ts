@@ -27,6 +27,8 @@ export class CategoryService {
 
 
 
+
+
   // Categories for a USER
   public getCategoriesForUser() {
     return this.http.get(`${baseUrl}/categoriesForUser`, {
@@ -74,6 +76,18 @@ export class CategoryService {
       }
     );
   }
+
+
+    // Fetch a single category by ID
+  public getAllStudent() {
+    return this.http.get(`${baseUrl}/all/students`,
+      {
+        withCredentials: true
+
+      }
+    );
+  }
+
 
 
   // In your category service file

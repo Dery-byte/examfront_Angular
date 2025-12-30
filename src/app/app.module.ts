@@ -92,6 +92,8 @@ import { LectviewQuizzesComponent } from './pages/lecturer/lectview-quizzes/lect
 import { LectaddQuizComponent } from './pages/lecturer/lectadd-quiz/lectadd-quiz.component';
 import { LectViewQuizQuestionComponent } from './pages/lecturer/lect-view-quiz-question/lect-view-quiz-question.component'; // 👈 if using toggle
 import { UpperCaseDirective } from './pages/utilities/UpperCaseDirective ';
+import { StudentsComponent } from './pages/admin/students/students.component';
+import { LecturersComponent } from './pages/admin/lecturers/lecturers.component';
 
 
 
@@ -149,7 +151,9 @@ import { UpperCaseDirective } from './pages/utilities/UpperCaseDirective ';
     ViewCourseComponent,
     LectviewQuizzesComponent,
     LectaddQuizComponent,
-    LectViewQuizQuestionComponent
+    LectViewQuizQuestionComponent,
+    StudentsComponent,
+    LecturersComponent
   ],
 exports:[TypingDirective],
 
