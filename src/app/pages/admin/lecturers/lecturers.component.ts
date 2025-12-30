@@ -18,6 +18,8 @@ export class LecturersComponent {
   filteredLecturers: any[] = [];
   searchText: string = '';
 
+  lecturersEdit;
+
 
 
   
@@ -68,6 +70,34 @@ export class LecturersComponent {
   clearSearch() {
     this.searchText = '';
     this.filteredLecturers = [...this.lecturers];
+  }
+
+
+
+
+
+
+    // UPDATE THE CATEGORY
+  getOneLecturer(lecturerId: any): any {
+    return this._category.getLecturerById(lecturerId);
+  }
+  openUpdateLecturer(lecturerId: any, templateRef: TemplateRef<any>): void {
+    console.log(lecturerId);
+    // Fetch question details based on ID
+    this.lecturers = this.getOneLecturer(lecturerId).subscribe((data) => {
+      // console.log(this.category);
+      this.lecturersEdit = data;
+      console.log(this.lecturersEdit);
+      this.dialogRef = this.dialog.open(templateRef, {
+        width: '650px',
+        data: this.lecturersEdit,
+      })
+    });
+    this.dialogRef.afterClosed().subscribe(result => {
+      if (result) {
+        this.lecturersEdit = result;
+      }
+    });
   }
 
 

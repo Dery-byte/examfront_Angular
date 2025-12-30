@@ -79,6 +79,15 @@ export class CategoryService {
 
 
     // Fetch a single category by ID
+  public getLecturerById(lecturerId) {
+    return this.http.get(`${baseUrl}/lecturerbyId/${lecturerId}`,
+      {
+        withCredentials: true
+      }
+    );
+  }
+
+    // Fetch a single category by ID
   public getAllStudent() {
     return this.http.get(`${baseUrl}/all/students`,
       {
@@ -106,6 +115,7 @@ export class CategoryService {
       }
     );
   }
+
 
  
   // Update category

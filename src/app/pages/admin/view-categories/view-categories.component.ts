@@ -172,6 +172,7 @@ assignCourse() {
   getQuesObj(categoryId: any): any {
     return this._category.getCategory(categoryId);
   }
+  
   openUpdateObjDialog(catId: any, templateRef: TemplateRef<any>): void {
     console.log(catId);
     // Fetch question details based on ID
