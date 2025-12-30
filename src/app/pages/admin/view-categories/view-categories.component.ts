@@ -221,25 +221,18 @@ assignCourse() {
     }).then((results) => {
       if (results.isConfirmed) {
         //delete
-
         this._category.deleteCategory(cId).subscribe(
           (data) => {
             this.categories = this.categories.filter((category) => category.cId != cId);
-
             Swal.fire("Success", "Course Deleted", "success");
           },
           (error) => {
             Swal.fire("Error", "Course could not be deleted", "error");
-
           }
         );
       }
     })
   }
-
-
-
-
 }
 
 
