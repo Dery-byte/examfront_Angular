@@ -65,7 +65,7 @@ export class CategoryService {
 
 
 
-    // Fetch a single category by ID
+  // Fetch a single category by ID
   public getAllLecturers() {
     return this.http.get(`${baseUrl}/all/lecturers`,
       {
@@ -77,11 +77,11 @@ export class CategoryService {
 
 
   // In your category service file
-assignCourseToLecturer(courseId: number, lecturerId: number): Observable<any> {
-  return this.http.put(`${baseUrl}/courses/${courseId}/assign/${lecturerId}`, {}, {
-     withCredentials: true
-  });
-}
+  assignCourseToLecturer(courseId: number, lecturerId: number): Observable<any> {
+    return this.http.put(`${baseUrl}/courses/${courseId}/assign/${lecturerId}`, {}, {
+      withCredentials: true
+    });
+  }
 
 
   //update category
@@ -89,10 +89,20 @@ assignCourseToLecturer(courseId: number, lecturerId: number): Observable<any> {
     return this.http.put(`${baseUrl}/category/updateCategory`, category,
       {
         withCredentials: true
-
       }
     );
   }
+
+ 
+  // Update category
+  public adminUpdateCategory(cId:number, category: any): Observable<any> {
+    return this.http.put(
+      `${baseUrl}/category/admin/updateCategory/${cId}`,
+      category,
+      { withCredentials: true }
+    );
+  }
+
 
   //delete category
   public deleteCategory(cId) {

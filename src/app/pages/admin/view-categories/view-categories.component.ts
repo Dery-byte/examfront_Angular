@@ -193,22 +193,22 @@ assignCourse() {
 
 
 
-  public updateCategoryData() {
-    this._category.updateCategory(this.categoryEdit).subscribe((data) => {
-      this._snack.open("This Course is Updated Successfully! ", "", {
+ public updateCategoryData() {
+  console.log('categoryEdit:', this.categoryEdit);
+  console.log('categoryEdit.id:', this.categoryEdit.cid);
+  this._category.adminUpdateCategory(this.categoryEdit.cid,this.categoryEdit).subscribe((data) => {
+    this._snack.open("This Course is Updated Successfully! ", "", {
+      duration: 3000,
+    });
+    this.dialogRef.close(this.categoryEdit);
+    this.ngOnInit();
+  },
+    (error) => {
+      this._snack.open("This Course couldn't be updated", "", {
         duration: 3000,
       });
-      this.dialogRef.close(this.categoryEdit);
-      this.ngOnInit();
-    },
-      (error) => {
-        this._snack.open("This question couldn't be updated", "", {
-          duration: 3000,
-        });
-      });
-
-
-  }
+    });
+}
 
 
 
