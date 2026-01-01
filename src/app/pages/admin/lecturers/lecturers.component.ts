@@ -126,26 +126,26 @@ export class LecturersComponent {
 
 
 
-  // deleteCategor(cId) {
-  //   Swal.fire({
-  //     icon: "info",
-  //     title: "Are you sure of this ?",
-  //     confirmButtonText: "Delete",
-  //     showCancelButton: true,
-  //   }).then((results) => {
-  //     if (results.isConfirmed) {
-  //       //delete
-  //       this._category.deleteCategory(cId).subscribe(
-  //         (data) => {
-  //           this.categories = this.categories.filter((category) => category.cId != cId);
-  //           Swal.fire("Success", "Course Deleted", "success");
-  //         },
-  //         (error) => {
-  //           Swal.fire("Error", "Course could not be deleted", "error");
-  //         }
-  //       );
-  //     }
-  //   })
-  // }
+  deleteLecturer(lectId) {
+    Swal.fire({
+      icon: "info",
+      title: "Are you sure of this ?",
+      confirmButtonText: "Delete",
+      showCancelButton: true,
+    }).then((results) => {
+      if (results.isConfirmed) {
+        //delete
+        this._category.deleteLecturer(lectId).subscribe(
+          (data) => {
+            this.lecturersEdit = this.lecturersEdit.filter((lecturers) => lecturers.id != lectId);
+            Swal.fire(`Success", "${this.lecturersEdit.fullName} Deleted", success`);
+          },
+          (error) => {
+            Swal.fire("Error", "Lecturer could not be deleted", "error");
+          }
+        );
+      }
+    })
+  }
 
 }

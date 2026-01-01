@@ -152,7 +152,7 @@ export class CategoryService {
 
  
   // Update category
-  public adminUpdateCategory(cId:number, category: any): Observable<any> {
+   adminUpdateCategory(cId:number, category: any): Observable<any> {
     return this.http.put(
       `${baseUrl}/category/admin/updateCategory/${cId}`,
       category,
@@ -162,10 +162,25 @@ export class CategoryService {
 
 
   //delete category
-  public deleteCategory(cId) {
+   deleteCategory(cId) {
     return this.http.delete(`${baseUrl}/category/${cId}`, {
       withCredentials: true
 
+    });
+
+  }
+
+
+    deleteLecturer(lectId) {
+    return this.http.delete(`${baseUrl}/lecturer/${lectId}`, {
+      withCredentials: true
+    })
+  }
+
+
+    deleteStudent(studId) {
+    return this.http.delete(`${baseUrl}/student/${studId}`, {
+      withCredentials: true
     });
 
   }

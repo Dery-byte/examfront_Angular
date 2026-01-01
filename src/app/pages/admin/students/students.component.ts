@@ -124,4 +124,30 @@ export class StudentsComponent {
       });
   }
 
+
+
+
+  deleteStudent(lectId) {
+    Swal.fire({
+      icon: "info",
+      title: "Are you sure of this ?",
+      confirmButtonText: "Delete",
+      showCancelButton: true,
+    }).then((results) => {
+      if (results.isConfirmed) {
+        //delete
+        this._category.deleteStudent(lectId).subscribe(
+          (data) => {
+            this.studentEdit = this.studentEdit.filter((students) => students.id != lectId);
+            Swal.fire(`Success", "${this.studentEdit.fullName} Deleted", success`);
+          },
+          (error) => {
+            Swal.fire("Error", "Student could not be deleted", "error");
+          }
+        );
+      }
+    })
+  }
+
+
 }
