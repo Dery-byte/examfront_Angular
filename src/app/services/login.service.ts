@@ -139,4 +139,9 @@ resetPassword(token: string, newPassword: string): Observable<any> {
   return this.http.post(`${baseUrl}/forgotten-password`, { email });
 }
 
+
+registerLecturer(payload: any): Observable<any> {
+  return this.http.post(`${baseUrl}/register/lecturer`, { payload });
+}
+
 }

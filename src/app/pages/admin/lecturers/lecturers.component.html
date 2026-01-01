@@ -6,10 +6,17 @@
       <mat-icon class="header-icon">school</mat-icon>
       <h1 class="card-title">All Lecturers</h1>
       <span class="flex-spacer"></span>
-      <button mat-raised-button color="primary" routerLink="/admin/add-student" class="add-course-btn">
+      <!-- <button mat-raised-button color="primary" routerLink="/admin/add-student" class="add-course-btn">
         <mat-icon>add</mat-icon>
         Add Lecturer
-      </button>
+      </button> -->
+
+
+<button mat-raised-button color="primary" (click)="openAddLecturerDialog(addLecturerDialog)" class="add-course-btn">
+  <mat-icon>add</mat-icon>
+  Add Lecturer
+</button>
+
     </div>
   </mat-card-header>
 
@@ -212,4 +219,67 @@
       </button>
     </div>
   </div>
+</ng-template>
+
+
+
+
+
+<!-- ADD LECTURER -->
+
+<!-- Dialog template -->
+<ng-template #addLecturerDialog>
+  <h2 mat-dialog-title>Add Lecturer</h2>
+  <mat-dialog-content class="dialog-content">
+    <form [formGroup]="lecturerForm" (ngSubmit)="onSubmit()" class="lecturer-form">
+      <div class="form-grid">
+        <mat-form-field appearance="fill">
+          <mat-label>First Name</mat-label>
+          <input matInput formControlName="firstname" required>
+        </mat-form-field>
+
+         <mat-form-field appearance="fill">
+          <mat-label>Last Name</mat-label>
+          <input matInput formControlName="lastname">
+        </mat-form-field>
+
+          <mat-form-field appearance="fill">
+          <mat-label>Username</mat-label>
+          <input matInput formControlName="username">
+        </mat-form-field>
+
+        <mat-form-field appearance="fill">
+          <mat-label>Email</mat-label>
+          <input matInput formControlName="email" type="email" required>
+        </mat-form-field>
+
+      
+
+        <mat-form-field appearance="fill">
+          <mat-label>Phone Number</mat-label>
+          <input matInput formControlName="phone">
+        </mat-form-field>
+
+        <mat-form-field appearance="fill">
+          <mat-label>Default Password</mat-label>
+          <input matInput formControlName="defaultpassword">
+        </mat-form-field>
+
+        <!-- <mat-form-field appearance="fill">
+          <mat-label>Office Room</mat-label>
+          <input matInput formControlName="office">
+        </mat-form-field>
+
+        <mat-form-field appearance="fill">
+          <mat-label>Hire Date</mat-label>
+          <input matInput formControlName="hireDate" type="date">
+        </mat-form-field> -->
+      </div>
+
+      <mat-dialog-actions align="end" class="dialog-actions">
+        <button mat-button mat-dialog-close>Cancel</button>
+        <button mat-raised-button color="primary" type="submit">Add Lecturer</button>
+      </mat-dialog-actions>
+    </form>
+  </mat-dialog-content>
 </ng-template>

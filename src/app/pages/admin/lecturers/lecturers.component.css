@@ -152,3 +152,37 @@
 .empty-action-btn {
   margin-top: 16px;
 }
+
+
+
+
+
+
+
+
+/* ADD LECTURER */
+
+
+.dialog-content {
+  min-width: 400px;
+}
+
+.lecturer-form {
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+}
+
+.form-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr; /* two columns for desktop */
+  gap: 16px;
+}
+
+.mat-form-field {
+  width: 100%;
+}
+
+.dialog-actions {
+  margin-top: 20px;
+}

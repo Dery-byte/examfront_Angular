@@ -5,6 +5,7 @@ import Swal from 'sweetalert2';
 import { MatSnackBar } from '@angular/material/snack-bar';
 import { forkJoin } from 'rxjs';
 import { LoginService } from 'src/app/services/login.service';
+import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 
 @Component({
   selector: 'app-lecturers',
@@ -17,8 +18,10 @@ export class LecturersComponent {
   // students: any[] = [];
   filteredLecturers: any[] = [];
   searchText: string = '';
-
   lecturersEdit;
+
+  lecturerForm: FormGroup;
+
 
 
 
@@ -28,16 +31,67 @@ export class LecturersComponent {
     private _snack: MatSnackBar,
     public dialog: MatDialog,
     private login: LoginService,
-  ) { }
+    private fb: FormBuilder,
+  ) {
+    this.lecturerForm = this.fb.group({
+      firstname: ['', Validators.required],
+      lastname: ['', Validators.required],
+      email: ['', [Validators.required, Validators.email]],
+      username: ['', Validators.required],
+      phone: [''],
+      defaultpassword: ['', Validators.required],
+    });
+  }
 
   dialogRef!: MatDialogRef<any>;
 
-  ngOnInit(): void {
-    this.getAllStudents();
+  //  onSubmit() {
+  //   if (this.lecturerForm.valid) {
+  //     console.log(this.lecturerForm.value);
+  //     this.dialogRef.close(this.lecturerForm.value);
+  //   }
+  // }
+
+
+  openAddLecturerDialog(templateRef: any) {
+    const dialogRef = this.dialog.open(templateRef, {
+      width: '800px',
+    });
+
+    dialogRef.afterClosed().subscribe(() => {
+      this.lecturerForm.reset();
+    });
+  }
+
+  onSubmit() {
+    if (this.lecturerForm.valid) {
+      console.log('Lecturer Data:', this.lecturerForm.value.firstname);
+      // close the dialog
+      this.login.registerLecturer(this.lecturerForm.value).subscribe((data) => {
+        this._snack.open(`${this.lecturerForm.value.firstname} has been added`, "", {
+          duration: 3000,
+        });
+this.dialog.closeAll();
+        this.getAllLecturerss
+        
+      },
+        (error) => {
+          this._snack.open(`${this.lecturerForm.value.firstname} has been added`, "", {
+            duration: 3000,
+          });
+        });
+
+    }
   }
 
 
-  getAllStudents() {
+
+  ngOnInit(): void {
+    this.getAllLecturerss();
+  }
+
+
+  getAllLecturerss() {
     this._category.getAllLecturers().subscribe((data: any) => {
       this.lecturers = data;
       this.filteredLecturers = [...this.lecturers]; // Display ALL lecturers initially
