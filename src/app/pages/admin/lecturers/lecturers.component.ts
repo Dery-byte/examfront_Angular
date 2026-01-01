@@ -5,6 +5,7 @@ import Swal from 'sweetalert2';
 import { MatSnackBar } from '@angular/material/snack-bar';
 import { forkJoin } from 'rxjs';
 import { LoginService } from 'src/app/services/login.service';
+import { UserService } from 'src/app/services/user.service';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 
 @Component({
@@ -31,6 +32,7 @@ export class LecturersComponent {
     private _snack: MatSnackBar,
     public dialog: MatDialog,
     private login: LoginService,
+    private user:UserService,
     private fb: FormBuilder,
   ) {
     this.lecturerForm = this.fb.group({
@@ -39,7 +41,7 @@ export class LecturersComponent {
       email: ['', [Validators.required, Validators.email]],
       username: ['', Validators.required],
       phone: [''],
-      defaultpassword: ['', Validators.required],
+      password: ['', Validators.required],
     });
   }
 
@@ -63,26 +65,35 @@ export class LecturersComponent {
     });
   }
 
-  onSubmit() {
-    if (this.lecturerForm.valid) {
-      console.log('Lecturer Data:', this.lecturerForm.value.firstname);
-      // close the dialog
-      this.login.registerLecturer(this.lecturerForm.value).subscribe((data) => {
-        this._snack.open(`${this.lecturerForm.value.firstname} has been added`, "", {
+
+
+
+onSubmit() {
+  if (this.lecturerForm.valid) {
+    const lecturerData = this.lecturerForm.value;
+    // Call the service to register lecturer
+    this.user.registerLecturer(lecturerData).subscribe(
+      (data) => {
+        // Success snackbar
+        this._snack.open(`${lecturerData.firstname} has been added`, '', {
           duration: 3000,
         });
-this.dialog.closeAll();
-        this.getAllLecturerss
-        
+        // Close the dialog
+        this.dialog.closeAll();
+        // Refresh the lecturer list
+        this.getAllLecturerss(); // make sure this is a method
       },
-        (error) => {
-          this._snack.open(`${this.lecturerForm.value.firstname} has been added`, "", {
-            duration: 3000,
-          });
+      (error) => {
+        // Error snackbar
+        this._snack.open(`Failed to add ${lecturerData.firstname}`, '', {
+          duration: 3000,
         });
-
-    }
+        console.error('Error adding lecturer:', error);
+      }
+    );
   }
+}
+
 
 
 
