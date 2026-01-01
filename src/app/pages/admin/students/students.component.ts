@@ -90,7 +90,7 @@ export class StudentsComponent {
     this.students = this.getOneStudent(studentsId).subscribe((data) => {
       // console.log(this.category);
       this.studentEdit = data;
-      console.log("On opening the modal Student Details ",this.studentEdit);
+      console.log("On opening the modal Student Details ", this.studentEdit);
       this.dialogRef = this.dialog.open(templateRef, {
         width: '650px',
         data: this.studentEdit,
@@ -107,10 +107,10 @@ export class StudentsComponent {
 
 
 
- public updatestudent() {
+  updatestudent() {
     console.log('Student DEtails before persisting for Edit:', this.studentEdit);
     console.log('studentEdit.id:', this.studentEdit.id);
-    this._category.updateStudentss(this.studentEdit.id, this.studentEdit).subscribe((data) => {
+    this._category.updateStudent(this.studentEdit.id, this.studentEdit).subscribe((data) => {
       this._snack.open("This Student is Updated Successfully! ", "", {
         duration: 3000,
       });

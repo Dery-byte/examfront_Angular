@@ -100,7 +100,7 @@ export class CategoryService {
 
 
 
-     updateStudentss(studId:number, payload) {
+     updateStudent(studId:number, payload) {
     return this.http.put(`${baseUrl}/update/student/${studId}`, payload,
       {
         withCredentials: true
