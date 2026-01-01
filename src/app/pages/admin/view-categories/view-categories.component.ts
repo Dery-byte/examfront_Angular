@@ -226,6 +226,7 @@ assignCourse() {
           (data) => {
             this.categories = this.categories.filter((category) => category.cId != cId);
             Swal.fire("Success", "Course Deleted", "success");
+            this.getAllCategories();
           },
           (error) => {
             Swal.fire("Error", "Course could not be deleted", "error");
