@@ -13,16 +13,16 @@ import { LoginService } from 'src/app/services/login.service';
   styleUrls: ['./students.component.css']
 })
 export class StudentsComponent {
-students = [];
-// students: any[] = [];
+  students = [];
+  // students: any[] = [];
   filteredStudents: any[] = [];
   searchText: string = '';
-   studentEdit;
+  studentEdit;
 
 
 
 
-    constructor(
+  constructor(
     private _category: CategoryService,
     private _snack: MatSnackBar,
     public dialog: MatDialog,
@@ -36,11 +36,11 @@ students = [];
   }
 
 
-    getAllStudents(){
+  getAllStudents() {
     this._category.getAllStudent().subscribe((data: any) => {
       this.students = data;
       this.filteredStudents = [...this.students]; // Display ALL students initially
-        console.log('Loaded students:', this.students.length);
+      console.log('Loaded students:', this.students.length);
       console.log(this.students);
     },
       (error) => {
@@ -56,7 +56,7 @@ students = [];
 
   applyFilter() {
     const searchValue = this.searchText.toLowerCase().trim();
-     if (!searchValue) {
+    if (!searchValue) {
       this.filteredStudents = [...this.students];
       return;
     }
@@ -80,27 +80,48 @@ students = [];
 
 
 
-      // UPDATE THE CATEGORY
-    getOneStudent(studentsId: any): any {
-      return this._category.getStudentById(studentsId);
-    }
-    openUpdateStudent(studentsId: any, templateRef: TemplateRef<any>): void {
-      console.log(studentsId);
-      // Fetch question details based on ID
-      this.students = this.getOneStudent(studentsId).subscribe((data) => {
-        // console.log(this.category);
-        this.studentEdit = data;
-        console.log(this.studentEdit);
-        this.dialogRef = this.dialog.open(templateRef, {
-          width: '650px',
-          data: this.studentEdit,
-        })
+  // UPDATE THE CATEGORY
+  getOneStudent(studentsId: any): any {
+    return this._category.getStudentById(studentsId);
+  }
+  openUpdateStudent(studentsId: any, templateRef: TemplateRef<any>): void {
+    console.log(studentsId);
+    // Fetch question details based on ID
+    this.students = this.getOneStudent(studentsId).subscribe((data) => {
+      // console.log(this.category);
+      this.studentEdit = data;
+      console.log("On opening the modal Student Details ",this.studentEdit);
+      this.dialogRef = this.dialog.open(templateRef, {
+        width: '650px',
+        data: this.studentEdit,
+      })
+    });
+    this.dialogRef.afterClosed().subscribe(result => {
+      if (result) {
+        this.studentEdit = result;
+      }
+    });
+  }
+
+
+
+
+
+ public updatestudent() {
+    console.log('Student DEtails before persisting for Edit:', this.studentEdit);
+    console.log('studentEdit.id:', this.studentEdit.id);
+    this._category.updateStudentss(this.studentEdit.id, this.studentEdit).subscribe((data) => {
+      this._snack.open("This Student is Updated Successfully! ", "", {
+        duration: 3000,
       });
-      this.dialogRef.afterClosed().subscribe(result => {
-        if (result) {
-          this.studentEdit = result;
-        }
+      this.dialogRef.close(this.studentEdit);
+      this.ngOnInit();
+    },
+      (error) => {
+        this._snack.open("This student couldn't be updated", "", {
+          duration: 3000,
+        });
       });
-    }
-  
+  }
+
 }

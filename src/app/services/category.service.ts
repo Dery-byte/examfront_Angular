@@ -87,6 +87,28 @@ export class CategoryService {
     );
   }
 
+
+
+  //update category
+   updateLecturer(lectId:number, payload) {
+    return this.http.put(`${baseUrl}/update/lecturer/${lectId}`, payload,
+      {
+        withCredentials: true
+      }
+    );
+  }
+
+
+
+     updateStudentss(studId:number, payload) {
+    return this.http.put(`${baseUrl}/update/student/${studId}`, payload,
+      {
+        withCredentials: true
+      }
+    );
+  }
+
+
     // Fetch a single category by ID
   public getAllStudent() {
     return this.http.get(`${baseUrl}/all/students`,

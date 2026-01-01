@@ -14,7 +14,7 @@ import { LoginService } from 'src/app/services/login.service';
 export class LecturersComponent {
 
   lecturers = [];
-// students: any[] = [];
+  // students: any[] = [];
   filteredLecturers: any[] = [];
   searchText: string = '';
 
@@ -22,8 +22,8 @@ export class LecturersComponent {
 
 
 
-  
-    constructor(
+
+  constructor(
     private _category: CategoryService,
     private _snack: MatSnackBar,
     public dialog: MatDialog,
@@ -37,11 +37,11 @@ export class LecturersComponent {
   }
 
 
-    getAllStudents(){
+  getAllStudents() {
     this._category.getAllLecturers().subscribe((data: any) => {
       this.lecturers = data;
       this.filteredLecturers = [...this.lecturers]; // Display ALL lecturers initially
-        console.log('Loaded lecturers:', this.lecturers.length);
+      console.log('Loaded lecturers:', this.lecturers.length);
       console.log(this.lecturers);
     },
       (error) => {
@@ -57,7 +57,7 @@ export class LecturersComponent {
 
   applyFilter() {
     const searchValue = this.searchText.toLowerCase().trim();
-     if (!searchValue) {
+    if (!searchValue) {
       this.filteredLecturers = [...this.lecturers];
       return;
     }
@@ -77,7 +77,7 @@ export class LecturersComponent {
 
 
 
-    // UPDATE THE CATEGORY
+  // UPDATE THE CATEGORY
   getOneLecturer(lecturerId: any): any {
     return this._category.getLecturerById(lecturerId);
   }
@@ -100,5 +100,52 @@ export class LecturersComponent {
     });
   }
 
+
+
+
+
+
+
+
+  updateLecturer() {
+    console.log('categoryEdit:', this.lecturersEdit);
+    console.log('lecturersEdit.id:', this.lecturersEdit.id);
+    this._category.updateLecturer(this.lecturersEdit.id, this.lecturersEdit).subscribe((data) => {
+      this._snack.open("This Lecturer is Updated Successfully! ", "", {
+        duration: 3000,
+      });
+      this.dialogRef.close(this.lecturersEdit);
+      this.ngOnInit();
+    },
+      (error) => {
+        this._snack.open("This Lecturer couldn't be updated", "", {
+          duration: 3000,
+        });
+      });
+  }
+
+
+
+  // deleteCategor(cId) {
+  //   Swal.fire({
+  //     icon: "info",
+  //     title: "Are you sure of this ?",
+  //     confirmButtonText: "Delete",
+  //     showCancelButton: true,
+  //   }).then((results) => {
+  //     if (results.isConfirmed) {
+  //       //delete
+  //       this._category.deleteCategory(cId).subscribe(
+  //         (data) => {
+  //           this.categories = this.categories.filter((category) => category.cId != cId);
+  //           Swal.fire("Success", "Course Deleted", "success");
+  //         },
+  //         (error) => {
+  //           Swal.fire("Error", "Course could not be deleted", "error");
+  //         }
+  //       );
+  //     }
+  //   })
+  // }
 
 }

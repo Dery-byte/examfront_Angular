@@ -1,9 +1,5 @@
 
-
 <!-- {{students | json}} -->
-
-
-
 <mat-card class="elevated-card">
   <mat-card-header class="card-header">
     <div class="header-content">
@@ -84,7 +80,7 @@
               <mat-divider></mat-divider>
               <button mat-menu-item (click)="openUpdateLecturer(element.id, updateDialogCategory)" class="menu-item">
                 <mat-icon class="menu-icon">edit</mat-icon>
-                <span>Edit Student</span>
+                <span>Edit Lecturer</span>
               </button>
               <mat-divider></mat-divider>
               <button mat-menu-item (click)="deleteStudent(element.id)" class="menu-item delete-item">
@@ -108,7 +104,7 @@
         <p>{{ searchText ? 'Try adjusting your search criteria' : 'Get started by adding your first student' }}</p>
         <button *ngIf="!searchText" mat-raised-button color="primary" routerLink="/admin/add-student" class="empty-action-btn">
           <mat-icon>add</mat-icon>
-          Add Student
+          Add Lecturer
         </button>
         <button *ngIf="searchText" mat-raised-button (click)="clearSearch()" class="empty-action-btn">
           <mat-icon>clear</mat-icon>
@@ -180,8 +176,6 @@
           </mat-form-field>
         </div>
 
-        
-
         <!-- <mat-form-field appearance="outline" floatLabel="always">
           <mat-label>Academic Level</mat-label>
           <mat-select [(ngModel)]="categoryEdit.level" name="level" required>
@@ -197,17 +191,22 @@
           <textarea matInput [(ngModel)]="categoryEdit.description" name="description" rows="5"></textarea>
           <mat-icon matSuffix>description</mat-icon>
         </mat-form-field> -->
+
+
+
+
+
+
+
       </form>
     </div>
-
     <mat-divider></mat-divider>
-
     <div mat-dialog-actions class="dialog-actions">
       <button mat-button (click)="dialogRef.close()" class="cancel-btn">
         <mat-icon>close</mat-icon>
         Cancel
       </button>
-      <button mat-raised-button color="primary" (click)="updateCategoryData()" class="save-btn">
+      <button mat-raised-button color="primary" (click)="updateLecturer()" class="save-btn">
         <mat-icon>save</mat-icon>
         Update
       </button>
