@@ -1,8 +1,8 @@
-<!-- {{currentQuestions|json}}
+<!-- {{currentQuestions|json}} -->
 
-{{ qid| json}} -->
+<!-- {{ qid| json}}  -->
 
-{{totalTime() | json}}
+<!-- {{totalTime() | json}} -->
 
 <div class="bootstrap-wrapper">
     <!-- Loading Spinner -->
@@ -32,14 +32,43 @@
                     <mat-card-content>
                         <h1><b>Instructions</b></h1>
                         <ul>
-                            <li style="color: brown;">
-                                
-                                <span *ngIf="quiz.quizType=='OBJ'">Answer all questions in Section A.</span>
-                                <span *ngIf="quiz.quizType=='THEORY'"> Answer <b>{{numberOfQuestionsToAnswer}}</b> questions from section B.</span>
-                                <span *ngIf="quiz.quizType=='BOTH'"> Answer all questions in Section A and <b>{{numberOfQuestionsToAnswer}}</b> questions from section B.</span>
-                            </li>
+                            <!-- <li style="color: brown;">
 
-                                             
+                                <span *ngIf="quiz.quizType=='OBJ'">Answer all questions in Section A.</span>
+                                <span *ngIf="quiz.quizType=='THEORY'"> Answer <b>{{numberOfQuestionsToAnswer}}</b>
+                                    questions from section B.</span>
+                                <span *ngIf="quiz.quizType=='BOTH'"> Answer all questions in Section A and
+                                    <b>{{numberOfQuestionsToAnswer}}</b> questions from section B.</span>
+                            </li> -->
+
+                            <li style="color: brown;">
+                                <span *ngIf="quiz.quizType=='OBJ'">Answer all questions in Section A.</span>
+
+                                <span *ngIf="quiz.quizType=='THEORY'">
+                                    <span *ngIf="compulsoryPrefixes.length > 0">
+                                        Answer question(s) <b>{{ compulsoryPrefixes.join(', ') }}</b> (compulsory) and
+                                        any other
+                                        <b>{{ numberOfQuestionsToAnswer - compulsoryPrefixes.length }}</b> question(s)
+                                        from section B.
+                                    </span>
+                                    <span *ngIf="compulsoryPrefixes.length === 0">
+                                        Answer <b>{{numberOfQuestionsToAnswer}}</b> questions from section B.
+                                    </span>
+                                </span>
+
+                                <span *ngIf="quiz.quizType=='BOTH'">
+                                    Answer all questions in Section A and
+                                    <span *ngIf="compulsoryPrefixes.length > 0">
+                                        question(s) <b>{{ compulsoryPrefixes.join(', ') }}</b> (compulsory) plus any
+                                        other
+                                        <b>{{ numberOfQuestionsToAnswer - compulsoryPrefixes.length }}</b> question(s)
+                                        from section B.
+                                    </span>
+                                    <span *ngIf="compulsoryPrefixes.length === 0">
+                                        <b>{{numberOfQuestionsToAnswer}}</b> questions from section B.
+                                    </span>
+                                </span>
+                            </li>
 
                             <li>Do not refresh the page. You might get new questions</li>
                             <li>Do not switch tabs</li>
@@ -154,63 +183,62 @@
                 <!-- {{quiz|json}} -->
 
                 <!-- <div *ngIf="quiz.quizType=='OBJ'"> -->
-                    <div *ngIf="questions?.length>0">
-                        <div *ngIf="questions">
-                            <mat-card class="cards"
-                                style="font-family: 'Times New Roman', Times, serif; font-size:18px; color: white;text-align: center; background-color: purple;">
-                                <mat-label> SECTION A -{{(timeO * 60)/60}} minutes </mat-label>
-                            </mat-card>
-                        </div>
-                        <mat-card
-                            *ngFor="let q of questions| paginate:{itemsPerPage: tableSize, currentPage:page, totalItems:count}; let i = index"
-                            class="mt10">
-                            <mat-card-content>
-                                <span class="no-select">
-                                    <div class="row">
-                                        <div class="col-md-12">
-                                            <p> <b> Q {{q.count}} </b> <span class="ml10"
-                                                    [innerHTML]="q.content"></span>
-                                            </p>
-                                        </div>
-                                    </div>
-                                    <mat-divider></mat-divider>
-                                    <br />
-                                    <div class="row mt20">
-                                        <div class="col-md-6">
-                                            <mat-checkbox [checked]="q.givenAnswer.includes(q.option1)"
-                                                (change)="updateSelectedAnswers(q, q.option1, $event.checked)">
-                                                {{q.option1}}
-                                            </mat-checkbox>
-                                        </div>
-                                        <div class="col-md-6">
-                                            <mat-checkbox [checked]="q.givenAnswer.includes(q.option2)"
-                                                (change)="updateSelectedAnswers(q, q.option2, $event.checked)">
-                                                {{q.option2}}
-                                            </mat-checkbox>
-                                        </div>
-                                        <div class="col-md-6">
-                                            <mat-checkbox [checked]="q.givenAnswer.includes(q.option3)"
-                                                (change)="updateSelectedAnswers(q, q.option3, $event.checked)">
-                                                {{q.option3}}
-                                            </mat-checkbox>
-                                        </div>
-                                        <div class="col-md-6">
-                                            <mat-checkbox [checked]="q.givenAnswer.includes(q.option4)"
-                                                (change)="updateSelectedAnswers(q, q.option4, $event.checked)">
-                                                {{q.option4}}
-                                            </mat-checkbox>
-                                        </div>
-                                    </div>
-                                </span>
-                            </mat-card-content>
+                <div *ngIf="questions?.length>0">
+                    <div *ngIf="questions">
+                        <mat-card class="cards"
+                            style="font-family: 'Times New Roman', Times, serif; font-size:18px; color: white;text-align: center; background-color: purple;">
+                            <mat-label> SECTION A -{{(timeO * 60)/60}} minutes </mat-label>
                         </mat-card>
-                        <!-- PAGINATION -->
-                        <div>
-                            <pagination-controls previousLabel="Prev" nextLabel="Next"
-                                (pageChange)="onTableDataChange($event)">
-                            </pagination-controls>
-                        </div>
                     </div>
+                    <mat-card
+                        *ngFor="let q of questions| paginate:{itemsPerPage: tableSize, currentPage:page, totalItems:count}; let i = index"
+                        class="mt10">
+                        <mat-card-content>
+                            <span class="no-select">
+                                <div class="row">
+                                    <div class="col-md-12">
+                                        <p> <b> Q {{q.count}} </b> <span class="ml10" [innerHTML]="q.content"></span>
+                                        </p>
+                                    </div>
+                                </div>
+                                <mat-divider></mat-divider>
+                                <br />
+                                <div class="row mt20">
+                                    <div class="col-md-6">
+                                        <mat-checkbox [checked]="q.givenAnswer.includes(q.option1)"
+                                            (change)="updateSelectedAnswers(q, q.option1, $event.checked)">
+                                            {{q.option1}}
+                                        </mat-checkbox>
+                                    </div>
+                                    <div class="col-md-6">
+                                        <mat-checkbox [checked]="q.givenAnswer.includes(q.option2)"
+                                            (change)="updateSelectedAnswers(q, q.option2, $event.checked)">
+                                            {{q.option2}}
+                                        </mat-checkbox>
+                                    </div>
+                                    <div class="col-md-6">
+                                        <mat-checkbox [checked]="q.givenAnswer.includes(q.option3)"
+                                            (change)="updateSelectedAnswers(q, q.option3, $event.checked)">
+                                            {{q.option3}}
+                                        </mat-checkbox>
+                                    </div>
+                                    <div class="col-md-6">
+                                        <mat-checkbox [checked]="q.givenAnswer.includes(q.option4)"
+                                            (change)="updateSelectedAnswers(q, q.option4, $event.checked)">
+                                            {{q.option4}}
+                                        </mat-checkbox>
+                                    </div>
+                                </div>
+                            </span>
+                        </mat-card-content>
+                    </mat-card>
+                    <!-- PAGINATION -->
+                    <div>
+                        <pagination-controls previousLabel="Prev" nextLabel="Next"
+                            (pageChange)="onTableDataChange($event)">
+                        </pagination-controls>
+                    </div>
+                </div>
                 <!-- </div> -->
 
 
@@ -358,6 +386,8 @@
 
 
                 <!-- subjective questions here -->
+
+
                 <div *ngIf="currentQuestions.length>0; else elseBlock">
                     <mat-card>
                         <mat-card class="cards"
@@ -365,9 +395,18 @@
                             <mat-label> SECTION B -{{(timeT * 60)/60}} minutes </mat-label>
                         </mat-card>
                         <form>
+                            <!-- Add compulsory alert here -->
+                            <mat-card class="cards" *ngIf="isCurrentGroupCompulsory()"
+                                style="margin: 20px; padding: 15px; font-size:16px; color: white; text-align: center; background-color: #d32f2f; border: 2px solid #b71c1c;">
+                                <mat-icon style="vertical-align: middle;">warning</mat-icon>
+                                <strong>COMPULSORY SECTION - All questions in {{prefixes[currentPage]}} must be
+                                    answered</strong>
+                            </mat-card>
+
                             <mat-card class="cards"
                                 style=" margin: 20px;font-size:18px; color: white;text-align: center; background-color: rgb(86, 82, 82);">
                             </mat-card>
+
                             <div *ngFor="let question of currentQuestions; let i = index">
                                 <mat-card-content class="mat-card-content">
                                     <input type="checkbox" [checked]="question.selected"
@@ -376,17 +415,19 @@
                                         <mat-label>
                                             <span class="no-select">
                                                 {{question.quesNo}} {{ question.question }} {{question.marks}}
+                                                <!-- <span *ngIf="question.isCompulsory"
+                                                    style="color: red; font-weight: bold;"> *COMPULSORY*</span> -->
                                             </span>
                                         </mat-label>
                                         <textarea class="input" [name]="'givenAnswer' + i"
                                             [(ngModel)]="question.givenAnswer" matInput rows="2"
-                                            (ngModelChange)="saveAnswers()" >
-                                        </textarea>
+                                            (ngModelChange)="saveAnswers()">
+                        </textarea>
                                     </mat-form-field>
-                                    <!-- (paste)="disablePaste($event)" -->
                                 </mat-card-content>
                             </div>
                         </form>
+                        <!-- Rest of your code... -->
                         <mat-card-actions>
                             <mat-card>
                                 <div class="container navselect">
@@ -405,16 +446,23 @@
                                                     [disabled]="currentPage === prefixes.length - 1">Next</button>
                                             </div>
                                         </div>
+
+
                                         <div class="col-md-6">
                                             <mat-card-title
-                                                style="font-size: 16px; font-family: 'Times New Roman', Times, serif; color: blueviolet;">Select
-                                                {{numberOfQuestionsToAnswer}} set(s) of questions
-                                                answered!</mat-card-title>
+                                                style="font-size: 16px; font-family: 'Times New Roman', Times, serif; color: blueviolet;">
+                                                Select {{numberOfQuestionsToAnswer}} set(s) of questions answered!
+                                            </mat-card-title>
                                             <div *ngIf="prefixes.length > 0" class="prefix-container">
                                                 <div *ngFor="let prefix of prefixes" class="prefix-item">
                                                     <mat-checkbox [checked]="selectedQuestions[prefix]"
-                                                        (change)="togglePrefixSelection(prefix)">
+                                                        (change)="togglePrefixSelection(prefix)"
+                                                        [disabled]="isGroupCompulsory(prefix)">
                                                         {{ prefix }}
+                                                        <span *ngIf="isGroupCompulsory(prefix)"
+                                                            style="color: red; font-weight: bold; margin-left: 5px;">
+                                                            ⚠ COMPULSORY
+                                                        </span>
                                                     </mat-checkbox>
                                                 </div>
                                             </div>
@@ -430,6 +478,24 @@
                             [disabled]="isSubmitDisabled">Submit Quiz</button>
                     </div>
                 </div>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
                 <!-- BUTTON TO SHOW IS SUBJECTIVE IS NOT INCLUDED -->
                 <ng-template #elseBlock>
                     <div class="contianer centerbtn mt20 mb20">
@@ -439,11 +505,11 @@
             </div>
 
             <!-- <div class="large-devices col-md-2 fixed-card"> -->
-                <!-- <mat-card class="cards"> -->
-                    <mat-card-content>
-                        <h1 class="text-center"> Time Left: <i>{{ getFormmatedTime() }} </i></h1>
-                    </mat-card-content>
-                <!-- </mat-card> -->
+            <!-- <mat-card class="cards"> -->
+            <mat-card-content>
+                <h1 class="text-center"> Time Left: <i>{{ getFormmatedTime() }} </i></h1>
+            </mat-card-content>
+            <!-- </mat-card> -->
             <!-- </div> -->
         </div>
     </div>

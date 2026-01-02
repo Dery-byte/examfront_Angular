@@ -6,4 +6,5 @@ export interface Question {
     tqId: number;
     quesNo:number
     selected?: boolean; // Optional property to track selection state
+    isCompulsory?:boolean;
   }

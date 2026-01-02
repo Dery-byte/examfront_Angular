@@ -65,16 +65,6 @@ interface Quiz {
   category: Category;
 }
 
-// interface Question {
-//   quesNo: string;
-//   question: string;
-//   answer: string | null;
-//   marks: string;
-//   quiz: Quiz;
-//   tqId: number;  // Make sure this is included
-//   givenAnswer: string;
-//   selected: boolean;
-// }
 // =============================
 
 @Component({
@@ -86,7 +76,6 @@ export class StartComponent implements OnInit {
 
   // BEGIN PAGINATION
   private readonly QUIZ_STORAGE_KEY = 'quiz_answers_by_prefix';
-
 
   title = "pagination";
   page: number = 1;
@@ -148,14 +137,10 @@ export class StartComponent implements OnInit {
   //  sectionB;
 
   sectionB: any[] = [];
-
   question: Question[] = [];
   geminiResponse: any[] = [];
   geminiResponseAI
-
   sectionBMarks;
-
-
   theoryResults = {
     marksB: "",
     quiz: {
@@ -177,9 +162,25 @@ export class StartComponent implements OnInit {
     this.quizForm = this.fb.group(formGroupConfig);
   }
 
+  // get isSubmitDisabled(): boolean {
+  //   return Object.keys(this.selectedQuestions).length !== this.numberOfQuestionsToAnswer;
+  // }
+
+
+
+
   get isSubmitDisabled(): boolean {
-    return Object.keys(this.selectedQuestions).length !== this.numberOfQuestionsToAnswer;
-  }
+  // Count selected groups
+  const selectedCount = Object.values(this.selectedQuestions).filter(val => val === true).length;
+  // Get compulsory groups
+  const compulsoryGroups = this.prefixes.filter(prefix => this.isGroupCompulsory(prefix));
+  // Check if all compulsory groups are selected
+  const allCompulsorySelected = compulsoryGroups.every(prefix => this.selectedQuestions[prefix] === true);
+  // Check if total selected equals required (including compulsory)
+  const hasCorrectTotal = selectedCount === this.numberOfQuestionsToAnswer;
+  // Disable if compulsory groups aren't selected OR wrong total count
+  return !allCompulsorySelected || !hasCorrectTotal;
+}
   //  ============================SUBJECTIVE QUESTIONS=======================================
 
 
@@ -251,10 +252,7 @@ export class StartComponent implements OnInit {
   ngOnInit(): void {
         // this.screenshotPrevention.enableProtection();
     this.isLoading = true; // Set loading to true when starting
-
-
     this.qid = this._route.snapshot.params['qid'];
-
     console.log(this.qid)
     // this.qid = this._route.snapshot.params['qid'];
     this._quiz.getQuiz(this.qid).subscribe((data: any) => {
@@ -394,7 +392,12 @@ export class StartComponent implements OnInit {
       // this.sectionB = theory;
       this.groupedQuestions = this.getQuestionsGroupedByPrefix(theory);
 
-      this.prefixes = Object.keys(this.groupedQuestions).sort();
+      // Sort prefixes: compulsory groups first
+      this.prefixes = this.sortPrefixesByCompulsory(this.groupedQuestions);
+            this.compulsoryPrefixes = this.getCompulsoryPrefixes();
+
+
+      // this.prefixes = Object.keys(this.groupedQuestions).sort();
 
       this.loadQuestionsTheory();
 
@@ -414,6 +417,58 @@ export class StartComponent implements OnInit {
         this.isLoading = false;
       });
   }
+
+  getCompulsoryPrefixes(): string[] {
+  return this.prefixes.filter(prefix => this.isGroupCompulsory(prefix));
+}
+
+
+
+
+
+  // Check if current page/group is compulsory
+isCurrentGroupCompulsory(): boolean {
+  if (!this.currentQuestions || this.currentQuestions.length === 0) {
+    return false;
+  }
+  return this.currentQuestions.every(q => q.isCompulsory);
+}
+
+
+
+// Check if a specific group is compulsory
+isGroupCompulsory(prefix: string): boolean {
+  const questions = this.groupedQuestions[prefix];
+  if (!questions || questions.length === 0) {
+    return false;
+  }
+  return questions.every((q: any) => q.isCompulsory);
+}
+
+sortPrefixesByCompulsory(groupedQuestions: any): string[] {
+  const prefixes = Object.keys(groupedQuestions);
+  
+  return prefixes.sort((prefixA, prefixB) => {
+    const questionsA = groupedQuestions[prefixA];
+    const questionsB = groupedQuestions[prefixB];
+    
+    // Check if all questions in group A are compulsory
+    const isGroupACompulsory = questionsA.every((q: any) => q.isCompulsory);
+    
+    // Check if all questions in group B are compulsory
+    const isGroupBCompulsory = questionsB.every((q: any) => q.isCompulsory);
+    
+    // Compulsory groups come first
+    if (isGroupACompulsory && !isGroupBCompulsory) return -1;
+    if (!isGroupACompulsory && isGroupBCompulsory) return 1;
+    
+    // If both are compulsory or both are not, sort alphabetically/numerically
+    return prefixA.localeCompare(prefixB, undefined, { numeric: true });
+  });
+}
+
+
+  
   getQuestionsGroupedByPrefix(questions) {
     return questions.reduce((acc, question) => {
       const prefix = question.quesNo.match(/^[A-Za-z]+[0-9]+/)[0];
@@ -448,8 +503,16 @@ export class StartComponent implements OnInit {
   //   return this.groupedQuestions[key] || [];  // Returns Question[] or empty array
   // }
   public currentQuestions: Question[] = [];
+  compulsoryPrefixes: string[] = [];
+
 
   loadQuestionsTheory(): void {
+    // Auto-select compulsory groups
+  this.prefixes.forEach(prefix => {
+    if (this.isGroupCompulsory(prefix)) {
+      this.selectedQuestions[prefix] = true;
+    }
+  });
     const key = this.prefixes[this.currentPage];
     this.currentQuestions = this.groupedQuestions[key] || [];
     this.loadSavedAnswers(); // load into currentQuestions
@@ -458,31 +521,51 @@ export class StartComponent implements OnInit {
 
 
 
-  togglePrefixSelection(prefix: string) {
-    if (this.selectedQuestions[prefix]) {
-      // Deselect all sub-questions
-      this.groupedQuestions[prefix].forEach(question => question.selected = false);
-      delete this.selectedQuestions[prefix];
-    } else {
-      if (Object.keys(this.groupedQuestions).length >= this.numberOfQuestionsToAnswer) {
-        // Select all sub-questions
-        this.groupedQuestions[prefix].forEach(question => question.selected = true);
-        this.selectedQuestions[prefix] = true;
-      }
-      else {
-        alert('You can only select ' + this.numberOfQuestionsToAnswer + ' set(s) of questions.');
-        this._snack.open(`You can only select ${this.numberOfQuestionsToAnswer} sets of questions`, "", {
-          duration: 3000,
-        });
-      }
-    }
+  // togglePrefixSelection(prefix: string) {
+  //     if (this.isGroupCompulsory(prefix)) {
+  //   this.selectedQuestions[prefix] = true;
+  //   return;
+  // }
+  //   this.selectedQuestions[prefix] = !this.selectedQuestions[prefix];
+  //   if (this.selectedQuestions[prefix]) {
+  //     // Deselect all sub-questions
+  //     this.groupedQuestions[prefix].forEach(question => question.selected = false);
+  //     delete this.selectedQuestions[prefix];
+  //   } else {
+  //     if (Object.keys(this.groupedQuestions).length >= this.numberOfQuestionsToAnswer) {
+  //       // Select all sub-questions
+  //       this.groupedQuestions[prefix].forEach(question => question.selected = true);
+  //       this.selectedQuestions[prefix] = true;
+  //     }
+  //     else {
+  //       alert('You can only select ' + this.numberOfQuestionsToAnswer + ' set(s) of questions.');
+  //       this._snack.open(`You can only select ${this.numberOfQuestionsToAnswer} sets of questions`, "", {
+  //         duration: 3000,
+  //       });
+  //     }
+  //   }
 
+  // }
+
+
+
+
+
+// Prevent deselection of compulsory groups
+togglePrefixSelection(prefix: string): void {
+  // Prevent deselection of compulsory groups
+  if (this.isGroupCompulsory(prefix)) {
+    this.selectedQuestions[prefix] = true;
+    alert(`${prefix} contains compulsory questions and cannot be deselected.`);
+    return;
   }
-
+  // Toggle for non-compulsory groups
+  this.selectedQuestions[prefix] = !this.selectedQuestions[prefix];
+  console.log('After toggle:', this.selectedQuestions);
+}
   // disableOtherSelection(){
   //   Object.keys(this.selectedQuestions).length = this.numberOfQuestionsToAnswer
   // }
-
 
   onPrefixChange(prefix: string) {
     this.selectedPrefix = prefix;
@@ -507,7 +590,6 @@ export class StartComponent implements OnInit {
 
   nextPage() {
     this.saveAnswers(); // save answers BEFORE changing the page
-
     if (this.currentPage < this.prefixes.length - 1) {
       this.currentPage++;
       this.loadQuestionsTheory(); // make sure this sets currentQuestions
@@ -519,7 +601,6 @@ export class StartComponent implements OnInit {
 
   prevPage() {
     this.saveAnswers(); // save before page change
-
     if (this.currentPage > 0) {
       this.currentPage--;
       this.loadQuestionsTheory();
