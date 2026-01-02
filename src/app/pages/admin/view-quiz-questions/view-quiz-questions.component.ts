@@ -102,6 +102,14 @@ export class ViewQuizQuestionsComponent implements OnInit {
       }
     );
 
+
+      // Initialize compulsory prefixes if you have saved data
+    this.getPrefixes().forEach(prefix => {
+        const questions = this.getGroupedQuestions(prefix);
+        // Check if any question in this prefix is marked as compulsory
+        this.compulsoryPrefixes[prefix] = questions.some(q => q.isCompulsory);
+    });
+
   }
 
 
@@ -320,5 +328,24 @@ export class ViewQuizQuestionsComponent implements OnInit {
       }
     });
   }
+
+
+
+  // Add this property to track compulsory prefixes
+compulsoryPrefixes: { [key: string]: boolean } = {};
+
+// Add this method to handle checkbox changes
+onCompulsoryChange(prefix: string, isCompulsory: boolean): void {
+    console.log(`Prefix "${prefix}" compulsory status:`, isCompulsory);
+    
+    // Update all questions with this prefix
+    const questions = this.getGroupedQuestions(prefix);
+    questions.forEach(question => {
+        question.isCompulsory = isCompulsory;
+        // You can also make an API call here to save this status
+        // this.updateQuestionCompulsoryStatus(question.tqId, isCompulsory);
+    });
+}
+
 
 }

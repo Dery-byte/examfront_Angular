@@ -26,3 +26,25 @@ mat-card {
 
 
 
+
+
+
+.compulsory-card {
+    background-color: #dbee71 !important; /* Light orange */
+    transition: background-color 0.3s ease;
+}
+
+.compulsory-card-accent {
+    background-color: #58052c !important; /* Light blue */
+    transition: background-color 0.3s ease;
+}
+
+.compulsory-card-warn {
+    background-color: #c40b27 !important; /* Light red */
+    transition: background-color 0.3s ease;
+}
+
+.compulsory-card-success {
+    background-color: #e8f5e9 !important; /* Light green */
+    transition: background-color 0.3s ease;
+}
