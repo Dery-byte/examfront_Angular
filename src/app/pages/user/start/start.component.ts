@@ -246,6 +246,8 @@ export class StartComponent implements OnInit {
   //  ============================SUBJECTIVE QUESTIONS=======================================
 
 
+
+
   ngOnInit(): void {
         // this.screenshotPrevention.enableProtection();
     this.isLoading = true; // Set loading to true when starting
@@ -368,6 +370,14 @@ export class StartComponent implements OnInit {
 
   }
 
+
+
+
+  totalTime(): number {
+  const timeT = Number(this.timeT) || 0;
+  const quizTime = Number(this.quiz.quizTime) || 0;
+  return timeT + quizTime;
+}
 
   // loadNumQuesToAnswer() {
   //   this._quiz.getNumerOfQuesToAnswer(this.qid).subscribe((data: any) => {
@@ -721,7 +731,6 @@ export class StartComponent implements OnInit {
       cancelButtonText: "Cancel"
     }).then((e) => {
       if (e.isConfirmed) {
-
         // Show the loading spinner
         this.clearSavedAnswers();
         Swal.fire({
@@ -748,13 +757,7 @@ export class StartComponent implements OnInit {
             title: 'Evaluated!',
             text: `Your results for ${this.courseTitle} is available for print on the dashboard.`,
           });
-          
-          // .then(() => {
-          //   window.close();
-          //   this.router.navigate(['/user-dashboard/0']); // Better than window.location
-          // });
-
-            setTimeout(() => {
+                  setTimeout(() => {
             window.close();
             if (window.opener) {
               window.opener.location.href = '/user-dashboard/0';
@@ -785,50 +788,90 @@ export class StartComponent implements OnInit {
   }
 
 
-  async startTimer() {
-    let t = window.setInterval(async () => {
-      //Code
-      if (this.timerAll <= 0) {
-        // this.submitQuiz();
-        // this.triggerAddSectBMarks();
-        // localStorage.removeItem("countdown_timer");
-        this.evalQuiz();
-        this.waitNavigateFunction();
-        this.loadQuestionsWithAnswers();
-        await this.evalSubjective();            // ✅ Wait here
-        // this.loadSubjectiveAIEval();
-        // this.getGrandTotalMarks();
-        this.preventBackButton();
-        // this.addSectBMarks();
-        clearInterval(t);
-        // localStorage.removeItem("exam");
-        // this.preventBackButton();
-      }
-      else {
-        this.timerAll--;
-      }
-    }, 1000);
-  }
+  // async startTimer() {
+  //   let t = window.setInterval(async () => {
+  //     //Code
+  //     if (this.timerAll <= 0) {
+  //       // this.submitQuiz();
+  //       // this.triggerAddSectBMarks();
+  //       // localStorage.removeItem("countdown_timer");
+  //       this.evalQuiz();
+  //       this.waitNavigateFunction();
+  //       this.loadQuestionsWithAnswers();
+  //       await this.evalSubjective();            // ✅ Wait here
+  //       // this.loadSubjectiveAIEval();
+  //       // this.getGrandTotalMarks();
+  //       this.preventBackButton();
+  //       // this.addSectBMarks();
+  //       clearInterval(t);
+  //       // localStorage.removeItem("exam");
+  //       // this.preventBackButton();
+  //     }
+  //     else {
+  //       this.timerAll--;
+  //     }
+  //   }, 1000);
+  // }
+
+
+
+
+
+
+
+
+
+
+  startTimer() {
+  // convert minutes → seconds ONCE
+  this.timerAll = this.totalTime() * 60;
+  let t = window.setInterval(async () => {
+    if (this.timerAll <= 0) {
+      this.evalQuiz();
+      this.waitNavigateFunction();
+      this.loadQuestionsWithAnswers();
+      await this.evalSubjective();
+      this.preventBackButton();
+      clearInterval(t);
+    } else {
+      this.timerAll--; // ✅ ticks every second
+    }
+  }, 1000);
+}
+
   // DISABLE PASTE
   // disablePaste(event: ClipboardEvent): void {
   //   event.preventDefault();
   // }
 
 
-  getFormmatedTime() {
-    // let timeToseconds = this.timerAll * 60
-    let hr = Math.floor(this.timerAll / 3600);
-    let mm = Math.floor((this.timerAll % 3600) / 60);
-    let ss = this.timerAll % 60;
+  // getFormmatedTime() {
+  //   // let timeToseconds = this.timerAll * 60
+  //   let hr = Math.floor(this.timerAll / 3600);
+  //   let mm = Math.floor((this.timerAll % 3600) / 60);
+  //   let ss = this.timerAll % 60;
 
-    console.log(hr, mm, ss)
-    let formattedTime = '';
-    if (hr > 0) {
-      formattedTime += `${hr} hr(s) : `;
-    }
-    formattedTime += `${mm} min : ${ss} sec`;
-    return formattedTime;
+  //   console.log(hr, mm, ss)
+  //   let formattedTime = '';
+  //   if (hr > 0) {
+  //     formattedTime += `${hr} hr(s) : `;
+  //   }
+  //   formattedTime += `${mm} min : ${ss} sec`;
+  //   return formattedTime;
+  // }
+
+getFormmatedTime(): string {
+  const hr = Math.floor(this.timerAll / 3600);
+  const mm = Math.floor((this.timerAll % 3600) / 60);
+  const ss = this.timerAll % 60;
+
+  let formattedTime = '';
+  if (hr > 0) {
+    formattedTime += `${hr} hr(s) : `;
   }
+  formattedTime += `${mm} min : ${ss} sec`;
+  return formattedTime;
+}
 
 
   evalQuiz() {
