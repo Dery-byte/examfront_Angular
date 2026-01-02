@@ -82,6 +82,7 @@ export class ViewQuizQuestionsComponent implements OnInit {
     this._question.getSubjective(this.qId).subscribe((theory: any) => {
       console.log(theory);
       this.sectionB = theory;
+      this.initializeCompulsoryStatus();
     },
       (error) => {
         this._snack.open("You're Session has expired! ", "", {
@@ -112,6 +113,23 @@ export class ViewQuizQuestionsComponent implements OnInit {
 
   }
 
+
+  initializeCompulsoryStatus(): void {
+    this.getPrefixes().forEach(prefix => {
+        const questions = this.getGroupedQuestions(prefix);
+        
+        // Check if ALL questions in this prefix are marked as compulsory
+        // OR if ANY question is compulsory (choose based on your requirement)
+        
+        // Option 1: If ANY question is compulsory, mark the whole prefix as compulsory
+        this.compulsoryPrefixes[prefix] = questions.some(q => q.isCompulsory === true);
+        
+        // Option 2: Only if ALL questions are compulsory (uncomment if you prefer this)
+        // this.compulsoryPrefixes[prefix] = questions.length > 0 && questions.every(q => q.isCompulsory === true);
+        
+        console.log(`Prefix ${prefix} compulsory status:`, this.compulsoryPrefixes[prefix]);
+    });
+}
 
 
   dialogRef!: MatDialogRef<any>;
@@ -316,7 +334,6 @@ export class ViewQuizQuestionsComponent implements OnInit {
             this._snack.open("Question Deleted ", "", {
               duration: 3000,
             });
-
             this.questions = this.questions.filter((q) => q.quesId != qId);
           });
       }
@@ -333,17 +350,36 @@ export class ViewQuizQuestionsComponent implements OnInit {
 
   // Add this property to track compulsory prefixes
 compulsoryPrefixes: { [key: string]: boolean } = {};
-
-// Add this method to handle checkbox changes
+isUpdatingCompulsory: { [key: string]: boolean } = {}; // Add this property to your component
 onCompulsoryChange(prefix: string, isCompulsory: boolean): void {
     console.log(`Prefix "${prefix}" compulsory status:`, isCompulsory);
-    
-    // Update all questions with this prefix
-    const questions = this.getGroupedQuestions(prefix);
-    questions.forEach(question => {
-        question.isCompulsory = isCompulsory;
-        // You can also make an API call here to save this status
-        // this.updateQuestionCompulsoryStatus(question.tqId, isCompulsory);
+    const quizId = this.qId;
+    // Show loading state
+    this.isUpdatingCompulsory[prefix] = true;
+    this._question.setCompulsoryQuestion(quizId, prefix, isCompulsory).subscribe({
+        next: (response: any) => {
+            console.log('Compulsory status updated successfully', response);
+            // Update local state
+            const questions = this.getGroupedQuestions(prefix);
+            questions.forEach(question => {
+                question.isCompulsory = isCompulsory;
+            });
+            // Hide loading state
+            this.isUpdatingCompulsory[prefix] = false;
+             this._snack.open(`${prefix} compulsory status updated successfully`, "", {
+          duration: 3000,
+        });
+        },
+        error: (error) => {
+            console.error('Error updating compulsory status:', error);
+            // Revert the toggle
+            this.compulsoryPrefixes[prefix] = !isCompulsory;
+            // Hide loading state
+            this.isUpdatingCompulsory[prefix] = false;
+                this._snack.open(`${prefix} compulsory status updated successfully`, "", {
+          duration: 3000,
+        });
+        }
     });
 }
 

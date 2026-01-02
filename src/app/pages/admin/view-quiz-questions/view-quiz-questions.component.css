@@ -1,25 +1,28 @@
-.mt10{
-    margin-top: 10px;
+.mt10 {
+  margin-top: 10px;
 }
+
 mat-card {
-    margin: 10px 0;
-  }
-  
-  .mat-card-content p {
-    margin: 5px 0; /* Adjust the margin as needed */
-  }
-  
-  .mat-card-header {
-    padding-bottom: 0; /* Reduce the padding if needed */
-  }
-  
+  margin: 10px 0;
+}
 
-  .w100{
-    width: 100%;
+.mat-card-content p {
+  margin: 5px 0;
+  /* Adjust the margin as needed */
+}
+
+.mat-card-header {
+  padding-bottom: 0;
+  /* Reduce the padding if needed */
 }
 
 
-.more_verti{
+.w100 {
+  width: 100%;
+}
+
+
+.more_verti {
   margin-bottom: -5px;
   background-color: rgb(241, 239, 243);
 }
@@ -30,21 +33,25 @@ mat-card {
 
 
 .compulsory-card {
-    background-color: #dbee71 !important; /* Light orange */
-    transition: background-color 0.3s ease;
+  background-color: #557c7c !important;
+  /* Light orange */
+  transition: background-color 0.3s ease;
 }
 
 .compulsory-card-accent {
-    background-color: #58052c !important; /* Light blue */
-    transition: background-color 0.3s ease;
+  background-color: #58052c !important;
+  /* Light blue */
+  transition: background-color 0.3s ease;
 }
 
 .compulsory-card-warn {
-    background-color: #c40b27 !important; /* Light red */
-    transition: background-color 0.3s ease;
+  background-color: #c40b27 !important;
+  /* Light red */
+  transition: background-color 0.3s ease;
 }
 
 .compulsory-card-success {
-    background-color: #e8f5e9 !important; /* Light green */
-    transition: background-color 0.3s ease;
+  background-color: #e8f5e9 !important;
+  /* Light green */
+  transition: background-color 0.3s ease;
 }

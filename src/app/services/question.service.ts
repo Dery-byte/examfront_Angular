@@ -24,7 +24,7 @@ export class QuestionService {
 
 
   // GET THE QUESTIONS FOR LECTURERE
-    public getQuestionsOfQuizforLecturer(qid) {
+  public getQuestionsOfQuizforLecturer(qid) {
     return this._http.get(`${baseUrl}/questions/quiz/all/${qid}`, {
       withCredentials: true
     });
@@ -171,9 +171,9 @@ export class QuestionService {
   // };
 
 
-    public evalQuiz(qid, question) {
+  public evalQuiz(qid, question) {
     return this._http.post(`${baseUrl}/question/eval-quiz/${qid}`, question,
-      {withCredentials: true}
+      { withCredentials: true }
     )
       .pipe(
         tap(() => {
@@ -226,6 +226,20 @@ export class QuestionService {
       withCredentials: true
     });
   }
+
+
+
+
+  public setCompulsoryQuestion(quizId: number, prefix: string, isCompulsory: boolean) {
+    return this._http.put(
+      `${baseUrl}/update-compulsory/${quizId}/${prefix}?isCompulsory=${isCompulsory}`, null,
+      {
+           withCredentials: true,
+      responseType: 'text' as 'json'
+    }
+    );
+  }
+
 
 }
 
