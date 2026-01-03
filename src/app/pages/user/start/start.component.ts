@@ -118,7 +118,7 @@ export class StartComponent implements OnInit {
   courseTitle
   quiz
   noOfQuesObject;
-  private countdownKey = 'countdown_timer';
+  // private countdownKey = 'countdown_timer';
   private intervalId: any;
 
 
@@ -210,8 +210,9 @@ export class StartComponent implements OnInit {
   @HostListener('window:beforeunload', ['$event'])
   beforeUnloadHandler(event: Event): void {
     // Custom code to be executed before the page is unloaded
-    localStorage.setItem(this.countdownKey, JSON.stringify(this.timerAll));
-    console.log('countdownKey:', this.countdownKey);
+    this.saveTimerToDatabase();
+    // localStorage.setItem(this.countdownKey, JSON.stringify(this.timerAll));
+    // console.log('countdownKey:', this.countdownKey);
     console.log('timerAll:', this.timerAll);
 
     console.log("Helllooooo...")
@@ -227,29 +228,8 @@ export class StartComponent implements OnInit {
     this.preventBackButton();
   }
 
-  //  ============================SUBJECTIVE QUESTIONS=======================================
 
-  // onSubmitt() {
-  //   Swal.fire({
-  //     title: "Do you want to submit the questions answered?",
-  //     showCancelButton: true,
-  //     confirmButtonText: "Submit",
-  //     icon: "info",
-  //   }).then((e) => {
-  //     if (e.isConfirmed) {
-  //       const selectedQuestions = [];
-  //       for (const prefix in this.selectedQuestions) {
-  //         selectedQuestions.push(...this.groupedQuestions[prefix]);
-  //       }
-  //       if (Object.keys(this.selectedQuestions).length === this.numberOfQuestionsToAnswer) {
-  //         // Handle the submission logic here
-  //         console.log('Submitted Questions:', selectedQuestions);
-  //       } else {
-  //         alert('Please select exactly 2 sets of questions to submit.');
-  //       }
-  //     };
-  //   });
-  // }
+
   //  ============================SUBJECTIVE QUESTIONS=======================================
 
 
@@ -328,9 +308,9 @@ export class StartComponent implements OnInit {
       console.log("This is the time for the Theory ", this.timeT);
 
 
-      let timerString = localStorage.getItem('countdown_timer');
-      const timerNumber = parseInt(timerString, 10);
-      console.log(typeof (timerNumber));
+      // let timerString = localStorage.getItem('countdown_timer');
+      // const timerNumber = parseInt(timerString, 10);
+      // console.log(typeof (timerNumber));
 
       // if (timerNumber) {
       //   this.timerAll = timerNumber;
@@ -745,7 +725,6 @@ export class StartComponent implements OnInit {
   }
 
   startTimer() {
-    // convert minutes → seconds ONCE
     this.timerAll = this.totalTime() * 60;
     let t = window.setInterval(async () => {
       if (this.timerAll <= 0) {
@@ -1143,24 +1122,17 @@ export class StartComponent implements OnInit {
 
   // Clear all answers for current quiz
 clearSavedAnswers(): void {
-  if (confirm('Are you sure you want to clear all answers for this quiz?')) {
     this.quiz_progress.clearAnswers(this.qid).subscribe({
       next: (response) => {
         console.log(response.message);
         // Clear UI
         this.currentQuestions.forEach((q: any) => {
           q.givenAnswer = '';
-        });
-        
-        // Optional: Show success message to user
-        // this.showSuccessMessage('All answers cleared successfully');
+        })
       },
       error: (error) => {
-        console.error('Error clearing answers:', error);
-        // this.showErrorMessage('Failed to clear answers. Please try again.');
-      }
+        console.error('Error clearing answers:', error);      }
     });
-  }
 }
 
 
@@ -1523,6 +1495,7 @@ private initializeTimer(): void {
     
     // Auto-submit the quiz
     this.submitQuiz();
+    this.submitAllQuiz();
   }
 
 
