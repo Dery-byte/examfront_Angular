@@ -8,6 +8,9 @@ import { Question } from 'src/model testing/model';
 import { FormBuilder, Validators, FormGroup } from '@angular/forms';
 import { LoginService } from 'src/app/services/login.service';
 import { MatSnackBar } from '@angular/material/snack-bar';
+import { QuizProgressService } from 'src/app/services/quiz-progress.service';
+import { QuizAnswerRequest } from 'src/app/services/quiz-progress.service';
+import { UserQuizAnswersResponse } from 'src/app/services/quiz-progress.service';
 
 import Swal from 'sweetalert2';
 import { ScreenshotPreventionService } from 'src/app/services/ScreenshotPreventionService ';
@@ -170,17 +173,17 @@ export class StartComponent implements OnInit {
 
 
   get isSubmitDisabled(): boolean {
-  // Count selected groups
-  const selectedCount = Object.values(this.selectedQuestions).filter(val => val === true).length;
-  // Get compulsory groups
-  const compulsoryGroups = this.prefixes.filter(prefix => this.isGroupCompulsory(prefix));
-  // Check if all compulsory groups are selected
-  const allCompulsorySelected = compulsoryGroups.every(prefix => this.selectedQuestions[prefix] === true);
-  // Check if total selected equals required (including compulsory)
-  const hasCorrectTotal = selectedCount === this.numberOfQuestionsToAnswer;
-  // Disable if compulsory groups aren't selected OR wrong total count
-  return !allCompulsorySelected || !hasCorrectTotal;
-}
+    // Count selected groups
+    const selectedCount = Object.values(this.selectedQuestions).filter(val => val === true).length;
+    // Get compulsory groups
+    const compulsoryGroups = this.prefixes.filter(prefix => this.isGroupCompulsory(prefix));
+    // Check if all compulsory groups are selected
+    const allCompulsorySelected = compulsoryGroups.every(prefix => this.selectedQuestions[prefix] === true);
+    // Check if total selected equals required (including compulsory)
+    const hasCorrectTotal = selectedCount === this.numberOfQuestionsToAnswer;
+    // Disable if compulsory groups aren't selected OR wrong total count
+    return !allCompulsorySelected || !hasCorrectTotal;
+  }
   //  ============================SUBJECTIVE QUESTIONS=======================================
 
 
@@ -196,6 +199,7 @@ export class StartComponent implements OnInit {
     private _snack: MatSnackBar,
     private _questions: QuestionService,
     private router: Router,
+    private quiz_progress: QuizProgressService,
     private screenshotPrevention: ScreenshotPreventionService,
 
   ) {
@@ -250,7 +254,7 @@ export class StartComponent implements OnInit {
 
 
   ngOnInit(): void {
-        // this.screenshotPrevention.enableProtection();
+    // this.screenshotPrevention.enableProtection();
     this.isLoading = true; // Set loading to true when starting
     this.qid = this._route.snapshot.params['qid'];
     console.log(this.qid)
@@ -364,7 +368,7 @@ export class StartComponent implements OnInit {
     this.preventBackButton();
 
 
-        this.screenshotPrevention.enableProtection();
+    this.screenshotPrevention.enableProtection();
 
   }
 
@@ -372,10 +376,10 @@ export class StartComponent implements OnInit {
 
 
   totalTime(): number {
-  const timeT = Number(this.timeT) || 0;
-  const quizTime = Number(this.quiz.quizTime) || 0;
-  return timeT + quizTime;
-}
+    const timeT = Number(this.timeT) || 0;
+    const quizTime = Number(this.quiz.quizTime) || 0;
+    return timeT + quizTime;
+  }
 
   // loadNumQuesToAnswer() {
   //   this._quiz.getNumerOfQuesToAnswer(this.qid).subscribe((data: any) => {
@@ -394,7 +398,7 @@ export class StartComponent implements OnInit {
 
       // Sort prefixes: compulsory groups first
       this.prefixes = this.sortPrefixesByCompulsory(this.groupedQuestions);
-            this.compulsoryPrefixes = this.getCompulsoryPrefixes();
+      this.compulsoryPrefixes = this.getCompulsoryPrefixes();
 
 
       // this.prefixes = Object.keys(this.groupedQuestions).sort();
@@ -419,56 +423,56 @@ export class StartComponent implements OnInit {
   }
 
   getCompulsoryPrefixes(): string[] {
-  return this.prefixes.filter(prefix => this.isGroupCompulsory(prefix));
-}
+    return this.prefixes.filter(prefix => this.isGroupCompulsory(prefix));
+  }
 
 
 
 
 
   // Check if current page/group is compulsory
-isCurrentGroupCompulsory(): boolean {
-  if (!this.currentQuestions || this.currentQuestions.length === 0) {
-    return false;
+  isCurrentGroupCompulsory(): boolean {
+    if (!this.currentQuestions || this.currentQuestions.length === 0) {
+      return false;
+    }
+    return this.currentQuestions.every(q => q.isCompulsory);
   }
-  return this.currentQuestions.every(q => q.isCompulsory);
-}
 
 
 
-// Check if a specific group is compulsory
-isGroupCompulsory(prefix: string): boolean {
-  const questions = this.groupedQuestions[prefix];
-  if (!questions || questions.length === 0) {
-    return false;
+  // Check if a specific group is compulsory
+  isGroupCompulsory(prefix: string): boolean {
+    const questions = this.groupedQuestions[prefix];
+    if (!questions || questions.length === 0) {
+      return false;
+    }
+    return questions.every((q: any) => q.isCompulsory);
   }
-  return questions.every((q: any) => q.isCompulsory);
-}
 
-sortPrefixesByCompulsory(groupedQuestions: any): string[] {
-  const prefixes = Object.keys(groupedQuestions);
-  
-  return prefixes.sort((prefixA, prefixB) => {
-    const questionsA = groupedQuestions[prefixA];
-    const questionsB = groupedQuestions[prefixB];
-    
-    // Check if all questions in group A are compulsory
-    const isGroupACompulsory = questionsA.every((q: any) => q.isCompulsory);
-    
-    // Check if all questions in group B are compulsory
-    const isGroupBCompulsory = questionsB.every((q: any) => q.isCompulsory);
-    
-    // Compulsory groups come first
-    if (isGroupACompulsory && !isGroupBCompulsory) return -1;
-    if (!isGroupACompulsory && isGroupBCompulsory) return 1;
-    
-    // If both are compulsory or both are not, sort alphabetically/numerically
-    return prefixA.localeCompare(prefixB, undefined, { numeric: true });
-  });
-}
+  sortPrefixesByCompulsory(groupedQuestions: any): string[] {
+    const prefixes = Object.keys(groupedQuestions);
+
+    return prefixes.sort((prefixA, prefixB) => {
+      const questionsA = groupedQuestions[prefixA];
+      const questionsB = groupedQuestions[prefixB];
+
+      // Check if all questions in group A are compulsory
+      const isGroupACompulsory = questionsA.every((q: any) => q.isCompulsory);
+
+      // Check if all questions in group B are compulsory
+      const isGroupBCompulsory = questionsB.every((q: any) => q.isCompulsory);
+
+      // Compulsory groups come first
+      if (isGroupACompulsory && !isGroupBCompulsory) return -1;
+      if (!isGroupACompulsory && isGroupBCompulsory) return 1;
+
+      // If both are compulsory or both are not, sort alphabetically/numerically
+      return prefixA.localeCompare(prefixB, undefined, { numeric: true });
+    });
+  }
 
 
-  
+
   getQuestionsGroupedByPrefix(questions) {
     return questions.reduce((acc, question) => {
       const prefix = question.quesNo.match(/^[A-Za-z]+[0-9]+/)[0];
@@ -508,11 +512,11 @@ sortPrefixesByCompulsory(groupedQuestions: any): string[] {
 
   loadQuestionsTheory(): void {
     // Auto-select compulsory groups
-  this.prefixes.forEach(prefix => {
-    if (this.isGroupCompulsory(prefix)) {
-      this.selectedQuestions[prefix] = true;
-    }
-  });
+    this.prefixes.forEach(prefix => {
+      if (this.isGroupCompulsory(prefix)) {
+        this.selectedQuestions[prefix] = true;
+      }
+    });
     const key = this.prefixes[this.currentPage];
     this.currentQuestions = this.groupedQuestions[key] || [];
     this.loadSavedAnswers(); // load into currentQuestions
@@ -521,48 +525,22 @@ sortPrefixesByCompulsory(groupedQuestions: any): string[] {
 
 
 
-  // togglePrefixSelection(prefix: string) {
-  //     if (this.isGroupCompulsory(prefix)) {
-  //   this.selectedQuestions[prefix] = true;
-  //   return;
-  // }
-  //   this.selectedQuestions[prefix] = !this.selectedQuestions[prefix];
-  //   if (this.selectedQuestions[prefix]) {
-  //     // Deselect all sub-questions
-  //     this.groupedQuestions[prefix].forEach(question => question.selected = false);
-  //     delete this.selectedQuestions[prefix];
-  //   } else {
-  //     if (Object.keys(this.groupedQuestions).length >= this.numberOfQuestionsToAnswer) {
-  //       // Select all sub-questions
-  //       this.groupedQuestions[prefix].forEach(question => question.selected = true);
-  //       this.selectedQuestions[prefix] = true;
-  //     }
-  //     else {
-  //       alert('You can only select ' + this.numberOfQuestionsToAnswer + ' set(s) of questions.');
-  //       this._snack.open(`You can only select ${this.numberOfQuestionsToAnswer} sets of questions`, "", {
-  //         duration: 3000,
-  //       });
-  //     }
-  //   }
-
-  // }
 
 
 
 
-
-// Prevent deselection of compulsory groups
-togglePrefixSelection(prefix: string): void {
   // Prevent deselection of compulsory groups
-  if (this.isGroupCompulsory(prefix)) {
-    this.selectedQuestions[prefix] = true;
-    alert(`${prefix} contains compulsory questions and cannot be deselected.`);
-    return;
+  togglePrefixSelection(prefix: string): void {
+    // Prevent deselection of compulsory groups
+    if (this.isGroupCompulsory(prefix)) {
+      this.selectedQuestions[prefix] = true;
+      alert(`${prefix} contains compulsory questions and cannot be deselected.`);
+      return;
+    }
+    // Toggle for non-compulsory groups
+    this.selectedQuestions[prefix] = !this.selectedQuestions[prefix];
+    console.log('After toggle:', this.selectedQuestions);
   }
-  // Toggle for non-compulsory groups
-  this.selectedQuestions[prefix] = !this.selectedQuestions[prefix];
-  console.log('After toggle:', this.selectedQuestions);
-}
   // disableOtherSelection(){
   //   Object.keys(this.selectedQuestions).length = this.numberOfQuestionsToAnswer
   // }
@@ -574,7 +552,7 @@ togglePrefixSelection(prefix: string): void {
 
 
   nextPage() {
-    this.saveAnswers(); // save answers BEFORE changing the page
+    // this.saveAnswers(); // save answers BEFORE changing the page
     if (this.currentPage < this.prefixes.length - 1) {
       this.currentPage++;
       this.loadQuestionsTheory(); // make sure this sets currentQuestions
@@ -585,7 +563,7 @@ togglePrefixSelection(prefix: string): void {
 
 
   prevPage() {
-    this.saveAnswers(); // save before page change
+    // this.saveAnswers(); // save before page change
     if (this.currentPage > 0) {
       this.currentPage--;
       this.loadQuestionsTheory();
@@ -611,51 +589,6 @@ togglePrefixSelection(prefix: string): void {
 
 
 
-
-  // loadQuestions(): void {
-  //   this._questions.getQuestionsOfQuiz(this.qid).subscribe((data: any) => {
-  //     this._questions.getQuestionsOfQuizForText(this.qid).subscribe((data: any) => {  
-  //     // this._questions.getQuestionsOfQuizForText(1).subscribe((data: any) => {  // this does the question shuffle on start of quiz
-  //     console.log(data[0].answer);
-  //     console.log("This is quest data",data);
-  //     this.questions = data.map((q, index) => {
-  //       q.count = index + 1;
-  //       q['givenAnswer'] = [];
-  //       console.log(this.questions)
-
-  //       return q;
-
-  //     });
-
-  //   });
-  //   },
-  //     (error) => {
-  //       console.log("Error Loading questions");
-  //       Swal.fire("Error", "Error loading questions", "error");
-  //     }
-  //   );
-  //   this.preventBackButton();
-  // }
-
-
-
-
-
-
-
-  // updateSelectedAnswers(q: any, option: string, isChecked: boolean) {
-  //   if (isChecked) {
-  //     // Add the option to the givenAnswer array if it's checked
-  //     q.givenAnswer.push(option);
-  //   } else {
-  //     // Remove the option from the givenAnswer array if it's unchecked
-  //     const index = q.givenAnswer.indexOf(option);
-  //     if (index !== -1) {
-  //       q.givenAnswer.splice(index, 1);
-  //     }
-  //   }
-  // }
-
   loadQuestionsWithAnswers() {
     this._questions.getQuestionsOfQuiz(this.qid).subscribe((data: any) => {
       this.questionWithAnswers = data;
@@ -677,29 +610,6 @@ togglePrefixSelection(prefix: string): void {
       history.pushState(null, null, location.href);
     });
   }
-
-
-  // submitQuiz() {
-  //   // this.evalSubjective();
-  //   Swal.fire({
-  //     title: "Do you want to submit the quiz ?",
-  //     showCancelButton: true,
-  //     confirmButtonText: "Submit",
-  //     icon: "info",
-  //   }).then((e) => {
-  //     if (e.isConfirmed) {
-  //       this.evalQuiz();
-  //       // this.triggerAddSectBMarks();
-  //       // localStorage.removeItem("countdown_timer");
-  //       // this.waitNavigateFunction();
-  //       this.loadQuestionsWithAnswers();
-  //       this.evalSubjective();
-  //       // this.loadSubjectiveAIEval();
-  //       // this.getGrandTotalMarks();
-  //       this.preventBackButton();
-  //     };
-  //   });
-  // }
 
 
 
@@ -731,6 +641,7 @@ togglePrefixSelection(prefix: string): void {
           this.evalQuiz();
           this.waitNavigateFunction();
           this.loadQuestionsWithAnswers();
+          this.clearProgress()
           // this.evalSubjective();
           this.preventBackButton();
 
@@ -742,14 +653,6 @@ togglePrefixSelection(prefix: string): void {
             timer: 1000,        // ⬅ auto-close after 1.2 seconds
             showConfirmButton: false
           });
-          // // then(() => {
-          //   // Navigate the MAIN window (correct)
-          //     window.close();
-          //   if (window.opener) {
-          //     window.opener.location.href = '/user-dashboard/0';
-          //   }
-          //   // Close the limited browser window
-          // });
           setTimeout(() => {
             window.close();
             if (window.opener) {
@@ -765,28 +668,16 @@ togglePrefixSelection(prefix: string): void {
   }
 
 
-  // submitAllQuiz() {
-  //   // this.evalSubjective();
-  //   Swal.fire({
-  //     title: "Do you want to submit the quiz ?",
-  //     showCancelButton: true,
-  //     confirmButtonText: "Submit",
-  //     icon: "info",
-  //   }).then((e) => {
-  //     if (e.isConfirmed) {
-  //       // EVALUATE THE SUBJECTIVE
-  //       this.evalQuiz();
-  //       // this.triggerAddSectBMarks();
-  //       // localStorage.removeItem("countdown_timer");
-  //       this.waitNavigateFunction();
-  //       this.loadQuestionsWithAnswers();
-  //       this.evalSubjective();
-  //       // this.loadSubjectiveAIEval();
-  //       // this.getGrandTotalMarks();
-  //       this.preventBackButton();
-  //     };
-  //   });
-  // }
+  clearProgress() {
+    this.quiz_progress.clearQuizAnswers(this.qid).subscribe((data: any) => {
+      console.log("Quiz Progress has been cleared!!")
+    },
+      (error) => {
+        console.log("Error clraring quiz progress");
+      }
+    );
+  }
+
 
   async submitAllQuiz() {
     Swal.fire({
@@ -814,7 +705,7 @@ togglePrefixSelection(prefix: string): void {
           this.waitNavigateFunction();
           this.loadQuestionsWithAnswers();
           await this.evalSubjective();            // ✅ Wait here
-
+          this.clearProgress()
           this.preventBackButton();
 
           // Optional: Close the spinner and show success message
@@ -823,7 +714,7 @@ togglePrefixSelection(prefix: string): void {
             title: 'Evaluated!',
             text: `Your results for ${this.courseTitle} is available for print on the dashboard.`,
           });
-                  setTimeout(() => {
+          setTimeout(() => {
             window.close();
             if (window.opener) {
               window.opener.location.href = '/user-dashboard/0';
@@ -889,21 +780,21 @@ togglePrefixSelection(prefix: string): void {
 
 
   startTimer() {
-  // convert minutes → seconds ONCE
-  this.timerAll = this.totalTime() * 60;
-  let t = window.setInterval(async () => {
-    if (this.timerAll <= 0) {
-      this.evalQuiz();
-      this.waitNavigateFunction();
-      this.loadQuestionsWithAnswers();
-      await this.evalSubjective();
-      this.preventBackButton();
-      clearInterval(t);
-    } else {
-      this.timerAll--; // ✅ ticks every second
-    }
-  }, 1000);
-}
+    // convert minutes → seconds ONCE
+    this.timerAll = this.totalTime() * 60;
+    let t = window.setInterval(async () => {
+      if (this.timerAll <= 0) {
+        this.evalQuiz();
+        this.waitNavigateFunction();
+        this.loadQuestionsWithAnswers();
+        await this.evalSubjective();
+        this.preventBackButton();
+        clearInterval(t);
+      } else {
+        this.timerAll--; // ✅ ticks every second
+      }
+    }, 1000);
+  }
 
   // DISABLE PASTE
   // disablePaste(event: ClipboardEvent): void {
@@ -926,18 +817,18 @@ togglePrefixSelection(prefix: string): void {
   //   return formattedTime;
   // }
 
-getFormmatedTime(): string {
-  const hr = Math.floor(this.timerAll / 3600);
-  const mm = Math.floor((this.timerAll % 3600) / 60);
-  const ss = this.timerAll % 60;
+  getFormmatedTime(): string {
+    const hr = Math.floor(this.timerAll / 3600);
+    const mm = Math.floor((this.timerAll % 3600) / 60);
+    const ss = this.timerAll % 60;
 
-  let formattedTime = '';
-  if (hr > 0) {
-    formattedTime += `${hr} hr(s) : `;
+    let formattedTime = '';
+    if (hr > 0) {
+      formattedTime += `${hr} hr(s) : `;
+    }
+    formattedTime += `${mm} min : ${ss} sec`;
+    return formattedTime;
   }
-  formattedTime += `${mm} min : ${ss} sec`;
-  return formattedTime;
-}
 
 
   evalQuiz() {
@@ -1301,18 +1192,18 @@ getFormmatedTime(): string {
 
 
   saved
-  loadSavedAnswers() {
-    const saved = localStorage.getItem('savedAnswers');
-    if (saved) {
-      const savedAnswers = JSON.parse(saved);
-      this.currentQuestions.forEach((question: any) => {
-        const savedQ = savedAnswers.find((sq: any) => sq.quesNo === question.quesNo);
-        if (savedQ) {
-          question.givenAnswer = savedQ.givenAnswer;
-        }
-      });
-    }
-  }
+  // loadSavedAnswers() {
+  //   const saved = localStorage.getItem('savedAnswers');
+  //   if (saved) {
+  //     const savedAnswers = JSON.parse(saved);
+  //     this.currentQuestions.forEach((question: any) => {
+  //       const savedQ = savedAnswers.find((sq: any) => sq.quesNo === question.quesNo);
+  //       if (savedQ) {
+  //         question.givenAnswer = savedQ.givenAnswer;
+  //       }
+  //     });
+  //   }
+  // }
 
 
   clearSavedAnswers(): void {
@@ -1396,6 +1287,7 @@ getFormmatedTime(): string {
       (data: any) => {
         // Get all stored answers from localStorage
         const storedAnswers = JSON.parse(localStorage.getItem('selectedAnswers') || '{}');
+        this.loadSavedAnswers();
 
         this.questions = data.map((q, index) => {
           // Add count property for display purposes
@@ -1434,15 +1326,13 @@ getFormmatedTime(): string {
   }
 
 
-
   updateSelectedAnswers(q: any, option: string, isChecked: boolean) {
-    // Initialize storage if needed
+
+    // Update local state immediately for responsive UI
     if (!q.givenAnswer) {
       q.givenAnswer = [];
     }
-    // Get all stored answers from localStorage
-    const allStoredAnswers = JSON.parse(localStorage.getItem('selectedAnswers') || '{}');
-    // Handle adding or removing the option from current question's answers
+
     if (isChecked) {
       if (!q.givenAnswer.includes(option)) {
         q.givenAnswer.push(option);
@@ -1453,43 +1343,85 @@ getFormmatedTime(): string {
         q.givenAnswer.splice(index, 1);
       }
     }
-    allStoredAnswers[q.quesId] = [...q.givenAnswer]; // Create a copy to avoid reference issues
-    localStorage.setItem('selectedAnswers', JSON.stringify(allStoredAnswers));
-    // 🔍 Debugging Logs
-    console.log("✅ Updated Question ID:", q.quesId);
-    console.log("➡️ Option Changed:", option, "Checked:", isChecked);
-    console.log("📦 Current givenAnswer:", q.givenAnswer);
-    console.log("🗃️ All storedAnswers:", allStoredAnswers);
-    return q.givenAnswer;
-  }
 
+    // Create a copy to avoid reference issues
+    const currentAnswers = [...q.givenAnswer];
 
+    // Save to database
+    const request: QuizAnswerRequest = {
+      questionId: q.quesId,
+      option: option,
+      checked: isChecked,
+      quizId: this.qid
+    };
 
-
-
-  
-
-    // In your component
-  private saveAnswers(): void {
-    const storageKey = 'savedAnswers';
-    const existing = localStorage.getItem(storageKey);
-    let savedAnswers = existing ? JSON.parse(existing) : [];
-
-    // Merge currentQuestions into savedAnswers
-    this.currentQuestions.forEach((currentQ: any) => {
-      const index = savedAnswers.findIndex((q: any) => q.quesNo === currentQ.quesNo);
-      if (index !== -1) {
-        savedAnswers[index].givenAnswer = currentQ.givenAnswer; // update existing
-      } else {
-        savedAnswers.push({
-          quesNo: currentQ.quesNo,
-          givenAnswer: currentQ.givenAnswer,
-        }); // keep only what's necessary
+    this.quiz_progress.updateAnswer(request).subscribe({
+      next: (response) => {
+        if (response.selectedOptions && Array.isArray(response.selectedOptions)) {
+          console.log("Server returned:", response.selectedOptions);
+          console.log("Local state:", currentAnswers);
+        }
+      },
+      error: (error) => {
+        console.error("❌ Error saving answer:", error);
+        // Revert local changes on error
+        q.givenAnswer = currentAnswers;
       }
     });
 
-    localStorage.setItem(storageKey, JSON.stringify(savedAnswers));
+    return q.givenAnswer;
   }
+
+  loadSavedAnswers() {
+    // Load all saved answers for this quiz
+    this.quiz_progress.getAnswersByQuiz(this.qid).subscribe({
+      next: (response: UserQuizAnswersResponse) => {
+        console.log("📥 Loaded saved answers:", response);
+
+        // Map saved answers to questions
+        this.questions.forEach((q: any) => {
+          // Check if this question has saved answers
+          if (response.answers && response.answers[q.quesId]) {
+            q.givenAnswer = response.answers[q.quesId]; // Get array of selected options
+          } else {
+            q.givenAnswer = []; // Initialize empty array
+          }
+        });
+
+        console.log("✅ Questions with answers:", this.questions);
+      },
+      error: (error) => {
+        console.error("❌ Error loading saved answers:", error);
+        // Initialize all questions with empty arrays
+        this.questions.forEach((q: any) => {
+          q.givenAnswer = [];
+        });
+      }
+    });
+  }
+
+
+  // In your component
+  // private saveAnswers(): void {
+  //   const storageKey = 'savedAnswers';
+  //   const existing = localStorage.getItem(storageKey);
+  //   let savedAnswers = existing ? JSON.parse(existing) : [];
+
+  //   // Merge currentQuestions into savedAnswers
+  //   this.currentQuestions.forEach((currentQ: any) => {
+  //     const index = savedAnswers.findIndex((q: any) => q.quesNo === currentQ.quesNo);
+  //     if (index !== -1) {
+  //       savedAnswers[index].givenAnswer = currentQ.givenAnswer; // update existing
+  //     } else {
+  //       savedAnswers.push({
+  //         quesNo: currentQ.quesNo,
+  //         givenAnswer: currentQ.givenAnswer,
+  //       }); // keep only what's necessary
+  //     }
+  //   });
+
+  //   localStorage.setItem(storageKey, JSON.stringify(savedAnswers));
+  // }
 
 
 

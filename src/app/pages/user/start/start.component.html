@@ -198,25 +198,25 @@
                                 <br />
                                 <div class="row mt20">
                                     <div class="col-md-6">
-                                        <mat-checkbox [checked]="q.givenAnswer.includes(q.option1)"
+                                        <mat-checkbox [checked]="q.givenAnswer?.includes(q.option1) || false"
                                             (change)="updateSelectedAnswers(q, q.option1, $event.checked)">
                                             {{q.option1}}
                                         </mat-checkbox>
                                     </div>
                                     <div class="col-md-6">
-                                        <mat-checkbox [checked]="q.givenAnswer.includes(q.option2)"
+                                        <mat-checkbox [checked]="q.givenAnswer?.includes(q.option2) || false"
                                             (change)="updateSelectedAnswers(q, q.option2, $event.checked)">
                                             {{q.option2}}
                                         </mat-checkbox>
                                     </div>
                                     <div class="col-md-6">
-                                        <mat-checkbox [checked]="q.givenAnswer.includes(q.option3)"
+                                        <mat-checkbox [checked]="q.givenAnswer?.includes(q.option3) || false"
                                             (change)="updateSelectedAnswers(q, q.option3, $event.checked)">
                                             {{q.option3}}
                                         </mat-checkbox>
                                     </div>
                                     <div class="col-md-6">
-                                        <mat-checkbox [checked]="q.givenAnswer.includes(q.option4)"
+                                        <mat-checkbox [checked]="q.givenAnswer?.includes(q.option4) || false"
                                             (change)="updateSelectedAnswers(q, q.option4, $event.checked)">
                                             {{q.option4}}
                                         </mat-checkbox>
