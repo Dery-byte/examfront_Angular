@@ -1235,7 +1235,7 @@ clearSavedAnswers(): void {
         this.isLoading = false;
         // 🔍 Final questions array check
         console.log("✅ Final loaded questions:", this.questions);
-        this.startTimer();
+        // this.startTimer();
 
       },
       (error) => {
@@ -1418,7 +1418,6 @@ private showWarningMessage(message: string): void {
 
 private initializeTimer(): void {
     // const quizId = this.quiz.id;
-
     this.quiz_progress.getQuizTimer(this.qid).subscribe({
       next: (savedTimer) => {
         if (savedTimer && savedTimer.remainingTime > 0) {
