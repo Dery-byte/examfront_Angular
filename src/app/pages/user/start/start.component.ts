@@ -570,22 +570,7 @@ togglePrefixSelection(prefix: string): void {
   onPrefixChange(prefix: string) {
     this.selectedPrefix = prefix;
   }
-  // nextPage() {
-  //   if (this.currentPage < this.prefixes.length - 1) {
-  //     this.currentPage++;
-  //     this.saveAnswers();
-  //         // this.loadSavedAnswers();
 
-  //   }
-  // }
-  // prevPage() {
-  //   if (this.currentPage > 0) {
-  //     this.currentPage--;
-  //     this.saveAnswers();
-  //         // this.loadSavedAnswers();
-
-  //   }
-  // }
 
 
   nextPage() {
@@ -1312,27 +1297,6 @@ getFormmatedTime(): string {
   //PESISTING THEORY EVEN ON PAGE REFRESH
 
 
-  // In your component
-  private saveAnswers(): void {
-    const storageKey = 'savedAnswers';
-    const existing = localStorage.getItem(storageKey);
-    let savedAnswers = existing ? JSON.parse(existing) : [];
-
-    // Merge currentQuestions into savedAnswers
-    this.currentQuestions.forEach((currentQ: any) => {
-      const index = savedAnswers.findIndex((q: any) => q.quesNo === currentQ.quesNo);
-      if (index !== -1) {
-        savedAnswers[index].givenAnswer = currentQ.givenAnswer; // update existing
-      } else {
-        savedAnswers.push({
-          quesNo: currentQ.quesNo,
-          givenAnswer: currentQ.givenAnswer,
-        }); // keep only what's necessary
-      }
-    });
-
-    localStorage.setItem(storageKey, JSON.stringify(savedAnswers));
-  }
 
 
 
@@ -1476,10 +1440,8 @@ getFormmatedTime(): string {
     if (!q.givenAnswer) {
       q.givenAnswer = [];
     }
-
     // Get all stored answers from localStorage
     const allStoredAnswers = JSON.parse(localStorage.getItem('selectedAnswers') || '{}');
-
     // Handle adding or removing the option from current question's answers
     if (isChecked) {
       if (!q.givenAnswer.includes(option)) {
@@ -1491,23 +1453,44 @@ getFormmatedTime(): string {
         q.givenAnswer.splice(index, 1);
       }
     }
-
-    // Update the specific question's answers in the overall storage object
-    // Using question ID as the unique key to avoid conflicts
     allStoredAnswers[q.quesId] = [...q.givenAnswer]; // Create a copy to avoid reference issues
-
-    // Save all answers back to localStorage
     localStorage.setItem('selectedAnswers', JSON.stringify(allStoredAnswers));
-
     // 🔍 Debugging Logs
     console.log("✅ Updated Question ID:", q.quesId);
     console.log("➡️ Option Changed:", option, "Checked:", isChecked);
     console.log("📦 Current givenAnswer:", q.givenAnswer);
     console.log("🗃️ All storedAnswers:", allStoredAnswers);
-
-    // Return the updated answers (useful for reactive frameworks)
     return q.givenAnswer;
   }
+
+
+
+
+
+  
+
+    // In your component
+  private saveAnswers(): void {
+    const storageKey = 'savedAnswers';
+    const existing = localStorage.getItem(storageKey);
+    let savedAnswers = existing ? JSON.parse(existing) : [];
+
+    // Merge currentQuestions into savedAnswers
+    this.currentQuestions.forEach((currentQ: any) => {
+      const index = savedAnswers.findIndex((q: any) => q.quesNo === currentQ.quesNo);
+      if (index !== -1) {
+        savedAnswers[index].givenAnswer = currentQ.givenAnswer; // update existing
+      } else {
+        savedAnswers.push({
+          quesNo: currentQ.quesNo,
+          givenAnswer: currentQ.givenAnswer,
+        }); // keep only what's necessary
+      }
+    });
+
+    localStorage.setItem(storageKey, JSON.stringify(savedAnswers));
+  }
+
 
 
 };
