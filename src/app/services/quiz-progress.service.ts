@@ -1,7 +1,8 @@
-import { Injectable } from '@angular/core';
-import { HttpClient } from '@angular/common/http';
-import { Observable } from 'rxjs';
 import baseUrl from './helper';
+import { Injectable } from '@angular/core';
+import { HttpClient, HttpHeaders } from '@angular/common/http';
+import { Observable, throwError } from 'rxjs';
+import { catchError, map } from 'rxjs/operators';
 
 export interface QuizAnswerRequest {
   questionId: number;
@@ -17,6 +18,16 @@ export interface QuizAnswerResponse {
 
 export interface UserQuizAnswersResponse {
   answers: { [key: number]: string[] };
+}
+
+
+export interface QuizTimerResponse {
+  remainingTime: number;
+  updatedAt: string;
+}
+
+export interface QuizTimerRequest {
+  remainingTime: number;
 }
 
 @Injectable({
@@ -101,4 +112,66 @@ export class QuizProgressService {
       }
     );
   }
+
+
+
+
+
+
+
+  // TIMER FOR THE QUIZ_STORAGE_KEY
+ getQuizTimer(quizId: number): Observable<QuizTimerResponse | null> {
+    return this.http.get<QuizTimerResponse>(`${baseUrl}/quiz-timer/getRemainingTime/${quizId}`,
+        {
+        withCredentials: true
+      }
+    )
+      .pipe(
+        catchError(error => {
+          if (error.status === 404) {
+            // No timer found, return null
+            return [null];
+          }
+          console.error('Error fetching quiz timer:', error);
+          return throwError(() => error);
+        })
+      );
+  }
+
+
+   saveQuizTimer(quizId: number, remainingTime: number): Observable<QuizTimerResponse> {
+    const request: QuizTimerRequest = { remainingTime };
+    return this.http.post<QuizTimerResponse>(`${baseUrl}/quiz-timer/saveRemainingTime/${quizId}`,request,
+        {
+        withCredentials: true
+      }
+    )
+      .pipe(
+        catchError(error => {
+          console.error('Error saving quiz timer:', error);
+          return throwError(() => error);
+        })
+      );
+  }
+
+
+   deleteQuizTimer(quizId: number): Observable<void> {
+    return this.http.delete<void>(`${baseUrl}/quiz-timer/deleteRemainingTime/${quizId}`,
+        {
+        withCredentials: true
+      }
+    )
+      .pipe(
+        catchError(error => {
+          console.error('Error deleting quiz timer:', error);
+          return throwError(() => error);
+        })
+      );
+  }
+
+
+
+
+
+
 }

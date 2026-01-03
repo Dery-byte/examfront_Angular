@@ -11,9 +11,11 @@ import { MatSnackBar } from '@angular/material/snack-bar';
 import { QuizProgressService } from 'src/app/services/quiz-progress.service';
 import { QuizAnswerRequest } from 'src/app/services/quiz-progress.service';
 import { UserQuizAnswersResponse } from 'src/app/services/quiz-progress.service';
+import { interval, Subscription } from 'rxjs';
 
 import Swal from 'sweetalert2';
 import { ScreenshotPreventionService } from 'src/app/services/ScreenshotPreventionService ';
+import { LoginComponent } from '../../login/login.component';
 
 interface QuizAnswers {
   [prefix: string]: {
@@ -299,33 +301,7 @@ export class StartComponent implements OnInit {
       this.quizTitle = data[0].quiz.title;
       this.courseTitle = data[0].quiz.category.title;
 
-      // this.numberOfQuestionsToAnswer = this.noOfQuesObject[0].totalQuestToAnswer;
-      this.timeT = data[0].timeAllowed;
-      console.log("This is the number of questions to answer", this.numberOfQuestionsToAnswer);
-      console.log("This is the time for the Theory ", this.timeT);
-
-
-      let timerString = localStorage.getItem('countdown_timer');
-      const timerNumber = parseInt(timerString, 10);
-      console.log(typeof (timerNumber));
-
-      if (timerNumber) {
-        this.timerAll = timerNumber;
-        console.log("The remaining time is ", this.timerAll);
-        console.log("The remaining time from the localStorage ", timerString);
-        console.log("This is remaining Theory timer", this.timeT);
-        console.log("This is remaining Theory timer", this.timeO);
-        //Remove value from local storage after accessing it.
-        localStorage.removeItem("countdown_timer");
-      } else {
-        // this.timer = this.questions.length * 2 * 60;
-        // this.timerAll = (this.quiz.quizTime * 60);
-        this.timerAll = (this.timeT + this.timeO) * 60;
-        // this.timerAll = (this.questions.length * 2 * 60) + this.timeT;
-        localStorage.setItem('totalTime', JSON.stringify(this.timerAll));
-
-      }
-
+      
 
 
       // this.timerAll = (this.timeT + this.timeO) * 60;
@@ -345,6 +321,37 @@ export class StartComponent implements OnInit {
       this.loadTheory();
       // this.loadSavedAnswers();
       // this.loadSubjective();
+
+      // this.numberOfQuestionsToAnswer = this.noOfQuesObject[0].totalQuestToAnswer;
+      this.timeT = data[0].timeAllowed;
+      console.log("This is the number of questions to answer", this.numberOfQuestionsToAnswer);
+      console.log("This is the time for the Theory ", this.timeT);
+
+
+      let timerString = localStorage.getItem('countdown_timer');
+      const timerNumber = parseInt(timerString, 10);
+      console.log(typeof (timerNumber));
+
+      // if (timerNumber) {
+      //   this.timerAll = timerNumber;
+      //   console.log("The remaining time is ", this.timerAll);
+      //   console.log("The remaining time from the localStorage ", timerString);
+      //   console.log("This is remaining Theory timer", this.timeT);
+      //   console.log("This is remaining Theory timer", this.timeO);
+      //   //Remove value from local storage after accessing it.
+      //   localStorage.removeItem("countdown_timer");
+      // } else {
+      //   // this.timer = this.questions.length * 2 * 60;
+      //   // this.timerAll = (this.quiz.quizTime * 60);
+      //   this.timerAll = (this.timeT + this.timeO) * 60;
+      //   // this.timerAll = (this.questions.length * 2 * 60) + this.timeT;
+      //   localStorage.setItem('totalTime', JSON.stringify(this.timerAll));
+
+      // }
+
+      this.initializeTimer();
+    this.startAutoSave(); // Auto-save timer every 10 seconds
+
 
     },
       (error) => {
@@ -1409,5 +1416,162 @@ private showWarningMessage(message: string): void {
 }
 
 // Remove the disablePaste() method from ngModelChange since we're handling it with events
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+// DATABASE TIMER LOGIC
+
+private initializeTimer(): void {
+    // const quizId = this.quiz.id;
+
+    this.quiz_progress.getQuizTimer(this.qid).subscribe({
+      next: (savedTimer) => {
+        if (savedTimer && savedTimer.remainingTime > 0) {
+          // Timer exists in database, resume from saved time
+          this.timerAll = savedTimer.remainingTime;
+          console.log("Resuming timer from database:", this.timerAll, "seconds");
+          console.log("Theory time:", this.timeT, "minutes");
+          console.log("Objective time:", this.timeO, "minutes");
+        } else {
+          // No saved timer, calculate new one
+          this.timerAll = (this.timeT + this.timeO) * 60;
+          console.log("Starting new timer:", this.timerAll, "seconds");
+          
+          // Save the initial timer to database
+          this.saveTimerToDatabase();
+        }
+        
+        this.isTimerLoaded = true;
+        this.startCountdown();
+      },
+      error: (error) => {
+        console.error('Error loading timer, using calculated time:', error);
+        // Fallback to calculated timer
+        this.timerAll = (this.timeT + this.timeO) * 60;
+        this.isTimerLoaded = true;
+        this.startCountdown();
+      }
+    });
+  }
+
+
+
+
+  private saveTimerToDatabase(): void {
+    // const quizId = this.quiz.id;
+    
+    this.quiz_progress.saveQuizTimer(this.qid, this.timerAll).subscribe({
+      next: (response) => {
+        console.log('Timer saved successfully:', response);
+      },
+      error: (error) => {
+        console.error('Failed to save timer:', error);
+      }
+    });
+  }
+
+
+
+  private startCountdown(): void {
+    // Update timer every second
+    this.timerSubscription = interval(1000).subscribe(() => {
+      if (this.timerAll > 0) {
+        this.timerAll--;
+        
+        // Optional: Save to database when timer reaches certain milestones
+        // if (this.timerAll % 60 === 0) { // Every minute
+        //   this.saveTimerToDatabase();
+        // }
+      } else {
+        // Timer expired
+        this.onTimerExpired();
+      }
+    });
+  }
+
+
+ private onTimerExpired(): void {
+    console.log('Timer expired! Auto-submitting quiz...');
+    
+    // Stop the timer
+    if (this.timerSubscription) {
+      this.timerSubscription.unsubscribe();
+    }
+    
+    // Auto-submit the quiz
+    this.submitQuiz();
+  }
+
+
+  private timerSubscription: Subscription;
+  private autoSaveSubscription: Subscription;
+  private isTimerLoaded: boolean = false;
+
+   ngOnDestroy(): void {
+    // Save timer before leaving the page
+    if (this.isTimerLoaded && this.timerAll > 0) {
+      this.saveTimerToDatabase();
+    }
+    
+    // Clean up subscriptions
+    if (this.timerSubscription) {
+      this.timerSubscription.unsubscribe();
+    }
+    if (this.autoSaveSubscription) {
+      this.autoSaveSubscription.unsubscribe();
+    }
+  }
+
+
+   private startAutoSave(): void {
+    this.autoSaveSubscription = interval(10000).subscribe(() => {
+      if (this.isTimerLoaded && this.timerAll > 0) {
+        this.saveTimerToDatabase();
+      }
+    });
+  }
+
 }
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
