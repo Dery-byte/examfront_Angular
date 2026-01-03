@@ -25,37 +25,80 @@ export interface UserQuizAnswersResponse {
 export class QuizProgressService {
 
 
-  constructor(private http: HttpClient) {}
+  constructor(private http: HttpClient) { }
 
   updateAnswer(request: QuizAnswerRequest): Observable<QuizAnswerResponse> {
     return this.http.post<QuizAnswerResponse>(`${baseUrl}/quiz-progress/update`, request,
       {
-      withCredentials: true
-    }
+        withCredentials: true
+      }
     );
   }
 
   getAllAnswers(): Observable<UserQuizAnswersResponse> {
     return this.http.get<UserQuizAnswersResponse>(`${baseUrl}/quiz-progress/all`,
       {
-      withCredentials: true
-    }
+        withCredentials: true
+      }
     );
   }
 
   getAnswersByQuiz(quizId: number): Observable<UserQuizAnswersResponse> {
     return this.http.get<UserQuizAnswersResponse>(`${baseUrl}/quiz-progress/quiz/${quizId}`,
       {
-      withCredentials: true
-    }
+        withCredentials: true
+      }
     );
   }
 
   clearQuizAnswers(quizId: number): Observable<void> {
     return this.http.delete<void>(`${baseUrl}/quiz-progress/quiz/${quizId}`,
       {
-      withCredentials: true
-    }
+        withCredentials: true
+      }
+    );
+  }
+
+
+  clearAllUserAnswers(): Observable<any> {
+    return this.http.delete(`${baseUrl}/quiz-progress/clear-all`,
+      {
+        withCredentials: true
+      }
+    );
+  }
+
+
+
+
+
+
+
+
+
+  // BELOW CODE IS FOR THEORY
+
+  saveAnswers(quizId: number, answers: any[]): Observable<any> {
+    return this.http.post(`${baseUrl}/theory-progress/save/${quizId}`, answers,
+      {
+        withCredentials: true,
+      },
+    );
+  }
+
+  loadAnswers(quizId: number): Observable<any[]> {
+    return this.http.get<any[]>(`${baseUrl}/theory-progress/load/${quizId}`,
+      {
+        withCredentials: true
+      }
+    );
+  }
+
+  clearAnswers(quizId: number): Observable<any> {
+    return this.http.delete(`${baseUrl}/theory-progress/clear/${quizId}`,
+      {
+        withCredentials: true
+      }
     );
   }
 }

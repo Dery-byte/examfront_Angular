@@ -147,3 +147,52 @@ width: 1px;
     font-size: 18px;
     color: #333;
 }
+
+
+
+
+
+
+
+
+
+
+
+/* FORM CSS */
+
+
+/* Add to your component CSS file */
+
+/* Disable text selection in form */
+form {
+  -webkit-user-select: none;
+  -moz-user-select: none;
+  -ms-user-select: none;
+  user-select: none;
+}
+
+/* Allow selection only in textarea for typing */
+textarea.input {
+  -webkit-user-select: text;
+  -moz-user-select: text;
+  -ms-user-select: text;
+  user-select: text;
+}
+
+/* Disable selection on labels */
+.no-select {
+  -webkit-user-select: none;
+  -moz-user-select: none;
+  -ms-user-select: none;
+  user-select: none;
+  cursor: default;
+}
+
+/* Prevent dragging */
+textarea.input {
+  -webkit-user-drag: none;
+  -khtml-user-drag: none;
+  -moz-user-drag: none;
+  -o-user-drag: none;
+  user-drag: none;
+}

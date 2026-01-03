@@ -86,93 +86,6 @@
                     <h1 class="mt20">On going quiz {{quizTitle}} for <b> {{courseTitle}}</b></h1>
                 </ng-container>
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
                 <!-- {{quiz|json}} -->
 
                 <!-- <div *ngIf="quiz.quizType=='OBJ'"> -->
@@ -247,137 +160,6 @@
 
 
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
                 <!-- subjective questions here -->
 
 
@@ -387,8 +169,52 @@
                             style="font-family: 'Times New Roman', Times, serif; font-size:18px; color: white;text-align: center; background-color: purple;">
                             <mat-label> SECTION B -{{(timeT * 60)/60}} minutes </mat-label>
                         </mat-card>
-                        <form>
-                            <!-- Add compulsory alert here -->
+
+
+                        <form (paste)="preventAction($event)" (copy)="preventAction($event)" (cut)="preventAction($event)" 
+      (contextmenu)="preventAction($event)" (drop)="preventAction($event)">
+    <!-- Add compulsory alert here -->
+    <mat-card class="cards" *ngIf="isCurrentGroupCompulsory()"
+        style="margin: 20px; padding: 15px; font-size:16px; color: white; text-align: center; background-color: #d32f2f; border: 2px solid #b71c1c;">
+        <mat-icon style="vertical-align: middle;">warning</mat-icon>
+        <strong>COMPULSORY SECTION - All questions in {{prefixes[currentPage]}} must be
+            answered</strong>
+    </mat-card>
+
+    <mat-card class="cards"
+        style=" margin: 20px;font-size:18px; color: white;text-align: center; background-color: rgb(86, 82, 82);">
+    </mat-card>
+
+    <div *ngFor="let question of currentQuestions; let i = index">
+        <mat-card-content class="mat-card-content">
+            <input type="checkbox" [checked]="question.selected"
+                (change)="onQuestionSelect(question)" disabled hidden>
+            <mat-form-field class="mat-form-field" style="margin-top: -450px;">
+                <mat-label>
+                    <span class="no-select">
+                        {{question.quesNo}} {{ question.question }} {{question.marks}}
+                    </span>
+                </mat-label>
+                <textarea class="input" 
+                    [name]="'givenAnswer' + i"
+                    [(ngModel)]="question.givenAnswer" 
+                    matInput 
+                    rows="2"
+                    (ngModelChange)="saveAnswers()"
+                    (paste)="preventAction($event)"
+                    (copy)="preventAction($event)"
+                    (cut)="preventAction($event)"
+                    (contextmenu)="preventAction($event)"
+                    (drop)="preventAction($event)"
+                    (dragover)="preventAction($event)"
+                    autocomplete="off"
+                    spellcheck="false">
+                </textarea>
+            </mat-form-field>
+        </mat-card-content>
+    </div>
+</form>
+                        <!-- <form>
                             <mat-card class="cards" *ngIf="isCurrentGroupCompulsory()"
                                 style="margin: 20px; padding: 15px; font-size:16px; color: white; text-align: center; background-color: #d32f2f; border: 2px solid #b71c1c;">
                                 <mat-icon style="vertical-align: middle;">warning</mat-icon>
@@ -408,18 +234,17 @@
                                         <mat-label>
                                             <span class="no-select">
                                                 {{question.quesNo}} {{ question.question }} {{question.marks}}
-                                                <!-- <span *ngIf="question.isCompulsory"
-                                                    style="color: red; font-weight: bold;"> *COMPULSORY*</span> -->
                                             </span>
                                         </mat-label>
                                         <textarea class="input" [name]="'givenAnswer' + i"
                                             [(ngModel)]="question.givenAnswer" matInput rows="2"
-                                            (ngModelChange)="saveAnswers()">
+                                            (ngModelChange)="saveAnswers()"
+                                            (ngModelChange)="disablePaste()">
                         </textarea>
                                     </mat-form-field>
                                 </mat-card-content>
                             </div>
-                        </form>
+                        </form> -->
                         <!-- Rest of your code... -->
                         <mat-card-actions>
                             <mat-card>

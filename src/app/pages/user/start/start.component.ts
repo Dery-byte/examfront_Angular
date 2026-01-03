@@ -519,7 +519,7 @@ export class StartComponent implements OnInit {
     });
     const key = this.prefixes[this.currentPage];
     this.currentQuestions = this.groupedQuestions[key] || [];
-    this.loadSavedAnswers(); // load into currentQuestions
+    this.loadAnswers(); // load into currentQuestions
   }
 
 
@@ -552,7 +552,7 @@ export class StartComponent implements OnInit {
 
 
   nextPage() {
-    // this.saveAnswers(); // save answers BEFORE changing the page
+    this.saveAnswers(); // save answers BEFORE changing the page
     if (this.currentPage < this.prefixes.length - 1) {
       this.currentPage++;
       this.loadQuestionsTheory(); // make sure this sets currentQuestions
@@ -563,7 +563,7 @@ export class StartComponent implements OnInit {
 
 
   prevPage() {
-    // this.saveAnswers(); // save before page change
+    this.saveAnswers(); // save before page change
     if (this.currentPage > 0) {
       this.currentPage--;
       this.loadQuestionsTheory();
@@ -727,57 +727,15 @@ export class StartComponent implements OnInit {
 
   }
 
-
-
   waitNavigateFunction() {
     setTimeout(() => {
       this.printQuiz();
     }, 3000); // 3000 milliseconds = 3 seconds delay
   }
 
-
-
-
   printQuiz() {
     this.router.navigate(['./user-dashboard/0']);
-    // this.router.navigate(['./print_quiz/' + this.qid]);
-    // this.router.navigate(['./start/' + this.qid]);
   }
-
-
-  // async startTimer() {
-  //   let t = window.setInterval(async () => {
-  //     //Code
-  //     if (this.timerAll <= 0) {
-  //       // this.submitQuiz();
-  //       // this.triggerAddSectBMarks();
-  //       // localStorage.removeItem("countdown_timer");
-  //       this.evalQuiz();
-  //       this.waitNavigateFunction();
-  //       this.loadQuestionsWithAnswers();
-  //       await this.evalSubjective();            // ✅ Wait here
-  //       // this.loadSubjectiveAIEval();
-  //       // this.getGrandTotalMarks();
-  //       this.preventBackButton();
-  //       // this.addSectBMarks();
-  //       clearInterval(t);
-  //       // localStorage.removeItem("exam");
-  //       // this.preventBackButton();
-  //     }
-  //     else {
-  //       this.timerAll--;
-  //     }
-  //   }, 1000);
-  // }
-
-
-
-
-
-
-
-
-
 
   startTimer() {
     // convert minutes → seconds ONCE
@@ -797,25 +755,12 @@ export class StartComponent implements OnInit {
   }
 
   // DISABLE PASTE
-  // disablePaste(event: ClipboardEvent): void {
-  //   event.preventDefault();
-  // }
 
 
-  // getFormmatedTime() {
-  //   // let timeToseconds = this.timerAll * 60
-  //   let hr = Math.floor(this.timerAll / 3600);
-  //   let mm = Math.floor((this.timerAll % 3600) / 60);
-  //   let ss = this.timerAll % 60;
+  disablePaste(event: ClipboardEvent): void {
+    event.preventDefault();
+  }
 
-  //   console.log(hr, mm, ss)
-  //   let formattedTime = '';
-  //   if (hr > 0) {
-  //     formattedTime += `${hr} hr(s) : `;
-  //   }
-  //   formattedTime += `${mm} min : ${ss} sec`;
-  //   return formattedTime;
-  // }
 
   getFormmatedTime(): string {
     const hr = Math.floor(this.timerAll / 3600);
@@ -1189,28 +1134,28 @@ export class StartComponent implements OnInit {
 
 
 
-
-
-  saved
-  // loadSavedAnswers() {
-  //   const saved = localStorage.getItem('savedAnswers');
-  //   if (saved) {
-  //     const savedAnswers = JSON.parse(saved);
-  //     this.currentQuestions.forEach((question: any) => {
-  //       const savedQ = savedAnswers.find((sq: any) => sq.quesNo === question.quesNo);
-  //       if (savedQ) {
-  //         question.givenAnswer = savedQ.givenAnswer;
-  //       }
-  //     });
-  //   }
-  // }
-
-
-  clearSavedAnswers(): void {
-    localStorage.removeItem('savedAnswers');
-    localStorage.removeItem('selectedAnswers');
-    console.log('Saved answers cleared from localStorage');
+  // Clear all answers for current quiz
+clearSavedAnswers(): void {
+  if (confirm('Are you sure you want to clear all answers for this quiz?')) {
+    this.quiz_progress.clearAnswers(this.qid).subscribe({
+      next: (response) => {
+        console.log(response.message);
+        // Clear UI
+        this.currentQuestions.forEach((q: any) => {
+          q.givenAnswer = '';
+        });
+        
+        // Optional: Show success message to user
+        // this.showSuccessMessage('All answers cleared successfully');
+      },
+      error: (error) => {
+        console.error('Error clearing answers:', error);
+        // this.showErrorMessage('Failed to clear answers. Please try again.');
+      }
+    });
   }
+}
+
 
 
 
@@ -1401,29 +1346,68 @@ export class StartComponent implements OnInit {
   }
 
 
-  // In your component
-  // private saveAnswers(): void {
-  //   const storageKey = 'savedAnswers';
-  //   const existing = localStorage.getItem(storageKey);
-  //   let savedAnswers = existing ? JSON.parse(existing) : [];
-
-  //   // Merge currentQuestions into savedAnswers
-  //   this.currentQuestions.forEach((currentQ: any) => {
-  //     const index = savedAnswers.findIndex((q: any) => q.quesNo === currentQ.quesNo);
-  //     if (index !== -1) {
-  //       savedAnswers[index].givenAnswer = currentQ.givenAnswer; // update existing
-  //     } else {
-  //       savedAnswers.push({
-  //         quesNo: currentQ.quesNo,
-  //         givenAnswer: currentQ.givenAnswer,
-  //       }); // keep only what's necessary
-  //     }
-  //   });
-
-  //   localStorage.setItem(storageKey, JSON.stringify(savedAnswers));
-  // }
 
 
 
-};
+  // SAVING THE THEORY ANSWERS FOR LATER LOAD
+
+  saveAnswers(): void {
+    const answersToSave = this.currentQuestions.map((q: any) => ({
+      quesNo: q.quesNo,
+      givenAnswer: q.givenAnswer || ''
+    }));
+    this.quiz_progress.saveAnswers(this.qid, answersToSave).subscribe({
+      next: (response) => {
+        console.log('Answers saved to backend successfully');
+      },
+      error: (error) => {
+        console.error('Error saving answers:', error);
+      }
+    });
+  }
+
+  // Load answers when component initializes
+  loadAnswers(): void {
+    this.quiz_progress.loadAnswers(this.qid).subscribe({
+      next: (savedAnswers) => {
+        // Merge loaded answers with current questions
+        this.currentQuestions.forEach((q: any) => {
+          const saved = savedAnswers.find((s: any) => s.quesNo === q.quesNo);
+          if (saved) {
+            q.givenAnswer = saved.givenAnswer;
+          }
+        });
+      },
+      error: (error) => {
+        console.error('Error loading answers:', error);
+      }
+    });
+  }
+
+
+
+
+
+
+  // PREVENT EVERY ACTION ON THE FORM TAG TAG
+
+preventAction(event: Event): void {
+  event.preventDefault();
+  event.stopPropagation();
+  
+  // Optional: Show a warning message to the user
+  this.showWarningMessage('Copy/Paste operations are disabled during the exam');
+  
+  return;
+}
+
+// Optional: Show warning message
+private showWarningMessage(message: string): void {
+  // You can use Angular Material Snackbar or a simple alert
+  console.warn(message);
+  // Or implement a toast/snackbar notification
+}
+
+// Remove the disablePaste() method from ngModelChange since we're handling it with events
+}
 
