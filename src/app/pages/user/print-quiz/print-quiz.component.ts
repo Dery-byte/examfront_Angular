@@ -71,6 +71,9 @@ export class PrintQuizComponent implements OnInit {
   theoryDetails;
   resultsOBJ;
 
+  totalMarks!: number;
+totalMaxMarks!: number;
+
 
 
 
@@ -163,6 +166,9 @@ export class PrintQuizComponent implements OnInit {
         alert("Error loading quiz data")
       }
     );
+
+
+    
   }
 
 
@@ -197,7 +203,7 @@ export class PrintQuizComponent implements OnInit {
      this._report.getResultsDetails(this.qid).subscribe({
       next: (data: any) => {
         this.resultsOBJ = data;
-        console.log("This is the theory results ", this.resultsOBJ);
+        console.log("This is the OBJ results ", this.resultsOBJ);
       },
       error: (error) => {
         console.error('Error loading reports:', error);
@@ -211,6 +217,7 @@ export class PrintQuizComponent implements OnInit {
          + (this.theoryDetails?.[0]?.timeAllowed || 0);
   }
 
+  
 
   totalTimeInMinutes(): number {
   return (parseInt(this.reportData?.[0]?.quiz?.quizTime || 0))
@@ -319,6 +326,7 @@ export class PrintQuizComponent implements OnInit {
       console.log(this.reportData[0].quiz.title);
       console.log(this.reportData[0].user.lastname);
       console.log(report);
+      
     });
   }
   // refreshContent() {

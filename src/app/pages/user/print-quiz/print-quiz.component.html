@@ -1,23 +1,18 @@
 <!-- {{reportData |json}} -->
 <!-- {{theoryDetails|json}} -->
 <!-- {{theoryAnswer|json}} -->
-
 <!-- {{questions | json}} -->
-
 <!-- <hr> -->
 <!-- {{questionWithAnswers | json}} -->
-
 <!-- <hr> -->
 <!-- {{resultsOBJ | json}} -->
 <ngx-ui-loader fgsColor="#ff4081" pbColor="#ff4081" textColor="#ff4081" pbThickness="6"
     text="Preparing results please wait...!"></ngx-ui-loader>
-
 <div ngxUiLoaderBlurred (blur)="10">
     <div class="bootstrap-wrapper">
         <div class="row mt20">
             <div class="col-md-6 offset-md-3">
                 <div class="watermark">
-
                     <!-- HEADER SECTION -->
                     <div class="caption">
                         <ng-container *ngIf="reportData && reportData.length > 0; else alternateHeader">
@@ -47,7 +42,6 @@
                             </p>
                         </ng-template>
                     </div>
-
                     <!-- MARKS SUMMARY SECTION -->
                     <div *ngIf="reportData && reportData.length > 0">
                         <div id="marks" *ngFor="let r of reportData">
@@ -64,7 +58,8 @@
                             </ng-container>
                             <ng-template #bothReport>
                                 <p>Total Marks A & B:
-                                    <span id="marksU">{{ r.marks + getGrandTotalMarks() }}/{{ r.quiz.maxMarks }}</span>
+                                    <span id="marksU">{{ r.marks + getGrandTotalMarks() }}/{{ +r.quiz.maxMarks +
+                                        +r.maxScoreSectionB }}</span>
                                 </p>
                                 <p>Attempted Questions: {{ attempted }}</p>
                                 <p style="color:rgb(80, 80, 80); font-weight: bolder;">
@@ -73,7 +68,6 @@
                             </ng-template>
                         </div>
                     </div>
-
                     <!-- SECTION A (OBJECTIVE QUESTIONS) -->
                     <div *ngIf="questions && questions.length > 0 && questionWithAnswers && questionWithAnswers.length > 0 &&
                         (questions[0].quiz.quizType === 'OBJ' || questions[0].quiz.quizType === 'BOTH')">
@@ -84,25 +78,6 @@
                                 Total Marks: <em class="grand-totals">{{reportData[0]?.marks}}</em>
                             </b>
                         </h1>
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 
 
                         <mat-card *ngFor="let qA of resultsOBJ?.results; let i = index" class="mt10">
