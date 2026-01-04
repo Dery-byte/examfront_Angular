@@ -332,3 +332,40 @@
         </div>
     </div>
 </div>
+
+
+
+
+
+
+<!-- TIME UP MODAL -->
+<div class="timeup-backdrop" *ngIf="showTimeUpModal">
+  <div class="timeup-modal">
+    <h2 class="title">⏰ Time’s Up</h2>
+
+    <div class="countdown-wrapper">
+      <svg class="progress-ring" width="160" height="160">
+        <circle
+          cx="80"
+          cy="80"
+          r="70"
+          class="ring-bg"
+        />
+        <circle
+          cx="80"
+          cy="80"
+          r="70"
+          class="ring-progress"
+          [attr.stroke-dasharray]="439"
+          [attr.stroke-dashoffset]="439 - (progressPercent / 100) * 439"
+        />
+      </svg>
+
+      <div class="countdown-text">
+        {{ countdownText }}
+      </div>
+    </div>
+  </div>
+</div>
+
+

@@ -12,6 +12,10 @@ import { QuizProgressService } from 'src/app/services/quiz-progress.service';
 import { QuizAnswerRequest } from 'src/app/services/quiz-progress.service';
 import { UserQuizAnswersResponse } from 'src/app/services/quiz-progress.service';
 import { interval, Subscription } from 'rxjs';
+import { Observable, forkJoin,of } from 'rxjs';
+import { catchError } from 'rxjs/operators';
+
+
 
 import Swal from 'sweetalert2';
 import { ScreenshotPreventionService } from 'src/app/services/ScreenshotPreventionService ';
@@ -726,22 +730,23 @@ export class StartComponent implements OnInit {
     this.router.navigate(['./user-dashboard/0']);
   }
 
-  startTimer() {
-    this.timerAll = this.totalTime() * 60;
-    let t = window.setInterval(async () => {
-      if (this.timerAll <= 0) {
-        this.evalQuiz();
-        this.waitNavigateFunction();
-        this.loadQuestionsWithAnswers();
-        await this.evalSubjective();
-        this.preventBackButton();
-        clearInterval(t);
-      } else {
-        this.timerAll--; // ✅ ticks every second
-      }
-    }, 1000);
-  }
+  // startTimer() {
+  //   this.timerAll = this.totalTime() * 60;
+  //   let t = window.setInterval(async () => {
+  //     if (this.timerAll <= 0) {
+  //       this.evalQuiz();
+  //       this.waitNavigateFunction();
+  //       this.loadQuestionsWithAnswers();
+  //       await this.evalSubjective();
+  //       this.preventBackButton();
+  //       clearInterval(t);
+  //     } else {
+  //       this.timerAll--; // ✅ ticks every second
+  //     }
+  //   }, 1000);
+  // }
 
+  
   // DISABLE PASTE
 
 
@@ -764,33 +769,67 @@ export class StartComponent implements OnInit {
   }
 
 
-  evalQuiz() {
-    //Evaluate questions
-    this._questions.evalQuiz(this.qid, this.questions).subscribe((data: any) => {
-      console.log(this.questions);
-      console.log(data);
-      this.marksGot = parseFloat(Number(data.marksGot).toFixed(2));
-      this.correct_answer = data.correct_answer;
-      this.attempted = data.attempted;
-      this.maxMarks = data.maxMarks;
-      localStorage.setItem('CorrectAnswer', JSON.stringify(this.correct_answer));
-      localStorage.setItem('MarksGot', JSON.stringify(this.marksGot));
-      localStorage.setItem('Attempted', JSON.stringify(this.attempted));
-      localStorage.setItem('MaxMarks', JSON.stringify(this.maxMarks));
-      this.clearSavedAnswers();
-      // this.addSectBMarks();
-      this.preventBackButton();
-      // this.evalSubjective();
-      this.isSubmit = true;
-    },
-      (error) => {
-        console.log("Error !")
 
+
+
+evalQuiz(): Observable<any> {
+  return new Observable(observer => {
+    this._questions.evalQuiz(this.qid, this.questions).subscribe({
+      next: (data: any) => {
+        console.log(this.questions, data);
+        this.marksGot = parseFloat(Number(data.marksGot).toFixed(2));
+        this.correct_answer = data.correct_answer;
+        this.attempted = data.attempted;
+        this.maxMarks = data.maxMarks;
+
+        localStorage.setItem('CorrectAnswer', JSON.stringify(this.correct_answer));
+        localStorage.setItem('MarksGot', JSON.stringify(this.marksGot));
+        localStorage.setItem('Attempted', JSON.stringify(this.attempted));
+        localStorage.setItem('MaxMarks', JSON.stringify(this.maxMarks));
+
+        this.clearSavedAnswers();
+        this.preventBackButton();
+        this.isSubmit = true;
+
+        observer.next(data);
+        observer.complete();
+      },
+      error: (err) => {
+        console.error('Evaluation Error', err);
+        observer.error(err);
       }
+    });
+  });
+}
 
-    );
+  // evalQuiz(){
+  //   //Evaluate questions
+  //    this._questions.evalQuiz(this.qid, this.questions).subscribe((data: any) => {
+  //     console.log(this.questions);
+  //     console.log(data);
+  //     this.marksGot = parseFloat(Number(data.marksGot).toFixed(2));
+  //     this.correct_answer = data.correct_answer;
+  //     this.attempted = data.attempted;
+  //     this.maxMarks = data.maxMarks;
+  //     localStorage.setItem('CorrectAnswer', JSON.stringify(this.correct_answer));
+  //     localStorage.setItem('MarksGot', JSON.stringify(this.marksGot));
+  //     localStorage.setItem('Attempted', JSON.stringify(this.attempted));
+  //     localStorage.setItem('MaxMarks', JSON.stringify(this.maxMarks));
+  //     this.clearSavedAnswers();
+  //     // this.addSectBMarks();
+  //     this.preventBackButton();
+  //     // this.evalSubjective();
+  //     this.isSubmit = true;
+     
+  //   },
+  //     (error) => {
+  //       console.log("Error !")
 
-  }
+  //     }
+
+  //   );
+
+  // }
 
 
 
@@ -799,39 +838,82 @@ export class StartComponent implements OnInit {
 
 
 
-  async evalSubjective(): Promise<void> {
+  // async evalSubjective(): Promise<void> {
+  //   for (const prefix in this.selectedQuestions) {
+  //     this.selectedQuestionsAnswer.push(...this.groupedQuestions[prefix]);
+  //   }
+  //   if (Object.keys(this.selectedQuestions).length === this.numberOfQuestionsToAnswer) {
+  //     localStorage.setItem(this.qid + "answeredQuestions", JSON.stringify(this.selectedQuestions));
+  //     this.convertJson();
+
+  //     this._quiz.evalTheory(this.convertedJsonAPIResponsebody).subscribe((data: any) => {
+  //       console.log("This is the Original Response from the server and formatted!!!!");
+
+  //       // Store the response only once
+  //       this.geminiResponse = data;
+  //       localStorage.setItem("answeredAIQuestions" + this.qid, JSON.stringify(this.geminiResponse));
+
+  //       console.log('Stored successfully:', localStorage.getItem("answeredAIQuestions" + this.qid));
+  //       console.log(this.geminiResponse);
+
+  //       setTimeout(() => {
+  //         this.loadSubjectiveAIEval();
+  //       }, 1000);
+  //     });
+
+  //     localStorage.setItem(this.qid + "answeredQuestions", JSON.stringify(this.selectedQuestionsAnswer));
+  //   }
+  //   (error) => {
+  //     this._snack.open("Please select exactly 3 sets of questions to submit", "", {
+  //       duration: 3000,
+  //     });
+  //   }
+  //   // window.close();
+
+  // }
+
+
+
+
+  evalSubjective(): Observable<any> {
+  return new Observable(observer => {
     for (const prefix in this.selectedQuestions) {
       this.selectedQuestionsAnswer.push(...this.groupedQuestions[prefix]);
     }
-    if (Object.keys(this.selectedQuestions).length === this.numberOfQuestionsToAnswer) {
-      localStorage.setItem(this.qid + "answeredQuestions", JSON.stringify(this.selectedQuestions));
-      this.convertJson();
+    if (Object.keys(this.selectedQuestions).length !== this.numberOfQuestionsToAnswer) {
+      this._snack.open("Please select exactly 3 sets of questions to submit", "", {
+        duration: 3000,
+      });
+      observer.error('Not enough questions selected');
+      return;
+    }
 
-      this._quiz.evalTheory(this.convertedJsonAPIResponsebody).subscribe((data: any) => {
-        console.log("This is the Original Response from the server and formatted!!!!");
-
-        // Store the response only once
+    // Save to localStorage
+    localStorage.setItem(this.qid + "answeredQuestions", JSON.stringify(this.selectedQuestions));
+    this.convertJson();
+    this._quiz.evalTheory(this.convertedJsonAPIResponsebody).subscribe({
+      next: (data: any) => {
+        console.log("Server Response:", data);
         this.geminiResponse = data;
         localStorage.setItem("answeredAIQuestions" + this.qid, JSON.stringify(this.geminiResponse));
-
-        console.log('Stored successfully:', localStorage.getItem("answeredAIQuestions" + this.qid));
-        console.log(this.geminiResponse);
 
         setTimeout(() => {
           this.loadSubjectiveAIEval();
         }, 1000);
-      });
 
-      localStorage.setItem(this.qid + "answeredQuestions", JSON.stringify(this.selectedQuestionsAnswer));
-    }
-    (error) => {
-      this._snack.open("Please select exactly 3 sets of questions to submit", "", {
-        duration: 3000,
-      });
-    }
-    // window.close();
+        // localStorage.setItem(this.qid + "answeredQuestions", JSON.stringify(this.selectedQuestionsAnswer));
 
-  }
+        observer.next(data);
+        observer.complete();
+      },
+      error: (err) => {
+        console.error("Subjective evaluation failed", err);
+        observer.error(err);
+      }
+    });
+  });
+}
+
 
 
 
@@ -1423,44 +1505,121 @@ export class StartComponent implements OnInit {
 
   // DATABASE TIMER LOGIC
 
-  private initializeTimer(): void {
-    // const quizId = this.quiz.id;
-    this.quiz_progress.getQuizTimer(this.qid).subscribe({
-      next: (savedTimer) => {
-        if (savedTimer && savedTimer.remainingTime > 0) {
-          // Timer exists in database, resume from saved time
-          this.timerAll = savedTimer.remainingTime;
-          console.log("Resuming timer from database:", this.timerAll, "seconds");
-          console.log("Theory time:", this.timeT, "minutes");
-          console.log("Objective time:", this.timeO, "minutes");
-        } else {
-          // No saved timer, calculate new one
-          this.timerAll = (this.timeT + this.timeO) * 60;
-          console.log("Starting new timer:", this.timerAll, "seconds");
+  initializeTimer(): void {
+  this.quiz_progress.getQuizTimer(this.qid).subscribe({
+    next: (savedTimer) => {
+      this.timerAll = (savedTimer?.remainingTime && savedTimer.remainingTime > 0)
+        ? savedTimer.remainingTime
+        : (this.timeT + this.timeO) * 60;
 
-          // Save the initial timer to database
-          this.saveTimerToDatabase();
-        }
-
-        this.isTimerLoaded = true;
-        this.startCountdown();
-      },
-      error: (error) => {
-        console.error('Error loading timer, using calculated time:', error);
-        // Fallback to calculated timer
-        this.timerAll = (this.timeT + this.timeO) * 60;
-        this.isTimerLoaded = true;
-        this.startCountdown();
+      if (!savedTimer || savedTimer.remainingTime <= 0) {
+        this.saveTimerToDatabase(); // first-time save
       }
-    });
+
+      this.isTimerLoaded = true;
+      this.startCountdown();
+    },
+    error: () => {
+      // Hard fallback
+      this.timerAll = (this.timeT + this.timeO) * 60;
+      this.isTimerLoaded = true;
+      this.startCountdown();
+    }
+  });
+}
+
+showTimeUpModal = false;
+private isExpiredHandled = false;
+countdownText = '';
+progressPercent = 100;
+private audio = new Audio('/assets/beep.mp3'); // short beep sound
+
+
+private onTimerExpired(): void {
+  if (this.isExpiredHandled) return;
+  this.isExpiredHandled = true;
+
+  this.timerSubscription?.unsubscribe();
+  this.timerAll = 0;
+  this.saveTimerToDatabase();
+  this.showTimeUpModal = true;
+
+  const total = 5;
+  let count = total;
+  this.countdownText = count.toString();
+  this.progressPercent = 100;
+
+  const interval = setInterval(() => {
+    count--;
+    this.progressPercent = (count / total) * 100;
+
+    if (count > 0) {
+      this.countdownText = count.toString();
+      if (count <= 3) {
+        this.audio.currentTime = 0;
+        this.audio.play().catch(() => {});
+      }
+    } else {
+      clearInterval(interval);
+      this.countdownText = 'Submitting...';
+      this.progressPercent = 0;
+
+    setTimeout(() => {
+  // Collect only existing evaluations
+  const observables: Observable<any>[] = [];
+
+  if (this.evalQuiz) {
+    observables.push(this.evalQuiz());
+  }
+  if (this.evalSubjective) {
+    observables.push(this.evalSubjective());
   }
 
+  if (observables.length === 0) {
+    // No evaluations for this quiz, just finish
+    this.finishAfterEvaluation();
+    return;
+  }
 
+  forkJoin(
+    observables.map(obs =>
+      obs.pipe(
+        catchError(err => {
+          console.error('One evaluation failed:', err);
+          return of(null); // allow forkJoin to continue even if this observable fails
+        })
+      )
+    )
+  ).subscribe({
+    next: () => {
+      console.log('All evaluations (that exist) completed');
+      this.finishAfterEvaluation();
+    },
+    error: (err) => {
+      // This block almost never runs now
+      console.error('Unexpected error in evaluation', err);
+      this.finishAfterEvaluation();
+    }
+  });
+}, 700);
+
+    }
+  }, 1000);
+}
+
+// Centralized finish logic
+private finishAfterEvaluation() {
+  this.showTimeUpModal = false;
+  this.preventBackButton();
+  if (window.opener) {
+    window.opener.location.href = '/user-dashboard/0';
+  }
+  window.close();
+}
 
 
   private saveTimerToDatabase(): void {
     // const quizId = this.quiz.id;
-
     this.quiz_progress.saveQuizTimer(this.qid, this.timerAll).subscribe({
       next: (response) => {
         console.log('Timer saved successfully:', response);
@@ -1472,37 +1631,27 @@ export class StartComponent implements OnInit {
   }
 
 
-
   private startCountdown(): void {
-    // Update timer every second
-    this.timerSubscription = interval(1000).subscribe(() => {
-      if (this.timerAll > 0) {
-        this.timerAll--;
+  // Safety: prevent multiple timers
+  this.timerSubscription?.unsubscribe();
 
-        // Optional: Save to database when timer reaches certain milestones
-        // if (this.timerAll % 60 === 0) { // Every minute
-        //   this.saveTimerToDatabase();
-        // }
-      } else {
-        // Timer expired
-        this.onTimerExpired();
-      }
-    });
-  }
+  this.timerSubscription = interval(1000).subscribe(() => {
+    this.timerAll--;
 
-
-  private onTimerExpired(): void {
-    console.log('Timer expired! Auto-submitting quiz...');
-
-    // Stop the timer
-    if (this.timerSubscription) {
-      this.timerSubscription.unsubscribe();
+    // OPTIONAL: persist every 10 seconds
+    if (this.timerAll % 10 === 0) {
+      this.saveTimerToDatabase();
     }
 
-    // Auto-submit the quiz
-    this.submitQuiz();
-    this.submitAllQuiz();
-  }
+    if (this.timerAll <= 0) {
+      this.onTimerExpired();
+    }
+  });
+}
+
+
+
+
 
 
   private timerSubscription: Subscription;
