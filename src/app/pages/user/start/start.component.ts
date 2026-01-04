@@ -281,7 +281,7 @@ export class StartComponent implements OnInit {
       this.quizTitle = data[0].quiz.title;
       this.courseTitle = data[0].quiz.category.title;
 
-      
+
 
 
       // this.timerAll = (this.timeT + this.timeO) * 60;
@@ -329,8 +329,8 @@ export class StartComponent implements OnInit {
 
       // }
 
-      this.initializeTimer();
-    this.startAutoSave(); // Auto-save timer every 10 seconds
+      // this.initializeTimer();
+      this.startAutoSave(); // Auto-save timer every 10 seconds
 
 
     },
@@ -345,17 +345,17 @@ export class StartComponent implements OnInit {
 
 
 
-    this.loadQuestionsFromLocalStorage();
+    // this.loadQuestionsFromLocalStorage();
 
     // this.startTimer();
     // this.printQuiz();
-    this.startTimer();
+    // this.startTimer();
 
     this.initForm();
     this.preventBackButton();
 
 
-    this.screenshotPrevention.enableProtection();
+    // this.screenshotPrevention.enableProtection();
 
   }
 
@@ -394,6 +394,8 @@ export class StartComponent implements OnInit {
 
       console.log(this.groupedQuestions);
       // this.startTimer();
+      // this.startCountdown();
+      // this.initializeTimer();
       this.preventBackButton();
 
 
@@ -1018,31 +1020,32 @@ export class StartComponent implements OnInit {
     },
     );
   }
-  loadQuestionsFromLocalStorage() {
-    // this.questionss = JSON.parse(localStorage.getItem("exam"));
-    // this.timeO = parseInt(this.quiz.quizTime) * 60;
-    this.timeO = parseInt(this.questionss[0].quiz.category.quizTime) * 1 * 60;
-    // this.timer = this.questionss.length * 2 * 60; // THIS WORKS FINE
-    localStorage.setItem('time', JSON.stringify(this.timeO));
-    this.questions.forEach(q => {
-      q['givenAnswer'] = "";
-    });
-    // localStorage.setItem('exam', JSON.stringify(data));
-    // this.preventBackButton();
-    // this.startTimer();
-    console.log(this.questionss[0]);
-  }
+  // loadQuestionsFromLocalStorage() {
+  //   // // this.questionss = JSON.parse(localStorage.getItem("exam"));
+  //   // // this.timeO = parseInt(this.quiz.quizTime) * 60;
+  //   // this.timerAll
+  //   // // this.timeO = parseInt(this.questionss[0].quiz.category.quizTime) * 1 * 60;
+  //   // // this.timer = this.questionss.length * 2 * 60; // THIS WORKS FINE
+  //   // // localStorage.setItem('time', JSON.stringify(this.timeO));
+  //   // this.questions.forEach(q => {
+  //   //   q['givenAnswer'] = "";
+  //   // });
+  //   // // localStorage.setItem('exam', JSON.stringify(data));
+  //   // // this.preventBackButton();
+  //   // this.startTimer();
+  //   // console.log(this.questionss[0]);
+  // }
 
   //PAGINATION
 
   onTableDataChange(event: any) {
     this.page = event;
-    this.loadQuestionsFromLocalStorage();
+    // this.loadQuestionsFromLocalStorage();
   }
   onTableSizeChange(event: any): void {
     this.tableSize = event.target.value;
     this.page = 1;
-    this.loadQuestionsFromLocalStorage();
+    // this.loadQuestionsFromLocalStorage();
   }
 
   //CONVERT TO API RESPONSE
@@ -1121,7 +1124,7 @@ export class StartComponent implements OnInit {
 
 
   // Clear all answers for current quiz
-clearSavedAnswers(): void {
+  clearSavedAnswers(): void {
     this.quiz_progress.clearAnswers(this.qid).subscribe({
       next: (response) => {
         console.log(response.message);
@@ -1131,9 +1134,10 @@ clearSavedAnswers(): void {
         })
       },
       error: (error) => {
-        console.error('Error clearing answers:', error);      }
+        console.error('Error clearing answers:', error);
+      }
     });
-}
+  }
 
 
 
@@ -1230,13 +1234,14 @@ clearSavedAnswers(): void {
           return q;
         });
 
-
         // Set loading to false when questions are loaded
         this.isLoading = false;
         // 🔍 Final questions array check
         console.log("✅ Final loaded questions:", this.questions);
         // this.startTimer();
 
+        // this.startCountdown();
+        this.initializeTimer();
       },
       (error) => {
         console.log("Error Loading questions");
@@ -1250,8 +1255,10 @@ clearSavedAnswers(): void {
   }
 
 
-  updateSelectedAnswers(q: any, option: string, isChecked: boolean) {
 
+
+
+  updateSelectedAnswers(q: any, option: string, isChecked: boolean) {
     // Update local state immediately for responsive UI
     if (!q.givenAnswer) {
       q.givenAnswer = [];
@@ -1267,7 +1274,6 @@ clearSavedAnswers(): void {
         q.givenAnswer.splice(index, 1);
       }
     }
-
     // Create a copy to avoid reference issues
     const currentAnswers = [...q.givenAnswer];
 
@@ -1278,7 +1284,6 @@ clearSavedAnswers(): void {
       checked: isChecked,
       quizId: this.qid
     };
-
     this.quiz_progress.updateAnswer(request).subscribe({
       next: (response) => {
         if (response.selectedOptions && Array.isArray(response.selectedOptions)) {
@@ -1295,6 +1300,8 @@ clearSavedAnswers(): void {
 
     return q.givenAnswer;
   }
+
+
 
   loadSavedAnswers() {
     // Load all saved answers for this quiz
@@ -1370,26 +1377,24 @@ clearSavedAnswers(): void {
 
   // PREVENT EVERY ACTION ON THE FORM TAG TAG
 
-preventAction(event: Event): void {
-  event.preventDefault();
-  event.stopPropagation();
-  
-  // Optional: Show a warning message to the user
-  this.showWarningMessage('Copy/Paste operations are disabled during the exam');
-  
-  return;
-}
+  preventAction(event: Event): void {
+    event.preventDefault();
+    event.stopPropagation();
 
-// Optional: Show warning message
-private showWarningMessage(message: string): void {
-  // You can use Angular Material Snackbar or a simple alert
-  console.warn(message);
-  // Or implement a toast/snackbar notification
-}
+    // Optional: Show a warning message to the user
+    this.showWarningMessage('Copy/Paste operations are disabled during the exam');
 
-// Remove the disablePaste() method from ngModelChange since we're handling it with events
+    return;
+  }
 
+  // Optional: Show warning message
+  private showWarningMessage(message: string): void {
+    // You can use Angular Material Snackbar or a simple alert
+    console.warn(message);
+    // Or implement a toast/snackbar notification
+  }
 
+  // Remove the disablePaste() method from ngModelChange since we're handling it with events
 
 
 
@@ -1414,9 +1419,11 @@ private showWarningMessage(message: string): void {
 
 
 
-// DATABASE TIMER LOGIC
 
-private initializeTimer(): void {
+
+  // DATABASE TIMER LOGIC
+
+  private initializeTimer(): void {
     // const quizId = this.quiz.id;
     this.quiz_progress.getQuizTimer(this.qid).subscribe({
       next: (savedTimer) => {
@@ -1430,11 +1437,11 @@ private initializeTimer(): void {
           // No saved timer, calculate new one
           this.timerAll = (this.timeT + this.timeO) * 60;
           console.log("Starting new timer:", this.timerAll, "seconds");
-          
+
           // Save the initial timer to database
           this.saveTimerToDatabase();
         }
-        
+
         this.isTimerLoaded = true;
         this.startCountdown();
       },
@@ -1453,7 +1460,7 @@ private initializeTimer(): void {
 
   private saveTimerToDatabase(): void {
     // const quizId = this.quiz.id;
-    
+
     this.quiz_progress.saveQuizTimer(this.qid, this.timerAll).subscribe({
       next: (response) => {
         console.log('Timer saved successfully:', response);
@@ -1471,7 +1478,7 @@ private initializeTimer(): void {
     this.timerSubscription = interval(1000).subscribe(() => {
       if (this.timerAll > 0) {
         this.timerAll--;
-        
+
         // Optional: Save to database when timer reaches certain milestones
         // if (this.timerAll % 60 === 0) { // Every minute
         //   this.saveTimerToDatabase();
@@ -1484,14 +1491,14 @@ private initializeTimer(): void {
   }
 
 
- private onTimerExpired(): void {
+  private onTimerExpired(): void {
     console.log('Timer expired! Auto-submitting quiz...');
-    
+
     // Stop the timer
     if (this.timerSubscription) {
       this.timerSubscription.unsubscribe();
     }
-    
+
     // Auto-submit the quiz
     this.submitQuiz();
     this.submitAllQuiz();
@@ -1502,12 +1509,12 @@ private initializeTimer(): void {
   private autoSaveSubscription: Subscription;
   private isTimerLoaded: boolean = false;
 
-   ngOnDestroy(): void {
+  ngOnDestroy(): void {
     // Save timer before leaving the page
     if (this.isTimerLoaded && this.timerAll > 0) {
       this.saveTimerToDatabase();
     }
-    
+
     // Clean up subscriptions
     if (this.timerSubscription) {
       this.timerSubscription.unsubscribe();
@@ -1518,7 +1525,7 @@ private initializeTimer(): void {
   }
 
 
-   private startAutoSave(): void {
+  private startAutoSave(): void {
     this.autoSaveSubscription = interval(10000).subscribe(() => {
       if (this.isTimerLoaded && this.timerAll > 0) {
         this.saveTimerToDatabase();
