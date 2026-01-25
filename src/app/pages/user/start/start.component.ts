@@ -12,8 +12,9 @@ import { QuizProgressService } from 'src/app/services/quiz-progress.service';
 import { QuizAnswerRequest } from 'src/app/services/quiz-progress.service';
 import { UserQuizAnswersResponse } from 'src/app/services/quiz-progress.service';
 import { interval, Subscription } from 'rxjs';
-import { Observable, forkJoin,of } from 'rxjs';
+import { Observable, forkJoin, of } from 'rxjs';
 import { catchError } from 'rxjs/operators';
+
 
 
 
@@ -672,7 +673,61 @@ export class StartComponent implements OnInit {
   }
 
 
+
+
+
+  // async submitAllQuiz() {
+  //   Swal.fire({
+  //     title: "Do you want to submit the quiz?",
+  //     icon: "info",
+  //     showCancelButton: true,
+  //     confirmButtonText: "Submit",
+  //     cancelButtonText: "Cancel"
+  //   }).then((e) => {
+  //     if (e.isConfirmed) {
+  //       // Show the loading spinner
+  //       this.clearSavedAnswers();
+  //       Swal.fire({
+  //         title: 'Evaluating...',
+  //         text: `Please wait while we evaluate your quiz for ${this.courseTitle}.`,
+  //         allowOutsideClick: false,
+  //         didOpen: () => {
+  //           Swal.showLoading();
+  //         }
+  //       });
+
+  //       // Run all your logic after a short delay or immediately
+  //       setTimeout(async () => {
+  //         this.evalQuiz();
+  //         this.waitNavigateFunction();
+  //         this.loadQuestionsWithAnswers();
+  //         await this.evalSubjective();            // ✅ Wait here
+  //         this.clearProgress()
+  //         this.preventBackButton();
+
+  //         // Optional: Close the spinner and show success message
+  //         Swal.fire({
+  //           icon: 'success',
+  //           title: 'Evaluated!',
+  //           text: `Your results for ${this.courseTitle} is available for print on the dashboard.`,
+  //         });
+  //         setTimeout(() => {
+  //           window.close();
+  //           if (window.opener) {
+  //             window.opener.location.href = '/user-dashboard/0';
+  //           }
+  //         }, 1200); // wait slightly longer than success popup duration
+
+  //       }, 8000); // You can remove this delay or wait for async logic instead
+  //     }
+  //   });
+
+  // }
+
+
+
   async submitAllQuiz() {
+
     Swal.fire({
       title: "Do you want to submit the quiz?",
       icon: "info",
@@ -680,45 +735,76 @@ export class StartComponent implements OnInit {
       confirmButtonText: "Submit",
       cancelButtonText: "Cancel"
     }).then((e) => {
-      if (e.isConfirmed) {
-        // Show the loading spinner
-        this.clearSavedAnswers();
-        Swal.fire({
-          title: 'Evaluating...',
-          text: `Please wait while we evaluate your quiz for ${this.courseTitle}.`,
-          allowOutsideClick: false,
-          didOpen: () => {
-            Swal.showLoading();
-          }
-        });
+      if (!e.isConfirmed) return;
 
-        // Run all your logic after a short delay or immediately
-        setTimeout(async () => {
-          this.evalQuiz();
+      this.clearSavedAnswers();
+
+      Swal.fire({
+        title: 'Evaluating...',
+        text: `Please wait while we evaluate your quiz for ${this.courseTitle}.`,
+        allowOutsideClick: false,
+        didOpen: () => {
+          Swal.showLoading();
+        }
+      });
+
+      // 🔑 Build evaluation list based on quiz type
+      const evaluations: Observable<any>[] = [];
+
+
+      if (this.timeO > 0) {
+        evaluations.push(this.evalQuiz());
+      }
+
+      if (this.timeT > 0) {
+        evaluations.push(this.evalSubjective());
+      }
+
+
+      // Safety: nothing to evaluate
+      if (evaluations.length === 0) {
+        this.finishAfterEvaluation();
+        return;
+      }
+
+      // ✅ WAIT for backend
+      forkJoin(evaluations).subscribe({
+        next: () => {
           this.waitNavigateFunction();
           this.loadQuestionsWithAnswers();
-          await this.evalSubjective();            // ✅ Wait here
-          this.clearProgress()
+          this.clearProgress();
           this.preventBackButton();
 
-          // Optional: Close the spinner and show success message
           Swal.fire({
             icon: 'success',
             title: 'Evaluated!',
-            text: `Your results for ${this.courseTitle} is available for print on the dashboard.`,
+            text: `Your results for ${this.courseTitle} are available on the dashboard.`,
           });
+
           setTimeout(() => {
-            window.close();
             if (window.opener) {
               window.opener.location.href = '/user-dashboard/0';
             }
-          }, 1200); // wait slightly longer than success popup duration
-
-        }, 8000); // You can remove this delay or wait for async logic instead
-      }
+            window.close();
+          }, 1200);
+        },
+        error: (err) => {
+          console.error('Evaluation failed', err);
+          Swal.fire({
+            icon: 'error',
+            title: 'Evaluation failed',
+            text: 'Please contact support.',
+          });
+        }
+      });
     });
 
+
   }
+
+
+
+
 
   waitNavigateFunction() {
     setTimeout(() => {
@@ -746,7 +832,7 @@ export class StartComponent implements OnInit {
   //   }, 1000);
   // }
 
-  
+
   // DISABLE PASTE
 
 
@@ -772,35 +858,35 @@ export class StartComponent implements OnInit {
 
 
 
-evalQuiz(): Observable<any> {
-  return new Observable(observer => {
-    this._questions.evalQuiz(this.qid, this.questions).subscribe({
-      next: (data: any) => {
-        console.log(this.questions, data);
-        this.marksGot = parseFloat(Number(data.marksGot).toFixed(2));
-        this.correct_answer = data.correct_answer;
-        this.attempted = data.attempted;
-        this.maxMarks = data.maxMarks;
+  evalQuiz(): Observable<any> {
+    return new Observable(observer => {
+      this._questions.evalQuiz(this.qid, this.questions).subscribe({
+        next: (data: any) => {
+          console.log(this.questions, data);
+          this.marksGot = parseFloat(Number(data.marksGot).toFixed(2));
+          this.correct_answer = data.correct_answer;
+          this.attempted = data.attempted;
+          this.maxMarks = data.maxMarks;
 
-        localStorage.setItem('CorrectAnswer', JSON.stringify(this.correct_answer));
-        localStorage.setItem('MarksGot', JSON.stringify(this.marksGot));
-        localStorage.setItem('Attempted', JSON.stringify(this.attempted));
-        localStorage.setItem('MaxMarks', JSON.stringify(this.maxMarks));
+          localStorage.setItem('CorrectAnswer', JSON.stringify(this.correct_answer));
+          localStorage.setItem('MarksGot', JSON.stringify(this.marksGot));
+          localStorage.setItem('Attempted', JSON.stringify(this.attempted));
+          localStorage.setItem('MaxMarks', JSON.stringify(this.maxMarks));
 
-        this.clearSavedAnswers();
-        this.preventBackButton();
-        this.isSubmit = true;
+          this.clearSavedAnswers();
+          this.preventBackButton();
+          this.isSubmit = true;
 
-        observer.next(data);
-        observer.complete();
-      },
-      error: (err) => {
-        console.error('Evaluation Error', err);
-        observer.error(err);
-      }
+          observer.next(data);
+          observer.complete();
+        },
+        error: (err) => {
+          console.error('Evaluation Error', err);
+          observer.error(err);
+        }
+      });
     });
-  });
-}
+  }
 
   // evalQuiz(){
   //   //Evaluate questions
@@ -820,7 +906,7 @@ evalQuiz(): Observable<any> {
   //     this.preventBackButton();
   //     // this.evalSubjective();
   //     this.isSubmit = true;
-     
+
   //   },
   //     (error) => {
   //       console.log("Error !")
@@ -876,43 +962,43 @@ evalQuiz(): Observable<any> {
 
 
   evalSubjective(): Observable<any> {
-  return new Observable(observer => {
-    for (const prefix in this.selectedQuestions) {
-      this.selectedQuestionsAnswer.push(...this.groupedQuestions[prefix]);
-    }
-    if (Object.keys(this.selectedQuestions).length !== this.numberOfQuestionsToAnswer) {
-      this._snack.open("Please select exactly 3 sets of questions to submit", "", {
-        duration: 3000,
-      });
-      observer.error('Not enough questions selected');
-      return;
-    }
-
-    // Save to localStorage
-    localStorage.setItem(this.qid + "answeredQuestions", JSON.stringify(this.selectedQuestions));
-    this.convertJson();
-    this._quiz.evalTheory(this.convertedJsonAPIResponsebody).subscribe({
-      next: (data: any) => {
-        console.log("Server Response:", data);
-        this.geminiResponse = data;
-        localStorage.setItem("answeredAIQuestions" + this.qid, JSON.stringify(this.geminiResponse));
-
-        setTimeout(() => {
-          this.loadSubjectiveAIEval();
-        }, 1000);
-
-        // localStorage.setItem(this.qid + "answeredQuestions", JSON.stringify(this.selectedQuestionsAnswer));
-
-        observer.next(data);
-        observer.complete();
-      },
-      error: (err) => {
-        console.error("Subjective evaluation failed", err);
-        observer.error(err);
+    return new Observable(observer => {
+      for (const prefix in this.selectedQuestions) {
+        this.selectedQuestionsAnswer.push(...this.groupedQuestions[prefix]);
       }
+      if (Object.keys(this.selectedQuestions).length !== this.numberOfQuestionsToAnswer) {
+        this._snack.open("Please select exactly 3 sets of questions to submit", "", {
+          duration: 3000,
+        });
+        observer.error('Not enough questions selected');
+        return;
+      }
+
+      // Save to localStorage
+      localStorage.setItem(this.qid + "answeredQuestions", JSON.stringify(this.selectedQuestions));
+      this.convertJson();
+      this._quiz.evalTheory(this.convertedJsonAPIResponsebody).subscribe({
+        next: (data: any) => {
+          console.log("Server Response:", data);
+          this.geminiResponse = data;
+          localStorage.setItem("answeredAIQuestions" + this.qid, JSON.stringify(this.geminiResponse));
+
+          setTimeout(() => {
+            this.loadSubjectiveAIEval();
+          }, 1000);
+
+          // localStorage.setItem(this.qid + "answeredQuestions", JSON.stringify(this.selectedQuestionsAnswer));
+
+          observer.next(data);
+          observer.complete();
+        },
+        error: (err) => {
+          console.error("Subjective evaluation failed", err);
+          observer.error(err);
+        }
+      });
     });
-  });
-}
+  }
 
 
 
@@ -1506,116 +1592,116 @@ evalQuiz(): Observable<any> {
   // DATABASE TIMER LOGIC
 
   initializeTimer(): void {
-  this.quiz_progress.getQuizTimer(this.qid).subscribe({
-    next: (savedTimer) => {
-      this.timerAll = (savedTimer?.remainingTime && savedTimer.remainingTime > 0)
-        ? savedTimer.remainingTime
-        : (this.timeT + this.timeO) * 60;
+    this.quiz_progress.getQuizTimer(this.qid).subscribe({
+      next: (savedTimer) => {
+        this.timerAll = (savedTimer?.remainingTime && savedTimer.remainingTime > 0)
+          ? savedTimer.remainingTime
+          : (this.timeT + this.timeO) * 60;
 
-      if (!savedTimer || savedTimer.remainingTime <= 0) {
-        this.saveTimerToDatabase(); // first-time save
+        if (!savedTimer || savedTimer.remainingTime <= 0) {
+          this.saveTimerToDatabase(); // first-time save
+        }
+
+        this.isTimerLoaded = true;
+        this.startCountdown();
+      },
+      error: () => {
+        // Hard fallback
+        this.timerAll = (this.timeT + this.timeO) * 60;
+        this.isTimerLoaded = true;
+        this.startCountdown();
       }
+    });
+  }
 
-      this.isTimerLoaded = true;
-      this.startCountdown();
-    },
-    error: () => {
-      // Hard fallback
-      this.timerAll = (this.timeT + this.timeO) * 60;
-      this.isTimerLoaded = true;
-      this.startCountdown();
-    }
-  });
-}
-
-showTimeUpModal = false;
-private isExpiredHandled = false;
-countdownText = '';
-progressPercent = 100;
-private audio = new Audio('/assets/beep.mp3'); // short beep sound
+  showTimeUpModal = false;
+  private isExpiredHandled = false;
+  countdownText = '';
+  progressPercent = 100;
+  private audio = new Audio('/assets/beep.mp3'); // short beep sound
 
 
-private onTimerExpired(): void {
-  if (this.isExpiredHandled) return;
-  this.isExpiredHandled = true;
+  private onTimerExpired(): void {
+    if (this.isExpiredHandled) return;
+    this.isExpiredHandled = true;
 
-  this.timerSubscription?.unsubscribe();
-  this.timerAll = 0;
-  this.saveTimerToDatabase();
-  this.showTimeUpModal = true;
+    this.timerSubscription?.unsubscribe();
+    this.timerAll = 0;
+    this.saveTimerToDatabase();
+    this.showTimeUpModal = true;
 
-  const total = 5;
-  let count = total;
-  this.countdownText = count.toString();
-  this.progressPercent = 100;
+    const total = 5;
+    let count = total;
+    this.countdownText = count.toString();
+    this.progressPercent = 100;
 
-  const interval = setInterval(() => {
-    count--;
-    this.progressPercent = (count / total) * 100;
+    const interval = setInterval(() => {
+      count--;
+      this.progressPercent = (count / total) * 100;
 
-    if (count > 0) {
-      this.countdownText = count.toString();
-      if (count <= 3) {
-        this.audio.currentTime = 0;
-        this.audio.play().catch(() => {});
+      if (count > 0) {
+        this.countdownText = count.toString();
+        if (count <= 3) {
+          this.audio.currentTime = 0;
+          this.audio.play().catch(() => { });
+        }
+      } else {
+        clearInterval(interval);
+        this.countdownText = 'Submitting...';
+        this.progressPercent = 0;
+
+        setTimeout(() => {
+          // Collect only existing evaluations
+          const observables: Observable<any>[] = [];
+
+          if (this.evalQuiz) {
+            observables.push(this.evalQuiz());
+          }
+          if (this.evalSubjective) {
+            observables.push(this.evalSubjective());
+          }
+
+          if (observables.length === 0) {
+            // No evaluations for this quiz, just finish
+            this.finishAfterEvaluation();
+            return;
+          }
+
+          forkJoin(
+            observables.map(obs =>
+              obs.pipe(
+                catchError(err => {
+                  console.error('One evaluation failed:', err);
+                  return of(null); // allow forkJoin to continue even if this observable fails
+                })
+              )
+            )
+          ).subscribe({
+            next: () => {
+              console.log('All evaluations (that exist) completed');
+              this.finishAfterEvaluation();
+            },
+            error: (err) => {
+              // This block almost never runs now
+              console.error('Unexpected error in evaluation', err);
+              this.finishAfterEvaluation();
+            }
+          });
+        }, 700);
+
       }
-    } else {
-      clearInterval(interval);
-      this.countdownText = 'Submitting...';
-      this.progressPercent = 0;
-
-    setTimeout(() => {
-  // Collect only existing evaluations
-  const observables: Observable<any>[] = [];
-
-  if (this.evalQuiz) {
-    observables.push(this.evalQuiz());
-  }
-  if (this.evalSubjective) {
-    observables.push(this.evalSubjective());
+    }, 1000);
   }
 
-  if (observables.length === 0) {
-    // No evaluations for this quiz, just finish
-    this.finishAfterEvaluation();
-    return;
-  }
-
-  forkJoin(
-    observables.map(obs =>
-      obs.pipe(
-        catchError(err => {
-          console.error('One evaluation failed:', err);
-          return of(null); // allow forkJoin to continue even if this observable fails
-        })
-      )
-    )
-  ).subscribe({
-    next: () => {
-      console.log('All evaluations (that exist) completed');
-      this.finishAfterEvaluation();
-    },
-    error: (err) => {
-      // This block almost never runs now
-      console.error('Unexpected error in evaluation', err);
-      this.finishAfterEvaluation();
+  // Centralized finish logic
+  private finishAfterEvaluation() {
+    this.showTimeUpModal = false;
+    this.preventBackButton();
+    if (window.opener) {
+      window.opener.location.href = '/user-dashboard/0';
     }
-  });
-}, 700);
-
-    }
-  }, 1000);
-}
-
-// Centralized finish logic
-private finishAfterEvaluation() {
-  this.showTimeUpModal = false;
-  this.preventBackButton();
-  if (window.opener) {
-    window.opener.location.href = '/user-dashboard/0';
+    window.close();
   }
-  window.close();
-}
 
 
   private saveTimerToDatabase(): void {
@@ -1632,22 +1718,22 @@ private finishAfterEvaluation() {
 
 
   private startCountdown(): void {
-  // Safety: prevent multiple timers
-  this.timerSubscription?.unsubscribe();
+    // Safety: prevent multiple timers
+    this.timerSubscription?.unsubscribe();
 
-  this.timerSubscription = interval(1000).subscribe(() => {
-    this.timerAll--;
+    this.timerSubscription = interval(1000).subscribe(() => {
+      this.timerAll--;
 
-    // OPTIONAL: persist every 10 seconds
-    if (this.timerAll % 10 === 0) {
-      this.saveTimerToDatabase();
-    }
+      // OPTIONAL: persist every 10 seconds
+      if (this.timerAll % 10 === 0) {
+        this.saveTimerToDatabase();
+      }
 
-    if (this.timerAll <= 0) {
-      this.onTimerExpired();
-    }
-  });
-}
+      if (this.timerAll <= 0) {
+        this.onTimerExpired();
+      }
+    });
+  }
 
 
 

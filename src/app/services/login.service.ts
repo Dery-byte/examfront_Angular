@@ -18,11 +18,19 @@ export class LoginService {
 
   constructor(private http:HttpClient, private router: Router) { }
 
+//   public getCurrentUser() {
+//   return this.http.get(`${baseUrl}/current-user`, { 
+//     withCredentials: true 
+//   });
+// }
+
+
   public getCurrentUser() {
   return this.http.get(`${baseUrl}/current-user`, { 
     withCredentials: true 
   });
 }
+
 
 public generateToken(loginData: any) {
   return this.http.post(`${baseUrl}/authenticate`, loginData, { 
