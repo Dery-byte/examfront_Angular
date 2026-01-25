@@ -227,48 +227,58 @@ export class AdminnavbarComponent {
 		}, 300);
 	}
 
-	public logout(): void {
-    // Prevent multiple simultaneous logout calls
-    if (this.isLoggingOut) {
-      console.log("⏳ Logout already in progress...");
-      return;
-    }
+	// public logout(): void {
+  //   // Prevent multiple simultaneous logout calls
+  //   if (this.isLoggingOut) {
+  //     console.log("⏳ Logout already in progress...");
+  //     return;
+  //   }
 
-    this.isLoggingOut = true;
-    console.log("🚪 Logging out user...");
+  //   this.isLoggingOut = true;
+  //   console.log("🚪 Logging out user...");
 
-    // Unsubscribe from countdown
-    if (this.expirationSubscription) {
-      this.expirationSubscription.unsubscribe();
-    }
+  //   // Unsubscribe from countdown
+  //   if (this.expirationSubscription) {
+  //     this.expirationSubscription.unsubscribe();
+  //   }
 
-    // Call backend logout endpoint
-    this.login.logout().subscribe({
-      next: (response) => {
-        console.log("✅ Backend logout successful:", response);
+  //   // Call backend logout endpoint
+  //   this.login.logout().subscribe({
+  //     next: (response) => {
+  //       console.log("✅ Backend logout successful:", response);
         
-        // Clear local session
-        this.login.clearLocalSession();
-        this.isloggedIn = false;
-        this.user = null;
+  //       // Clear local session
+  //       this.login.clearLocalSession();
+  //       this.isloggedIn = false;
+  //       this.user = null;
         
-        // Redirect to login page
-        console.log("🔄 Redirecting to login...");
-        window.location.href = '/login';
-      },
-      error: (error) => {
-        console.error("❌ Logout error:", error);
+  //       // Redirect to login page
+  //       console.log("🔄 Redirecting to login...");
+  //       window.location.href = '/login';
+  //     },
+  //     error: (error) => {
+  //       console.error("❌ Logout error:", error);
         
-        // Even if backend fails, clear local session and redirect
-        this.login.clearLocalSession();
-        this.isloggedIn = false;
-        this.user = null;
+  //       // Even if backend fails, clear local session and redirect
+  //       this.login.clearLocalSession();
+  //       this.isloggedIn = false;
+  //       this.user = null;
         
-        // Still redirect to login
-        window.location.href = '/login';
-      }
-	});
-	}
+  //       // Still redirect to login
+  //       window.location.href = '/login';
+  //     }
+	// });
+	// }
+
+
+  logout(): void {
+  // Service handles backend call, clearing session, and redirect
+  this.login.logout();
+  
+  // Update component state
+  this.isloggedIn = false;
+  this.user = null;
+}
 	
 
   // Add a method to handle alert effect
