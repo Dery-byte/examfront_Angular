@@ -616,12 +616,10 @@ export class LoginComponent implements OnInit {
     this.login.requestPasswordResetLink(email).subscribe({
       next: () => {
         this.successEmail = email;
-        
         if (form) {
           form.resetForm();
         }
         this.resetData.email = '';
-        
         this.showSuccessMessage = true;
         this.isSubmitting = false;
       },
@@ -632,6 +630,14 @@ export class LoginComponent implements OnInit {
       }
     });
   }
+
+
+
+
+
+
+
+
 
   /**
    * Validate email format
