@@ -15,6 +15,8 @@ import { switchMap, tap } from 'rxjs/operators';
 })
 export class AddQuestionComponent implements OnInit {
   selectedFile: File | null = null;
+  selectedFileTheory: File | null = null;
+
 
   specificQuiz: any;
   public Editor = ClassisEditor;
@@ -122,6 +124,17 @@ export class AddQuestionComponent implements OnInit {
       this.selectedFile = null;
     }
   }
+
+
+
+    onFileSelectedTheory(event: Event): void {
+    const input = event.target as HTMLInputElement;
+    if (input.files && input.files.length > 0) {
+      this.selectedFileTheory = input.files[0];
+    } else {
+      this.selectedFileTheory = null;
+    }
+  }
   // onFileSelected(event: any): void {
   //   this.selectedFile = event.target.files[0];
   // }
@@ -141,7 +154,8 @@ export class AddQuestionComponent implements OnInit {
 
         (error) => {
           Swal.fire('Success', "Questions uploaded successfully", "success");
-          this._router.navigate(["/admin/quizzes"]);
+          this.clearSelectedFile();
+          // this._router.navigate(["/admin/quizzes"]);
           console.log(" Not Done!!!");
           // this._router.navigate(["/admin/view-questions"/{this.qId}]);
         }
@@ -151,7 +165,7 @@ export class AddQuestionComponent implements OnInit {
 
 
   uploadTheoryQuestionss(): void {
-    if (!this.selectedFile || !this.theoryQuesToAnswer.totalQuestToAnswer) {
+    if (!this.selectedFileTheory || !this.theoryQuesToAnswer.totalQuestToAnswer) {
       this._snack.open(
         "Select a file and specify No. of questions to answer!",
         "",
@@ -173,7 +187,7 @@ export class AddQuestionComponent implements OnInit {
         }),
         switchMap((data: any) => {
           // console.log("Starting file upload...");
-          return this._question.uploadTheoryQuestions(this.qId, this.selectedFile);
+          return this._question.uploadTheoryQuestions(this.qId, this.selectedFileTheory);
         }),
         tap(response => {
           // console.log("Second API response (uploadTheoryQuestions):", response);
@@ -183,7 +197,7 @@ export class AddQuestionComponent implements OnInit {
         response => {
           console.log("Final success response:", response);
           Swal.fire("Success", "Theory Questions uploaded successfully", "success");
-          this.clearSelectedFile();
+          this.clearSelectedFileTheory();
           this.theoryQuesToAnswer.totalQuestToAnswer = "";
           this.theoryQuesToAnswer.timeAllowed = "";
         },
@@ -206,7 +220,10 @@ export class AddQuestionComponent implements OnInit {
     this.selectedFile = null;
   }
 
-
+  
+    clearSelectedFileTheory(): void {
+    this.selectedFileTheory = null;
+  }
 
 
 }

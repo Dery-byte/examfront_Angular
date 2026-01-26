@@ -211,9 +211,20 @@
 
               </div> -->
 
+
+
+
+
+
+
+
+
+
+
+
               <div class="file-upload-wrapper">
-                <label class="file-upload-label" *ngIf="!selectedFile">
-                  <input type="file" (change)="onFileSelected($event)" class="file-upload-input" accept=".json" hidden>
+                <label class="file-upload-label" *ngIf="!selectedFileTheory">
+                  <input type="file" (change)="onFileSelectedTheory($event)" class="file-upload-input" accept=".json" hidden>
                   <span class="file-upload-button" mat-raised-button>
                     <mat-icon>attach_file</mat-icon>
                     Select JSON File
@@ -221,18 +232,18 @@
                 </label>
 
                 <!-- Show selected file -->
-                <div class="selected-file" *ngIf="selectedFile">
+                <div class="selected-file" *ngIf="selectedFileTheory">
                   <mat-icon color="primary">description</mat-icon>
-                  <span>{{ selectedFile.name }}</span>
-                  <button mat-icon-button color="warn" (click)="clearSelectedFile()">
+                  <span>{{ selectedFileTheory.name }}</span>
+                  <button mat-icon-button color="warn" (click)="clearSelectedFileTheory()">
                     <mat-icon>close</mat-icon>
                   </button>
                 </div>
 
                 <button mat-raised-button color="accent" (click)="uploadTheoryQuestionss()" class="upload-action-btn"
-                  [disabled]="!selectedFile || !theoryQuesToAnswer?.totalQuestToAnswer|| !theoryQuesToAnswer.timeAllowed">
+                  [disabled]="!selectedFileTheory || !theoryQuesToAnswer?.totalQuestToAnswer|| !theoryQuesToAnswer.timeAllowed">
                   <mat-icon>publish</mat-icon>
-                  Upload Questions
+                  Upload Theory
                 </button>
               </div>
 
