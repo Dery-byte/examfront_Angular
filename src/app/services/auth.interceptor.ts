@@ -41,7 +41,7 @@
 
 
 
-    
+
 
 
 
@@ -80,24 +80,27 @@ import { Injectable } from '@angular/core';
 import { LoginService } from "./login.service";
 import { Router } from '@angular/router';
 
-@Injectable() 
+@Injectable()
 export class AuthInterceptor implements HttpInterceptor {
 
     constructor(
         private login: LoginService,
         private router: Router
-    ) {}
+    ) { }
 
     intercept(req: HttpRequest<any>, next: HttpHandler): Observable<HttpEvent<any>> {
-        
+        const token = localStorage.getItem('access_token'); // or sessionStorage
+
         // Clone the request and add withCredentials for cookie-based auth
         const authReq = req.clone({
-            withCredentials: true  // This ensures cookies are sent with every request
+            setHeaders: {
+                Authorization: `Bearer ${token}`
+            }
         });
 
         return next.handle(authReq).pipe(
             catchError((error: HttpErrorResponse) => {
-                
+
                 // Handle 401 Unauthorized errors
                 if (error.status === 401) {
                     console.error('Unauthorized request - logging out');

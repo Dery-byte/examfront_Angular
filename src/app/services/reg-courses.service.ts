@@ -20,9 +20,7 @@ export class RegCoursesService {
   // }
 
     public getRegCourses() {
-  return this._http.get(`${baseUrl}/getRegCourses`, { 
-    withCredentials: true 
-  });
+  return this._http.get(`${baseUrl}/getRegCourses`);
 }
 
 
@@ -33,9 +31,7 @@ export class RegCoursesService {
 
 
       public regCourses(courses) {
-  return this._http.post(`${baseUrl}/registerCourse `, courses, { 
-    withCredentials: true 
-  });
+  return this._http.post(`${baseUrl}/registerCourse `, courses);
 }
 
   // public deleteRegCourse(Rid) {
@@ -45,9 +41,7 @@ export class RegCoursesService {
 
 
         public deleteRegCourse(Rid) {
-  return this._http.delete(`${baseUrl}/regCourse/deleteById/${Rid}`,{ 
-    withCredentials: true 
-  });
+  return this._http.delete(`${baseUrl}/regCourse/deleteById/${Rid}`);
 }
 
 

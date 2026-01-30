@@ -20,9 +20,7 @@ export class CategoryService {
   //   }
 
   public getCategories() {
-    return this.http.get(`${baseUrl}/getCategories`, {
-      withCredentials: true
-    });
+    return this.http.get(`${baseUrl}/getCategories`);
   }
 
 
@@ -31,9 +29,7 @@ export class CategoryService {
 
   // Categories for a USER
   public getCategoriesForUser() {
-    return this.http.get(`${baseUrl}/categoriesForUser`, {
-      withCredentials: true
-    });
+    return this.http.get(`${baseUrl}/categoriesForUser`);
   }
 
 
@@ -41,27 +37,19 @@ export class CategoryService {
 
   //add new category
   public addCategory(category) {
-    return this.http.post(`${baseUrl}/add`, category, {
-      withCredentials: true
-    });
+    return this.http.post(`${baseUrl}/add`, category);
   }
 
   //add new category then USER
   public addCategoryAndUser(category) {
-    return this.http.post(`${baseUrl}/user/addCategory`, category, {
-      withCredentials: true
-    });
+    return this.http.post(`${baseUrl}/user/addCategory`, category);
   }
 
 
 
   // Fetch a single category by ID
   public getCategory(cId) {
-    return this.http.get(`${baseUrl}/category/${cId}`,
-      {
-        withCredentials: true
-
-      }
+    return this.http.get(`${baseUrl}/category/${cId}`
     );
   }
 
@@ -69,21 +57,14 @@ export class CategoryService {
 
   // Fetch a single category by ID
   public getAllLecturers() {
-    return this.http.get(`${baseUrl}/all/lecturers`,
-      {
-        withCredentials: true
-
-      }
+    return this.http.get(`${baseUrl}/all/lecturers`
     );
   }
 
 
     // Fetch a single category by ID
   public getLecturerById(lecturerId) {
-    return this.http.get(`${baseUrl}/lecturerbyId/${lecturerId}`,
-      {
-        withCredentials: true
-      }
+    return this.http.get(`${baseUrl}/lecturerbyId/${lecturerId}`
     );
   }
 
@@ -91,31 +72,21 @@ export class CategoryService {
 
   //update category
    updateLecturer(lectId:number, payload) {
-    return this.http.put(`${baseUrl}/update/lecturer/${lectId}`, payload,
-      {
-        withCredentials: true
-      }
+    return this.http.put(`${baseUrl}/update/lecturer/${lectId}`, payload
     );
   }
 
 
 
      updateStudent(studId:number, payload) {
-    return this.http.put(`${baseUrl}/update/student/${studId}`, payload,
-      {
-        withCredentials: true
-      }
+    return this.http.put(`${baseUrl}/update/student/${studId}`, payload
     );
   }
 
 
     // Fetch a single category by ID
   public getAllStudent() {
-    return this.http.get(`${baseUrl}/all/students`,
-      {
-        withCredentials: true
-
-      }
+    return this.http.get(`${baseUrl}/all/students`
     );
   }
 
@@ -123,10 +94,7 @@ export class CategoryService {
 
       // Fetch a single category by ID
   public getStudentById(studentId) {
-    return this.http.get(`${baseUrl}/studentbyId/${studentId}`,
-      {
-        withCredentials: true
-      }
+    return this.http.get(`${baseUrl}/studentbyId/${studentId}`
     );
   }
 
@@ -134,18 +102,13 @@ export class CategoryService {
 
   // In your category service file
   assignCourseToLecturer(courseId: number, lecturerId: number): Observable<any> {
-    return this.http.put(`${baseUrl}/courses/${courseId}/assign/${lecturerId}`, {}, {
-      withCredentials: true
-    });
+    return this.http.put(`${baseUrl}/courses/${courseId}/assign/${lecturerId}`, {});
   }
 
 
   //update category
   public updateCategory(category) {
-    return this.http.put(`${baseUrl}/category/updateCategory`, category,
-      {
-        withCredentials: true
-      }
+    return this.http.put(`${baseUrl}/category/updateCategory`, category
     );
   }
 
@@ -155,33 +118,25 @@ export class CategoryService {
    adminUpdateCategory(cId:number, category: any): Observable<any> {
     return this.http.put(
       `${baseUrl}/category/admin/updateCategory/${cId}`,
-      category,
-      { withCredentials: true }
+      category
     );
   }
 
 
   //delete category
    deleteCategory(cId) {
-    return this.http.delete(`${baseUrl}/category/${cId}`, {
-      withCredentials: true
-
-    });
+    return this.http.delete(`${baseUrl}/category/${cId}`);
 
   }
 
 
     deleteLecturer(lectId) {
-    return this.http.delete(`${baseUrl}/lecturer/${lectId}`, {
-      withCredentials: true
-    })
+    return this.http.delete(`${baseUrl}/lecturer/${lectId}`)
   }
 
 
     deleteStudent(studId) {
-    return this.http.delete(`${baseUrl}/student/${studId}`, {
-      withCredentials: true
-    });
+    return this.http.delete(`${baseUrl}/student/${studId}`);
 
   }
 

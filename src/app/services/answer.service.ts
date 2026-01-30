@@ -17,14 +17,11 @@ constructor( private _http:HttpClient ) { }
   //get Report by userId and QuizId
   // get Report by quizId
 public getTheoryReport(qId: number): Observable<any> {
-  const token = localStorage.getItem('token'); // or however you store it
+  const token = localStorage.getItem('access_token'); // or however you store it
   const headers = {
     Authorization: `Bearer ${token}`
   };
-  return this._http.get(`${baseUrl}/answers/quiz/${qId}`, { 
-    headers,
-  withCredentials: true 
-  });
+  return this._http.get(`${baseUrl}/answers/quiz/${qId}`);
 }
 
 // public getTheoryReport(qId){

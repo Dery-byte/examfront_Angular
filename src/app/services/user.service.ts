@@ -21,9 +21,7 @@ return this.http.post(`${baseUrl}/register`, user);
 
 
   registerLecturer(payload: any) {
-  return this.http.post(`${baseUrl}/register/lecturer`, payload,{
-    withCredentials:true
-  } );
+  return this.http.post(`${baseUrl}/register/lecturer`, payload);
 }
 
 }

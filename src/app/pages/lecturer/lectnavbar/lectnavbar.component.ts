@@ -105,19 +105,15 @@ export class LectnavbarComponent {
     }
   
     ngOnInit(): void {
-  
-  
-  
+        this.startCountdown();
       this.isloggedIn = this.login.isLoggedIn();
       this.user = this.login.getUser();
-      this.isAdminUser = this.hasAuthority('ADMIN');   // ✅ compute once
-      this.startCountdown();
-  
+      this.isAdminUser = this.hasAuthority('LECTURER');   // ✅ compute once
       // react to login status changes
       this.login.loginStatusSubject.asObservable().subscribe(() => {
         this.isloggedIn = this.login.isLoggedIn();
         this.user = this.login.getUser();
-        this.isAdminUser = this.hasAuthority('ADMIN');  // ✅ recompute
+        this.isAdminUser = this.hasAuthority('LECTURER');  // ✅ recompute
       });
   
       this._cat.getCategories().subscribe(
@@ -125,7 +121,7 @@ export class LectnavbarComponent {
           this.categories = data;
         },
         (error) => {
-          this._snack.open("Couldn't load Categories from Server", "", { duration: 3000 });
+          // this._snack.open("Couldn't load Categories from Server", "", { duration: 3000 });
         }
       );
          this.breakpointObserver.observe([Breakpoints.Handset]).subscribe(result => {
@@ -161,54 +157,55 @@ export class LectnavbarComponent {
   
   
     
-    startCountdown(): void {
-      this.tokenExpirationService.startCountdownFromBackend();
-  
-      this.expirationSubscription = this.tokenExpirationService.expiration$.subscribe(
-        (seconds) => {
-          console.log("⏱️ Countdown seconds:", seconds);
-  
-          if (seconds === 0) {
-            // Token expired - show expired state then trigger modal
-            this.logout();
-            console.log("🚨 Token expired! Showing modal...");
-  
-            // Small delay to let the UI update before showing modal
-            setTimeout(() => {
-              this.handleTokenExpiration();
-            }, 500);
-          } else {
-            // Update the display
-            const minutesLeft = Math.floor(seconds / 60);
-            this.timeDisplay = this.formatTime(seconds, minutesLeft);
-            console.log("⏰ Time display:", this.timeDisplay);
-  
-            // Trigger alert effect when less than 1 minute left
-            if (minutesLeft === 0 && seconds <= 60 && seconds > 0) {
-              this.triggerAlertEffect();
-            }
-  
-            // Optional: Show warning at 5 minutes
-            if (seconds === 300) {
-              console.log("⚠️ Warning: 5 minutes remaining!");
-              // You could show a toast notification here
-            }
-  
-            // Optional: Show critical warning at 1 minute
-            if (seconds === 60) {
-              console.log("🔴 Critical: 1 minute remaining!");
-              // You could show another notification here
-            }
-          }
-        },
-        (error) => {
-          console.error("❌ Error in countdown subscription:", error);
-        },
-        () => {
-          console.log("✅ Countdown completed");
-        }
-      );
-    }
+    
+	startCountdown(): void {
+		this.tokenExpirationService.startCountdownFromBackend();
+
+		this.expirationSubscription = this.tokenExpirationService.expiration$.subscribe(
+			(seconds) => {
+				console.log("⏱️ Countdown seconds:", seconds);
+
+				if (seconds === 0) {
+					// Token expired - show expired state then trigger modal
+					this.logout();
+					console.log("🚨 Token expired! Showing modal...");
+
+					// Small delay to let the UI update before showing modal
+					setTimeout(() => {
+						this.handleTokenExpiration();
+					}, 500);
+				} else {
+					// Update the display
+					const minutesLeft = Math.floor(seconds / 60);
+					this.timeDisplay = this.formatTime(seconds, minutesLeft);
+					console.log("⏰ Time display:", this.timeDisplay);
+
+					// Trigger alert effect when less than 1 minute left
+					if (minutesLeft === 0 && seconds <= 60 && seconds > 0) {
+						this.triggerAlertEffect();
+					}
+
+					// Optional: Show warning at 5 minutes
+					if (seconds === 300) {
+						console.log("⚠️ Warning: 5 minutes remaining!");
+						// You could show a toast notification here
+					}
+
+					// Optional: Show critical warning at 1 minute
+					if (seconds === 60) {
+						console.log("🔴 Critical: 1 minute remaining!");
+						// You could show another notification here
+					}
+				}
+			},
+			(error) => {
+				console.error("❌ Error in countdown subscription:", error);
+			},
+			() => {
+				console.log("✅ Countdown completed");
+			}
+		);
+	}
   
     private handleTokenExpiration(): void {
       console.log("🔒 Handling token expiration - showing modal");

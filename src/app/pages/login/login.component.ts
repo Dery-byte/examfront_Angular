@@ -2,7 +2,7 @@
 // import { MatSnackBar } from '@angular/material/snack-bar';
 // import { Router, ActivatedRoute } from '@angular/router';
 // import Swal from 'sweetalert2';
-// import { LoginService } from 'src/app/services/login.service';
+// import { login } from 'src/app/services/login.service';
 // import { FormBuilder, Validators, FormGroup } from '@angular/forms';
 // import { MatDialog, MAT_DIALOG_DATA, MatDialogRef, MatDialogModule } from '@angular/material/dialog';
 // import { NgForm } from '@angular/forms';  // <--- add this
@@ -444,6 +444,7 @@ export class LoginComponent implements OnInit {
   isSubmitting = false;
   apiError: string | null = null;
   successEmail: string | null = null;
+  errorMessage = '';
 
   constructor(
     private snack: MatSnackBar,
@@ -469,6 +470,11 @@ export class LoginComponent implements OnInit {
         console.log('Received OAuth token:', token);
         this.router.navigate(['/dashboard']);
       }
+
+
+        if (this.login.isLoggedIn()) {
+      this.redirectBasedOnRole();
+    }
     });
 
     // Redirect if already logged in
@@ -522,60 +528,191 @@ export class LoginComponent implements OnInit {
   /**
    * Handle login form submission
    */
-  formSubmit(): void {
-    // Validate inputs
-    if (!this.loginData.username?.trim()) {
-      this.snack.open('Username is required!', '', { duration: 3000 });
-      return;
-    }
 
-    if (!this.loginData.password?.trim()) {
-      this.snack.open('Password is required!', '', { duration: 3000 });
-      return;
-    }
 
-    this.isLogingIn = true;
-    this.loading = true;
+  // formSubmit(): void {
+  //   // Validate inputs
+  //   if (!this.loginData.username?.trim()) {
+  //     this.snack.open('Username is required!', '', { duration: 3000 });
+  //     return;
+  //   }
 
-    // Step 1: Authenticate and get cookie from backend
-    this.login.generateToken(this.loginData).subscribe({
-      next: (response: any) => {
-        console.log('Authentication successful, cookie set');
+  //   if (!this.loginData.password?.trim()) {
+  //     this.snack.open('Password is required!', '', { duration: 3000 });
+  //     return;
+  //   }
+
+  //   this.isLogingIn = true;
+  //   this.loading = true;
+
+  //   // Step 1: Authenticate and get cookie from backend
+  //   this.login.generateToken(this.loginData).subscribe({
+  //     next: (response: any) => {
+  //       console.log('Authentication successful, cookie set');
         
-        // Step 2: Fetch current user details
+  //       // Step 2: Fetch current user details
+  //       this.login.getCurrentUser().subscribe({
+  //         next: (user: any) => {
+  //           console.log('User details:', user);
+            
+  //           // Step 3: Store user in localStorage
+  //           this.login.loginUser(user);
+            
+  //           // Step 4: Redirect based on role
+  //           const role = this.login.getUserRole();
+  //           this.redirectToRoleDashboard(role);
+  //         },
+  //         error: (error) => {
+  //           console.error('Error fetching user:', error);
+  //           this.loading = false;
+  //           this.isLogingIn = false;
+  //           this.snack.open('Failed to fetch user details', '', { duration: 3000 });
+  //         }
+  //       });
+  //     },
+  //     error: (error) => {
+  //       console.error('Login error:', error);
+  //       this.loading = false;
+  //       this.isLogingIn = false;
+        
+  //       const errorMessage = error.status === 401 
+  //         ? 'Invalid username or password' 
+  //         : 'Login failed. Please try again';
+          
+  //       this.snack.open(errorMessage, '', { duration: 3000 });
+  //     }
+  //   });
+  // }
+
+
+
+ 
+  /**
+   * Submit login form
+   */
+  formSubmit(): void {
+    // Validation
+    if (!this.loginData.username || !this.loginData.password) {
+      this.showError('Please enter both email and password');
+      return;
+    }
+
+    this.loading = true;
+    this.errorMessage = '';
+
+    console.log('🔐 Attempting login for:', this.loginData.username);
+
+    // Step 1: Authenticate and get token
+    this.login.generateToken(this.loginData).subscribe({
+      next: (response) => {
+        console.log('✅ Token received:', response);
+
+        // Step 2: Get current user details
         this.login.getCurrentUser().subscribe({
-          next: (user: any) => {
-            console.log('User details:', user);
-            
-            // Step 3: Store user in localStorage
+          next: (user) => {
+            console.log('✅ User data received:', user);
+
+            // Step 3: Store user and update login status
             this.login.loginUser(user);
-            
-            // Step 4: Redirect based on role
-            const role = this.login.getUserRole();
-            this.redirectToRoleDashboard(role);
+
+            // Step 4: Show success message
+            this.showSuccess('Login successful!');
+
+            // Step 5: Redirect based on role
+            this.redirectBasedOnRole();
           },
           error: (error) => {
-            console.error('Error fetching user:', error);
+            console.error('❌ Failed to fetch user data:', error);
+            this.showError('Failed to load user data');
             this.loading = false;
-            this.isLogingIn = false;
-            this.snack.open('Failed to fetch user details', '', { duration: 3000 });
           }
         });
       },
       error: (error) => {
-        console.error('Login error:', error);
+        console.error('❌ Login failed:', error);
+        this.handleLoginError(error);
         this.loading = false;
-        this.isLogingIn = false;
-        
-        const errorMessage = error.status === 401 
-          ? 'Invalid username or password' 
-          : 'Login failed. Please try again';
-          
-        this.snack.open(errorMessage, '', { duration: 3000 });
       }
     });
   }
 
+  /**
+   * Handle login errors
+   */
+  private handleLoginError(error: any): void {
+    if (error.status === 401) {
+      this.errorMessage = 'Invalid email or password';
+    } else if (error.status === 403) {
+      this.errorMessage = 'Account is disabled';
+    } else if (error.status === 0) {
+      this.errorMessage = 'Cannot connect to server';
+    } else {
+      this.errorMessage = error.error?.message || 'Login failed. Please try again.';
+    }
+    this.showError(this.errorMessage);
+  }
+
+  /**
+   * Redirect user based on their role
+   */
+  private redirectBasedOnRole(): void {
+    const userRole = this.login.getUserRole();
+    console.log('👤 User role:', userRole);
+
+    if (this.login.isAdmin()) {
+      console.log('🔑 Redirecting to admin dashboard');
+      this.router.navigate(['/admin']);
+    } else if (this.login.isStudent()) {
+      console.log('👤 Redirecting to user dashboard');
+      this.router.navigate(['/user-dashboard/0']);
+    }
+    else if (this.login.isLecturer()) {
+      console.log('👤 Redirecting to user dashboard');
+      this.router.navigate(['/lect']);
+    }    
+    else {
+      console.log('❓ Unknown role, redirecting to home');
+      this.router.navigate(['/']);
+    }
+  }
+
+  /**
+   * Show success message
+   */
+  private showSuccess(message: string): void {
+    this.snack.open(message, 'Close', {
+      duration: 3000,
+      horizontalPosition: 'center',
+      verticalPosition: 'top',
+      panelClass: ['success-snackbar']
+    });
+  }
+
+  /**
+   * Show error message
+   */
+  private showError(message: string): void {
+    this.snack.open(message, 'Close', {
+      duration: 5000,
+      horizontalPosition: 'center',
+      verticalPosition: 'top',
+      panelClass: ['error-snackbar']
+    });
+  }
+
+  /**
+   * Navigate to registration page
+   */
+  goToRegister(): void {
+    this.router.navigate(['/register']);
+  }
+
+  /**
+   * Navigate to forgot password page
+   */
+  goToForgotPassword(): void {
+    this.router.navigate(['/forgot-password']);
+  }
   /**
    * Redirect user to appropriate dashboard based on role
    */

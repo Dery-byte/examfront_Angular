@@ -27,33 +27,23 @@ $items: Observable<any> = this.items.asObservable();
   }
 
 public loadQuizzes(){
-  return this._http.get(`${baseUrl}/getQuizzes`,{
-            withCredentials:true
-
-  });
+  return this._http.get(`${baseUrl}/getQuizzes`);
 }
 
 
 public loadQuizzesForUser(){
-  return this._http.get(`${baseUrl}/user/getQuiz`,{
-            withCredentials:true
-
-  });
+  return this._http.get(`${baseUrl}/user/getQuiz`);
 }
 
 
 
 public addQuiz(quiz){
-return this._http.post(`${baseUrl}/addQuiz`, quiz,{
-          withCredentials:true
-});
+return this._http.post(`${baseUrl}/addQuiz`, quiz);
 }
 
 
 public addUserQuiz(quiz){
-return this._http.post(`${baseUrl}/user/addQuiz`, quiz,{
-          withCredentials:true
-});
+return this._http.post(`${baseUrl}/user/addQuiz`, quiz);
 }
 
 
@@ -62,44 +52,30 @@ return this._http.post(`${baseUrl}/user/addQuiz`, quiz,{
 // }
 
 public deleteQuizs(qId){
-return this._http.delete(`${baseUrl}/delete/quiz/${qId}`,{
-          withCredentials:true
-
-});
+return this._http.delete(`${baseUrl}/delete/quiz/${qId}`);
 }
 
 //get single quiz to facilitate update
 
 public getQuiz(qId){
-  return this._http.get(`${baseUrl}/singleQuiz/${qId}`,{
-    withCredentials:true
-  });
+  return this._http.get(`${baseUrl}/singleQuiz/${qId}`);
 }
 
 
 
 
 public getQuizById(qId){
-  return this._http.get(`${baseUrl}/singleQuiz/${qId}`,{
-            withCredentials:true
-
-  });
+  return this._http.get(`${baseUrl}/singleQuiz/${qId}`);
 }
 //update Quiz
 public updateQuiz(quiz){
-return this._http.put(`${baseUrl}/update`, quiz,{
-          withCredentials:true
-
-});
+return this._http.put(`${baseUrl}/update`, quiz);
 }
 
 //get quizzes of ctegory
 
 public getQuizzessOfCategory(cid){
-  return this._http.get(`${baseUrl}/quiz/category/${cid}`,{
-            withCredentials:true
-
-  });
+  return this._http.get(`${baseUrl}/quiz/category/${cid}`);
 }
 
 //get Active quizzzes
@@ -110,9 +86,7 @@ public getQuizzessOfCategory(cid){
 
 
    public actieQuizzes() {
-  return this._http.get(`${baseUrl}/active/quizzes`, { 
-    withCredentials: true 
-  });
+  return this._http.get(`${baseUrl}/active/quizzes`);
 }
 
 // get active quizzes of category 
@@ -122,9 +96,7 @@ public getQuizzessOfCategory(cid){
 
 
    public getActieQuizzesOfCategory(cid) {
-  return this._http.get(`${baseUrl}/category/active/${cid}`, { 
-    withCredentials: true 
-  });
+  return this._http.get(`${baseUrl}/category/active/${cid}`);
 }
 
 
@@ -137,9 +109,7 @@ public getQuizzessOfCategory(cid){
 
 
    public getTakenQuizzesOfCategoryByUser(cid) {
-  return this._http.get(`${baseUrl}/category/takenByUser/${cid}`, { 
-    withCredentials: true 
-  });
+  return this._http.get(`${baseUrl}/category/takenByUser/${cid}`);
 }
 
 
@@ -150,25 +120,17 @@ public getQuizzessOfCategory(cid){
 
 //get single quiz to facilitate update
 public getNumerOfQuesToAnswer(qId){
-  return this._http.get(`${baseUrl}/numberOfTheoryQuestion/${qId}`,{
-    withCredentials:true
-  });
+  return this._http.get(`${baseUrl}/numberOfTheoryQuestion/${qId}`);
 }
 
 public addNumberOfTheoryQuestions(quizNumberOfQuestion){
-  return this._http.post(`${baseUrl}/numberOfTheoryQuestion/add`, quizNumberOfQuestion,{
-            withCredentials:true
-
-  });
+  return this._http.post(`${baseUrl}/numberOfTheoryQuestion/add`, quizNumberOfQuestion);
 }
 
 
 //get Active quizzzes
 public addSectionBMarks(questions){
-  return this._http.put(`${baseUrl}/addtheoryMark`,questions,{
-            withCredentials:true
-
-  });
+  return this._http.put(`${baseUrl}/addtheoryMark`,questions);
 }
 
 //BELOW IS FOR TESTING
@@ -198,10 +160,7 @@ public addSectionBMarks(questions){
 
 // GPT EVALUATION
 public evalTheory(questions){
-  return this._http.post(`${baseUrl}/quizGPT/evaluate`, questions,{
-            withCredentials:true
-
-  });
+  return this._http.post(`${baseUrl}/quizGPT/evaluate`, questions);
 }
 
 
@@ -209,10 +168,7 @@ public evalTheory(questions){
 
 public updateQuizStatus(qId: number, status: string) {
   const body = { status };
-  return this._http.put(`${baseUrl}/quiz/status/${qId}`, body,{
-            withCredentials:true
-
-  });
+  return this._http.put(`${baseUrl}/quiz/status/${qId}`, body);
 }
 
 

@@ -14,9 +14,7 @@ export class ReportServiceService {
   constructor( private _http:HttpClient ) { }
 
 public loadResultsSummary(rId){
-  return this._http.get(`${baseUrl}/getReport/${rId}`,{
-    withCredentials: true 
-  });
+  return this._http.get(`${baseUrl}/getReport/${rId}`);
 }
 
 
@@ -29,9 +27,7 @@ public loadResultsSummary(rId){
 
 
     public getReport(uId,qId) {
-  return this._http.get(`${baseUrl}/getReportByUidAndQid/${uId}/${qId}`, { 
-    withCredentials: true 
-  });
+  return this._http.get(`${baseUrl}/getReportByUidAndQid/${uId}/${qId}`);
 }
 
 
@@ -43,37 +39,27 @@ public loadResultsSummary(rId){
 
 
    public getReportsByUserID(uid) {
-  return this._http.get(`${baseUrl}/getReportsByUser/${uid}`, { 
-    withCredentials: true 
-  });
+  return this._http.get(`${baseUrl}/getReportsByUser/${uid}`);
 }
 
 
 
 
 public getReportsByUserAndId(qid){
-  return this._http.get(`${baseUrl}/quiz-results/my-quiz/${qid}`,{
-    withCredentials: true 
-  });
+  return this._http.get(`${baseUrl}/quiz-results/my-quiz/${qid}`);
 }
 
 public getTheoryDetails(qid){
-  return this._http.get(`${baseUrl}/quiz/${qid}`,{
-    withCredentials: true 
-  });
+  return this._http.get(`${baseUrl}/quiz/${qid}`);
 }
 
 public getResultsDetails(qid){
-  return this._http.get(`${baseUrl}/quiz/result/${qid}`,{
-    withCredentials: true 
-  });
+  return this._http.get(`${baseUrl}/quiz/result/${qid}`);
 }
 
 
 public loadReportSummary(): Observable<any> {
-  return this._http.get(`${baseUrl}/getReport`,{
-    withCredentials: true 
-  });
+  return this._http.get(`${baseUrl}/getReport`);
 }
 
 getUniqueCategoriesForLecturer(): Observable<any[]> {
@@ -87,9 +73,7 @@ getUniqueCategoriesForLecturer(): Observable<any[]> {
 
 //get catgory from Report
 public getCategoriesFromReport(): Observable<any>{
-  return this._http.get(`${baseUrl}/my-students-reports`,{
-    withCredentials: true 
-  });
+  return this._http.get(`${baseUrl}/my-students-reports`);
 }
 
 getUniqueCategoriesAndQuizzes(): Observable<any[]> {
@@ -147,17 +131,13 @@ private extractCategoriesAndQuizzes(quizzes: any[]): any[] {
 
 //get Report by  QuizId
 public getReportByQuizId(qId){
-  return this._http.get(`${baseUrl}/getReports/${qId}`,{
-    withCredentials: true 
-  });
+  return this._http.get(`${baseUrl}/getReports/${qId}`);
 }
 
 
 //get Report by  USERS
 public getReportByUser_Id(quizId){
-  return this._http.get(`${baseUrl}/getReports/${quizId}`,{
-    withCredentials: true 
-  });
+  return this._http.get(`${baseUrl}/getReports/${quizId}`);
 }
 
 

@@ -39,43 +39,28 @@ export class QuizProgressService {
   constructor(private http: HttpClient) { }
 
   updateAnswer(request: QuizAnswerRequest): Observable<QuizAnswerResponse> {
-    return this.http.post<QuizAnswerResponse>(`${baseUrl}/quiz-progress/update`, request,
-      {
-        withCredentials: true
-      }
+    return this.http.post<QuizAnswerResponse>(`${baseUrl}/quiz-progress/update`, request
     );
   }
 
   getAllAnswers(): Observable<UserQuizAnswersResponse> {
-    return this.http.get<UserQuizAnswersResponse>(`${baseUrl}/quiz-progress/all`,
-      {
-        withCredentials: true
-      }
+    return this.http.get<UserQuizAnswersResponse>(`${baseUrl}/quiz-progress/all`
     );
   }
 
   getAnswersByQuiz(quizId: number): Observable<UserQuizAnswersResponse> {
-    return this.http.get<UserQuizAnswersResponse>(`${baseUrl}/quiz-progress/quiz/${quizId}`,
-      {
-        withCredentials: true
-      }
+    return this.http.get<UserQuizAnswersResponse>(`${baseUrl}/quiz-progress/quiz/${quizId}`
     );
   }
 
   clearQuizAnswers(quizId: number): Observable<void> {
-    return this.http.delete<void>(`${baseUrl}/quiz-progress/quiz/${quizId}`,
-      {
-        withCredentials: true
-      }
+    return this.http.delete<void>(`${baseUrl}/quiz-progress/quiz/${quizId}`
     );
   }
 
 
   clearAllUserAnswers(): Observable<any> {
-    return this.http.delete(`${baseUrl}/quiz-progress/clear-all`,
-      {
-        withCredentials: true
-      }
+    return this.http.delete(`${baseUrl}/quiz-progress/clear-all`
     );
   }
 
@@ -98,18 +83,12 @@ export class QuizProgressService {
   }
 
   loadAnswers(quizId: number): Observable<any[]> {
-    return this.http.get<any[]>(`${baseUrl}/theory-progress/load/${quizId}`,
-      {
-        withCredentials: true
-      }
+    return this.http.get<any[]>(`${baseUrl}/theory-progress/load/${quizId}`
     );
   }
 
   clearAnswers(quizId: number): Observable<any> {
-    return this.http.delete(`${baseUrl}/theory-progress/clear/${quizId}`,
-      {
-        withCredentials: true
-      }
+    return this.http.delete(`${baseUrl}/theory-progress/clear/${quizId}`
     );
   }
 

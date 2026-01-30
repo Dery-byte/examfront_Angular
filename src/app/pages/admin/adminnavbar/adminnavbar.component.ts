@@ -106,13 +106,11 @@ export class AdminnavbarComponent {
 	}
 
   ngOnInit(): void {
-
-
-
+this.startCountdown();
     this.isloggedIn = this.login.isLoggedIn();
     this.user = this.login.getUser();
     this.isAdminUser = this.hasAuthority('ADMIN');   // ✅ compute once
-    this.startCountdown();
+    
 
     // react to login status changes
     this.login.loginStatusSubject.asObservable().subscribe(() => {
