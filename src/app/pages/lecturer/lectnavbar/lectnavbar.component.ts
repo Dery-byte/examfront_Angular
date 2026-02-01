@@ -3,7 +3,7 @@ import { TokenExpirationService } from 'src/app/services/token-expiration.servic
 import { MatSnackBar } from '@angular/material/snack-bar';
 import { CategoryService } from 'src/app/services/category.service';
 import { LoginService } from 'src/app/services/login.service';
-import { Router } from '@angular/router';
+import { Router,NavigationEnd } from '@angular/router';
 import { MatDialog, MatDialogRef } from '@angular/material/dialog';
 import { FormControl, Validators } from '@angular/forms';
 import { CdkTextareaAutosize } from '@angular/cdk/text-field';
@@ -13,6 +13,7 @@ import { MailServiceService } from 'src/app/services/mail-service.service';
 import { BreakpointObserver, Breakpoints } from '@angular/cdk/layout';
 import { MatDrawer } from '@angular/material/sidenav';
 import { trigger, style, animate, transition } from '@angular/animations';
+import { filter } from 'rxjs/operators';
 
 interface TimeDisplay {
   display: string;
@@ -39,6 +40,11 @@ export class LectnavbarComponent {
       Validators.required,
       Validators.email,
     ]);
+
+       private expirationSubscription?: Subscription;
+    private loginStatusSubscription?: Subscription;
+    private breakpointSubscription?: Subscription;
+	    private routerSubscription?: Subscription;
   
     badgevisible = false;
     badgevisibility() {
@@ -58,7 +64,6 @@ export class LectnavbarComponent {
     isAdminUser = false;
       isMobile = false;
    timeDisplay: TimeDisplay = { display: '00 min : 00 sec', className: 'normal-minutes' };
-    private expirationSubscription?: Subscription;
      isLoggingOut = false;  // Prevent multiple logout calls
   
   
@@ -124,17 +129,22 @@ export class LectnavbarComponent {
           // this._snack.open("Couldn't load Categories from Server", "", { duration: 3000 });
         }
       );
-         this.breakpointObserver.observe([Breakpoints.Handset]).subscribe(result => {
-            this.isMobile = result.matches;
+  
+        this.breakpointSubscription = this.breakpointObserver
+                  .observe([Breakpoints.Handset])
+                  .subscribe(result => {
+                      this.isMobile = result.matches;
+                      if (this.drawer) {  // ✅ Check existence
+                          this.isMobile ? this.drawer.close() : this.drawer.open();
+                      }
+                  });
       
-            if (this.isMobile) {
-              // On mobile: close drawer
-              this.drawer?.close();
-            } else {
-              // On desktop: open drawer
-              this.drawer?.open();
-            }
-          });
+              // Auto-close drawer on route changes (mobile only)
+          this.routerSubscription = this.router.events
+            .pipe(filter(event => event instanceof NavigationEnd))
+            .subscribe(() => {
+              this.closeDrawerOnMobile();
+            });
     }
   
     closeDrawerOnMobile() {
@@ -223,49 +233,23 @@ export class LectnavbarComponent {
       }, 300);
     }
   
-    // public logout(): void {
-    //   // Prevent multiple simultaneous logout calls
-    //   if (this.isLoggingOut) {
-    //     console.log("⏳ Logout already in progress...");
-    //     return;
-    //   }
-  
-    //   this.isLoggingOut = true;
-    //   console.log("🚪 Logging out user...");
-  
-    //   // Unsubscribe from countdown
-    //   if (this.expirationSubscription) {
-    //     this.expirationSubscription.unsubscribe();
-    //   }
-  
-    //   // Call backend logout endpoint
-    //   this.login.logout().subscribe({
-    //     next: (response) => {
-    //       console.log("✅ Backend logout successful:", response);
-          
-    //       // Clear local session
-    //       this.login.clearLocalSession();
-    //       this.isloggedIn = false;
-    //       this.user = null;
-          
-    //       // Redirect to login page
-    //       console.log("🔄 Redirecting to login...");
-    //       window.location.href = '/login';
-    //     },
-    //     error: (error) => {
-    //       console.error("❌ Logout error:", error);
-          
-    //       // Even if backend fails, clear local session and redirect
-    //       this.login.clearLocalSession();
-    //       this.isloggedIn = false;
-    //       this.user = null;
-          
-    //       // Still redirect to login
-    //       window.location.href = '/login';
-    //     }
-    // });
-    // }
-
+    	ngAfterViewInit(): void {
+		this.breakpointSubscription = this.breakpointObserver
+			.observe([Breakpoints.Handset])
+			.subscribe(result => {
+				this.isMobile = result.matches;
+				
+				// ✅ Drawer is guaranteed to be initialized here
+				if (this.drawer) {
+					if (this.isMobile) {
+						this.drawer.close();
+					} else {
+						this.drawer.open();
+					}
+				}
+			});
+	}
+    // public logout(): void 
 
     logout(): void {
   // Service handles backend call, clearing session, and redirect

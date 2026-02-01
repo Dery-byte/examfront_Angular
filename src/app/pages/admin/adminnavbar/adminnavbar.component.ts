@@ -3,7 +3,7 @@ import { TokenExpirationService } from 'src/app/services/token-expiration.servic
 import { MatSnackBar } from '@angular/material/snack-bar';
 import { CategoryService } from 'src/app/services/category.service';
 import { LoginService } from 'src/app/services/login.service';
-import { Router } from '@angular/router';
+import { Router, NavigationEnd } from '@angular/router';
 import { MatDialog, MatDialogRef } from '@angular/material/dialog';
 import { FormControl, Validators } from '@angular/forms';
 import { CdkTextareaAutosize } from '@angular/cdk/text-field';
@@ -13,6 +13,9 @@ import { MailServiceService } from 'src/app/services/mail-service.service';
 import { BreakpointObserver, Breakpoints } from '@angular/cdk/layout';
 import { MatDrawer } from '@angular/material/sidenav';
 import { trigger, style, animate, transition } from '@angular/animations';
+import { filter } from 'rxjs/operators';
+
+
 
 
 
@@ -41,6 +44,15 @@ export class AdminnavbarComponent {
     Validators.email,
   ]);
 
+
+  
+
+    private expirationSubscription?: Subscription;
+    private loginStatusSubscription?: Subscription;
+    private breakpointSubscription?: Subscription;
+	    private routerSubscription?: Subscription;
+
+
   badgevisible = false;
   badgevisibility() {
     this.badgevisible = true;
@@ -59,7 +71,6 @@ export class AdminnavbarComponent {
   isAdminUser = false;
   	isMobile = false;
  timeDisplay: TimeDisplay = { display: '00 min : 00 sec', className: 'normal-minutes' };
-  private expirationSubscription?: Subscription;
    isLoggingOut = false;  // Prevent multiple logout calls
 
 
@@ -127,27 +138,49 @@ this.startCountdown();
         this._snack.open("Couldn't load Categories from Server", "", { duration: 3000 });
       }
     );
-       this.breakpointObserver.observe([Breakpoints.Handset]).subscribe(result => {
-          this.isMobile = result.matches;
+     this.breakpointSubscription = this.breakpointObserver
+                .observe([Breakpoints.Handset])
+                .subscribe(result => {
+                    this.isMobile = result.matches;
+                    if (this.drawer) {  // ✅ Check existence
+                        this.isMobile ? this.drawer.close() : this.drawer.open();
+                    }
+                });
     
-          if (this.isMobile) {
-            // On mobile: close drawer
-            this.drawer?.close();
-          } else {
-            // On desktop: open drawer
-            this.drawer?.open();
-          }
-        });
+            // Auto-close drawer on route changes (mobile only)
+        this.routerSubscription = this.router.events
+          .pipe(filter(event => event instanceof NavigationEnd))
+          .subscribe(() => {
+            this.closeDrawerOnMobile();
+          });
   }
 
-  closeDrawerOnMobile() {
-    if (this.isMobile) {
-      this.drawer.close();
-    }
-  }
+	closeDrawerOnMobile(): void {
+		if (this.isMobile && this.drawer) {
+			this.drawer.close();
+		}
+	}
+
 
   dialogRef!: MatDialogRef<any>;
 
+	// ✅ Move breakpoint observer to AfterViewInit to ensure drawer is initialized
+	ngAfterViewInit(): void {
+		this.breakpointSubscription = this.breakpointObserver
+			.observe([Breakpoints.Handset])
+			.subscribe(result => {
+				this.isMobile = result.matches;
+				
+				// ✅ Drawer is guaranteed to be initialized here
+				if (this.drawer) {
+					if (this.isMobile) {
+						this.drawer.close();
+					} else {
+						this.drawer.open();
+					}
+				}
+			});
+	}
 
 
   // public logout() {
