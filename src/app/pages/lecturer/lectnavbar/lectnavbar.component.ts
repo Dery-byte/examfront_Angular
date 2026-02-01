@@ -260,6 +260,7 @@ export class LectnavbarComponent {
   this.user = null;
 }
     
+
   
     // Add a method to handle alert effect
     private triggerAlertEffect(): void {
