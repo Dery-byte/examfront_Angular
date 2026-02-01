@@ -400,21 +400,36 @@
 
 
 
-import { Component, OnInit, TemplateRef } from '@angular/core';
+import { Component, OnInit, TemplateRef,ViewChild  } from '@angular/core';
 import { MatSnackBar } from '@angular/material/snack-bar';
 import { Router, ActivatedRoute } from '@angular/router';
 import { LoginService } from 'src/app/services/login.service';
 import { MatDialog, MatDialogRef } from '@angular/material/dialog';
 import { NgForm } from '@angular/forms';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
+import { AuthService } from 'src/app/services/smsresetpassword';
+
+
+export interface LoginRequest {
+  username: string;      // Backend uses 'email' field
+  password: string;
+}
+
+
+export interface AuthResponse {
+  token: string;
+  message?: string;
+}
 
 @Component({
   selector: 'app-login',
   templateUrl: './login.component.html',
   styleUrls: ['./login.component.css']
 })
-export class LoginComponent implements OnInit {
 
+
+export class LoginComponent implements OnInit {
+ @ViewChild('resetForm') resetForm!: NgForm;
   hidePassword = true;
   hideNewPassword = true;
   hideConfirmPassword = true;
@@ -436,6 +451,13 @@ export class LoginComponent implements OnInit {
     email: ''
   };
 
+   
+
+  resetDataPhone = {
+    phone: ''
+  };
+
+  successPhone = '';
   allUsers: any[] = [];
   dialogRef!: MatDialogRef<any>;
   
@@ -452,7 +474,8 @@ export class LoginComponent implements OnInit {
     private login: LoginService,
     private router: Router,
     private _formBuilder: FormBuilder,
-    public dialog: MatDialog
+    public dialog: MatDialog,
+    private authService: AuthService
   ) {
     this.firstFormGroup = this._formBuilder.group({
       firstCtrl: ['', Validators.required],
@@ -590,51 +613,113 @@ export class LoginComponent implements OnInit {
   /**
    * Submit login form
    */
+
+
+  // formSubmit(): void {
+  //   // Validation
+  //   if (!this.loginData.username || !this.loginData.password) {
+  //     this.showError('Please enter both email and password');
+  //     return;
+  //   }
+
+  //   this.loading = true;
+  //   this.errorMessage = '';
+
+  //   console.log('🔐 Attempting login for:', this.loginData.username);
+
+  //   // Step 1: Authenticate and get token
+  //   this.login.generateToken(this.loginData).subscribe({
+  //     next: (response) => {
+  //       console.log('✅ Token received:', response);
+
+  //       // Step 2: Get current user details
+  //       this.login.getCurrentUser().subscribe({
+  //         next: (user) => {
+  //           console.log('✅ User data received:', user);
+
+  //           // Step 3: Store user and update login status
+  //           this.login.loginUser(user);
+
+  //           // Step 4: Show success message
+  //           this.showSuccess('Login successful!');
+
+  //           // Step 5: Redirect based on role
+  //           this.redirectBasedOnRole();
+  //         },
+  //         error: (error) => {
+  //           console.error('❌ Failed to fetch user data:', error);
+  //           this.showError('Failed to load user data');
+  //           this.loading = false;
+  //         }
+  //       });
+  //     },
+  //     error: (error) => {
+  //       console.error('❌ Login failed:', error);
+  //       this.handleLoginError(error);
+  //       this.loading = false;
+  //     }
+  //   });
+  // }
+
+
+
+
   formSubmit(): void {
-    // Validation
-    if (!this.loginData.username || !this.loginData.password) {
-      this.showError('Please enter both email and password');
-      return;
-    }
-
-    this.loading = true;
-    this.errorMessage = '';
-
-    console.log('🔐 Attempting login for:', this.loginData.username);
-
-    // Step 1: Authenticate and get token
-    this.login.generateToken(this.loginData).subscribe({
-      next: (response) => {
-        console.log('✅ Token received:', response);
-
-        // Step 2: Get current user details
-        this.login.getCurrentUser().subscribe({
-          next: (user) => {
-            console.log('✅ User data received:', user);
-
-            // Step 3: Store user and update login status
-            this.login.loginUser(user);
-
-            // Step 4: Show success message
-            this.showSuccess('Login successful!');
-
-            // Step 5: Redirect based on role
-            this.redirectBasedOnRole();
-          },
-          error: (error) => {
-            console.error('❌ Failed to fetch user data:', error);
-            this.showError('Failed to load user data');
-            this.loading = false;
-          }
-        });
-      },
-      error: (error) => {
-        console.error('❌ Login failed:', error);
-        this.handleLoginError(error);
-        this.loading = false;
-      }
-    });
+  // Validation
+  if (!this.loginData.username || !this.loginData.password) {
+    this.showError('Please enter both email and password');
+    return;
   }
+
+  this.loading = true;
+  this.errorMessage = '';
+
+  console.log('🔐 Attempting login for:', this.loginData.username);
+
+  // Create proper payload matching backend expectations
+  const loginPayload: LoginRequest = {
+    username : this.loginData.username,  // Backend expects 'email'
+    password: this.loginData.password
+  };
+
+  // Step 1: Authenticate and get token
+  this.login.generateToken(loginPayload).subscribe({
+    next: (response) => {
+      console.log('✅ Token received:', response);
+
+      // Step 2: Get current user details
+      this.login.getCurrentUser().subscribe({
+        next: (user) => {
+          console.log('✅ User data received:', user);
+
+          // Step 3: Store user and update login status
+          this.login.loginUser(user);
+
+          // Step 4: Show success message
+          this.showSuccess('Login successful!');
+
+          // Step 5: Redirect based on role
+          this.redirectBasedOnRole();
+        },
+        error: (error) => {
+          console.error('❌ Failed to fetch user data:', error);
+          this.showError('Failed to load user data');
+          this.loading = false;
+        }
+      });
+    },
+    error: (error) => {
+      console.error('❌ Login failed:', error);
+      this.handleLoginError(error);
+      this.loading = false;
+    }
+  });
+}
+
+
+
+
+
 
   /**
    * Handle login errors
@@ -643,7 +728,7 @@ export class LoginComponent implements OnInit {
     if (error.status === 401) {
       this.errorMessage = 'Invalid email or password';
     } else if (error.status === 403) {
-      this.errorMessage = 'Account is disabled';
+      this.errorMessage = 'Authentication Failed !. Check Username or Password';
     } else if (error.status === 0) {
       this.errorMessage = 'Cannot connect to server';
     } else {
@@ -736,37 +821,39 @@ export class LoginComponent implements OnInit {
   /**
    * Handle forgot password submission
    */
-  onForgotPasswordSubmit(form?: NgForm): void {
-    // Validate email
-    if (!this.resetData.email || !this.isValidEmail(this.resetData.email)) {
-      if (form) form.control.markAllAsTouched();
-      return;
-    }
 
-    this.isSubmitting = true;
-    this.showSuccessMessage = false;
-    this.apiError = null;
 
-    const email = this.resetData.email;
-    console.log('Requesting password reset for:', email);
+  // onForgotPasswordSubmit(form?: NgForm): void {
+  //   // Validate email
+  //   if (!this.resetData.email || !this.isValidEmail(this.resetData.email)) {
+  //     if (form) form.control.markAllAsTouched();
+  //     return;
+  //   }
 
-    this.login.requestPasswordResetLink(email).subscribe({
-      next: () => {
-        this.successEmail = email;
-        if (form) {
-          form.resetForm();
-        }
-        this.resetData.email = '';
-        this.showSuccessMessage = true;
-        this.isSubmitting = false;
-      },
-      error: (err) => {
-        console.error('Password reset error:', err);
-        this.apiError = err.error?.message || 'Failed to send reset link. Please try again.';
-        this.isSubmitting = false;
-      }
-    });
-  }
+  //   this.isSubmitting = true;
+  //   this.showSuccessMessage = false;
+  //   this.apiError = null;
+
+  //   const email = this.resetData.email;
+  //   console.log('Requesting password reset for:', email);
+
+  //   this.login.requestPasswordResetLink(email).subscribe({
+  //     next: () => {
+  //       this.successEmail = email;
+  //       if (form) {
+  //         form.resetForm();
+  //       }
+  //       this.resetData.email = '';
+  //       this.showSuccessMessage = true;
+  //       this.isSubmitting = false;
+  //     },
+  //     error: (err) => {
+  //       console.error('Password reset error:', err);
+  //       this.apiError = err.error?.message || 'Failed to send reset link. Please try again.';
+  //       this.isSubmitting = false;
+  //     }
+  //   });
+  // }
 
 
 
@@ -798,16 +885,28 @@ export class LoginComponent implements OnInit {
   /**
    * Close dialog and reset state
    */
-  onCloseDialog(): void {
-    if (this.dialogRef) {
-      this.dialogRef.close();
-    }
-    this.showSuccessMessage = false;
+  // onCloseDialog(): void {
+  //   if (this.dialogRef) {
+  //     this.dialogRef.close();
+  //   }
+  //   this.showSuccessMessage = false;
+  //   this.apiError = null;
+  //   this.successEmail = null;
+  //   this.resetData.email = '';
+  //   this.resetDataPhone.phone;
+  // }
+
+    onCloseDialog(): void {
+    this.dialogRef.close({
+      success: this.showSuccessMessage,
+      phone: this.successPhone,
+    });
+      this.showSuccessMessage = false;
     this.apiError = null;
     this.successEmail = null;
     this.resetData.email = '';
+    this.resetDataPhone.phone='';
   }
-
   /**
    * Dialog utilities
    */
@@ -838,4 +937,64 @@ export class LoginComponent implements OnInit {
     }
     return state;
   }
+
+
+
+
+
+  // RESET PASSWORD BY PHONE
+
+
+ private simulateApiCall(): Promise<void> {
+    return new Promise((resolve, reject) => {
+      setTimeout(() => {
+        // Simulate success
+        resolve();
+        
+        // Simulate error (uncomment to test error state)
+        // reject(new Error('Phone number not found'));
+      }, 2000);
+    });
+  }
+
+
+
+
+
+
+ async onForgotPasswordSubmit(form: NgForm): Promise<void> {
+    if (form.invalid) {
+      return;
+    }
+    this.isSubmitting = true;
+    this.apiError = '';
+    try {
+      // Call the refactored service method
+      await this.authService.requestPasswordResetCode(this.resetDataPhone.phone).toPromise();
+      // Success - show confirmation
+      this.successPhone = this.resetDataPhone.phone;
+      this.showSuccessMessage = true;
+      console.log('✅ Reset code sent successfully to:', this.successPhone);
+    } catch (error: any) {
+      // Handle different error scenarios
+      console.error('❌ Error sending reset code:', error);
+      if (error.status === 404) {
+        this.apiError = 'Phone number not found. Please check and try again.';
+      } else if (error.status === 429) {
+        this.apiError = 'Too many requests. Please try again later.';
+      } else if (error.status === 400) {
+        this.apiError = error.error?.message || 'Invalid phone number format.';
+      } else if (error.status === 0) {
+        this.apiError = 'Network error. Please check your connection.';
+      } else {
+        this.apiError = error.error?.message || 'Failed to send reset code. Please try again.';
+      }
+    } finally {
+      this.isSubmitting = false;
+    }
+  }
+
+
+
+
 }

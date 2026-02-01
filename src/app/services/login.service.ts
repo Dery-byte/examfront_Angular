@@ -210,6 +210,7 @@ export class LoginService {
    * Authenticate user and store token in localStorage
    * @param loginData - { email: string, password: string }
    */
+  
   public generateToken(loginData: LoginRequest): Observable<AuthResponse> {
     console.log('🔐 Attempting authentication...');
 
@@ -526,6 +527,8 @@ export class LoginService {
   /**
    * Request password reset link
    */
+
+  
   public requestPasswordResetLink(email: string): Observable<any> {
     console.log('📧 Requesting password reset for:', email);
     

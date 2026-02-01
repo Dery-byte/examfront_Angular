@@ -3,7 +3,6 @@ import { TokenExpirationService } from 'src/app/services/token-expiration.servic
 import { MatSnackBar } from '@angular/material/snack-bar';
 import { CategoryService } from 'src/app/services/category.service';
 import { LoginService } from 'src/app/services/login.service';
-import { Router } from '@angular/router';
 import { MatDialog, MatDialogRef } from '@angular/material/dialog';
 import { FormControl, Validators } from '@angular/forms';
 import { CdkTextareaAutosize } from '@angular/cdk/text-field';
@@ -12,6 +11,8 @@ import { Subscription } from 'rxjs';
 import { MatDrawer } from '@angular/material/sidenav';
 import { MailServiceService } from 'src/app/services/mail-service.service';
 import { BreakpointObserver, Breakpoints } from '@angular/cdk/layout';
+import { Router, NavigationEnd } from '@angular/router';
+import { filter } from 'rxjs/operators';
 
 
 interface TimeDisplay {
@@ -29,6 +30,11 @@ export class UserNavbarComponent {
 	dialogRef!: MatDialogRef<any>;
 
 
+
+    private expirationSubscription?: Subscription;
+    private loginStatusSubscription?: Subscription;
+    private breakpointSubscription?: Subscription;
+	    private routerSubscription?: Subscription;
 
 
 	isloggedIn = false;
@@ -62,18 +68,7 @@ export class UserNavbarComponent {
 
 
 
-
-	ngOnDestroy(): void {
-		    this.stopCountdown();
-		if (this.expirationSubscription) {
-			this.expirationSubscription.unsubscribe();
-		}
-		// Clear the interval when the component is destroyed to prevent memory leaks
-		if (this.intervalId) {
-			clearInterval(this.intervalId);
-		}
-	}
-
+	
 
 	ngOnInit(): void {
 		this.startCountdown();
@@ -88,26 +83,54 @@ export class UserNavbarComponent {
 			this.isNormalUser = this.checkAuthority('NORMAL');  // ✅ recompute
 		});
 
-		this.breakpointObserver.observe([Breakpoints.Handset]).subscribe(result => {
-			this.isMobile = result.matches;
-			if (this.isMobile) {
-				// On mobile: close drawer
-				this.drawer?.close();
-			} else {
-				// On desktop: open drawer
-				this.drawer?.open();
-			}
-		});
+	  this.breakpointSubscription = this.breakpointObserver
+            .observe([Breakpoints.Handset])
+            .subscribe(result => {
+                this.isMobile = result.matches;
+                if (this.drawer) {  // ✅ Check existence
+                    this.isMobile ? this.drawer.close() : this.drawer.open();
+                }
+            });
 
+				// Auto-close drawer on route changes (mobile only)
+		this.routerSubscription = this.router.events
+			.pipe(filter(event => event instanceof NavigationEnd))
+			.subscribe(() => {
+				this.closeDrawerOnMobile();
+			});
 	}
 
-	closeDrawerOnMobile() {
-		if (this.isMobile) {
+
+	// ✅ Move breakpoint observer to AfterViewInit to ensure drawer is initialized
+	ngAfterViewInit(): void {
+		this.breakpointSubscription = this.breakpointObserver
+			.observe([Breakpoints.Handset])
+			.subscribe(result => {
+				this.isMobile = result.matches;
+				
+				// ✅ Drawer is guaranteed to be initialized here
+				if (this.drawer) {
+					if (this.isMobile) {
+						this.drawer.close();
+					} else {
+						this.drawer.open();
+					}
+				}
+			});
+	}
+
+
+	//    closeDrawerOnMobile(): void {
+    //     if (this.isMobile) {
+    //         this.drawer?.close();
+    //     }
+    // }
+
+		closeDrawerOnMobile(): void {
+		if (this.isMobile && this.drawer) {
 			this.drawer.close();
 		}
 	}
-
-
 
 
 
@@ -119,8 +142,8 @@ export class UserNavbarComponent {
 
 	private hasLoggedOut = false;
 	timeDisplay: TimeDisplay = { display: '00 min : 00 sec', className: 'normal-minutes' };
-	private expirationSubscription?: Subscription;
 
+	
 
 	startCountdown(): void {
 		this.tokenExpirationService.startCountdownFromBackend();
@@ -197,52 +220,6 @@ private stopCountdown(): void {
 			this.logout();
 		}, 300);
 	}
-
-	// public logout(): void {
-    // // Prevent multiple simultaneous logout calls
-    // if (this.isLoggingOut) {
-    //   console.log("⏳ Logout already in progress...");
-    //   return;
-    // }
-
-    // this.isLoggingOut = true;
-    // console.log("🚪 Logging out user...");
-
-    // // Unsubscribe from countdown
-    // if (this.expirationSubscription) {
-    //   this.expirationSubscription.unsubscribe();
-    // }
-
-    // // Call backend logout endpoint
-
-
-    // this.login.logout().subscribe({
-    //   next: (response) => {
-    //     console.log("✅ Backend logout successful:", response);
-        
-    //     // Clear local session
-    //     this.login.clearLocalSession();
-    //     this.isloggedIn = false;
-    //     this.user = null;
-        
-    //     // Redirect to login page
-    //     console.log("🔄 Redirecting to login...");
-    //     window.location.href = '/login';
-    //   },
-    //   error: (error) => {
-    //     console.error("❌ Logout error:", error);
-        
-    //     // Even if backend fails, clear local session and redirect
-    //     this.login.clearLocalSession();
-    //     this.isloggedIn = false;
-    //     this.user = null;
-        
-    //     // Still redirect to login
-    //     window.location.href = '/login';
-    //   }
-	// });
-	// }
-
 logout(): void {
   // Service handles backend call, clearing session, and redirect
   this.login.logout();
@@ -311,6 +288,24 @@ logout(): void {
 			}
 		});
 	}
+
+
+
+	    ngOnDestroy(): void {
+        this.stopCountdown();
+          this.stopCountdown();
+		if (this.expirationSubscription) {
+			this.expirationSubscription.unsubscribe();
+		}
+		// Clear the interval when the component is destroyed to prevent memory leaks
+		if (this.intervalId) {
+			clearInterval(this.intervalId);
+		}
+        // ✅ Clean up all subscriptions
+        this.loginStatusSubscription?.unsubscribe();
+        this.breakpointSubscription?.unsubscribe();
+    }
+
 
 
 

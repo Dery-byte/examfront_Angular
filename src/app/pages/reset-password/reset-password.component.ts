@@ -5,6 +5,8 @@ import { ActivatedRoute, Router } from '@angular/router';
 
 import { LoginService } from 'src/app/services/login.service';
 
+import { AuthService } from 'src/app/services/smsresetpassword';
+
 @Component({
   selector: 'app-reset-password',
   templateUrl: './reset-password.component.html',
@@ -24,14 +26,15 @@ export class ResetPasswordComponent {
   isLoading = false;
   errorMessage: string | null = null;
   successMessage: string | null = null;
-  showPassword=false;
+  showPassword = false;
   showConfirmPassword = false;
 
   constructor(
     private fb: FormBuilder,
     private route: ActivatedRoute,
     private router: Router,
-    private loginService: LoginService
+    private loginService: LoginService,
+    private authservice: AuthService
   ) {
     this.token = this.route.snapshot.queryParamMap.get('token') || '';
     if (!this.token) this.errorMessage = 'Invalid reset link';
@@ -45,43 +48,99 @@ export class ResetPasswordComponent {
 
 
 
-  onSubmit() {
-  if (this.resetForm.invalid || !this.token) return;
 
-  this.isLoading = true;
-  this.errorMessage = null;
+  // RESEST VIA EMAIL
+  onSubmit2() {
+    if (this.resetForm.invalid || !this.token) return;
 
-  this.loginService.resetPassword(
-    this.token,
-    this.resetForm.value.password!
-  ).subscribe({
-    next: () => {
-      this.successMessage = 'Password updated successfully! Redirecting to login...';
-      setTimeout(() => this.router.navigate(['/login']), 3000);
-    },
-    error: (err) => {
-      const status = err.status;
-      const message = err.error?.message || 'Failed to reset password';
+    this.isLoading = true;
+    this.errorMessage = null;
 
-      if (status === 410) {
-        // Token expired
-        this.errorMessage = 'Your reset link has expired. Please request a new one.';
-        setTimeout(() => this.router.navigate(['/forgot-password']), 4000);
-      } else if (status === 400 && message.includes("already been used")) {
-        // Token already used
-        this.errorMessage = 'This reset link has already been used. Please request a new one.';
-        setTimeout(() => this.router.navigate(['/forgot-password']), 4000);
-      } else {
-        this.errorMessage = message;
+    this.loginService.resetPassword(
+      this.token,
+      this.resetForm.value.password!
+    ).subscribe({
+      next: () => {
+        this.successMessage = 'Password updated successfully! Redirecting to login...';
+        setTimeout(() => this.router.navigate(['/login']), 3000);
+      },
+      error: (err) => {
+        const status = err.status;
+        const message = err.error?.message || 'Failed to reset password';
+
+        if (status === 410) {
+          // Token expired
+          this.errorMessage = 'Your reset link has expired. Please request a new one.';
+          setTimeout(() => this.router.navigate(['/forgot-password']), 4000);
+        } else if (status === 400 && message.includes("already been used")) {
+          // Token already used
+          this.errorMessage = 'This reset link has already been used. Please request a new one.';
+          setTimeout(() => this.router.navigate(['/forgot-password']), 4000);
+        } else {
+          this.errorMessage = message;
+        }
+
+        this.isLoading = false;
       }
-
-      this.isLoading = false;
-    }
-  });
-}
+    });
+  }
 
 
   togglePasswordVisibility(field: HTMLInputElement) {
     field.type = field.type === 'password' ? 'text' : 'password';
   }
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  // Reset via phone
+
+  onSubmit() {
+    if (this.resetForm.invalid || !this.token) return;
+
+    this.isLoading = true;
+    this.errorMessage = null;
+
+   
+
+    this.authservice.verifyResetCodeAndUpdatePassword(
+      this.token,
+      this.resetForm.value.password!
+    ).subscribe({
+      next: () => {
+        this.successMessage = 'Password updated successfully! Redirecting to login...';
+        setTimeout(() => this.router.navigate(['/login']), 3000);
+      },
+      error: (err) => {
+        const status = err.status;
+        const message = err.error?.message || 'Failed to reset password';
+
+        if (status === 410) {
+          // Token expired
+          this.errorMessage = 'Your reset link has expired. Please request a new one.';
+          setTimeout(() => this.router.navigate(['/forgot-password']), 4000);
+        } else if (status === 400 && message.includes("already been used")) {
+          // Token already used
+          this.errorMessage = 'This reset link has already been used. Please request a new one.';
+          setTimeout(() => this.router.navigate(['/forgot-password']), 4000);
+        } else {
+          this.errorMessage = message;
+        }
+
+        this.isLoading = false;
+      }
+    });
+  }
+
 }

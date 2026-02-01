@@ -78,9 +78,9 @@
 
 
 
-    <!-- MODAL TO SEND RESET PASSWORD LINK -->
+    <!-- MODAL TO SEND RESET PASSWORD LINK BY EMAIL-->
 
-
+    <!-- 
     <ng-template #updateDialog let-data="data">
       <div class="dialog-container">
         <div class="dialog-header">
@@ -89,10 +89,8 @@
         </div>
 
         <div mat-dialog-content class="dialog-content">
-          <!-- Show success message if email sent -->
           <div *ngIf="showSuccessMessage" style="text-align: center;">
             <mat-icon color="primary" style="">check_circle</mat-icon>
-            <!-- {{resetData.email}} -->
             <p style="margin-top: 10px; color: green;">Reset link sent to your email: <strong>{{ successEmail
                 }}</strong>
             </p>
@@ -102,8 +100,6 @@
             </button>
 
           </div>
-
-          <!-- Show form if email not sent yet -->
           <form *ngIf="!showSuccessMessage" #resetForm="ngForm" (ngSubmit)="onForgotPasswordSubmit(resetForm)">
             <h6 style="font-size: 13px;">Enter your email to receive a password reset link</h6>
 
@@ -138,7 +134,7 @@
           </form>
         </div>
       </div>
-    </ng-template>
+    </ng-template> -->
 
 
 
@@ -148,10 +144,89 @@
 
 
 
+
+
+<ng-template #updateDialog let-data="data">
+  <div class="dialog-container">
+    <!-- Close button -->
+    <button mat-icon-button class="close-btn" (click)="onCloseDialog()" *ngIf="!showSuccessMessage">
+      <mat-icon>close</mat-icon>
+    </button>
+
+    <div mat-dialog-content class="dialog-content">
+      <!-- Success State -->
+      <div *ngIf="showSuccessMessage" class="success-container">
+        <div class="success-icon-wrapper">
+          <mat-icon class="success-icon">check_circle</mat-icon>
+        </div>
+        <h2 class="success-title">Code Sent!</h2>
+        <p class="success-message">
+          A password reset code has been sent to <strong>{{ successPhone }}</strong>
+        </p>
+        <button mat-flat-button color="primary" class="action-btn" (click)="onCloseDialog()">
+          Done
+        </button>
+      </div>
+
+      <!-- Form State -->
+      <div *ngIf="!showSuccessMessage" class="form-container">
+        <div class="header-section">
+          <div class="icon-wrapper">
+            <mat-icon class="header-icon">lock_reset</mat-icon>
+          </div>
+          <h1 class="dialog-title">Reset Password</h1>
+          <p class="dialog-subtitle">Enter your phone number to receive a reset code</p>
+        </div>
+
+        <form #resetForm="ngForm" (ngSubmit)="onForgotPasswordSubmit(resetForm)" class="reset-form">
+          <mat-form-field appearance="outline" class="phone-field">
+            <mat-label>Phone Number</mat-label>
+            <mat-icon matPrefix class="field-icon">phone</mat-icon>
+            <input [(ngModel)]="resetDataPhone.phone" name="phone" type="tel" matInput 
+                   placeholder="0544073427" #phone="ngModel" required 
+                   pattern="^[\+]?[(]?[0-9]{3}[)]?[-\s\.]?[0-9]{3}[-\s\.]?[0-9]{4,6}$"
+                   autocomplete="tel">
+            <mat-error *ngIf="phone.invalid && (phone.dirty || phone.touched)">
+              <span *ngIf="phone.errors?.['required']">Phone number is required</span>
+              <span *ngIf="phone.errors?.['pattern']">Enter a valid phone number</span>
+            </mat-error>
+          </mat-form-field>
+
+          <div *ngIf="apiError" class="error-alert">
+            <mat-icon>error_outline</mat-icon>
+            <span>{{ apiError }}</span>
+          </div>
+
+          <div class="button-group">
+            <button mat-stroked-button type="button" class="cancel-btn" (click)="onCloseDialog()">
+              Cancel
+            </button>
+            <button mat-flat-button color="primary" type="submit" class="submit-btn"
+                    [disabled]="isSubmitting || resetForm.invalid">
+              <mat-spinner *ngIf="isSubmitting" diameter="18" class="btn-spinner"></mat-spinner>
+              <span>{{ isSubmitting ? 'Sending...' : 'Send Code' }}</span>
+            </button>
+          </div>
+        </form>
+      </div>
+    </div>
+  </div>
+</ng-template>
 
 
 
   </main>
+
+
+
+
+
+
+
+
+
+
+
 
 
 
