@@ -141,27 +141,66 @@ export class AddQuestionComponent implements OnInit {
 
 
   uploadQuiz(): void {
-    if (!this.selectedFile) {
-      Swal.fire("Error", "No file selected.", "error");
-      console.error('No file selected.');
-      return;
-    } else if (this.selectedFile) {
-      this._question.uploadQuestions(this.qId, this.selectedFile).subscribe(
+  if (!this.selectedFile) {
+    Swal.fire("Error", "No file selected.", "error");
+    console.error('No file selected.');
+    return;
+  }
+  // Read and parse the JSON file
+  const reader = new FileReader();
+  reader.onload = (e: any) => {
+    try {
+      const questions = JSON.parse(e.target.result);
+      // Now upload the parsed questions
+      this._question.uploadQuestions(this.qId, questions).subscribe(
         response => {
-          Swal.fire("Error", "Error uploading questions", "error");
-          console.log("Done");
-        },
-
-        (error) => {
+          // SUCCESS callback
           Swal.fire('Success', "Questions uploaded successfully", "success");
+          console.log("Upload successful:", response);
           this.clearSelectedFile();
+          // Uncomment if you want to navigate
           // this._router.navigate(["/admin/quizzes"]);
-          console.log(" Not Done!!!");
-          // this._router.navigate(["/admin/view-questions"/{this.qId}]);
+        },
+        error => {
+          // ERROR callback
+          Swal.fire("Error", "Error uploading questions", "error");
+          console.error("Upload failed:", error);
         }
       );
+    } catch (error) {
+      Swal.fire("Error", "Invalid JSON file format", "error");
+      console.error('JSON parse error:', error);
     }
-  }
+  };
+  reader.onerror = (error) => {
+    Swal.fire("Error", "Error reading file", "error");
+    console.error('FileReader error:', error);
+  };
+  reader.readAsText(this.selectedFile);
+}
+
+  // uploadQuiz(): void {
+  //   if (!this.selectedFile) {
+  //     Swal.fire("Error", "No file selected.", "error");
+  //     console.error('No file selected.');
+  //     return;
+  //   } else if (this.selectedFile) {
+  //     this._question.uploadQuestions(this.qId, this.selectedFile).subscribe(
+  //       response => {
+  //         Swal.fire("Error", "Error uploading questions", "error");
+  //         console.log("Done");
+  //       },
+
+  //       (error) => {
+  //         Swal.fire('Success', "Questions uploaded successfully", "success");
+  //         this.clearSelectedFile();
+  //         // this._router.navigate(["/admin/quizzes"]);
+  //         console.log(" Not Done!!!");
+  //         // this._router.navigate(["/admin/view-questions"/{this.qId}]);
+  //       }
+  //     );
+  //   }
+  // }
 
 
   uploadTheoryQuestionss(): void {

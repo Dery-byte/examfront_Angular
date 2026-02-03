@@ -1,8 +1,9 @@
-import { HttpClient } from '@angular/common/http';
+import { HttpClient,HttpHeaders } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import baseUrl from './helper';
 import { BehaviorSubject, Observable } from 'rxjs';
 import { map } from 'rxjs/operators';
+
 
 
 
@@ -29,6 +30,17 @@ export class RegCoursesService {
   //   return this._http.post(`${baseUrl}/registerCourse`, courses)
   // }
 
+private jwtToken = localStorage.getItem('token')
+
+uploadQuestions(qid: number, questions): Observable<any> {
+  const headers = new HttpHeaders({
+    'Content-Type': 'application/json',
+    'Authorization': `Bearer ${this.jwtToken}` // Add this!
+  });
+  
+  return this._http.post(`${baseUrl}/upload/${qid}`, questions, { headers })
+}
+  
 
       public regCourses(courses) {
   return this._http.post(`${baseUrl}/registerCourse `, courses);

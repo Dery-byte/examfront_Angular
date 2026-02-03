@@ -147,17 +147,27 @@ export class QuestionService {
       )
   };
 
+private jwtToken = localStorage.getItem('token')
+// upload questions
+uploadQuestions(qid: number, questions): Observable<any> {
+  const headers = new HttpHeaders({
+    'Content-Type': 'application/json',
+    'Authorization': `Bearer ${this.jwtToken}` // Add if you need authentication
+  });
 
+  return this._http.post(`${baseUrl}/upload/${qid}`, questions, { headers })
+  // Note: Added { headers } as the third parameter ↑
+}
 
-  private jwtToken = localStorage.getItem('token')
-  // upload questions
-  uploadQuestions(qid: number, questions): Observable<any> {
-    const headers = new HttpHeaders({
-      'Content-Type': 'application/json',
-      // 'Content-Type': 'multipart/form-data',
-    });
-    return this._http.post(`${baseUrl}/upload/${qid}`, questions)
-  }
+  // private jwtToken = localStorage.getItem('token')
+  // // upload questions
+  // uploadQuestions(qid: number, questions): Observable<any> {
+  //   const headers = new HttpHeaders({
+  //     'Content-Type': 'application/json',
+  //     // 'Content-Type': 'multipart/form-data',
+  //   });
+  //   return this._http.post(`${baseUrl}/upload/${qid}`, questions)
+  // }
 
 
   // uploadTheoryQuestions(qid: number, questions): Observable<any> {
