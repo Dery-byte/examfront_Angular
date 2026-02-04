@@ -8,6 +8,26 @@ import { LoginService } from 'src/app/services/login.service';
 import { UserService } from 'src/app/services/user.service';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 
+
+
+interface Lecturer {
+  id: number;
+  firstname: string;
+  lastname: string;
+  email: string;
+  username: string;
+  phone: string;
+  fullName: string;
+  role: string;
+  enabled: boolean;
+  // add other properties as needed
+}
+
+interface LecturerResponse {
+  count: number;
+  lecturers: Lecturer[];
+}
+
 @Component({
   selector: 'app-lecturers',
   templateUrl: './lecturers.component.html',
@@ -15,12 +35,15 @@ import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 })
 export class LecturersComponent {
 
-  lecturers = [];
+  // lecturers = [];
+
+
+   lecturers: Lecturer[] = [];
   // students: any[] = [];
   filteredLecturers: any[] = [];
   searchText: string = '';
   lecturersEdit;
-
+  lectuersTotal = 0;
   lecturerForm: FormGroup;
 
 
@@ -32,7 +55,7 @@ export class LecturersComponent {
     private _snack: MatSnackBar,
     public dialog: MatDialog,
     private login: LoginService,
-    private user:UserService,
+    private userService: UserService,
     private fb: FormBuilder,
   ) {
     this.lecturerForm = this.fb.group({
@@ -68,70 +91,93 @@ export class LecturersComponent {
 
 
 
-onSubmit() {
-  if (this.lecturerForm.valid) {
-    const lecturerData = this.lecturerForm.value;
-    // Call the service to register lecturer
-    this.user.registerLecturer(lecturerData).subscribe(
-      (data) => {
-        // Success snackbar
-        this._snack.open(`${lecturerData.firstname} has been added`, '', {
-          duration: 3000,
-        });
-        // Close the dialog
-        this.dialog.closeAll();
-        // Refresh the lecturer list
-        this.getAllLecturerss(); // make sure this is a method
-      },
-      (error) => {
-        // Error snackbar
-        this._snack.open(`Failed to add ${lecturerData.firstname}`, '', {
-          duration: 3000,
-        });
-        console.error('Error adding lecturer:', error);
-      }
-    );
+  onSubmit() {
+    if (this.lecturerForm.valid) {
+      const lecturerData = this.lecturerForm.value;
+      // Call the service to register lecturer
+      this.userService.registerLecturer(lecturerData).subscribe(
+        (data) => {
+          // Success snackbar
+          this._snack.open(`${lecturerData.firstname} has been added`, '', {
+            duration: 3000,
+          });
+          // Close the dialog
+          this.dialog.closeAll();
+          // Refresh the lecturer list
+          this.fetchLecturers(); // make sure this is a method
+        },
+        (error) => {
+          // Error snackbar
+          this._snack.open(`Failed to add ${lecturerData.firstname}`, '', {
+            duration: 3000,
+          });
+          console.error('Error adding lecturer:', error);
+        }
+      );
+    }
   }
-}
 
 
 
 
   ngOnInit(): void {
-    this.getAllLecturerss();
+    this.fetchLecturers();
   }
 
 
-  getAllLecturerss() {
-    this._category.getAllLecturers().subscribe((data: any) => {
-      this.lecturers = data;
-      this.filteredLecturers = [...this.lecturers]; // Display ALL lecturers initially
-      console.log('Loaded lecturers:', this.lecturers.length);
-      console.log(this.lecturers);
-    },
-      (error) => {
-        this._snack.open("You're Session has expired! ", "", {
-          duration: 3000,
-        });
-        this.login.logout();
-        // console.log(error);
-        // Swal.fire('Error !! ', 'Error in loading data', 'error');
+  // getAllLecturerss() {
+  //   this._category.getAllLecturers().subscribe((data: any) => {
+  //     this.lecturers = data;
+  //     this.filteredLecturers = [...this.lecturers]; // Display ALL lecturers initially
+  //     console.log('Loaded lecturers:', this.lecturers.length);
+  //     console.log(this.lecturers);
+  //   },
+  //     (error) => {
+  //       this._snack.open("You're Session has expired! ", "", {
+  //         duration: 3000,
+  //       });
+  //       this.login.logout();
+  //       // console.log(error);
+  //       // Swal.fire('Error !! ', 'Error in loading data', 'error');
+  //     }
+  //   );
+  // }
+
+
+  fetchLecturers() {
+    this.userService.allLecturer().subscribe({
+      next: (response: LecturerResponse) => {
+        // The API returns { count: 18, students: [...] }
+        // So extract the students array:
+        this.lecturers = response.lecturers;  // <-- Important!
+        this.lectuersTotal = response.count;
+        this.filteredLecturers = this.lecturers;
+      },
+      error: (err) => {
+        console.error('Error fetching lecturers', err);
       }
-    );
-  }
-
-  applyFilter() {
-    const searchValue = this.searchText.toLowerCase().trim();
-    if (!searchValue) {
-      this.filteredLecturers = [...this.lecturers];
-      return;
-    }
-    this.filteredLecturers = this.lecturers.filter(student => {
-      const fullName = student.fullName?.toLowerCase() || '';
-      const indexNumber = student.username?.toLowerCase() || '';
-      return fullName.includes(searchValue) || indexNumber.includes(searchValue);
     });
   }
+
+
+  applyFilter() {
+    if (!this.searchText) {
+      this.filteredLecturers = this.lecturers;
+    } else {
+      const search = this.searchText.toLowerCase();
+      this.filteredLecturers = this.lecturers.filter(student =>
+        student.fullName.toLowerCase().includes(search) ||
+        student.username.toLowerCase().includes(search)
+      );
+    }
+  }
+
+
+
+
+
+
+
   clearSearch() {
     this.searchText = '';
     this.filteredLecturers = [...this.lecturers];

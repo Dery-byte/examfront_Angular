@@ -77,7 +77,7 @@
             <!-- Timer counter on small devices -->
             <div class="small-devices col-md-2">
                 <mat-card-content>
-                    <h1 class="text-center"><i>{{ getFormmatedTime() }} </i></h1>
+                    <h1 class="text-center">Time Left: <i>{{ getFormmatedTime() }} </i></h1>
                 </mat-card-content>
             </div>
 
@@ -171,49 +171,42 @@
                         </mat-card>
 
 
-                        <form (paste)="preventAction($event)" (copy)="preventAction($event)" (cut)="preventAction($event)" 
-      (contextmenu)="preventAction($event)" (drop)="preventAction($event)">
-    <!-- Add compulsory alert here -->
-    <mat-card class="cards" *ngIf="isCurrentGroupCompulsory()"
-        style="margin: 20px; padding: 15px; font-size:16px; color: white; text-align: center; background-color: #d32f2f; border: 2px solid #b71c1c;">
-        <mat-icon style="vertical-align: middle;">warning</mat-icon>
-        <strong>COMPULSORY SECTION - All questions in {{prefixes[currentPage]}} must be
-            answered</strong>
-    </mat-card>
+                        <form (paste)="preventAction($event)" (copy)="preventAction($event)"
+                            (cut)="preventAction($event)" (contextmenu)="preventAction($event)"
+                            (drop)="preventAction($event)">
+                            <!-- Add compulsory alert here -->
+                            <mat-card class="cards" *ngIf="isCurrentGroupCompulsory()"
+                                style="margin: 20px; padding: 15px; font-size:16px; color: white; text-align: center; background-color: #d32f2f; border: 2px solid #b71c1c;">
+                                <mat-icon style="vertical-align: middle;">warning</mat-icon>
+                                <strong>COMPULSORY SECTION - All questions in {{prefixes[currentPage]}} must be
+                                    answered</strong>
+                            </mat-card>
 
-    <mat-card class="cards"
-        style=" margin: 20px;font-size:18px; color: white;text-align: center; background-color: rgb(86, 82, 82);">
-    </mat-card>
+                            <mat-card class="cards"
+                                style=" margin: 20px;font-size:18px; color: white;text-align: center; background-color: rgb(86, 82, 82);">
+                            </mat-card>
 
-    <div *ngFor="let question of currentQuestions; let i = index">
-        <mat-card-content class="mat-card-content">
-            <input type="checkbox" [checked]="question.selected"
-                (change)="onQuestionSelect(question)" disabled hidden>
-            <mat-form-field class="mat-form-field" style="margin-top: -450px;">
-                <mat-label>
-                    <span class="no-select">
-                        {{question.quesNo}} {{ question.question }} {{question.marks}}
-                    </span>
-                </mat-label>
-                <textarea class="input" 
-                    [name]="'givenAnswer' + i"
-                    [(ngModel)]="question.givenAnswer" 
-                    matInput 
-                    rows="2"
-                    (ngModelChange)="saveAnswers()"
-                    (paste)="preventAction($event)"
-                    (copy)="preventAction($event)"
-                    (cut)="preventAction($event)"
-                    (contextmenu)="preventAction($event)"
-                    (drop)="preventAction($event)"
-                    (dragover)="preventAction($event)"
-                    autocomplete="off"
-                    spellcheck="false">
+                            <div *ngFor="let question of currentQuestions; let i = index">
+                                <mat-card-content class="mat-card-content">
+                                    <input type="checkbox" [checked]="question.selected"
+                                        (change)="onQuestionSelect(question)" disabled hidden>
+                                    <mat-form-field class="mat-form-field" style="margin-top: -450px;">
+                                        <mat-label>
+                                            <span class="no-select">
+                                                {{question.quesNo}} {{ question.question }} {{question.marks}}
+                                            </span>
+                                        </mat-label>
+                                        <textarea class="input" [name]="'givenAnswer' + i"
+                                            [(ngModel)]="question.givenAnswer" matInput rows="2"
+                                            (ngModelChange)="saveAnswers()" (paste)="preventAction($event)"
+                                            (copy)="preventAction($event)" (cut)="preventAction($event)"
+                                            (contextmenu)="preventAction($event)" (drop)="preventAction($event)"
+                                            (dragover)="preventAction($event)" autocomplete="off" spellcheck="false">
                 </textarea>
-            </mat-form-field>
-        </mat-card-content>
-    </div>
-</form>
+                                    </mat-form-field>
+                                </mat-card-content>
+                            </div>
+                        </form>
                         <!-- <form>
                             <mat-card class="cards" *ngIf="isCurrentGroupCompulsory()"
                                 style="margin: 20px; padding: 15px; font-size:16px; color: white; text-align: center; background-color: #d32f2f; border: 2px solid #b71c1c;">
@@ -247,6 +240,8 @@
                         </form> -->
                         <!-- Rest of your code... -->
                         <mat-card-actions>
+
+                            
                             <mat-card>
                                 <div class="container navselect">
                                     <div class="row">
@@ -266,7 +261,7 @@
                                         </div>
 
 
-                                        <div class="col-md-6">
+                                        <!-- <div class="col-md-6"> -->
                                             <mat-card-title
                                                 style="font-size: 16px; font-family: 'Times New Roman', Times, serif; color: blueviolet;">
                                                 Select {{numberOfQuestionsToAnswer}} set(s) of questions answered!
@@ -284,14 +279,22 @@
                                                     </mat-checkbox>
                                                 </div>
                                             </div>
-                                        </div>
+                                        <!-- </div> -->
                                     </div>
                                 </div>
                             </mat-card>
+
+
+
+
+
+
+
                         </mat-card-actions>
                     </mat-card>
+                    
                     <!-- BUTTON IF SUBJECTIVE IS INCLUSIVE -->
-                    <div class="contianer centerbtn mt20 mb20">
+                    <div class="contianer centerbtn mt40 mb20">
                         <button mat-raised-button color="primary" (click)="submitAllQuiz()"
                             [disabled]="isSubmitDisabled">Submit Quiz</button>
                     </div>
@@ -316,19 +319,19 @@
 
                 <!-- BUTTON TO SHOW If SUBJECTIVE IS NOT INCLUDED -->
                 <ng-template #elseBlock>
-                    <div class="contianer centerbtn mt20 mb20">
+                    <div class="contianer centerbtn mt40 mb20">
                         <button mat-raised-button color="primary" (click)="submitAllQuiz()">Submit Quiz</button>
                     </div>
                 </ng-template>
             </div>
 
-            <!-- <div class="large-devices col-md-2 fixed-card"> -->
+            <div class="large-devices col-md-2 fixed-card">
             <!-- <mat-card class="cards"> -->
             <mat-card-content>
                 <h1 class="text-center"> Time Left: <i>{{ getFormmatedTime() }} </i></h1>
             </mat-card-content>
             <!-- </mat-card> -->
-            <!-- </div> -->
+            </div>
         </div>
     </div>
 </div>
@@ -340,32 +343,19 @@
 
 <!-- TIME UP MODAL -->
 <div class="timeup-backdrop" *ngIf="showTimeUpModal">
-  <div class="timeup-modal">
-    <h2 class="title">⏰ Time’s Up</h2>
+    <div class="timeup-modal">
+        <h2 class="title">⏰ Time’s Up</h2>
 
-    <div class="countdown-wrapper">
-      <svg class="progress-ring" width="160" height="160">
-        <circle
-          cx="80"
-          cy="80"
-          r="70"
-          class="ring-bg"
-        />
-        <circle
-          cx="80"
-          cy="80"
-          r="70"
-          class="ring-progress"
-          [attr.stroke-dasharray]="439"
-          [attr.stroke-dashoffset]="439 - (progressPercent / 100) * 439"
-        />
-      </svg>
+        <div class="countdown-wrapper">
+            <svg class="progress-ring" width="160" height="160">
+                <circle cx="80" cy="80" r="70" class="ring-bg" />
+                <circle cx="80" cy="80" r="70" class="ring-progress" [attr.stroke-dasharray]="439"
+                    [attr.stroke-dashoffset]="439 - (progressPercent / 100) * 439" />
+            </svg>
 
-      <div class="countdown-text">
-        {{ countdownText }}
-      </div>
+            <div class="countdown-text">
+                {{ countdownText }}
+            </div>
+        </div>
     </div>
-  </div>
 </div>
-
-

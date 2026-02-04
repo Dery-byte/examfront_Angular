@@ -5,6 +5,25 @@ import Swal from 'sweetalert2';
 import { MatSnackBar } from '@angular/material/snack-bar';
 import { forkJoin } from 'rxjs';
 import { LoginService } from 'src/app/services/login.service';
+import { UserService } from 'src/app/services/user.service';
+
+interface Student {
+  id: number;
+  firstname: string;
+  lastname: string;
+  email: string;
+  username: string;
+  phone: string;
+  fullName: string;
+  role: string;
+  enabled: boolean;
+  // add other properties as needed
+}
+
+interface StudentResponse {
+  count: number;
+  students: Student[];
+}
 
 
 @Component({
@@ -13,11 +32,14 @@ import { LoginService } from 'src/app/services/login.service';
   styleUrls: ['./students.component.css']
 })
 export class StudentsComponent {
-  students = [];
-  // students: any[] = [];
-  filteredStudents: any[] = [];
+  // students = [];
+  students: Student[] = [];
+  filteredStudents: Student[] = [];
+  studentss = [];
+  studentTotal = 0;
   searchText: string = '';
   studentEdit;
+
 
 
 
@@ -27,48 +49,49 @@ export class StudentsComponent {
     private _snack: MatSnackBar,
     public dialog: MatDialog,
     private login: LoginService,
+    private userService: UserService
   ) { }
 
   dialogRef!: MatDialogRef<any>;
 
   ngOnInit(): void {
-    this.getAllStudents();
+    // this.getAllStudents();
+    this.fetchStudents();
   }
 
 
-  getAllStudents() {
-    this._category.getAllStudent().subscribe((data: any) => {
-      this.students = data;
-      this.filteredStudents = [...this.students]; // Display ALL students initially
-      console.log('Loaded students:', this.students.length);
-      console.log(this.students);
-    },
-      (error) => {
-        this._snack.open("You're Session has expired! ", "", {
-          duration: 3000,
-        });
-        this.login.logout();
-        // console.log(error);
-        // Swal.fire('Error !! ', 'Error in loading data', 'error');
+  fetchStudents() {
+    this.userService.allStudentss().subscribe({
+      next: (response: StudentResponse) => {
+        // The API returns { count: 18, students: [...] }
+        // So extract the students array:
+        this.students = response.students;  // <-- Important!
+        this.studentTotal = response.count;
+        this.filteredStudents = this.students;
+      },
+      error: (err) => {
+        console.error('Error fetching students', err);
       }
-    );
-  }
-
-  applyFilter() {
-    const searchValue = this.searchText.toLowerCase().trim();
-    if (!searchValue) {
-      this.filteredStudents = [...this.students];
-      return;
-    }
-    this.filteredStudents = this.students.filter(student => {
-      const fullName = student.fullName?.toLowerCase() || '';
-      const indexNumber = student.username?.toLowerCase() || '';
-      return fullName.includes(searchValue) || indexNumber.includes(searchValue);
     });
   }
+
+
+  applyFilter() {
+    if (!this.searchText) {
+      this.filteredStudents = this.students;
+    } else {
+      const search = this.searchText.toLowerCase();
+      this.filteredStudents = this.students.filter(student =>
+        student.fullName.toLowerCase().includes(search) ||
+        student.username.toLowerCase().includes(search)
+      );
+    }
+  }
+
+
   clearSearch() {
     this.searchText = '';
-    this.filteredStudents = [...this.students];
+    this.filteredStudents = this.students;
   }
 
 

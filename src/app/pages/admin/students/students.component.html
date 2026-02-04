@@ -2,13 +2,17 @@
 
 <!-- {{students | json}} -->
 
-
+<!-- {{students | json}} -->
 
 <mat-card class="elevated-card">
   <mat-card-header class="card-header">
     <div class="header-content">
       <mat-icon class="header-icon">school</mat-icon>
-      <h1 class="card-title">All Students</h1>
+      <!-- <h1 class="card-title">All Students {{studentTotal}}</h1> -->
+<h1 class="card-title">
+  All Students 
+  <span class="student-count">({{studentTotal}})</span>
+</h1>
       <span class="flex-spacer"></span>
       <button mat-raised-button color="primary" routerLink="/admin/add-student" class="add-course-btn">
         <mat-icon>add</mat-icon>
@@ -77,10 +81,10 @@
             </button>
 
             <mat-menu #actionMenu="matMenu" class="action-menu">
-              <button mat-menu-item (click)="openAssignCourse(element.id, assignCategory)" class="menu-item">
+              <!-- <button mat-menu-item (click)="openAssignCourse(element.id, assignCategory)" class="menu-item">
                 <mat-icon class="menu-icon">assignment</mat-icon>
                 <span>Assign Course</span>
-              </button>
+              </button> -->
               <mat-divider></mat-divider>
               <button mat-menu-item (click)="openUpdateStudent(element.id, updateDialogCategory)" class="menu-item">
                 <mat-icon class="menu-icon">edit</mat-icon>

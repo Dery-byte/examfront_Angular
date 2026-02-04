@@ -1,7 +1,7 @@
 import baseUrl from './helper';
 import { Injectable } from '@angular/core';
 import { HttpClient, HttpHeaders } from '@angular/common/http';
-import { Observable, throwError } from 'rxjs';
+import { Observable, throwError,of, } from 'rxjs';
 import { catchError, map } from 'rxjs/operators';
 
 export interface QuizAnswerRequest {
@@ -98,56 +98,117 @@ export class QuizProgressService {
 
 
 
-  // TIMER FOR THE QUIZ_STORAGE_KEY
- getQuizTimer(quizId: number): Observable<QuizTimerResponse | null> {
-    return this.http.get<QuizTimerResponse>(`${baseUrl}/quiz-timer/getRemainingTime/${quizId}`,
-        {
-        withCredentials: true
-      }
+//   // TIMER FOR THE QUIZ_STORAGE_KEY
+//  getQuizTimer(quizId: number): Observable<QuizTimerResponse | null> {
+//     return this.http.get<QuizTimerResponse>(`${baseUrl}/quiz-timer/getRemainingTime/${quizId}`,
+//         {
+//         withCredentials: true
+//       }
+//     )
+//       .pipe(
+//         catchError(error => {
+//           if (error.status === 404) {
+//             // No timer found, return null
+//             return [null];
+//           }
+//           console.error('Error fetching quiz timer:', error);
+//           return throwError(() => error);
+//         })
+//       );
+//   }
+
+
+//    saveQuizTimer(quizId: number, remainingTime: number): Observable<QuizTimerResponse> {
+//     const request: QuizTimerRequest = { remainingTime };
+//     return this.http.post<QuizTimerResponse>(`${baseUrl}/quiz-timer/saveRemainingTime/${quizId}`,request,
+//         {
+//         withCredentials: true
+//       }
+//     )
+//       .pipe(
+//         catchError(error => {
+//           console.error('Error saving quiz timer:', error);
+//           return throwError(() => error);
+//         })
+//       );
+//   }
+
+
+//    deleteQuizTimer(quizId: number): Observable<void> {
+//     return this.http.delete<void>(`${baseUrl}/quiz-timer/deleteRemainingTime/${quizId}`,
+//         {
+//         withCredentials: true
+//       }
+//     )
+//       .pipe(
+//         catchError(error => {
+//           console.error('Error deleting quiz timer:', error);
+//           return throwError(() => error);
+//         })
+//       );
+//   }
+
+// import { of, throwError } from 'rxjs';
+// import { catchError } from 'rxjs/operators';
+
+
+// GET TIMER
+getQuizTimer(quizId: number): Observable<QuizTimerResponse | null> {
+    const headers = new HttpHeaders({
+    'Content-Type': 'application/json',
+    'Authorization': `Bearer ${this.jwtToken}` // Add this!
+  });
+  return this.http
+    .get<QuizTimerResponse>(`${baseUrl}/quiz-timer/getRemainingTime/${quizId}`,{headers})
+    .pipe(
+      catchError(error => {
+        if (error.status === 404) {
+          // 404 is valid business logic: no timer saved yet
+          return of(null);
+        }
+        console.error('Error fetching quiz timer:', error);
+        return throwError(() => error);
+      })
+    );
+}
+
+private jwtToken = localStorage.getItem('token')
+// SAVE TIMER
+saveQuizTimer(quizId: number, remainingTime: number): Observable<QuizTimerResponse> {
+  const request: QuizTimerRequest = { remainingTime };
+  const headers = new HttpHeaders({
+    'Content-Type': 'application/json',
+    'Authorization': `Bearer ${this.jwtToken}` // Add this!
+  });
+  return this.http
+    .post<QuizTimerResponse>(
+      `${baseUrl}/quiz-timer/saveRemainingTime/${quizId}`,
+      request,{headers}
     )
-      .pipe(
-        catchError(error => {
-          if (error.status === 404) {
-            // No timer found, return null
-            return [null];
-          }
-          console.error('Error fetching quiz timer:', error);
-          return throwError(() => error);
-        })
-      );
-  }
+    .pipe(
+      catchError(error => {
+        console.error('Error saving quiz timer:', error);
+        return throwError(() => error);
+      })
+    );
+}
 
 
-   saveQuizTimer(quizId: number, remainingTime: number): Observable<QuizTimerResponse> {
-    const request: QuizTimerRequest = { remainingTime };
-    return this.http.post<QuizTimerResponse>(`${baseUrl}/quiz-timer/saveRemainingTime/${quizId}`,request,
-        {
-        withCredentials: true
-      }
-    )
-      .pipe(
-        catchError(error => {
-          console.error('Error saving quiz timer:', error);
-          return throwError(() => error);
-        })
-      );
-  }
-
-
-   deleteQuizTimer(quizId: number): Observable<void> {
-    return this.http.delete<void>(`${baseUrl}/quiz-timer/deleteRemainingTime/${quizId}`,
-        {
-        withCredentials: true
-      }
-    )
-      .pipe(
-        catchError(error => {
-          console.error('Error deleting quiz timer:', error);
-          return throwError(() => error);
-        })
-      );
-  }
-
+// DELETE TIMER
+deleteQuizTimer(quizId: number): Observable<void> {
+      const headers = new HttpHeaders({
+    'Content-Type': 'application/json',
+    'Authorization': `Bearer ${this.jwtToken}` // Add this!
+  });
+  return this.http
+    .delete<void>(`${baseUrl}/quiz-timer/deleteRemainingTime/${quizId}`,{headers})
+    .pipe(
+      catchError(error => {
+        console.error('Error deleting quiz timer:', error);
+        return throwError(() => error);
+      })
+    );
+}
 
 
 
