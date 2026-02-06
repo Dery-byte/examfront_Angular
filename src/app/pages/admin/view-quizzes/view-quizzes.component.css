@@ -329,3 +329,67 @@
   font-size: 18px;
   margin-right: 4px;
 }
+
+
+
+
+
+
+
+
+
+
+
+
+.protection-card {
+  margin-top: 20px;
+  padding: 10px 0;
+
+  .header-icon {
+    color: #e53935;
+    margin-right: 8px;
+  }
+}
+
+.protection-list {
+  display: flex;
+  flex-direction: column;
+  gap: 18px;
+  padding: 20px;
+}
+
+.protection-item {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 14px 16px;
+  border-radius: 8px;
+  transition: background 0.2s ease;
+  border: 1px solid #eee;
+
+  &:hover {
+    background: #fafafa;
+  }
+
+  .info {
+    display: flex;
+    gap: 16px;
+    align-items: flex-start;
+
+    mat-icon {
+      font-size: 28px;
+      color: #3f51b5;
+      margin-top: 4px;
+    }
+
+    .title {
+      font-weight: 600;
+      font-size: 15px;
+    }
+
+    .desc {
+      font-size: 13px;
+      color: #666;
+    }
+  }
+}

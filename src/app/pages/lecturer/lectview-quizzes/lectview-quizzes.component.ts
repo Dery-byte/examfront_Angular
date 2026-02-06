@@ -1,4 +1,4 @@
-import { Component,TemplateRef, OnInit } from '@angular/core';
+import { Component, TemplateRef, OnInit } from '@angular/core';
 import { QuizService } from 'src/app/services/quiz.service';
 import { MatDialog, MatDialogRef } from '@angular/material/dialog';
 import Swal from 'sweetalert2';
@@ -19,48 +19,48 @@ interface QuizStatusResponse {
 export class LectviewQuizzesComponent {
 
 
-quizzes = [];
+  quizzes = [];
 
-specificQuestion;
-quizById;
-categories;
-  constructor(private quizz : QuizService, 
-    private _category : CategoryService, 
+  specificQuestion;
+  quizById;
+  categories;
+  constructor(private quizz: QuizService,
+    private _category: CategoryService,
     private _snack: MatSnackBar,
-     public dialog: MatDialog,
-    public login:LoginService,
-  ){}
+    public dialog: MatDialog,
+    public login: LoginService,
+  ) { }
 
   ngOnInit(): void {
     this.quizz.loadQuizzesForUser().subscribe(
-      (data:any)=>{
-        this.quizzes=data;
+      (data: any) => {
+        this.quizzes = data;
         console.log(this.quizzes);
-
-     },
-     
-     (error)=>{
-      console.log(error);
-      // Swal.fire("Error !!", "Failed to load data !", "error");
-      this._snack.open("You're Session has expired! ", "", {
-        duration: 3000,
-      });
-      this.login.logout();
-     });
-
-
-     this._category.getCategoriesForUser().subscribe((data)=>
-      {
-        this.categories = data;
       },
-      (error)=>
-      {
-this.login.logout();
+      (error) => {
+        console.log(error);
+        // Swal.fire("Error !!", "Failed to load data !", "error");
+        this._snack.open("You're Session has expired! ", "", {
+          duration: 3000,
+        });
+        this.login.logout();
+      });
+
+
+    this._category.getCategoriesForUser().subscribe((data) => {
+      this.categories = data;
+    },
+      (error) => {
+        this.login.logout();
 
         // alert("error loading Categories");
       }
-      );
-        }
+    );
+
+
+
+    
+  }
 
 
   dialogRef!: MatDialogRef<any>;
@@ -102,41 +102,50 @@ this.login.logout();
 
 
   // LOGIC TO UPDATE Quiz
-  public updateData(){
+  public updateData() {
     console.log('quizById before update:', this.quizById);
-  // Check if ID exists
-  const quizId = this.quizById.qId;
-  
-  if (!quizId) {
-    console.error('No ID found in quizById:', this.quizById);
-    this._snack.open("Quiz ID is missing", "", {
-      duration: 3000,
-    });
-    return;
-  }
+    // Check if ID exists
+    const quizId = this.quizById.qId;
 
-     const updateRequest = {
-    qId: quizId,
-    title: this.quizById.title,
-    description: this.quizById.description,
-    maxMarks: this.quizById.maxMarks,
-    quizTime: this.quizById.quizTime,
-    numberOfQuestions: this.quizById.numberOfQuestions,
-    active: this.quizById.active,
-    quizpassword: this.quizById.quizpassword,
-    status: this.quizById.status,
-    quizType: this.quizById.quizType,
-    startTime: this.quizById.startTime,
-    quizDate: this.quizById.quizDate,
-    categoryId: this.quizById.category?.cid || this.quizById.category?.id // Only send category ID
-    // Don't include: user, category (full object), questions, reports
-  };
+    if (!quizId) {
+      console.error('No ID found in quizById:', this.quizById);
+      this._snack.open("Quiz ID is missing", "", {
+        duration: 3000,
+      });
+      return;
+    }
 
-  console.log('Sending quiz update request:', updateRequest);
+    const updateRequest = {
+      qId: quizId,
+      title: this.quizById.title,
+      description: this.quizById.description,
+      maxMarks: this.quizById.maxMarks,
+      quizTime: this.quizById.quizTime,
+      numberOfQuestions: this.quizById.numberOfQuestions,
+      active: this.quizById.active,
+      quizpassword: this.quizById.quizpassword,
+      status: this.quizById.status,
+      quizType: this.quizById.quizType,
+      startTime: this.quizById.startTime,
+      quizDate: this.quizById.quizDate,
 
+      violationAction: this.quizById.violationAction,
+      violationDelaySeconds: this.quizById.violationDelaySeconds,
+      autoSubmitCountdownSeconds: this.quizById.autoSubmitCountdownSeconds,
+      maxViolations: this.quizById.maxViolations,
+      delayMultiplier: this.quizById.delayMultiplier,
+      // Protection toggles
+      enableFullscreenLock: this.quizById.enableFullscreenLock,
+      enableWatermark: this.quizById.enableWatermark,
+      enableScreenshotBlocking: this.quizById.enableScreenshotBlocking,
+      enableDevToolsBlocking: this.quizById.enableDevToolsBlocking,
 
-    this.quizz.updateQuiz(updateRequest).subscribe((data)=>
-    {
+      categoryId: this.quizById.category?.cid || this.quizById.category?.id // Only send category ID
+      // Don't include: user, category (full object), questions, reports
+    };
+    console.log('Sending quiz update request:', updateRequest);
+
+    this.quizz.updateQuiz(updateRequest).subscribe((data) => {
       this._snack.open("Quiz Updated Successfully! ", "", {
         duration: 3000,
       });
@@ -149,32 +158,31 @@ this.login.logout();
         });
       });
   }
-  deleteQuiz(qId){
-   Swal.fire({ 
-    icon:"info",
-    title:"Are you sure of this ?",
-    confirmButtonText:"Delete",
-    showCancelButton:true,
-   }).then((results)=>{
-    if(results.isConfirmed){
- //delete
+  deleteQuiz(qId) {
+    Swal.fire({
+      icon: "info",
+      title: "Are you sure of this ?",
+      confirmButtonText: "Delete",
+      showCancelButton: true,
+    }).then((results) => {
+      if (results.isConfirmed) {
+        //delete
 
- this.quizz.deleteQuizs(qId).subscribe(
-  (data)=>{
-this.quizzes = this.quizzes.filter((quiz)=> quiz.qId != qId);
+        this.quizz.deleteQuizs(qId).subscribe(
+          (data) => {
+            this.quizzes = this.quizzes.filter((quiz) => quiz.qId != qId);
 
-    Swal.fire("Success", "Quiz Deleted", "success");
-  },
-  (error)=>
-  {
-    Swal.fire("Error", "Quiz could not be deleted", "error");
+            Swal.fire("Success", "Quiz Deleted", "success");
+          },
+          (error) => {
+            Swal.fire("Error", "Quiz could not be deleted", "error");
 
+          }
+        );
+
+      }
+    })
   }
-);
-
-    }
-   })
-  }
 
 
 
@@ -182,53 +190,53 @@ this.quizzes = this.quizzes.filter((quiz)=> quiz.qId != qId);
 
 
 
- selectedStatus: string = '';
+  selectedStatus: string = '';
   updating: boolean = false;
 
 
 
- updateQuizStatus(q: any) {
-  Swal.fire({
-    title: 'Are you sure?',
-    text: `Change quiz status to "${q.selectedStatus}" ?`,
-    icon: 'warning',
-    showCancelButton: true,
-    confirmButtonColor: '#d33',
-    cancelButtonColor: '#aaa',
-    confirmButtonText: 'Yes, update it!'
-  }).then((result) => {
-    if (result.isConfirmed) {
-      q.updating = true;
-      this.quizz.updateQuizStatus(q.qId, q.selectedStatus).subscribe({
-        next: (res: QuizStatusResponse) => {
-          q.status = res.status;
-          q.updating = false;
+  updateQuizStatus(q: any) {
+    Swal.fire({
+      title: 'Are you sure?',
+      text: `Change quiz status to "${q.selectedStatus}" ?`,
+      icon: 'warning',
+      showCancelButton: true,
+      confirmButtonColor: '#d33',
+      cancelButtonColor: '#aaa',
+      confirmButtonText: 'Yes, update it!'
+    }).then((result) => {
+      if (result.isConfirmed) {
+        q.updating = true;
+        this.quizz.updateQuizStatus(q.qId, q.selectedStatus).subscribe({
+          next: (res: QuizStatusResponse) => {
+            q.status = res.status;
+            q.updating = false;
 
             this._snack.open(`Quiz status changed to ${res.status}`, "", {
-        duration: 3000,
-      });
-          // Swal.fire({
-          //   icon: 'success',
-          //   title: 'Status Updated',
-          //   text: `Quiz status changed to ${res.status}`
-          // });
-        },
-        error: (err) => {
-          console.error(err);
-          q.updating = false;
-      this._snack.open("Status update failed. Please try again.", "", {
-        duration: 3000,
-      });
-          // Swal.fire({
-          //   icon: 'error',
-          //   title: 'Update Failed',
-          //   text: 'Failed to update quiz status. Please try again.'
-          // });
-        }
-      });
-    }
-  });
-}
+              duration: 3000,
+            });
+            // Swal.fire({
+            //   icon: 'success',
+            //   title: 'Status Updated',
+            //   text: `Quiz status changed to ${res.status}`
+            // });
+          },
+          error: (err) => {
+            console.error(err);
+            q.updating = false;
+            this._snack.open("Status update failed. Please try again.", "", {
+              duration: 3000,
+            });
+            // Swal.fire({
+            //   icon: 'error',
+            //   title: 'Update Failed',
+            //   text: 'Failed to update quiz status. Please try again.'
+            // });
+          }
+        });
+      }
+    });
+  }
 
 
 }

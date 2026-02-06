@@ -11,6 +11,64 @@
 
   <mat-divider></mat-divider>
 
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
   <mat-card-content>
     <form (ngSubmit)="addQuiz()" class="quiz-form">
       <!-- Basic Information Section -->
@@ -113,14 +171,14 @@
 
 
 
-             <mat-form-field appearance="outline" class="form-field">
-              <mat-label>Quiz Password</mat-label>
-              <input matInput [(ngModel)]="quizData.quizpassword" name="quizpassword" type="password"
-                [type]="hide ? 'password' : 'text'">
-              <button mat-icon-button matSuffix type="button" (click)="hide = !hide">
-                <mat-icon>{{ hide ? 'visibility_off' : 'visibility' }}</mat-icon>
-              </button> <mat-hint>Optional password protection</mat-hint>
-            </mat-form-field>
+          <mat-form-field appearance="outline" class="form-field">
+            <mat-label>Quiz Password</mat-label>
+            <input matInput [(ngModel)]="quizData.quizpassword" name="quizpassword" type="password"
+              [type]="hide ? 'password' : 'text'">
+            <button mat-icon-button matSuffix type="button" (click)="hide = !hide">
+              <mat-icon>{{ hide ? 'visibility_off' : 'visibility' }}</mat-icon>
+            </button> <mat-hint>Optional password protection</mat-hint>
+          </mat-form-field>
         </div>
       </div>
 
@@ -153,6 +211,83 @@
           {{quizData.active ? 'Publish Immediately' : 'Save as Draft'}}
         </mat-slide-toggle>
       </div>
+
+
+
+
+
+
+      <!-- Quiz Protection / Violation Rules -->
+      <!-- Quiz Protection / Violation Rules -->
+      <div class="form-section">
+        <h3 class="section-title">
+          <mat-icon color="warn">security</mat-icon>
+          Quiz Protection (Violation Rules)
+        </h3>
+
+        <div class="form-row">
+          <mat-form-field appearance="outline" class="form-field">
+            <mat-label>Violation Action</mat-label>
+            <mat-select [(ngModel)]="quizData.violationAction" name="violationAction">
+              <mat-option value="NONE">None</mat-option>
+              <mat-option value="DELAY_ONLY">Delay Student Only</mat-option>
+              <mat-option value="AUTOSUBMIT_ONLY">Auto Submit Only</mat-option>
+              <mat-option value="DELAY_AND_AUTOSUBMIT">Delay + Auto Submit</mat-option>
+            </mat-select>
+            <mat-hint>What should happen when a violation is detected</mat-hint>
+          </mat-form-field>
+
+          <mat-form-field appearance="outline" class="form-field">
+            <mat-label>Max Violations Allowed</mat-label>
+            <input matInput type="number" [(ngModel)]="quizData.maxViolations" name="maxViolations" min="1" max="10">
+            <mat-hint>After this, quiz is auto-submitted</mat-hint>
+          </mat-form-field>
+        </div>
+
+        <div class="form-row" *ngIf="quizData.violationAction !== 'NONE'">
+          <mat-form-field appearance="outline" class="form-field">
+            <mat-label>Delay Seconds</mat-label>
+            <input matInput type="number" [(ngModel)]="quizData.violationDelaySeconds" name="violationDelaySeconds"
+              min="5" max="300">
+            <mat-hint>How long to lock student on each violation</mat-hint>
+          </mat-form-field>
+
+          <mat-form-field appearance="outline" class="form-field">
+            <mat-label>Auto Submit Countdown (seconds)</mat-label>
+            <input matInput type="number" [(ngModel)]="quizData.autoSubmitCountdownSeconds"
+              name="autoSubmitCountdownSeconds" min="3" max="30">
+            <mat-hint>Countdown before auto-submit executes</mat-hint>
+          </mat-form-field>
+
+          <mat-form-field appearance="outline" class="form-field">
+            <mat-label>Delay Multiplier</mat-label>
+            <input matInput type="number" [(ngModel)]="quizData.delayMultiplier"
+              name="autoSubmitCountdownSeconds" min="3" max="30">
+            <mat-hint>Delay Multiplier</mat-hint>
+          </mat-form-field>
+        </div>
+
+        <!-- Additional Protection Toggles -->
+        <div class="protection-toggles" *ngIf="quizData.violationAction !== 'NONE'">
+          <mat-slide-toggle [(ngModel)]="quizData.enableFullscreenLock" name="enableFullscreenLock" color="primary">
+            <mat-icon>fullscreen</mat-icon> Require Fullscreen Mode
+          </mat-slide-toggle>
+
+          <mat-slide-toggle [(ngModel)]="quizData.enableWatermark" name="enableWatermark" color="primary">
+            <mat-icon>branding_watermark</mat-icon> Show Watermark Overlay
+          </mat-slide-toggle>
+
+          <mat-slide-toggle [(ngModel)]="quizData.enableScreenshotBlocking" name="enableScreenshotBlocking"
+            color="primary">
+            <mat-icon>no_photography</mat-icon> Block Screenshots
+          </mat-slide-toggle>
+
+          <mat-slide-toggle [(ngModel)]="quizData.enableDevToolsBlocking" name="enableDevToolsBlocking" color="primary">
+            <mat-icon>code_off</mat-icon> Block Developer Tools
+          </mat-slide-toggle>
+        </div>
+      </div>
+
 
       <!-- Form Actions -->
       <div class="form-actions">

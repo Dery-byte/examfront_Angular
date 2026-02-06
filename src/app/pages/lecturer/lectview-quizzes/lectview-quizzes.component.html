@@ -13,22 +13,22 @@
 
   <div class="quiz-grid">
 
-     <!-- Show message if no quizzes -->
-<div *ngIf="quizzes.length === 0" class="empty-state">
-  <mat-card class="empty-state-card mat-elevation-z4">
-    <mat-card-content class="empty-state-content">
-      <mat-icon class="empty-state-icon">quiz</mat-icon>
-      <h3 class="empty-state-title">No Quizzes Yet</h3>
-      <p class="empty-state-description">
-        You haven't created any quizzes. Start by adding your first quiz.
-      </p>
-      <button mat-raised-button color="primary" routerLink="/lect/add-quizes">
-        <mat-icon>add</mat-icon>
-        Create First Quiz
-      </button>
-    </mat-card-content>
-  </mat-card>
-</div>
+    <!-- Show message if no quizzes -->
+    <div *ngIf="quizzes.length === 0" class="empty-state">
+      <mat-card class="empty-state-card mat-elevation-z4">
+        <mat-card-content class="empty-state-content">
+          <mat-icon class="empty-state-icon">quiz</mat-icon>
+          <h3 class="empty-state-title">No Quizzes Yet</h3>
+          <p class="empty-state-description">
+            You haven't created any quizzes. Start by adding your first quiz.
+          </p>
+          <button mat-raised-button color="primary" routerLink="/lect/add-quizes">
+            <mat-icon>add</mat-icon>
+            Create First Quiz
+          </button>
+        </mat-card-content>
+      </mat-card>
+    </div>
     <!-- Quiz Card -->
     <mat-card *ngFor="let q of quizzes" class="quiz-card mat-elevation-z4">
       <mat-card-header>
@@ -67,32 +67,10 @@
           Questions
         </button>
 
-
-
-
-
-
-
-
-
-
-        
-
         <button mat-button color="accent" (click)="openUpdateDialog(q.qId, updateObj)" class="action-btn">
           <mat-icon>edit</mat-icon>
           Edit
         </button>
-
-
-
-
-
-
-
-
-
-
-
 
         <button mat-button color="warn" (click)="deleteQuiz(q.qId)" class="action-btn">
           <mat-icon>delete</mat-icon>
@@ -127,45 +105,7 @@
 </div>
 
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 <!-- Update Quiz Dialog -->
-
 
 <ng-template #updateObj let-data="data">
   <div class="dialog-container">
@@ -266,29 +206,158 @@
               <mat-datepicker #picker></mat-datepicker>
               <!-- <mat-icon matSuffix>event</mat-icon> -->
             </mat-form-field>
-
             <mat-form-field appearance="outline" class="form-field">
               <mat-label>Start Time</mat-label>
               <input matInput type="time" [(ngModel)]="quizById.startTime" name="startTime">
               <mat-icon matSuffix>access_time</mat-icon>
             </mat-form-field>
           </div>
-
-
-
         </div>
+
+
+        <!-- Quiz Protection / Violation Rules -->
+        <div class="form-section">
+          <h3 class="section-title">
+            <mat-icon color="warn">security</mat-icon>
+            Quiz Protection (Violation Rules)
+          </h3>
+
+          <div class="form-row">
+            <mat-form-field appearance="outline" class="form-field">
+              <mat-label>Violation Action</mat-label>
+              <mat-select [(ngModel)]="quizById.violationAction" name="violationAction">
+                <mat-option value="NONE">None</mat-option>
+                <mat-option value="DELAY_ONLY">Delay Student Only</mat-option>
+                <mat-option value="AUTOSUBMIT_ONLY">Auto Submit Only</mat-option>
+                <mat-option value="DELAY_AND_AUTOSUBMIT">Delay + Auto Submit</mat-option>
+              </mat-select>
+              <!-- <mat-hint>What should happen when a violation is detected</mat-hint> -->
+            </mat-form-field>
+
+            <mat-form-field appearance="outline" class="form-field">
+              <mat-label>Max Violations Allowed</mat-label>
+              <input matInput type="number" [(ngModel)]="quizById.maxViolations" name="maxViolations" min="1" max="10">
+              <!-- <mat-hint>After this, quiz is auto-submitted</mat-hint> -->
+            </mat-form-field>
+          </div>
+
+          <div class="form-row" *ngIf="quizById.violationAction !== 'NONE'">
+            <mat-form-field appearance="outline" class="form-field">
+              <mat-label>Delay Seconds</mat-label>
+              <input matInput type="number" [(ngModel)]="quizById.delaySeconds" name="violationDelaySeconds" min="5"
+                max="300">
+              <!-- <mat-hint>How long to lock student on each violation</mat-hint> -->
+            </mat-form-field>
+
+            <mat-form-field appearance="outline" class="form-field">
+              <mat-label>Auto Submit Countdown (seconds)</mat-label>
+              <input matInput type="number" [(ngModel)]="quizById.autoSubmitCountdownSeconds"
+                name="autoSubmitCountdownSeconds" min="3" max="30">
+              <!-- <mat-hint>Countdown before auto-submit executes</mat-hint> -->
+            </mat-form-field>
+
+
+            <mat-form-field appearance="outline" class="form-field">
+              <mat-label>Delay Multiplier</mat-label>
+              <input matInput type="number" [(ngModel)]="quizById.delayMultiplier" name="delayMultiplier" min="3"
+                max="30">
+              <!-- <mat-hint>Delay Multiplier</mat-hint> -->
+            </mat-form-field>
+          </div>
+
+                    <!-- Additional Protection Toggles -->
+                    <!-- <div class="protection-toggles" *ngIf="quizById.violationAction !== 'NONE'">
+                    <mat-slide-toggle [(ngModel)]="quizById.enableFullscreenLock" name="enableFullscreenLock" color="primary">
+                      <mat-icon>fullscreen</mat-icon> Fullscreen
+                    </mat-slide-toggle>
+
+                    <mat-slide-toggle [(ngModel)]="quizById.enableWatermark" name="enableWatermark" color="primary">
+                      <mat-icon>branding_watermark</mat-icon>Watermark Overlay
+                    </mat-slide-toggle>
+
+                    <mat-slide-toggle [(ngModel)]="quizById.enableScreenshotBlocking" name="enableScreenshotBlocking"
+                      color="primary">
+                      <mat-icon>no_photography</mat-icon> Block Screenshots
+                    </mat-slide-toggle>
+
+                    <mat-slide-toggle [(ngModel)]="quizById.enableDevToolsBlocking" name="enableDevToolsBlocking" color="primary">
+                      <mat-icon>code_off</mat-icon> 
+                    </mat-slide-toggle>
+                  </div> -->
+
+
+          <mat-card class="protection-card" *ngIf="quizById.violationAction !== 'NONE'">
+            <mat-card-header>
+              <mat-icon class="header-icon">security</mat-icon>
+              <mat-card-title>Exam Protection Settings</mat-card-title>
+              <mat-card-subtitle>Enable controls to prevent cheating during the quiz</mat-card-subtitle>
+            </mat-card-header>
+
+            <mat-divider></mat-divider>
+
+            <div class="protection-list">
+
+              <!-- Fullscreen -->
+              <div class="protection-item">
+                <div class="info">
+                  <mat-icon>fullscreen</mat-icon>
+                  <div>
+                    <div class="title">Fullscreen Lock</div>
+                    <div class="desc">Forces candidates to stay in fullscreen mode throughout the quiz.</div>
+                  </div>
+                </div>
+                <mat-slide-toggle [(ngModel)]="quizById.enableFullscreenLock" color="primary"
+                  name="enableFullscreenLock"></mat-slide-toggle>
+              </div>
+
+              <!-- Watermark -->
+              <div class="protection-item">
+                <div class="info">
+                  <mat-icon>branding_watermark</mat-icon>
+                  <div>
+                    <div class="title">Watermark Overlay</div>
+                    <div class="desc">Displays user details on the screen to discourage screen recording.</div>
+                  </div>
+                </div>
+                <mat-slide-toggle [(ngModel)]="quizById.enableWatermark" name="enableWatermark"
+                  color="primary"></mat-slide-toggle>
+              </div>
+
+              <!-- Screenshot Blocking -->
+              <div class="protection-item">
+                <div class="info">
+                  <mat-icon>no_photography</mat-icon>
+                  <div>
+                    <div class="title">Block Screenshots</div>
+                    <div class="desc">Prevents common screenshot and screen capture actions.</div>
+                  </div>
+                </div>
+                <mat-slide-toggle [(ngModel)]="quizById.enableScreenshotBlocking" name="enableScreenshotBlocking"
+                  color="primary"></mat-slide-toggle>
+              </div>
+
+              <!-- DevTools -->
+              <div class="protection-item">
+                <div class="info">
+                  <mat-icon>code_off</mat-icon>
+                  <div>
+                    <div class="title">Block Developer Tools</div>
+                    <div class="desc">Disables access to browser developer tools during the quiz.</div>
+                  </div>
+                </div>
+                <mat-slide-toggle [(ngModel)]="quizById.enableDevToolsBlocking" name="enableDevToolsBlocking"
+                  color="primary"></mat-slide-toggle>
+              </div>
+            </div>
+          </mat-card>
+        </div>
+
         <mat-slide-toggle [(ngModel)]="quizById.active" name="active" color="primary" class="publish-toggle">
           <mat-icon>{{quizById.active ? 'visibility' : 'visibility_off'}}</mat-icon>
           {{quizById.active ? 'Published' : 'Unpublished'}}
         </mat-slide-toggle>
       </form>
     </div>
-
-
-
-
-
-
 
 
 

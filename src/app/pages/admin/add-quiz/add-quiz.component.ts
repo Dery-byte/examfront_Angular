@@ -13,6 +13,35 @@ export class AddQuizComponent implements OnInit {
 
   categories = [];
 
+  // quizData = {
+  //   title: "",
+  //   description: "",
+  //   maxMarks: "",
+  //   numberOfQuestions: "",
+  //   quizpassword: "",
+  //   quizTime: "",
+  //   startTime: "",
+  //   quizDate: "",
+  //   attempted: false,
+  //   active: true,
+  //   category:
+  //   {
+  //     cid: ""
+  //   },
+  //   quizType: '',  // 👈 Add this
+
+
+  //   // ✅ NEW — violation config
+  //   violationAction: 'NONE',
+  //   violationDelaySeconds: 5,
+  //   autoSubmitCountdownSeconds: 10,
+  //   maxViolations: 3
+
+  // }
+
+
+
+
   quizData = {
     title: "",
     description: "",
@@ -24,17 +53,29 @@ export class AddQuizComponent implements OnInit {
     quizDate: "",
     attempted: false,
     active: true,
-    category:
-    {
+    category: {
       cid: ""
     },
-      quizType: ''   // 👈 Add this
+    quizType: '',
 
+    // Violation config
+    violationAction: 'NONE',
+    violationDelaySeconds: 30,
+    autoSubmitCountdownSeconds: 5,
+    maxViolations: 3,
+    delayMultiplier:1.5,
+
+
+    // Protection toggles
+    enableFullscreenLock: true,
+    enableWatermark: true,
+    enableScreenshotBlocking: true,
+    enableDevToolsBlocking: true
   }
-quizFormSubmitted = false;
-hide = true; // default: password hidden
+  quizFormSubmitted = false;
+  hide = true; // default: password hidden
 
-    // quizType is only for controlling UI, not saved
+  // quizType is only for controlling UI, not saved
   // quizType: 'theory' | 'obj' | 'both' | '' = '';
 
   constructor(private _cat: CategoryService,
@@ -54,7 +95,7 @@ hide = true; // default: password hidden
     )
   }
   addQuiz() {
-      this.quizFormSubmitted = true;
+    this.quizFormSubmitted = true;
     if (this.quizData.title.trim() == '' || this.quizData.title == null) {
       this._snackbar.open("Title is required !!", "", {
         duration: 3000,
@@ -62,12 +103,12 @@ hide = true; // default: password hidden
       return;
     }
 
-      if (!this.quizData.quizType) {
-          this._snackbar.open("Select Quiz Type !!", "", {
+    if (!this.quizData.quizType) {
+      this._snackbar.open("Select Quiz Type !!", "", {
         duration: 3000,
       })
-    return; // stop submission until user selects quizType
-  }
+      return; // stop submission until user selects quizType
+    }
 
     console.log(this.quizData);
     //validation...
@@ -85,11 +126,24 @@ hide = true; // default: password hidden
           quizDate: "",
           attempted: false,
           active: true,
-          quizType:"",
+          quizType: "",
           category:
           {
             cid: ""
-          }
+          },
+          // ✅ NEW — violation config
+          // Violation config
+          violationAction: 'NONE',
+          violationDelaySeconds: 30,
+          autoSubmitCountdownSeconds: 5,
+          maxViolations: 3,
+          delayMultiplier:1.5,
+
+          // Protection toggles
+          enableFullscreenLock: true,
+          enableWatermark: true,
+          enableScreenshotBlocking: true,
+          enableDevToolsBlocking: true
         },
           Swal.fire("Success", "Quiz is added", "success");
 
