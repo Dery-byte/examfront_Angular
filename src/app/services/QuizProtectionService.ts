@@ -1674,7 +1674,7 @@ export class QuizProtectionService implements OnDestroy {
   private getViolationMessage(type: string): string {
     const messages: Record<string, string> = {
       'screenshot-attempt': 'Screenshots are not allowed',
-      'context-menu-block': 'Right-click is disabled',
+      'context-menu-block': 'Right-click is not allowed',
       'devtools-block': 'Developer tools are disabled',
       'new-tab-block': 'Opening new tabs/windows is not allowed',
       'focus-lost': 'Please stay on the quiz page',
@@ -1683,6 +1683,7 @@ export class QuizProtectionService implements OnDestroy {
       'clipboard-monitor': 'Clipboard access is restricted',
       'unload-attempt': 'Leaving the page is not allowed',
       'locked': 'Quiz access suspended',
+
     };
     return messages[type] || 'Violation detected';
   }
@@ -1796,8 +1797,7 @@ export class QuizProtectionService implements OnDestroy {
 
     overlay.innerHTML = `
       <div style="text-align: center; padding: 40px; max-width: 500px;">
-        <div style="font-size: 64px; margin-bottom: 20px;">⏸️</div>
-        <h1 style="font-size: 28px; margin-bottom: 8px; color: #ff9800;">QUIZ ACCESS SUSPENDED</h1>
+        <h1 style="font-size: 28px; margin-bottom: 8px; color: #ff9800;">YOU HAVE BEEN SUSPENDED FOR ${this.calculateDelayDuration()} SECONDS</h1>
         <p style="font-size: 16px; opacity: 0.8; margin-bottom: 16px;">${this.getViolationMessage(violationType)}</p>
         
         <div style="position: relative; width: 180px; height: 180px; margin: 0 auto 24px;">
@@ -1814,7 +1814,7 @@ export class QuizProtectionService implements OnDestroy {
         
         <div style="background: rgba(255,255,255,0.05); padding: 16px; border-radius: 8px; margin-bottom: 20px;">
           <p style="font-size: 14px; margin: 0; color: ${warningColor};">
-            <strong>Violation ${this.totalViolationCount} of ${cfg.maxViolations}</strong>
+            <strong>Violation ${this.totalViolationCount}</strong>
           </p>
           <p style="font-size: 13px; opacity: 0.7; margin: 8px 0 0 0;">${warningText}</p>
         </div>
@@ -2081,9 +2081,10 @@ export class QuizProtectionService implements OnDestroy {
   public showAutoSubmitComplete(message?: string): void {
     this.removeAutoSubmitOverlay();
 
+
+
     const overlay = this.renderer.createElement('div');
     this.autoSubmitOverlayElement = overlay;
-
     this.renderer.setStyle(overlay, 'position', 'fixed');
     this.renderer.setStyle(overlay, 'top', '0');
     this.renderer.setStyle(overlay, 'left', '0');

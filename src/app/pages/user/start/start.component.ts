@@ -6502,6 +6502,8 @@ import { Observable, forkJoin, of } from 'rxjs';
 import { catchError } from 'rxjs/operators';
 import Swal from 'sweetalert2';
 import { ScreenshotPreventionService } from 'src/app/services/ScreenshotPreventionService ';
+// import { ScreenshotPreventionService } from 'src/app/services/ScreenshotPreventionService ';
+
 
 import { 
   QuizProtectionService,
@@ -6780,6 +6782,10 @@ export class StartComponent implements OnInit, OnDestroy {
 
     this.initForm();
     this.preventBackButton();
+
+
+
+    this.screenshotPrevention.enableProtection();
   }
 
   ngOnDestroy(): void {
@@ -6931,7 +6937,7 @@ export class StartComponent implements OnInit, OnDestroy {
     // =========================================================================
 
     const violationConfig = {
-      action: (this.quiz.violationAction || 'DELAY_AND_AUTOSUBMIT') as 'NONE' | 'DELAY_ONLY' | 'AUTOSUBMIT_ONLY' | 'DELAY_AND_AUTOSUBMIT',
+      action: (this.quiz.violationAction || 'NONE') as 'NONE' | 'DELAY_ONLY' | 'AUTOSUBMIT_ONLY' | 'DELAY_AND_AUTOSUBMIT',
       maxViolations: this.quiz.maxViolations ?? 3,
       delaySeconds: this.quiz.delaySeconds ?? 30,
       delayIncrementOnRepeat: this.quiz.delayIncrementOnRepeat ?? true,
@@ -7018,39 +7024,132 @@ export class StartComponent implements OnInit, OnDestroy {
   /**
    * Handle auto-submit warning (approaching max violations)
    */
-  private handleAutoSubmitWarning(remaining: number, total: number): void {
-    // Show escalating warning using Swal
-    if (remaining === 1) {
-      Swal.fire({
-        icon: 'warning',
-        title: '⚠️ FINAL WARNING',
-        html: `
-          <p>You have <strong>${total - 1}</strong> violations.</p>
-          <p><strong>ONE MORE violation will AUTO-SUBMIT your quiz!</strong></p>
-          <p>Please stay on this page and do not:</p>
-          <ul style="text-align: left;">
-            <li>Switch tabs or windows</li>
+
+
+
+
+
+
+
+
+
+
+private handleAutoSubmitWarning(remaining: number, total: number): void {
+  if (remaining === 2) {
+    Swal.fire({
+      icon: 'warning',
+      title: '<span class="swal-title-pro">Security Warning</span>',
+      html: `
+        <div class="swal-body-pro">
+          <p>Your activity indicates behavior outside the quiz environment.</p>
+
+          <div class="violation-badge badge-warning">
+            ${remaining} violations remaining before auto-submit
+          </div>
+          <p style="margin-top:16px">
+            Please remain focused on the quiz screen to avoid automatic submission.
+          </p>
+        </div>
+      `,
+      timer: 4500,
+      showConfirmButton: false,
+      allowOutsideClick: false,
+      customClass: {
+        popup: 'swal-proctoring swal-warning'
+      }
+    });
+  }
+
+  if (remaining === 1) {
+    Swal.fire({
+      icon: 'error',
+      title: '<span class="swal-title-pro">Final Warning</span>',
+      html: `
+        <div class="swal-body-pro">
+          <p>You have reached the maximum allowed violations.</p>
+
+          <div class="violation-badge badge-danger">
+            ONE more violation will auto-submit your quiz
+          </div>
+
+          <p style="margin-top:18px; font-weight:500;">Do NOT perform any of the following:</p>
+          <ul style="margin-top:8px; padding-left:18px;">
+            <li>Switch browser tabs or applications</li>
             <li>Exit fullscreen mode</li>
-            <li>Use keyboard shortcuts</li>
+            <li>Use restricted keyboard shortcuts</li>
             <li>Right-click on the page</li>
           </ul>
-        `,
-        confirmButtonText: 'I Understand',
-        allowOutsideClick: false,
-        customClass: {
-          popup: 'swal-danger'
-        }
-      });
-    } else if (remaining === 2) {
-      Swal.fire({
-        icon: 'error',
-        title: '🚨 Critical Warning',
-        text: `Only ${remaining} violations remaining before your quiz is auto-submitted!`,
-        timer: 4000,
-        showConfirmButton: true
-      });
-    }
+        </div>
+      `,
+      confirmButtonText: 'Continue Quiz',
+      allowOutsideClick: false,
+      allowEscapeKey: false,
+      customClass: {
+        popup: 'swal-proctoring swal-danger'
+      }
+    });
   }
+}
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  // private handleAutoSubmitWarning(remaining: number, total: number): void {
+  //   // Show escalating warning using Swal
+  //   if (remaining === 1) {
+  //     Swal.fire({
+  //       icon: 'warning',
+  //       title: '⚠️ FINAL WARNING',
+  //       html: `
+  //         <p>You have <strong>${total - 1}</strong> violations.</p>
+  //         <p><strong>ONE MORE violation will AUTO-SUBMIT your quiz!</strong></p>
+  //         <p>Please stay on this page and do not:</p>
+  //         <ul style="text-align: left;">
+  //           <li>Switch tabs or windows</li>
+  //           <li>Exit fullscreen mode</li>
+  //           <li>Use keyboard shortcuts</li>
+  //           <li>Right-click on the page</li>
+  //         </ul>
+  //       `,
+  //       confirmButtonText: 'I Understand',
+  //       allowOutsideClick: false,
+  //       customClass: {
+  //         popup: 'swal-danger'
+  //       }
+  //     });
+  //   } else if (remaining === 2) {
+  //     Swal.fire({
+  //       icon: 'error',
+  //       title: '🚨 Critical Warning',
+  //       text: `Only ${remaining} violations remaining before your quiz is auto-submitted!`,
+  //       timer: 4000,
+  //       showConfirmButton: true
+  //     });
+  //   }
+  // }
+
+
+
+
+
+
+
+
+
+
+
+
+
 
   /**
    * Execute auto-submit - called when protection service triggers auto-submit
@@ -7347,15 +7446,24 @@ export class StartComponent implements OnInit, OnDestroy {
         clearInterval(timerInterval);
         this.countdownText = 'Submitting...';
         this.progressPercent = 0;
+    this.clearSavedAnswers();
+          this.clearProgress();
 
         setTimeout(() => {
           const observables: Observable<any>[] = [];
 
           if (this.evalQuiz) {
             observables.push(this.evalQuiz());
+                this.clearSavedAnswers();
+          this.clearProgress();
+
           }
           if (this.evalSubjective) {
             observables.push(this.evalSubjective());
+                this.clearSavedAnswers();
+                          this.clearProgress();
+
+
           }
 
           if (observables.length === 0) {
@@ -7376,6 +7484,10 @@ export class StartComponent implements OnInit, OnDestroy {
             next: () => {
               console.log('All evaluations completed');
               this.finishAfterEvaluation();
+                  this.clearSavedAnswers();
+                            this.clearProgress();
+
+
             },
             error: (err) => {
               console.error('Unexpected error in evaluation', err);
@@ -7616,6 +7728,8 @@ export class StartComponent implements OnInit, OnDestroy {
     }).then((e) => {
       if (e.isConfirmed) {
         this.clearSavedAnswers();
+                  this.clearProgress();
+
         Swal.fire({
           title: 'Evaluating...',
           text: `Please wait while we evaluate your quiz for "${this.courseTitle}".`,
@@ -7662,6 +7776,7 @@ export class StartComponent implements OnInit, OnDestroy {
       if (!e.isConfirmed) return;
 
       this.clearSavedAnswers();
+          this.clearProgress();
 
       Swal.fire({
         title: 'Evaluating...',
@@ -7692,6 +7807,8 @@ export class StartComponent implements OnInit, OnDestroy {
           this.waitNavigateFunction();
           this.loadQuestionsWithAnswers();
           this.clearProgress();
+                this.clearSavedAnswers();
+
           this.preventBackButton();
           this.disableQuizProtection(); // <-- DISABLE PROTECTION
 
@@ -7720,16 +7837,6 @@ export class StartComponent implements OnInit, OnDestroy {
     });
   }
 
-  clearProgress(): void {
-    this.quiz_progress.clearQuizAnswers(this.qid).subscribe(
-      (data: any) => {
-        console.log("Quiz Progress has been cleared!!");
-      },
-      (error) => {
-        console.log("Error clearing quiz progress");
-      }
-    );
-  }
 
   waitNavigateFunction(): void {
     setTimeout(() => {
@@ -7761,6 +7868,8 @@ export class StartComponent implements OnInit, OnDestroy {
           localStorage.setItem('MaxMarks', JSON.stringify(this.maxMarks));
 
           this.clearSavedAnswers();
+
+          this.clearProgress();
           this.preventBackButton();
           this.isSubmit = true;
 
@@ -7985,6 +8094,21 @@ export class StartComponent implements OnInit, OnDestroy {
       }
     });
   }
+
+
+    clearProgress() {
+    this.quiz_progress.clearQuizAnswers(this.qid).subscribe((data: any) => {
+      console.log("Quiz Progress has been cleared!!")
+    },
+      (error) => {
+        console.log("Error clraring quiz progress");
+      }
+    );
+  }
+
+
+
+
 
   updateSelectedAnswers(q: any, option: string, isChecked: boolean): string[] {
     if (!q.givenAnswer) {

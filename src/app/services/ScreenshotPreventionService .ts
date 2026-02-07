@@ -37,7 +37,7 @@ export class ScreenshotPreventionService implements OnDestroy {
   private config: ProtectionConfig = {
     watermarkOpacity: 0.15,
     watermarkCount: 25,
-    enableAlerts: true,
+    enableAlerts: false,
     enableLogging: true,
     enableFullscreenLock: true,
     fullscreenRetryInterval: 2000,
@@ -68,7 +68,7 @@ export class ScreenshotPreventionService implements OnDestroy {
 
     try {
       // Visual protections
-      this.createWatermark();
+      // this.createWatermark();
       this.applySecureStyles();
 
       // Event blocking
@@ -81,7 +81,7 @@ export class ScreenshotPreventionService implements OnDestroy {
       this.monitorClipboard();
       this.monitorWindowFocus();
       this.monitorPageVisibility();
-      this.monitorBeforeUnload();
+      // this.monitorBeforeUnload();
 
       // Mobile specific
       this.preventMobileZoom();
@@ -450,16 +450,16 @@ export class ScreenshotPreventionService implements OnDestroy {
     this.eventListeners.set('visibility-monitor', handler);
   }
 
-  private monitorBeforeUnload(): void {
-    const handler = this.renderer.listen('window', 'beforeunload', (e: BeforeUnloadEvent) => {
-      e.preventDefault();
-      e.returnValue = 'Quiz in progress. Are you sure you want to leave?';
-      this.logEvent('unload-attempt', 'User attempted to leave page');
-      return e.returnValue;
-    });
+  // private monitorBeforeUnload(): void {
+  //   const handler = this.renderer.listen('window', 'beforeunload', (e: BeforeUnloadEvent) => {
+  //     e.preventDefault();
+  //     e.returnValue = 'Quiz in progress. Are you sure you want to leave?';
+  //     this.logEvent('unload-attempt', 'User attempted to leave page');
+  //     return e.returnValue;
+  //   });
 
-    this.eventListeners.set('unload-monitor', handler);
-  }
+  //   this.eventListeners.set('unload-monitor', handler);
+  // }
 
   // ============================================================================
   // FULLSCREEN
