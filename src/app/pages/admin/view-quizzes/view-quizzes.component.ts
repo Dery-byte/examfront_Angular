@@ -56,6 +56,10 @@ export class ViewQuizzesComponent implements OnInit {
 
 
   dialogRef!: MatDialogRef<any>;
+
+
+
+  
   openUpdateDialog(quizId: any, templateRef: TemplateRef<any>): void {
     console.log(quizId);
     // Fetch question details based on ID
@@ -63,6 +67,7 @@ export class ViewQuizzesComponent implements OnInit {
       console.log(this.specificQuestion);
       this.quizById = data;
       console.log(this.quizById);
+
       this.dialogRef = this.dialog.open(templateRef, {
         width: '550px',
         data: this.quizById,
@@ -77,6 +82,10 @@ export class ViewQuizzesComponent implements OnInit {
   getQuestionById(quizId: any): any {
     return this.quizz.getQuizById(quizId);
   }
+
+
+
+
 
 
   // LOGIC TO UPDATE Quiz
