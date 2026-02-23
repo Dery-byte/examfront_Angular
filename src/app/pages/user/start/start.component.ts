@@ -6505,7 +6505,7 @@ import { ScreenshotPreventionService } from 'src/app/services/ScreenshotPreventi
 // import { ScreenshotPreventionService } from 'src/app/services/ScreenshotPreventionService ';
 
 
-import { 
+import {
   QuizProtectionService,
   QuizProtectionState,
   SecurityEvent,
@@ -6513,6 +6513,7 @@ import {
   DelayEvent,
   QuizViolationConfig
 } from 'src/app/services/QuizProtectionService';
+import baseUrl from 'src/app/services/helper';
 
 interface QuizAnswers {
   [prefix: string]: {
@@ -6561,41 +6562,41 @@ interface Quiz {
   attempted: boolean;
   quizpassword: string;
   category: Category;
-  
+
   // =========================================================================
   // QUIZ PROTECTION SETTINGS (from database)
   // =========================================================================
-  
+
   // Violation Action: 'NONE' | 'DELAY_ONLY' | 'AUTOSUBMIT_ONLY' | 'DELAY_AND_AUTOSUBMIT'
   violationAction?: string;
-  
+
   // Maximum violations before auto-submit (if action includes auto-submit)
   maxViolations?: number;
-  
+
   // Delay duration in seconds for each violation
   delaySeconds?: number;
-  
+
   // Whether to increase delay on repeat violations
   delayIncrementOnRepeat?: boolean;
-  
+
   // Multiplier for delay increment (e.g., 1.5 = 50% increase each time)
   delayMultiplier?: number;
-  
+
   // Maximum delay cap in seconds
   maxDelaySeconds?: number;
-  
+
   // Countdown seconds before auto-submit executes
   autoSubmitCountdownSeconds?: number;
-  
+
   // Enable/disable watermark overlay
   enableWatermark?: boolean;
-  
+
   // Enable/disable fullscreen lock
   enableFullscreenLock?: boolean;
-  
+
   // Enable/disable screenshot blocking
   enableScreenshotBlocking?: boolean;
-  
+
   // Enable/disable developer tools blocking
   enableDevToolsBlocking?: boolean;
 }
@@ -6717,19 +6718,30 @@ export class StartComponent implements OnInit, OnDestroy {
     private quiz_progress: QuizProgressService,
     private screenshotPrevention: ScreenshotPreventionService,
     private quizProtection: QuizProtectionService // <-- INJECT THE PROTECTION SERVICE
-  ) {}
+  ) { }
 
   // ============================================================================
   // LIFECYCLE HOOKS
   // ============================================================================
 
   ngOnInit(): void {
-    this.isLoading = true;
+    this.screenshotPrevention.enableProtection();
+      this.isLoading = true;
+    this.screenshotPrevention.enableProtection();
+    // After enableProtection():
+   
+  
     this.qid = this._route.snapshot.params['qid'];
     console.log(this.qid);
+      this.quizProtection.setQuizContext(this.qid, baseUrl, localStorage.getItem('token') || '');
 
+//  this.quizProtection.setQuizContext(this.qid, baseUrl, localStorage.getItem('token') || '');
+
+//     // Inside initializeTimer():
+//     this.quizProtection.loadDelayFromBackend(this.qid);
     // Setup protection subscriptions FIRST
     this.setupProtectionSubscriptions();
+    this.startAutoSaveviolationDelay(); // <-- ADD THIS LINE HERE
 
     this._quiz.getQuiz(this.qid).subscribe(
       (data: any) => {
@@ -6747,6 +6759,11 @@ export class StartComponent implements OnInit, OnDestroy {
 
         // Enable protection AFTER quiz data is loaded
         this.enableQuizProtection();
+        // Wire up backend AFTER protection is active so resetState() doesn't wipe the loaded value
+this.enableQuizProtection();
+      // ✅ KEEP these too (re-sets context after enableProtection resets state)
+      this.quizProtection.setQuizContext(this.qid, baseUrl, localStorage.getItem('token') || '');
+      this.quizProtection.loadDelayFromBackend(this.qid);
       },
       (error) => {
         this.isLoading = false;
@@ -6785,7 +6802,7 @@ export class StartComponent implements OnInit, OnDestroy {
 
 
 
-    this.screenshotPrevention.enableProtection();
+
   }
 
   ngOnDestroy(): void {
@@ -6807,6 +6824,9 @@ export class StartComponent implements OnInit, OnDestroy {
 
     // Clean up protection subscriptions
     this.protectionSubscriptions.forEach(sub => sub.unsubscribe());
+    if (this.autoSaveViolationDelaySubscription) {
+  this.autoSaveViolationDelaySubscription.unsubscribe();
+}
   }
 
   // ============================================================================
@@ -6948,47 +6968,47 @@ export class StartComponent implements OnInit, OnDestroy {
 
     // Set the violation config from database
     this.quizProtection.setViolationConfig(violationConfig);
-    
+
     // Configure other protection settings from database
     this.quizProtection.updateConfig({
       examMode: 'proctored',
-      
+
       // Watermark settings from database
       watermarkEnabled: this.quiz.enableWatermark ?? true,
       watermarkOpacity: 0.12,
       watermarkCount: 25,
       watermarkText: `${this.getUserDisplayName()} • ${this.courseTitle} • ${new Date().toLocaleDateString()}`,
-      
+
       // Alerts & Logging
       enableAlerts: true,
       enableLogging: true,
       logEndpoint: '/api/security-events',
-      
+
       // Fullscreen lock from database
       enableFullscreenLock: this.quiz.enableFullscreenLock ?? true,
       fullscreenRetryInterval: 2000,
-      
+
       // Focus monitoring
       focusCheckInterval: 1000,
-      
+
       // Grace period
       autoSubmitGracePeriodMs: 1000,
-      
+
       // Mobile protection
       enableMobileProtection: true,
       preventZoom: true,
-      
+
       // Screenshot & DevTools blocking from database
       enableScreenshotBlocking: this.quiz.enableScreenshotBlocking ?? true,
       enableDevToolsBlocking: this.quiz.enableDevToolsBlocking ?? true,
-      
+
       // Wake Lock (keeps screen on)
       enableWakeLock: true,
     });
 
     // Enable protection
     this.quizProtection.enableProtection();
-    
+
     console.log('[Quiz Protection] Protection enabled for quiz:', this.qid);
     console.log('[Quiz Protection] Violation Config from DB:', violationConfig);
   }
@@ -7007,7 +7027,7 @@ export class StartComponent implements OnInit, OnDestroy {
    */
   private handleProtectionViolation(event: SecurityEvent): void {
     console.warn(`[Quiz Violation] Type: ${event.type}, Details: ${event.details}, Severity: ${event.severity}`);
-    
+
     // Show violation count in UI when getting concerning
     // if (this.protectionState.violationCount >= 2) {
     //   const remaining = this.quizProtection.getConfig().maxViolations - this.protectionState.violationCount;
@@ -7034,12 +7054,12 @@ export class StartComponent implements OnInit, OnDestroy {
 
 
 
-private handleAutoSubmitWarning(remaining: number, total: number): void {
-  if (remaining === 2) {
-    Swal.fire({
-      icon: 'warning',
-      title: '<span class="swal-title-pro">Security Warning</span>',
-      html: `
+  private handleAutoSubmitWarning(remaining: number, total: number): void {
+    if (remaining === 2) {
+      Swal.fire({
+        icon: 'warning',
+        title: '<span class="swal-title-pro">Security Warning</span>',
+        html: `
         <div class="swal-body-pro">
           <p>Your activity indicates behavior outside the quiz environment.</p>
 
@@ -7051,20 +7071,20 @@ private handleAutoSubmitWarning(remaining: number, total: number): void {
           </p>
         </div>
       `,
-      timer: 4500,
-      showConfirmButton: false,
-      allowOutsideClick: false,
-      customClass: {
-        popup: 'swal-proctoring swal-warning'
-      }
-    });
-  }
+        timer: 4500,
+        showConfirmButton: false,
+        allowOutsideClick: false,
+        customClass: {
+          popup: 'swal-proctoring swal-warning'
+        }
+      });
+    }
 
-  if (remaining === 1) {
-    Swal.fire({
-      icon: 'error',
-      title: '<span class="swal-title-pro">Final Warning</span>',
-      html: `
+    if (remaining === 1) {
+      Swal.fire({
+        icon: 'error',
+        title: '<span class="swal-title-pro">Final Warning</span>',
+        html: `
         <div class="swal-body-pro">
           <p>You have reached the maximum allowed violations.</p>
 
@@ -7081,15 +7101,15 @@ private handleAutoSubmitWarning(remaining: number, total: number): void {
           </ul>
         </div>
       `,
-      confirmButtonText: 'Continue Quiz',
-      allowOutsideClick: false,
-      allowEscapeKey: false,
-      customClass: {
-        popup: 'swal-proctoring swal-danger'
-      }
-    });
+        confirmButtonText: 'Continue Quiz',
+        allowOutsideClick: false,
+        allowEscapeKey: false,
+        customClass: {
+          popup: 'swal-proctoring swal-danger'
+        }
+      });
+    }
   }
-}
 
 
 
@@ -7156,7 +7176,7 @@ private handleAutoSubmitWarning(remaining: number, total: number): void {
    */
   private executeAutoSubmitFromProtection(payload: AutoSubmitPayload): void {
     console.log('[Quiz Protection] Executing auto-submit with payload:', payload);
-    
+
     // Clear any saved draft answers
     this.clearSavedAnswers();
 
@@ -7233,7 +7253,7 @@ private handleAutoSubmitWarning(remaining: number, total: number): void {
         window.opener.location.href = '/user-dashboard/0';
       }
       window.close();
-      
+
       // Fallback if window doesn't close
       setTimeout(() => {
         this.router.navigate(['/user-dashboard/0']);
@@ -7378,6 +7398,39 @@ private handleAutoSubmitWarning(remaining: number, total: number): void {
   }
 
   initializeTimer(): void {
+
+    //    // First fetch violation delay, then proceed with timer init
+    // this.quiz_progress.getViolatioDelay(this.qid).subscribe({
+    //   next: (response) => {
+    //     console.log('Violation delay fetched on load:', response);
+    //     // Store it in protection state or wherever your service expects it
+    //     if (response?.violationDelayTime) {
+    //       this.protectionState.totalDelayTimeServed = response.violationDelayTime;
+    //     }
+    //   },
+    //   error: (error) => {
+    //     console.error('No violation delay found, continuing normally:', error);
+    //   }
+    // });
+
+
+    // this.quiz_progress.getViolatioDelay(this.qid).subscribe({
+    //   next: (response) => {
+    //     console.log('Violation delay fetched on load:', response);
+
+
+    //     console.log("Nananahahaajajaakakaakakajaj")
+    //     if (response?.remainingTime) {
+    //       this.protectionState.totalDelayTimeServed = response.remainingTime;
+    //     }
+    //   },
+    //   error: (error) => {
+    //     console.error('No violation delay found, continuing normally:', error);
+    //   }
+    // });
+
+
+
     this.quiz_progress.getQuizTimer(this.qid).subscribe({
       next: (savedTimer) => {
         this.timerAll = (savedTimer?.remainingTime && savedTimer.remainingTime > 0)
@@ -7446,22 +7499,22 @@ private handleAutoSubmitWarning(remaining: number, total: number): void {
         clearInterval(timerInterval);
         this.countdownText = 'Submitting...';
         this.progressPercent = 0;
-    this.clearSavedAnswers();
-          this.clearProgress();
+        this.clearSavedAnswers();
+        this.clearProgress();
 
         setTimeout(() => {
           const observables: Observable<any>[] = [];
 
           if (this.evalQuiz) {
             observables.push(this.evalQuiz());
-                this.clearSavedAnswers();
-          this.clearProgress();
+            this.clearSavedAnswers();
+            this.clearProgress();
 
           }
           if (this.evalSubjective) {
             observables.push(this.evalSubjective());
-                this.clearSavedAnswers();
-                          this.clearProgress();
+            this.clearSavedAnswers();
+            this.clearProgress();
 
 
           }
@@ -7484,8 +7537,8 @@ private handleAutoSubmitWarning(remaining: number, total: number): void {
             next: () => {
               console.log('All evaluations completed');
               this.finishAfterEvaluation();
-                  this.clearSavedAnswers();
-                            this.clearProgress();
+              this.clearSavedAnswers();
+              this.clearProgress();
 
 
             },
@@ -7527,6 +7580,14 @@ private handleAutoSubmitWarning(remaining: number, total: number): void {
       }
     });
   }
+
+
+
+
+
+
+
+
 
   // ============================================================================
   // THEORY/SUBJECTIVE QUESTIONS
@@ -7728,7 +7789,7 @@ private handleAutoSubmitWarning(remaining: number, total: number): void {
     }).then((e) => {
       if (e.isConfirmed) {
         this.clearSavedAnswers();
-                  this.clearProgress();
+        this.clearProgress();
 
         Swal.fire({
           title: 'Evaluating...',
@@ -7776,7 +7837,7 @@ private handleAutoSubmitWarning(remaining: number, total: number): void {
       if (!e.isConfirmed) return;
 
       this.clearSavedAnswers();
-          this.clearProgress();
+      this.clearProgress();
 
       Swal.fire({
         title: 'Evaluating...',
@@ -7807,7 +7868,7 @@ private handleAutoSubmitWarning(remaining: number, total: number): void {
           this.waitNavigateFunction();
           this.loadQuestionsWithAnswers();
           this.clearProgress();
-                this.clearSavedAnswers();
+          this.clearSavedAnswers();
 
           this.preventBackButton();
           this.disableQuizProtection(); // <-- DISABLE PROTECTION
@@ -8059,7 +8120,7 @@ private handleAutoSubmitWarning(remaining: number, total: number): void {
   }
 
   saveDataInBrowser(): void {
-    this._questions.getQuestionsOfQuiz(this.qid).subscribe((data: any) => {});
+    this._questions.getQuestionsOfQuiz(this.qid).subscribe((data: any) => { });
   }
 
   disablePaste(event: ClipboardEvent): void {
@@ -8096,7 +8157,7 @@ private handleAutoSubmitWarning(remaining: number, total: number): void {
   }
 
 
-    clearProgress() {
+  clearProgress() {
     this.quiz_progress.clearQuizAnswers(this.qid).subscribe((data: any) => {
       console.log("Quiz Progress has been cleared!!")
     },
@@ -8125,7 +8186,7 @@ private handleAutoSubmitWarning(remaining: number, total: number): void {
         q.givenAnswer.splice(index, 1);
       }
     }
-    
+
     const currentAnswers = [...q.givenAnswer];
 
     const request: QuizAnswerRequest = {
@@ -8134,7 +8195,7 @@ private handleAutoSubmitWarning(remaining: number, total: number): void {
       checked: isChecked,
       quizId: this.qid
     };
-    
+
     this.quiz_progress.updateAnswer(request).subscribe({
       next: (response) => {
         if (response.selectedOptions && Array.isArray(response.selectedOptions)) {
@@ -8247,6 +8308,139 @@ private handleAutoSubmitWarning(remaining: number, total: number): void {
     console.log(this.convertedJsonAPIResponsebody);
     return this.convertedJsonAPIResponsebody;
   }
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  //   private saveViolationDelay(): void {
+  //   this.quiz_progress.saveViolatioDelay(this.qid, this.timerAll).subscribe({
+  //     next: (response) => {
+  //       console.log('Timer saved successfully:', response);
+  //     },
+  //     error: (error) => {
+  //       console.error('Failed to save timer:', error);
+  //     }
+  //   });
+  // }
+  private saveViolationDelay(): void {
+    const delayTime = this.protectionState?.totalDelayTimeServed ?? 0;
+    this.quiz_progress.saveViolatioDelay(this.qid, delayTime).subscribe({
+      next: (response) => {
+        console.log('Violation delay saved successfully:', response);
+      },
+      error: (error) => {
+        console.error('Failed to save violation delay:', error);
+      }
+    });
+  }
+
+  private getViolatioDelay(): void {
+    this.quiz_progress.getViolatioDelay(this.qid).subscribe({
+      next: (response) => {
+        console.log('Timer saved successfully:', response);
+      },
+      error: (error) => {
+        console.error('Failed to save timer:', error);
+      }
+    });
+  }
+
+  // private startAutoSaveviolationDelay(): void {
+  //   this.autoSaveSubscription = interval(1000).subscribe(() => {
+  //     if (this.isTimerLoaded && this.timerAll > 0) {
+  //       this.saveViolationDelay();
+  //     }
+  //   });
+
+  // }
+
+
+//   private startAutoSaveviolationDelay(): void {
+//   interval(30000).subscribe(() => {  // ← was: 1000 (1 second = hammering DB)
+//     const delayTime = this.protectionState?.totalDelayTimeServed ?? 0;
+//     if (delayTime > 0) {
+//       this.saveViolationDelay();
+//     }
+//   });
+// }
+
+
+
+private autoSaveViolationDelaySubscription: Subscription;
+
+private startAutoSaveviolationDelay(): void {
+  if (this.autoSaveViolationDelaySubscription) {
+    this.autoSaveViolationDelaySubscription.unsubscribe();
+  }
+  this.autoSaveViolationDelaySubscription = interval(10000).subscribe(() => {
+    const delayTime = this.quizProtection.getTotalDelayServed();
+    if (delayTime > 0) {
+      this.quiz_progress.saveViolatioDelay(this.qid, delayTime).subscribe({
+        next: () => console.log('[AutoSave] Violation delay saved:', delayTime),
+        error: (err) => console.error('[AutoSave] Failed to save:', err)
+      });
+    }
+  });
+}
 }
 
 

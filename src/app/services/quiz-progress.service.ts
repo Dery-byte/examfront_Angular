@@ -30,6 +30,16 @@ export interface QuizTimerRequest {
   remainingTime: number;
 }
 
+export interface ViolationTimerRequest{
+  remainingDelayTime:number;
+}
+
+export interface ViolationTimerResponse {
+  remainingTime: number;
+  updatedAt: string;
+}
+
+
 @Injectable({
   providedIn: 'root'
 })
@@ -172,7 +182,12 @@ getQuizTimer(quizId: number): Observable<QuizTimerResponse | null> {
     );
 }
 
-private jwtToken = localStorage.getItem('token')
+// private jwtToken = localStorage.getItem('token')
+
+// To this:
+private get jwtToken(): string {
+  return localStorage.getItem('token') || '';
+}
 // SAVE TIMER
 saveQuizTimer(quizId: number, remainingTime: number): Observable<QuizTimerResponse> {
   const request: QuizTimerRequest = { remainingTime };
@@ -211,6 +226,48 @@ deleteQuizTimer(quizId: number): Observable<void> {
 }
 
 
+
+
+saveViolatioDelay(quizId: number, remainingDelayTime: number): Observable<ViolationTimerRequest> {
+  const request: ViolationTimerRequest = { remainingDelayTime };
+  const headers = new HttpHeaders({
+    'Content-Type': 'application/json',
+    'Authorization': `Bearer ${this.jwtToken}` // Add this!
+  });
+  return this.http
+    .post<ViolationTimerRequest>(
+      `${baseUrl}/quiz-timer/saveViolation-delay/${quizId}`,
+      request,{headers}
+    )
+    .pipe(
+      catchError(error => {
+        console.error('Error saving quiz timer:', error);
+        return throwError(() => error);
+      })
+    );
+}
+
+
+
+
+getViolatioDelay(quizId: number): Observable<ViolationTimerResponse | null> {
+    const headers = new HttpHeaders({
+    'Content-Type': 'application/json',
+    'Authorization': `Bearer ${this.jwtToken}` // Add this!
+  });
+  return this.http
+    .get<ViolationTimerResponse>(`${baseUrl}/quiz-timer/getViolation-delay/${quizId}`,{headers})
+    .pipe(
+      catchError(error => {
+        if (error.status === 404) {
+          // 404 is valid business logic: no timer saved yet
+          return of(null);
+        }
+        console.error('Error fetching quiz timer:', error);
+        return throwError(() => error);
+      })
+    );
+}
 
 
 

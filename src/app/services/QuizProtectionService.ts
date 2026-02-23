@@ -1,7 +1,3 @@
-// NEW IMPLEMENTATION
-
-
-
 // import { Injectable, Renderer2, RendererFactory2, OnDestroy } from '@angular/core';
 // import { HttpClient } from '@angular/common/http';
 // import { catchError, of, Subject, BehaviorSubject } from 'rxjs';
@@ -9,6 +5,9 @@
 // // ============================================================================
 // // TYPES & INTERFACES
 // // ============================================================================
+
+
+
 
 // export interface SecurityEvent {
 //   type: string;
@@ -27,12 +26,24 @@
 
 // export type ExamMode = 'casual' | 'standard' | 'proctored';
 
-// export type ViolationAction = 
-//   | 'warn'
-//   | 'warn-penalty'
-//   | 'log-only'
-//   | 'block'
-//   | 'auto-submit';
+// /**
+//  * Violation Action Types:
+//  * - NONE: No action, just log
+//  * - DELAY_ONLY: Lock user for delaySeconds on each violation
+//  * - AUTOSUBMIT_ONLY: Auto-submit when maxViolations reached
+//  * - DELAY_AND_AUTOSUBMIT: Delay on each violation, auto-submit at max
+//  */
+// export type ViolationAction = 'NONE' | 'DELAY_ONLY' | 'AUTOSUBMIT_ONLY' | 'DELAY_AND_AUTOSUBMIT';
+
+// export interface QuizViolationConfig {
+//   action: ViolationAction;
+//   maxViolations: number;
+//   delaySeconds: number;
+//   delayIncrementOnRepeat: boolean;
+//   delayMultiplier: number;
+//   maxDelaySeconds: number;
+//   autoSubmitCountdownSeconds: number;
+// }
 
 // export interface ProtectionConfig {
 //   examMode: ExamMode;
@@ -46,16 +57,15 @@
 //   enableFullscreenLock: boolean;
 //   fullscreenRetryInterval: number;
 //   focusCheckInterval: number;
-//   violationAction: ViolationAction;
-//   maxViolations: number;
-//   violationPenaltySeconds: number;
-//   autoSubmitCountdownSeconds: number;
 //   autoSubmitGracePeriodMs: number;
 //   enableMobileProtection: boolean;
 //   preventZoom: boolean;
 //   enableScreenshotBlocking: boolean;
 //   enableDevToolsBlocking: boolean;
 //   enableWakeLock: boolean;
+  
+//   // Violation config - this is what gets set from the Quiz settings
+//   violationConfig: QuizViolationConfig;
 // }
 
 // export interface QuizProtectionState {
@@ -67,6 +77,9 @@
 //   lastViolation?: Date;
 //   autoSubmitTriggered: boolean;
 //   autoSubmitCountdown?: number;
+//   isDelayActive: boolean;
+//   delayRemainingSeconds: number;
+//   totalDelayTimeServed: number;
 // }
 
 // export interface AutoSubmitEvent {
@@ -75,15 +88,33 @@
 //   violations: ViolationRecord[];
 //   totalViolations: number;
 //   penaltySeconds: number;
+//   totalDelayTimeServed: number;
 //   timestamp: Date;
 // }
 
-// // Alias for backward compatibility
 // export type AutoSubmitPayload = AutoSubmitEvent;
+
+// export interface DelayEvent {
+//   violationType: string;
+//   delayDuration: number;
+//   violationCount: number;
+//   maxViolations: number;
+//   willAutoSubmitNext: boolean;
+// }
 
 // // ============================================================================
 // // DEFAULT CONFIGS
 // // ============================================================================
+
+// const DEFAULT_VIOLATION_CONFIG: QuizViolationConfig = {
+//   action: 'DELAY_AND_AUTOSUBMIT',
+//   maxViolations: 3,
+//   delaySeconds: 30,
+//   delayIncrementOnRepeat: true,
+//   delayMultiplier: 1.5,
+//   maxDelaySeconds: 100000,
+//   autoSubmitCountdownSeconds: 5,
+// };
 
 // const CASUAL_CONFIG: Partial<ProtectionConfig> = {
 //   examMode: 'casual',
@@ -91,9 +122,16 @@
 //   enableFullscreenLock: false,
 //   enableScreenshotBlocking: false,
 //   enableDevToolsBlocking: false,
-//   violationAction: 'log-only',
-//   maxViolations: 999,
 //   enableAlerts: false,
+//   violationConfig: {
+//     action: 'NONE',
+//     maxViolations: 999,
+//     delaySeconds: 0,
+//     delayIncrementOnRepeat: false,
+//     delayMultiplier: 1,
+//     maxDelaySeconds: 100000,
+//     autoSubmitCountdownSeconds: 5,
+//   },
 // };
 
 // const STANDARD_CONFIG: Partial<ProtectionConfig> = {
@@ -103,10 +141,16 @@
 //   enableFullscreenLock: true,
 //   enableScreenshotBlocking: true,
 //   enableDevToolsBlocking: true,
-//   violationAction: 'warn-penalty',
-//   maxViolations: 5,
-//   violationPenaltySeconds: 30,
 //   enableAlerts: true,
+//   violationConfig: {
+//     action: 'DELAY_ONLY',
+//     maxViolations: 5,
+//     delaySeconds: 30,
+//     delayIncrementOnRepeat: true,
+//     delayMultiplier: 1.5,
+//     maxDelaySeconds: 100000,
+//     autoSubmitCountdownSeconds: 5,
+//   },
 // };
 
 // const PROCTORED_CONFIG: Partial<ProtectionConfig> = {
@@ -117,55 +161,73 @@
 //   enableFullscreenLock: true,
 //   enableScreenshotBlocking: true,
 //   enableDevToolsBlocking: true,
-//   violationAction: 'auto-submit',
-//   maxViolations: 3,
-//   autoSubmitCountdownSeconds: 5,
-//   autoSubmitGracePeriodMs: 500,
 //   enableAlerts: true,
 //   enableWakeLock: true,
+//   violationConfig: {
+//     action: 'DELAY_AND_AUTOSUBMIT',
+//     maxViolations: 3,
+//     delaySeconds: 30,
+//     delayIncrementOnRepeat: true,
+//     delayMultiplier: 1.5,
+//     maxDelaySeconds: 100000,
+//     autoSubmitCountdownSeconds: 5,
+//   },
 // };
 
 // // ============================================================================
 // // SERVICE
 // // ============================================================================
 
-
-// @Injectable({
-//   providedIn: 'root'
-// })
+// @Injectable({ providedIn: 'root' })
 // export class QuizProtectionService implements OnDestroy {
 //   private renderer: Renderer2;
 //   private eventListeners: Map<string, () => void> = new Map();
 //   private isActive = false;
   
+//   // UI Elements
 //   private watermarkElement?: HTMLElement;
 //   private warningBannerElement?: HTMLElement;
 //   private violationOverlayElement?: HTMLElement;
 //   private autoSubmitOverlayElement?: HTMLElement;
+//   private delayOverlayElement?: HTMLElement;
   
+//   // State
 //   private fullscreenActive = false;
 //   private focusCheckTimer?: number;
 //   private fullscreenRetryTimer?: number;
 //   private originalViewportContent = '';
 //   private wakeLock: any = null;
   
+//   // Violation tracking
 //   private violations: ViolationRecord[] = [];
 //   private totalViolationCount = 0;
 //   private penaltySeconds = 0;
   
+//   // Auto-submit state
 //   private autoSubmitTriggered = false;
 //   private autoSubmitCountdownTimer?: number;
 //   private autoSubmitCountdownValue = 0;
 //   private isProcessingViolation = false;
   
-//   // PUBLIC EVENTS - Components subscribe to these
+//   // Delay state
+//   private isDelayActive = false;
+//   private delayRemainingSeconds = 0;
+//   private delayTimer?: number;
+//   private totalDelayTimeServed = 0;
+//   private currentDelayDuration = 0;
+  
+//   // PUBLIC EVENTS
 //   public readonly onViolation = new Subject<SecurityEvent>();
 //   public readonly onAutoSubmit = new Subject<AutoSubmitEvent>();
 //   public readonly onAutoSubmitCountdown = new Subject<number>();
 //   public readonly onAutoSubmitWarning = new Subject<{ remaining: number; total: number }>();
 //   public readonly onAutoSubmitCancelled = new Subject<void>();
+//   public readonly onDelayStarted = new Subject<DelayEvent>();
+//   public readonly onDelayTick = new Subject<number>();
+//   public readonly onDelayEnded = new Subject<void>();
 //   public readonly onStateChange = new BehaviorSubject<QuizProtectionState>(this.getState());
   
+//   // Configuration
 //   private config: ProtectionConfig = {
 //     examMode: 'standard',
 //     watermarkEnabled: true,
@@ -177,28 +239,20 @@
 //     enableFullscreenLock: true,
 //     fullscreenRetryInterval: 2000,
 //     focusCheckInterval: 1000,
-//     violationAction: 'warn-penalty',
-//     maxViolations: 5,
-//     violationPenaltySeconds: 30,
-//     autoSubmitCountdownSeconds: 5,
 //     autoSubmitGracePeriodMs: 500,
 //     enableMobileProtection: true,
 //     preventZoom: true,
 //     enableScreenshotBlocking: true,
 //     enableDevToolsBlocking: true,
 //     enableWakeLock: true,
+//     violationConfig: { ...DEFAULT_VIOLATION_CONFIG },
 //   };
 
-//   constructor(
-//     private rendererFactory: RendererFactory2,
-//     private http: HttpClient
-//   ) {
+//   constructor(private rendererFactory: RendererFactory2, private http: HttpClient) {
 //     this.renderer = rendererFactory.createRenderer(null, null);
 //   }
 
-//   ngOnDestroy(): void {
-//     this.disableProtection();
-//   }
+//   ngOnDestroy(): void { this.disableProtection(); }
 
 //   // ============================================================================
 //   // PUBLIC API
@@ -212,7 +266,7 @@
 
 //     if (mode) this.setMode(mode);
 
-//     console.info(`[Quiz Protection] Enabling ${this.config.examMode} mode...`);
+//     console.info(`[Quiz Protection] Enabling ${this.config.examMode} mode with action: ${this.config.violationConfig.action}`);
 
 //     try {
 //       this.resetState();
@@ -255,9 +309,7 @@
 
 //     this.clearAllTimers();
 
-//     this.eventListeners.forEach((cleanup) => {
-//       try { cleanup(); } catch (e) {}
-//     });
+//     this.eventListeners.forEach((cleanup) => { try { cleanup(); } catch (e) {} });
 //     this.eventListeners.clear();
 
 //     this.releaseWakeLock();
@@ -267,6 +319,7 @@
 //     this.removeWarningBanner();
 //     this.removeViolationOverlay();
 //     this.removeAutoSubmitOverlay();
+//     this.removeDelayOverlay();
 
 //     this.restoreStyles();
 //     this.restoreViewport();
@@ -283,6 +336,10 @@
 //     this.autoSubmitTriggered = false;
 //     this.autoSubmitCountdownValue = 0;
 //     this.isProcessingViolation = false;
+//     this.isDelayActive = false;
+//     this.delayRemainingSeconds = 0;
+//     this.totalDelayTimeServed = 0;
+//     this.currentDelayDuration = 0;
 //     this.clearAllTimers();
 //   }
 
@@ -290,6 +347,7 @@
 //     if (this.focusCheckTimer) { clearInterval(this.focusCheckTimer); this.focusCheckTimer = undefined; }
 //     if (this.fullscreenRetryTimer) { clearInterval(this.fullscreenRetryTimer); this.fullscreenRetryTimer = undefined; }
 //     if (this.autoSubmitCountdownTimer) { clearInterval(this.autoSubmitCountdownTimer); this.autoSubmitCountdownTimer = undefined; }
+//     if (this.delayTimer) { clearInterval(this.delayTimer); this.delayTimer = undefined; }
 //   }
 
 //   setMode(mode: ExamMode): void {
@@ -298,8 +356,22 @@
 //     console.info(`[Quiz Protection] Mode set to: ${mode}`);
 //   }
 
+//   /**
+//    * Update the violation config - call this after loading quiz settings from backend
+//    */
+//   setViolationConfig(cfg: Partial<QuizViolationConfig>): void {
+//     Object.assign(this.config.violationConfig, cfg);
+//     console.info('[Quiz Protection] Violation config updated:', this.config.violationConfig);
+//   }
+
 //   updateConfig(newConfig: Partial<ProtectionConfig>): void {
+//     // Handle nested violationConfig
+//     if (newConfig.violationConfig) {
+//       Object.assign(this.config.violationConfig, newConfig.violationConfig);
+//       delete newConfig.violationConfig;
+//     }
 //     Object.assign(this.config, newConfig);
+    
 //     if (this.isActive) {
 //       this.removeWatermark();
 //       if (this.config.watermarkEnabled) this.createWatermark();
@@ -307,12 +379,16 @@
 //     this.emitStateChange();
 //   }
 
-//   getConfig(): ProtectionConfig { return { ...this.config }; }
+//   getConfig(): ProtectionConfig { return { ...this.config, violationConfig: { ...this.config.violationConfig } }; }
+//   getViolationConfig(): QuizViolationConfig { return { ...this.config.violationConfig }; }
 //   isEnabled(): boolean { return this.isActive; }
 //   isAutoSubmitTriggered(): boolean { return this.autoSubmitTriggered; }
+//   isDelayModeActive(): boolean { return this.isDelayActive; }
 //   getPenaltySeconds(): number { return this.penaltySeconds; }
 //   getViolationCount(): number { return this.totalViolationCount; }
 //   getViolations(): ViolationRecord[] { return [...this.violations]; }
+//   getDelayRemaining(): number { return this.delayRemainingSeconds; }
+//   getTotalDelayServed(): number { return this.totalDelayTimeServed; }
 
 //   getState(): QuizProtectionState {
 //     return {
@@ -324,27 +400,33 @@
 //       lastViolation: this.violations.length > 0 ? this.violations[this.violations.length - 1].timestamp : undefined,
 //       autoSubmitTriggered: this.autoSubmitTriggered,
 //       autoSubmitCountdown: this.autoSubmitCountdownValue,
+//       isDelayActive: this.isDelayActive,
+//       delayRemainingSeconds: this.delayRemainingSeconds,
+//       totalDelayTimeServed: this.totalDelayTimeServed,
 //     };
 //   }
 
 //   enterFullscreen(): Promise<void> {
 //     return new Promise((resolve, reject) => {
 //       this.requestFullscreen();
-//       setTimeout(() => {
-//         this.isInFullscreen() ? resolve() : reject(new Error('Failed to enter fullscreen'));
-//       }, 500);
+//       setTimeout(() => { this.isInFullscreen() ? resolve() : reject(new Error('Failed')); }, 500);
 //     });
 //   }
 
 //   // ============================================================================
-//   // VIOLATION HANDLING
+//   // VIOLATION HANDLING - MAIN LOGIC
 //   // ============================================================================
 
 //   private handleViolation(type: string, details: string, severity: 'low' | 'medium' | 'high' | 'critical' = 'medium'): void {
-//     if (this.isProcessingViolation || this.autoSubmitTriggered) return;
+//     // Don't process if already in delay, auto-submit, or processing another violation
+//     if (this.isProcessingViolation || this.autoSubmitTriggered || this.isDelayActive) {
+//       console.log('[Quiz Protection] Skipping violation - already processing');
+//       return;
+//     }
 
 //     this.isProcessingViolation = true;
 
+//     // Record violation
 //     const existingViolation = this.violations.find(v => v.type === type);
 //     if (existingViolation) {
 //       existingViolation.count++;
@@ -357,34 +439,47 @@
 //     const event = this.logEvent(type, details, severity);
 //     this.onViolation.next(event);
 
-//     switch (this.config.violationAction) {
-//       case 'warn':
-//         this.notify(`⚠️ ${this.getViolationMessage(type)}`);
+//     const cfg = this.config.violationConfig;
+
+//     // Check if max violations reached - always auto-submit if action includes auto-submit
+//     if (this.totalViolationCount >= cfg.maxViolations && 
+//         (cfg.action === 'AUTOSUBMIT_ONLY' || cfg.action === 'DELAY_AND_AUTOSUBMIT')) {
+//       this.initiateAutoSubmit(type);
+//       this.emitStateChange();
+//       setTimeout(() => { this.isProcessingViolation = false; }, 1000);
+//       return;
+//     }
+
+//     // Handle based on configured action
+//     const remaining = cfg.maxViolations - this.totalViolationCount;
+
+//     switch (cfg.action) {
+//       case 'NONE':
+//         // Just log, no action
+//         console.log(`[Quiz Protection] Violation logged: ${type}`);
 //         break;
 
-//       case 'warn-penalty':
-//         this.penaltySeconds += this.config.violationPenaltySeconds;
-//         this.notify(`⚠️ ${this.getViolationMessage(type)} (+${this.config.violationPenaltySeconds}s penalty)`);
+//       case 'DELAY_ONLY':
+//         // Delay user without auto-submit
+//         this.notify(`⚠️ ${this.getViolationMessage(type)}. Access suspended for ${this.calculateDelayDuration()}s`);
+//         this.startDelay(type, false);
 //         break;
 
-//       case 'log-only':
-//         break;
-
-//       case 'block':
-//         this.showViolationOverlay(type);
-//         break;
-
-//       case 'auto-submit':
-//         const remaining = this.config.maxViolations - this.totalViolationCount;
-//         if (this.totalViolationCount >= this.config.maxViolations) {
-//           this.initiateAutoSubmit(type);
-//         } else if (remaining <= 2) {
-//           // Emit warning event for component to handle
-//           this.onAutoSubmitWarning.next({ remaining, total: this.config.maxViolations });
+//       case 'AUTOSUBMIT_ONLY':
+//         // Show warnings, will auto-submit at max
+//         if (remaining <= 2) {
+//           this.onAutoSubmitWarning.next({ remaining, total: cfg.maxViolations });
 //           this.showCriticalWarning(type, remaining);
 //         } else {
 //           this.notify(`🚨 VIOLATION: ${this.getViolationMessage(type)}. ${remaining} warning(s) remaining before auto-submit.`);
 //         }
+//         break;
+
+//       case 'DELAY_AND_AUTOSUBMIT':
+//         // Delay on each violation, auto-submit at max
+//         const willAutoSubmitNext = remaining === 1;
+//         this.notify(`⚠️ ${this.getViolationMessage(type)}. Access suspended for ${this.calculateDelayDuration()}s`);
+//         this.startDelay(type, willAutoSubmitNext);
 //         break;
 //     }
 
@@ -395,7 +490,7 @@
 //   private getViolationMessage(type: string): string {
 //     const messages: Record<string, string> = {
 //       'screenshot-attempt': 'Screenshots are not allowed',
-//       'context-menu-block': 'Right-click is disabled',
+//       'context-menu-block': 'Right-click is not allowed',
 //       'devtools-block': 'Developer tools are disabled',
 //       'new-tab-block': 'Opening new tabs/windows is not allowed',
 //       'focus-lost': 'Please stay on the quiz page',
@@ -403,8 +498,310 @@
 //       'fullscreen-exit': 'Fullscreen mode is required',
 //       'clipboard-monitor': 'Clipboard access is restricted',
 //       'unload-attempt': 'Leaving the page is not allowed',
+//       'locked': 'Quiz access suspended',
+
 //     };
 //     return messages[type] || 'Violation detected';
+//   }
+
+//   // ============================================================================
+//   // DELAY MODE IMPLEMENTATION
+//   // ============================================================================
+
+//   private calculateDelayDuration(): number {
+//     const cfg = this.config.violationConfig;
+//     let duration = cfg.delaySeconds;
+//     if (cfg.delayIncrementOnRepeat && this.totalViolationCount > 1) {
+//       const multiplier = Math.pow(cfg.delayMultiplier, this.totalViolationCount - 1);
+//       duration = Math.min(Math.round(cfg.delaySeconds * multiplier), cfg.maxDelaySeconds);
+//     }
+//     return duration;
+//   }
+
+
+//   // NO CAP THE DELAY JUST GROWS
+// // private calculateDelayDuration(): number {
+// //   const cfg = this.config.violationConfig;
+// //   let duration = cfg.delaySeconds;
+// //   if (cfg.delayIncrementOnRepeat && this.totalViolationCount > 1) {
+// //     const multiplier = Math.pow(cfg.delayMultiplier, this.totalViolationCount - 1);
+// //     duration = Math.round(cfg.delaySeconds * multiplier);
+// //   }
+// //   return duration;
+// // }
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+
+
+
+
+
+
+
+
+
+//   private startDelay(violationType: string, willAutoSubmitNext: boolean): void {
+//     console.log(`[Quiz Protection] Starting delay for violation: ${violationType}`);
+//     const duration = this.calculateDelayDuration();
+//     this.currentDelayDuration = duration;
+//     this.delayRemainingSeconds = duration;
+//     this.isDelayActive = true;
+//     this.showDelayOverlay(violationType, duration, willAutoSubmitNext);
+//     const cfg = this.config.violationConfig;
+//     this.onDelayStarted.next({
+//       violationType,
+//       delayDuration: duration,
+//       violationCount: this.totalViolationCount,
+//       maxViolations: cfg.maxViolations,
+//       willAutoSubmitNext,
+//     });
+    
+//     this.playWarningSound();
+    
+//     this.delayTimer = window.setInterval(() => {
+//       this.delayRemainingSeconds--;
+//       this.onDelayTick.next(this.delayRemainingSeconds);
+//       this.updateDelayOverlay();
+//       this.emitStateChange();
+      
+//       if (this.delayRemainingSeconds <= 5 && this.delayRemainingSeconds > 0) {
+//         this.playBeepSound();
+//       }
+      
+//       if (this.delayRemainingSeconds <= 0) {
+//         this.endDelay();
+//       }
+//     }, 1000);
+//   }
+
+//   private endDelay(): void {
+//     if (this.delayTimer) {
+//       clearInterval(this.delayTimer);
+//       this.delayTimer = undefined;
+//     }
+    
+//     this.totalDelayTimeServed += this.currentDelayDuration;
+//     this.isDelayActive = false;
+//     this.delayRemainingSeconds = 0;
+    
+//     this.removeDelayOverlay();
+//     this.onDelayEnded.next();
+//     this.emitStateChange();
+    
+//     if (this.config.enableFullscreenLock) {
+//       setTimeout(() => this.requestFullscreen(), 300);
+//     }
+    
+//     console.log('[Quiz Protection] Delay ended, quiz access restored');
+//   }
+
+//   private showDelayOverlay(violationType: string, duration: number, willAutoSubmitNext: boolean): void {
+//     this.removeDelayOverlay();
+    
+//     const overlay = this.renderer.createElement('div');
+//     this.delayOverlayElement = overlay;
+
+//     this.renderer.setAttribute(overlay, 'id', 'delay-overlay');
+//     this.renderer.setStyle(overlay, 'position', 'fixed');
+//     this.renderer.setStyle(overlay, 'top', '0');
+//     this.renderer.setStyle(overlay, 'left', '0');
+//     this.renderer.setStyle(overlay, 'width', '100vw');
+//     this.renderer.setStyle(overlay, 'height', '100vh');
+//     this.renderer.setStyle(overlay, 'background', 'linear-gradient(135deg, #1a1a2e 0%, #16213e 100%)');
+//     this.renderer.setStyle(overlay, 'display', 'flex');
+//     this.renderer.setStyle(overlay, 'align-items', 'center');
+//     this.renderer.setStyle(overlay, 'justify-content', 'center');
+//     this.renderer.setStyle(overlay, 'z-index', '1000003');
+//     this.renderer.setStyle(overlay, 'color', 'white');
+//     this.renderer.setStyle(overlay, 'font-family', 'system-ui, -apple-system, sans-serif');
+
+//     const cfg = this.config.violationConfig;
+//     const remaining = cfg.maxViolations - this.totalViolationCount;
+//     const warningColor = willAutoSubmitNext ? '#f44336' : '#ff9800';
+    
+//     let warningText: string;
+//     if (cfg.action === 'DELAY_ONLY') {
+//       warningText = `Violation ${this.totalViolationCount} recorded`;
+//     } else if (willAutoSubmitNext) {
+//       warningText = '⚠️ FINAL WARNING: Next violation will AUTO-SUBMIT your quiz!';
+//     } else {
+//       warningText = `${remaining} violation(s) remaining before auto-submit`;
+//     }
+
+//     overlay.innerHTML = `
+//       <div style="text-align: center; padding: 40px; max-width: 500px;">
+//         <h1 style="font-size: 28px; margin-bottom: 8px; color: #ff9800;">YOU HAVE BEEN SUSPENDED FOR ${this.calculateDelayDuration()} SECONDS</h1>
+//         <p style="font-size: 16px; opacity: 0.8; margin-bottom: 16px;">${this.getViolationMessage(violationType)}</p>
+        
+//         <div style="position: relative; width: 180px; height: 180px; margin: 0 auto 24px;">
+//           <svg width="180" height="180" style="transform: rotate(-90deg);">
+//             <circle cx="90" cy="90" r="80" fill="none" stroke="rgba(255,255,255,0.1)" stroke-width="12"/>
+//             <circle id="delay-circle" cx="90" cy="90" r="80" fill="none" stroke="#ff9800" stroke-width="12"
+//               stroke-dasharray="502" stroke-dashoffset="0" stroke-linecap="round" style="transition: stroke-dashoffset 1s linear;"/>
+//           </svg>
+//           <div style="position: absolute; top: 50%; left: 50%; transform: translate(-50%, -50%); text-align: center;">
+//             <div id="delay-number" style="font-size: 48px; font-weight: bold; color: #ff9800;">${duration}</div>
+//             <div style="font-size: 14px; opacity: 0.7;">seconds</div>
+//           </div>
+//         </div>
+        
+//         <div style="background: rgba(255,255,255,0.05); padding: 16px; border-radius: 8px; margin-bottom: 20px;">
+//           <p style="font-size: 14px; margin: 0; color: ${warningColor};">
+//             <strong>Violation ${this.totalViolationCount}</strong>
+//           </p>
+//           <p style="font-size: 13px; opacity: 0.7; margin: 8px 0 0 0;">${warningText}</p>
+//         </div>
+        
+//         <p id="delay-status" style="font-size: 14px; color: #ff9800;">Quiz will resume in ${duration} seconds...</p>
+        
+//         <p style="font-size: 12px; opacity: 0.5; margin-top: 16px;">
+//           Total time suspended: ${this.formatTime(this.totalDelayTimeServed)}
+//         </p>
+//       </div>
+//     `;
+
+//     this.renderer.appendChild(document.body, overlay);
+//   }
+
+//   private updateDelayOverlay(): void {
+//     const numberEl = document.getElementById('delay-number');
+//     const statusEl = document.getElementById('delay-status');
+//     const circleEl = document.getElementById('delay-circle');
+
+//     if (numberEl) {
+//       numberEl.textContent = this.delayRemainingSeconds.toString();
+//       if (this.delayRemainingSeconds <= 5) {
+//         numberEl.style.color = '#f44336';
+//       }
+//     }
+
+//     if (statusEl) {
+//       if (this.delayRemainingSeconds <= 0) {
+//         statusEl.textContent = 'Resuming quiz access...';
+//         statusEl.style.color = '#4CAF50';
+//       } else {
+//         statusEl.textContent = `Quiz will resume in ${this.delayRemainingSeconds} second${this.delayRemainingSeconds !== 1 ? 's' : ''}...`;
+//       }
+//     }
+
+//     if (circleEl) {
+//       const circumference = 502;
+//       const offset = circumference - (this.delayRemainingSeconds / this.currentDelayDuration) * circumference;
+//       circleEl.style.strokeDashoffset = offset.toString();
+//     }
+//   }
+
+//   private removeDelayOverlay(): void {
+//     if (this.delayOverlayElement?.parentNode) {
+//       this.renderer.removeChild(document.body, this.delayOverlayElement);
+//       this.delayOverlayElement = undefined;
+//     }
+//   }
+
+//   private formatTime(seconds: number): string {
+//     const mins = Math.floor(seconds / 60);
+//     const secs = seconds % 60;
+//     if (mins > 0) return `${mins}m ${secs}s`;
+//     return `${secs}s`;
 //   }
 
 //   // ============================================================================
@@ -430,6 +827,8 @@
 //     this.renderer.setStyle(overlay, 'color', 'white');
 //     this.renderer.setStyle(overlay, 'font-family', 'system-ui, -apple-system, sans-serif');
 
+//     const cfg = this.config.violationConfig;
+    
 //     overlay.innerHTML = `
 //       <div style="text-align: center; padding: 40px; max-width: 500px;">
 //         <div style="font-size: 80px; margin-bottom: 20px;">⚠️</div>
@@ -442,7 +841,7 @@
 //           </p>
 //         </div>
 //         <p style="font-size: 14px; opacity: 0.7; margin-bottom: 24px;">
-//           Total violations: ${this.totalViolationCount} / ${this.config.maxViolations}
+//           Total violations: ${this.totalViolationCount} / ${cfg.maxViolations}
 //         </p>
 //         <button id="critical-warning-btn" style="
 //           background: #4CAF50; color: white; border: none; padding: 16px 48px;
@@ -473,14 +872,16 @@
 
 //     console.warn('[Quiz Protection] INITIATING AUTO-SUBMIT');
 //     this.autoSubmitTriggered = true;
-//     this.autoSubmitCountdownValue = this.config.autoSubmitCountdownSeconds;
+    
+//     const cfg = this.config.violationConfig;
+//     this.autoSubmitCountdownValue = cfg.autoSubmitCountdownSeconds;
 
 //     this.showAutoSubmitCountdownOverlay(violationType);
 
 //     this.autoSubmitCountdownTimer = window.setInterval(() => {
 //       this.autoSubmitCountdownValue--;
 //       this.onAutoSubmitCountdown.next(this.autoSubmitCountdownValue);
-//       this.updateAutoSubmitCountdown(this.autoSubmitCountdownValue);
+//       this.updateAutoSubmitCountdown();
 //       this.emitStateChange();
 
 //       if (this.autoSubmitCountdownValue <= 3 && this.autoSubmitCountdownValue > 0) {
@@ -496,6 +897,7 @@
 //   private showAutoSubmitCountdownOverlay(violationType: string): void {
 //     this.removeAutoSubmitOverlay();
 //     this.removeViolationOverlay();
+//     this.removeDelayOverlay();
 
 //     const overlay = this.renderer.createElement('div');
 //     this.autoSubmitOverlayElement = overlay;
@@ -513,6 +915,8 @@
 //     this.renderer.setStyle(overlay, 'z-index', '1000003');
 //     this.renderer.setStyle(overlay, 'color', 'white');
 //     this.renderer.setStyle(overlay, 'font-family', 'system-ui, -apple-system, sans-serif');
+
+//     const cfg = this.config.violationConfig;
 
 //     overlay.innerHTML = `
 //       <div style="text-align: center; padding: 40px; max-width: 500px;">
@@ -535,7 +939,7 @@
 //         <div style="background: rgba(255,255,255,0.05); padding: 16px; border-radius: 8px; margin-bottom: 20px;">
 //           <p style="font-size: 13px; opacity: 0.7; margin: 0;">
 //             Total Violations: <strong style="color: #f44336;">${this.totalViolationCount}</strong> | 
-//             Penalty Time: <strong style="color: #ff9800;">+${this.penaltySeconds}s</strong>
+//             Delay Served: <strong style="color: #ff9800;">${this.formatTime(this.totalDelayTimeServed)}</strong>
 //           </p>
 //         </div>
         
@@ -547,27 +951,31 @@
 //     this.playWarningSound();
 //   }
 
-//   private updateAutoSubmitCountdown(seconds: number): void {
+//   private updateAutoSubmitCountdown(): void {
 //     const numberEl = document.getElementById('countdown-number');
 //     const statusEl = document.getElementById('countdown-status');
 //     const circleEl = document.getElementById('countdown-circle');
 
+//     const cfg = this.config.violationConfig;
+
 //     if (numberEl) {
-//       numberEl.textContent = seconds.toString();
-//       if (seconds <= 3) {
+//       numberEl.textContent = this.autoSubmitCountdownValue.toString();
+//       if (this.autoSubmitCountdownValue <= 3) {
 //         numberEl.style.color = '#ff0000';
 //         numberEl.style.fontSize = '56px';
 //       }
 //     }
 
 //     if (statusEl) {
-//       statusEl.textContent = seconds <= 0 ? 'Submitting now...' : `Submitting in ${seconds} second${seconds !== 1 ? 's' : ''}...`;
-//       if (seconds <= 0) statusEl.style.color = '#f44336';
+//       statusEl.textContent = this.autoSubmitCountdownValue <= 0 
+//         ? 'Submitting now...' 
+//         : `Submitting in ${this.autoSubmitCountdownValue} second${this.autoSubmitCountdownValue !== 1 ? 's' : ''}...`;
+//       if (this.autoSubmitCountdownValue <= 0) statusEl.style.color = '#f44336';
 //     }
 
 //     if (circleEl) {
 //       const circumference = 408;
-//       const offset = circumference - (seconds / this.config.autoSubmitCountdownSeconds) * circumference;
+//       const offset = circumference - (this.autoSubmitCountdownValue / cfg.autoSubmitCountdownSeconds) * circumference;
 //       circleEl.style.strokeDashoffset = offset.toString();
 //     }
 //   }
@@ -585,18 +993,19 @@
 //       statusEl.innerHTML = '<span style="color: #4CAF50;">✓ Submitting your quiz...</span>';
 //     }
 
+//     const cfg = this.config.violationConfig;
+    
 //     const autoSubmitEvent: AutoSubmitEvent = {
-//       reason: `Maximum violations reached (${this.totalViolationCount}/${this.config.maxViolations})`,
+//       reason: `Maximum violations reached (${this.totalViolationCount}/${cfg.maxViolations})`,
 //       violationType: violationType,
 //       violations: [...this.violations],
 //       totalViolations: this.totalViolationCount,
 //       penaltySeconds: this.penaltySeconds,
+//       totalDelayTimeServed: this.totalDelayTimeServed,
 //       timestamp: new Date(),
 //     };
 
 //     this.logEvent('auto-submit-triggered', JSON.stringify(autoSubmitEvent), 'critical');
-
-//     // EMIT THE EVENT - Component handles actual submission
 //     this.onAutoSubmit.next(autoSubmitEvent);
 //     this.emitStateChange();
 //   }
@@ -604,9 +1013,10 @@
 //   public showAutoSubmitComplete(message?: string): void {
 //     this.removeAutoSubmitOverlay();
 
+
+
 //     const overlay = this.renderer.createElement('div');
 //     this.autoSubmitOverlayElement = overlay;
-
 //     this.renderer.setStyle(overlay, 'position', 'fixed');
 //     this.renderer.setStyle(overlay, 'top', '0');
 //     this.renderer.setStyle(overlay, 'left', '0');
@@ -629,7 +1039,7 @@
 //         </p>
 //         <div style="background: rgba(255,255,255,0.05); padding: 16px; border-radius: 8px; margin: 20px 0;">
 //           <p style="font-size: 14px; opacity: 0.7; margin: 0;">
-//             Violations: ${this.totalViolationCount} | Penalty: +${this.penaltySeconds}s
+//             Violations: ${this.totalViolationCount} | Delay Served: ${this.formatTime(this.totalDelayTimeServed)}
 //           </p>
 //         </div>
 //         <p style="font-size: 14px; color: #4CAF50;">Redirecting to dashboard...</p>
@@ -639,19 +1049,23 @@
 //     this.renderer.appendChild(document.body, overlay);
 //   }
 
+//   // ============================================================================
+//   // AUDIO
+//   // ============================================================================
+
 //   private playWarningSound(): void {
 //     try {
 //       const ctx = new (window.AudioContext || (window as any).webkitAudioContext)();
-//       const oscillator = ctx.createOscillator();
-//       const gainNode = ctx.createGain();
-//       oscillator.connect(gainNode);
-//       gainNode.connect(ctx.destination);
-//       oscillator.frequency.value = 440; // A4 note
-//       oscillator.type = 'sine';
-//       gainNode.gain.setValueAtTime(0.3, ctx.currentTime);
-//       gainNode.gain.exponentialRampToValueAtTime(0.01, ctx.currentTime + 0.5);
-//       oscillator.start(ctx.currentTime);
-//       oscillator.stop(ctx.currentTime + 0.5);
+//       const osc = ctx.createOscillator();
+//       const gain = ctx.createGain();
+//       osc.connect(gain);
+//       gain.connect(ctx.destination);
+//       osc.frequency.value = 440;
+//       osc.type = 'sine';
+//       gain.gain.setValueAtTime(0.3, ctx.currentTime);
+//       gain.gain.exponentialRampToValueAtTime(0.01, ctx.currentTime + 0.5);
+//       osc.start(ctx.currentTime);
+//       osc.stop(ctx.currentTime + 0.5);
 //     } catch (e) {
 //       console.warn('[Quiz Protection] Could not play warning sound');
 //     }
@@ -660,34 +1074,23 @@
 //   private playBeepSound(): void {
 //     try {
 //       const ctx = new (window.AudioContext || (window as any).webkitAudioContext)();
-//       const oscillator = ctx.createOscillator();
-//       const gainNode = ctx.createGain();
-//       oscillator.connect(gainNode);
-//       gainNode.connect(ctx.destination);
-//       oscillator.frequency.value = 880; // A5 note - higher pitch for urgency
-//       oscillator.type = 'sine';
-//       gainNode.gain.setValueAtTime(0.2, ctx.currentTime);
-//       gainNode.gain.exponentialRampToValueAtTime(0.01, ctx.currentTime + 0.2);
-//       oscillator.start(ctx.currentTime);
-//       oscillator.stop(ctx.currentTime + 0.2);
+//       const osc = ctx.createOscillator();
+//       const gain = ctx.createGain();
+//       osc.connect(gain);
+//       gain.connect(ctx.destination);
+//       osc.frequency.value = 880;
+//       osc.type = 'sine';
+//       gain.gain.setValueAtTime(0.2, ctx.currentTime);
+//       gain.gain.exponentialRampToValueAtTime(0.01, ctx.currentTime + 0.2);
+//       osc.start(ctx.currentTime);
+//       osc.stop(ctx.currentTime + 0.2);
 //     } catch (e) {
 //       console.warn('[Quiz Protection] Could not play beep sound');
 //     }
 //   }
 
-//   /**
-//    * Play countdown beep - exposed for external use (e.g., timer expiry)
-//    */
-//   public playCountdownBeep(): void {
-//     this.playBeepSound();
-//   }
-
-//   /**
-//    * Play urgent warning sound - exposed for external use
-//    */
-//   public playUrgentWarning(): void {
-//     this.playWarningSound();
-//   }
+//   public playCountdownBeep(): void { this.playBeepSound(); }
+//   public playUrgentWarning(): void { this.playWarningSound(); }
 
 //   // ============================================================================
 //   // WATERMARK
@@ -695,7 +1098,6 @@
 
 //   private createWatermark(): void {
 //     this.removeWatermark();
-
 //     const watermark = this.renderer.createElement('div');
 //     this.watermarkElement = watermark;
     
@@ -860,12 +1262,12 @@
 
 //   private monitorWindowFocus(): void {
 //     const handler = this.renderer.listen('window', 'blur', () => {
-//       if (!this.autoSubmitTriggered) {
+//       if (!this.autoSubmitTriggered && !this.isDelayActive) {
 //         this.handleViolation('focus-lost', 'Window lost focus', 'medium');
 //       }
 //       setTimeout(() => {
 //         window.focus();
-//         if (this.fullscreenActive && !this.isInFullscreen()) this.requestFullscreen();
+//         if (this.fullscreenActive && !this.isInFullscreen() && !this.isDelayActive) this.requestFullscreen();
 //       }, 100);
 //     });
 //     this.eventListeners.set('focus-monitor', handler);
@@ -873,9 +1275,9 @@
 
 //   private monitorPageVisibility(): void {
 //     const handler = this.renderer.listen('document', 'visibilitychange', () => {
-//       if (document.hidden && !this.autoSubmitTriggered) {
+//       if (document.hidden && !this.autoSubmitTriggered && !this.isDelayActive) {
 //         this.handleViolation('visibility-hidden', 'Tab/app switched', 'high');
-//       } else {
+//       } else if (!this.isDelayActive) {
 //         window.focus();
 //         if (this.fullscreenActive && !this.isInFullscreen()) {
 //           setTimeout(() => this.requestFullscreen(), 300);
@@ -906,7 +1308,7 @@
 //     events.forEach(eventName => {
 //       const handler = this.renderer.listen('document', eventName, () => {
 //         const inFullscreen = this.isInFullscreen();
-//         if (!inFullscreen && this.fullscreenActive && this.isActive && !this.autoSubmitTriggered) {
+//         if (!inFullscreen && this.fullscreenActive && this.isActive && !this.autoSubmitTriggered && !this.isDelayActive) {
 //           this.handleViolation('fullscreen-exit', 'Exited fullscreen', 'high');
 //           window.focus();
 //           setTimeout(() => this.requestFullscreen(), 300);
@@ -917,7 +1319,7 @@
 //     });
 
 //     this.fullscreenRetryTimer = window.setInterval(() => {
-//       if (this.isActive && this.fullscreenActive && !this.isInFullscreen() && !this.autoSubmitTriggered) {
+//       if (this.isActive && this.fullscreenActive && !this.isInFullscreen() && !this.autoSubmitTriggered && !this.isDelayActive) {
 //         this.requestFullscreen();
 //       }
 //     }, this.config.fullscreenRetryInterval);
@@ -1017,7 +1419,7 @@
 //   private startFocusEnforcement(): void {
 //     window.focus();
 //     this.focusCheckTimer = window.setInterval(() => {
-//       if ((!document.hasFocus() || document.hidden) && !this.autoSubmitTriggered) {
+//       if ((!document.hasFocus() || document.hidden) && !this.autoSubmitTriggered && !this.isDelayActive) {
 //         window.focus();
 //         if (this.fullscreenActive && !this.isInFullscreen()) this.requestFullscreen();
 //       }
@@ -1065,7 +1467,6 @@
 //     this.renderer.setStyle(banner, 'width', '100%');
 //     this.renderer.setStyle(banner, 'background', 'linear-gradient(135deg, #dc3545 0%, #c82333 100%)');
 //     this.renderer.setStyle(banner, 'color', 'white');
-//     // this.renderer.setStyle(banner, 'padding', '12px');
 //     this.renderer.setStyle(banner, 'text-align', 'center');
 //     this.renderer.setStyle(banner, 'z-index', '1000001');
 //     this.renderer.setStyle(banner, 'font-size', '14px');
@@ -1176,6 +1577,7 @@
 
 //     return event;
 //   }
+
 //   private emitStateChange(): void {
 //     this.onStateChange.next(this.getState());
 //   }
@@ -1184,10 +1586,10 @@
 
 
 
-
 import { Injectable, Renderer2, RendererFactory2, OnDestroy } from '@angular/core';
-import { HttpClient } from '@angular/common/http';
+import { HttpClient, HttpHeaders } from '@angular/common/http';
 import { catchError, of, Subject, BehaviorSubject } from 'rxjs';
+import baseUrl from './helper';
 
 // ============================================================================
 // TYPES & INTERFACES
@@ -1247,7 +1649,7 @@ export interface ProtectionConfig {
   enableScreenshotBlocking: boolean;
   enableDevToolsBlocking: boolean;
   enableWakeLock: boolean;
-  
+
   // Violation config - this is what gets set from the Quiz settings
   violationConfig: QuizViolationConfig;
 }
@@ -1296,7 +1698,7 @@ const DEFAULT_VIOLATION_CONFIG: QuizViolationConfig = {
   delaySeconds: 30,
   delayIncrementOnRepeat: true,
   delayMultiplier: 1.5,
-  maxDelaySeconds: 120,
+  maxDelaySeconds: 100000,
   autoSubmitCountdownSeconds: 5,
 };
 
@@ -1313,7 +1715,7 @@ const CASUAL_CONFIG: Partial<ProtectionConfig> = {
     delaySeconds: 0,
     delayIncrementOnRepeat: false,
     delayMultiplier: 1,
-    maxDelaySeconds: 0,
+    maxDelaySeconds: 100000,
     autoSubmitCountdownSeconds: 5,
   },
 };
@@ -1332,7 +1734,7 @@ const STANDARD_CONFIG: Partial<ProtectionConfig> = {
     delaySeconds: 30,
     delayIncrementOnRepeat: true,
     delayMultiplier: 1.5,
-    maxDelaySeconds: 120,
+    maxDelaySeconds: 100000,
     autoSubmitCountdownSeconds: 5,
   },
 };
@@ -1353,7 +1755,7 @@ const PROCTORED_CONFIG: Partial<ProtectionConfig> = {
     delaySeconds: 30,
     delayIncrementOnRepeat: true,
     delayMultiplier: 1.5,
-    maxDelaySeconds: 120,
+    maxDelaySeconds: 100000,
     autoSubmitCountdownSeconds: 5,
   },
 };
@@ -1367,39 +1769,46 @@ export class QuizProtectionService implements OnDestroy {
   private renderer: Renderer2;
   private eventListeners: Map<string, () => void> = new Map();
   private isActive = false;
-  
+
   // UI Elements
   private watermarkElement?: HTMLElement;
   private warningBannerElement?: HTMLElement;
   private violationOverlayElement?: HTMLElement;
   private autoSubmitOverlayElement?: HTMLElement;
   private delayOverlayElement?: HTMLElement;
-  
+
   // State
   private fullscreenActive = false;
   private focusCheckTimer?: number;
   private fullscreenRetryTimer?: number;
   private originalViewportContent = '';
   private wakeLock: any = null;
-  
+
   // Violation tracking
   private violations: ViolationRecord[] = [];
   private totalViolationCount = 0;
   private penaltySeconds = 0;
-  
+
   // Auto-submit state
   private autoSubmitTriggered = false;
   private autoSubmitCountdownTimer?: number;
   private autoSubmitCountdownValue = 0;
   private isProcessingViolation = false;
-  
+
   // Delay state
   private isDelayActive = false;
   private delayRemainingSeconds = 0;
   private delayTimer?: number;
   private totalDelayTimeServed = 0;
   private currentDelayDuration = 0;
-  
+
+  // ============================================================================
+  // BACKEND PERSISTENCE - Quiz context for saving/loading delay
+  // ============================================================================
+  private currentQuizId: number | null = null;
+  private authToken: string = '';
+  private backendBaseUrl: string = '';
+
   // PUBLIC EVENTS
   public readonly onViolation = new Subject<SecurityEvent>();
   public readonly onAutoSubmit = new Subject<AutoSubmitEvent>();
@@ -1410,7 +1819,7 @@ export class QuizProtectionService implements OnDestroy {
   public readonly onDelayTick = new Subject<number>();
   public readonly onDelayEnded = new Subject<void>();
   public readonly onStateChange = new BehaviorSubject<QuizProtectionState>(this.getState());
-  
+
   // Configuration
   private config: ProtectionConfig = {
     examMode: 'standard',
@@ -1549,13 +1958,12 @@ export class QuizProtectionService implements OnDestroy {
   }
 
   updateConfig(newConfig: Partial<ProtectionConfig>): void {
-    // Handle nested violationConfig
     if (newConfig.violationConfig) {
       Object.assign(this.config.violationConfig, newConfig.violationConfig);
       delete newConfig.violationConfig;
     }
     Object.assign(this.config, newConfig);
-    
+
     if (this.isActive) {
       this.removeWatermark();
       if (this.config.watermarkEnabled) this.createWatermark();
@@ -1598,11 +2006,366 @@ export class QuizProtectionService implements OnDestroy {
   }
 
   // ============================================================================
+  // BACKEND PERSISTENCE - Public methods called from component
+  // ============================================================================
+// private jwtToken = localStorage.getItem('token')
+  /**
+   * 
+   * 
+   * 
+   * Call this from the component after enableProtection() to wire up backend persistence.
+   * Example:
+   *   this.quizProtection.enableProtection();
+   *   this.quizProtection.setQuizContext(this.qid, environment.apiUrl, localStorage.getItem('token') || '');
+   */
+
+
+  // REPLACE with a getter so it's always fresh:
+private get jwtToken(): string {
+  return localStorage.getItem('access_token') || '';
+}
+
+
+  // public setQuizContext(quizId: number, baseUrl: string, token: string): void {
+  //   this.currentQuizId = quizId;
+  //   this.backendBaseUrl = baseUrl;
+  //   this.authToken = token;
+  //   console.info('[Quiz Protection] Quiz context set for quiz:', quizId);
+  // }
+
+
+
+
+
+  public setQuizContext(quizId: number, baseUrl: string, token: string): void {
+  this.currentQuizId = quizId;
+  this.backendBaseUrl = baseUrl;
+  this.authToken = token;
+  console.log('[QuizProtection] setQuizContext called:', {
+    quizId,
+    baseUrl,
+    tokenProvided: !!token,
+    tokenPreview: token ? token.substring(0, 20) + '...' : 'NULL',
+    jwtTokenFromGetter: this.jwtToken ? this.jwtToken.substring(0, 20) + '...' : 'NULL'
+  });
+}
+  /**
+   * Call this from initializeTimer() in the component on page/quiz load.
+   * Restores the persisted totalDelayTimeServed from the backend.
+   * Example:
+   *   this.quizProtection.loadDelayFromBackend(this.qid);
+   */
+
+// public loadDelayFromBackend(quizId: number): void {
+//   if (!this.backendBaseUrl || !this.jwtToken) {  // ← was: if (!baseUrl || !this.authToken)
+//     console.warn('[Quiz Protection] loadDelayFromBackend called before setQuizContext');
+//     return;
+//   }
+//   this.currentQuizId = quizId;
+//   const headers = new HttpHeaders({
+//     'Content-Type': 'application/json',
+//     'Authorization': `Bearer ${this.jwtToken}`,
+//   });
+//   this.http.get<{ violationDelayTime: number }>(
+//     `${this.backendBaseUrl}/quiz-timer/getViolation-delay/${quizId}`,  // ← was: baseUrl/...
+//     { headers }
+//   ).pipe(
+//     catchError(err => {
+//       if (err.status === 404) return of(null);
+//       console.error('[Quiz Protection] Error loading delay:', err);
+//       return of(null);
+//     })
+//   ).subscribe(response => {
+//     if (response?.violationDelayTime && response.violationDelayTime > 0) {
+//       this.totalDelayTimeServed = response.violationDelayTime;
+//       console.log('[Quiz Protection] Delay restored:', this.totalDelayTimeServed);
+//       this.emitStateChange();
+//     }
+//   });
+// }
+
+
+
+
+
+
+// THIS LOADFROMBACKEND WORKS
+
+// public loadDelayFromBackend(quizId: number): void {
+//   console.log('[QuizProtection] loadDelayFromBackend called:', {
+//     quizId,
+//     backendBaseUrl: this.backendBaseUrl,
+//     hasToken: !!this.jwtToken,
+//     tokenPreview: this.jwtToken ? this.jwtToken.substring(0, 20) + '...' : 'NULL'
+//   });
+//   if (!this.backendBaseUrl || !this.jwtToken) {
+//     console.warn('[QuizProtection] loadDelayFromBackend ABORTED - missing:', {
+//       backendBaseUrl: this.backendBaseUrl,
+//       jwtToken: this.jwtToken ? 'present' : 'MISSING'
+//     });
+//     return;
+//   }
+//   this.currentQuizId = quizId;
+//   const url = `${this.backendBaseUrl}/quiz-timer/getViolation-delay/${quizId}`;
+//   console.log('[QuizProtection] Sending GET to:', url);
+//   const headers = new HttpHeaders({
+//     'Content-Type': 'application/json',
+//     'Authorization': `Bearer ${this.jwtToken}`,
+//   });
+//   this.http.get<{ violationDelayTime: number }>(url, { headers }).pipe(
+//     catchError(err => {
+//       if (err.status === 404) {
+//         console.log('[QuizProtection] loadDelayFromBackend 404 - no saved delay, starting fresh');
+//         return of(null);
+//       }
+//       console.error('[QuizProtection] loadDelayFromBackend FAILED:', {
+//         status: err.status,
+//         message: err.message,
+//         url
+//       });
+//       return of(null);
+//     })
+//   ).subscribe(response => {
+//     console.log('[QuizProtection] loadDelayFromBackend response:', response);
+//     if (response?.violationDelayTime && response.violationDelayTime > 0) {
+//       this.totalDelayTimeServed = response.violationDelayTime;
+//       console.log('[QuizProtection] Delay restored:', this.totalDelayTimeServed);
+//       this.emitStateChange();
+//     } else {
+//       console.log('[QuizProtection] No delay to restore (response empty or zero)');
+//     }
+//   });
+ 
+// }
+
+
+
+
+// NEW 
+
+
+
+
+public loadDelayFromBackend(quizId: number): void {
+  console.log('[QuizProtection] loadDelayFromBackend called:', {
+    quizId,
+    backendBaseUrl: this.backendBaseUrl,
+    hasToken: !!this.jwtToken,
+    tokenPreview: this.jwtToken ? this.jwtToken.substring(0, 20) + '...' : 'NULL'
+  });
+  if (!this.backendBaseUrl || !this.jwtToken) {
+    console.warn('[QuizProtection] loadDelayFromBackend ABORTED - missing:', {
+      backendBaseUrl: this.backendBaseUrl,
+      jwtToken: this.jwtToken ? 'present' : 'MISSING'
+    });
+    return;
+  }
+  this.currentQuizId = quizId;
+  const url = `${this.backendBaseUrl}/quiz-timer/getViolation-delay/${quizId}`;
+  console.log('[QuizProtection] Sending GET to:', url);
+  const headers = new HttpHeaders({
+    'Content-Type': 'application/json',
+    'Authorization': `Bearer ${this.jwtToken}`,
+  });
+  this.http.get<{ violationDelayTime: number }>(url, { headers }).pipe(
+    catchError(err => {
+      if (err.status === 404) {
+        console.log('[QuizProtection] loadDelayFromBackend 404 - no saved delay, starting fresh');
+        return of(null);
+      }
+      console.error('[QuizProtection] loadDelayFromBackend FAILED:', {
+        status: err.status,
+        message: err.message,
+        url
+      });
+      return of(null);
+    })
+  ).subscribe(response => {
+    console.log('[QuizProtection] loadDelayFromBackend response:', response);
+    
+    const remaining = response?.violationDelayTime ?? 0;
+
+    if (remaining > 0) {
+      console.log('[QuizProtection] Resuming unfinished delay:', remaining, 'seconds left');
+      
+      this.currentDelayDuration = remaining;
+      this.delayRemainingSeconds = remaining;
+      this.isDelayActive = true;
+      this.showDelayOverlay('locked', remaining, false);
+      this.playWarningSound();
+
+      this.delayTimer = window.setInterval(() => {
+        this.delayRemainingSeconds--;
+        this.onDelayTick.next(this.delayRemainingSeconds);
+        this.updateDelayOverlay();
+        this.emitStateChange();
+        this.saveDelayToBackend(this.delayRemainingSeconds);
+
+        if (this.delayRemainingSeconds <= 5 && this.delayRemainingSeconds > 0) {
+          this.playBeepSound();
+        }
+
+        if (this.delayRemainingSeconds <= 0) {
+          this.endDelay();
+        }
+      }, 1000);
+
+    } else {
+      console.log('[QuizProtection] No pending delay (0 or null), starting fresh');
+    }
+  });
+ 
+}
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  // public loadDelayFromBackend(quizId: number): void {
+  //   if (!baseUrl || !this.authToken) {
+  //     console.warn('[Quiz Protection] loadDelayFromBackend called before setQuizContext');
+  //     return;
+  //   }
+
+  //   this.currentQuizId = quizId;
+
+  //   const headers = new HttpHeaders({
+  //     'Content-Type': 'application/json',
+  //     'Authorization': `Bearer ${this.jwtToken}`,
+  //   });
+
+  //   this.http.get<{ violationDelayTime: number }>(
+  //     `${baseUrl}/quiz-progress/getViolation-delay/${quizId}`,
+  //     { headers }
+  //   ).pipe(
+  //     catchError(err => {
+  //       if (err.status === 404) {
+  //         console.log('[Quiz Protection] No saved delay found (404), starting fresh');
+  //         return of(null);
+  //       }
+  //       console.error('[Quiz Protection] Error loading delay from backend:', err);
+  //       return of(null);
+  //     })
+  //   ).subscribe(response => {
+  //     if (response?.violationDelayTime) {
+  //       this.totalDelayTimeServed = response.violationDelayTime;
+  //       console.log('[Quiz Protection] Delay restored from backend:', this.totalDelayTimeServed, 'seconds');
+  //       this.emitStateChange();
+  //     }
+  //   });
+  // }
+
+  /**
+   * Saves the current cumulative delay to backend.
+   * Called automatically on every tick and on delay end — no need to call manually.
+   */
+
+
+//   private saveDelayToBackend(totalDelayServed: number): void {
+//   if (!this.currentQuizId || !this.backendBaseUrl || !this.jwtToken) return;  // ← was: !baseUrl
+
+//   const headers = new HttpHeaders({
+//     'Content-Type': 'application/json',
+//     'Authorization': `Bearer ${this.jwtToken}`,
+//   });
+//   this.http.post(
+//     `${this.backendBaseUrl}/quiz-timer/saveViolation-delay/${this.currentQuizId}`,  // ← was: baseUrl/...
+//     { violationDelayTime: totalDelayServed },
+//     { headers }
+//   ).pipe(catchError(() => of(null))).subscribe();
+// }
+
+
+private saveDelayToBackend(duration: number): void {
+  console.log('[QuizProtection] saveDelayToBackend called:', {
+    currentQuizId: this.currentQuizId,
+    backendBaseUrl: this.backendBaseUrl,
+    hasToken: !!this.jwtToken,
+    tokenPreview: this.jwtToken ? this.jwtToken.substring(0, 20) + '...' : 'NULL',
+    duration
+  });
+
+  if (!this.currentQuizId || !this.backendBaseUrl || !this.jwtToken) {
+    console.warn('[QuizProtection] saveDelayToBackend ABORTED - missing:', {
+      currentQuizId: this.currentQuizId,
+      backendBaseUrl: this.backendBaseUrl,
+      jwtToken: this.jwtToken ? 'present' : 'MISSING'
+    });
+    return;
+  }
+
+  const url = `${this.backendBaseUrl}/quiz-timer/saveViolation-delay/${this.currentQuizId}`;
+  const payload = { violationDelayTime: duration };
+  console.log('[QuizProtection] Sending POST to:', url, 'payload:', payload);
+
+  const headers = new HttpHeaders({
+    'Content-Type': 'application/json',
+    'Authorization': `Bearer ${this.jwtToken}`,
+  });
+
+  this.http.post(url, payload, { headers }).pipe(
+    catchError(err => {
+      console.error('[QuizProtection] saveDelayToBackend FAILED:', {
+        status: err.status,
+        message: err.message,
+        url
+      });
+      return of(null);
+    })
+  ).subscribe(response => {
+    console.log('[QuizProtection] saveDelayToBackend SUCCESS:', response);
+  });
+}
+  
+
+  // private saveDelayToBackend(totalDelayServed: number): void {
+  //   if (!this.currentQuizId || !baseUrl || !this.jwtToken) return;
+
+  //   const headers = new HttpHeaders({
+  //     'Content-Type': 'application/json',
+  //     'Authorization': `Bearer ${this.jwtToken}`,
+  //   });
+
+  //   this.http.post(
+  //     `${baseUrl}/quiz-progress/saveViolation-delay/${this.currentQuizId}`,
+  //     { remainingDelayTime: totalDelayServed },
+  //     { headers }
+  //   ).pipe(catchError(() => of(null))).subscribe({
+  //     next: () => console.log('[Quiz Protection] Delay saved to backend:', totalDelayServed),
+  //     error: (err) => console.error('[Quiz Protection] Failed to save delay:', err),
+  //   });
+  // }
+
+  // ============================================================================
   // VIOLATION HANDLING - MAIN LOGIC
   // ============================================================================
 
   private handleViolation(type: string, details: string, severity: 'low' | 'medium' | 'high' | 'critical' = 'medium'): void {
-    // Don't process if already in delay, auto-submit, or processing another violation
     if (this.isProcessingViolation || this.autoSubmitTriggered || this.isDelayActive) {
       console.log('[Quiz Protection] Skipping violation - already processing');
       return;
@@ -1610,7 +2373,6 @@ export class QuizProtectionService implements OnDestroy {
 
     this.isProcessingViolation = true;
 
-    // Record violation
     const existingViolation = this.violations.find(v => v.type === type);
     if (existingViolation) {
       existingViolation.count++;
@@ -1625,32 +2387,27 @@ export class QuizProtectionService implements OnDestroy {
 
     const cfg = this.config.violationConfig;
 
-    // Check if max violations reached - always auto-submit if action includes auto-submit
-    if (this.totalViolationCount >= cfg.maxViolations && 
-        (cfg.action === 'AUTOSUBMIT_ONLY' || cfg.action === 'DELAY_AND_AUTOSUBMIT')) {
+    if (this.totalViolationCount >= cfg.maxViolations &&
+      (cfg.action === 'AUTOSUBMIT_ONLY' || cfg.action === 'DELAY_AND_AUTOSUBMIT')) {
       this.initiateAutoSubmit(type);
       this.emitStateChange();
       setTimeout(() => { this.isProcessingViolation = false; }, 1000);
       return;
     }
 
-    // Handle based on configured action
     const remaining = cfg.maxViolations - this.totalViolationCount;
 
     switch (cfg.action) {
       case 'NONE':
-        // Just log, no action
         console.log(`[Quiz Protection] Violation logged: ${type}`);
         break;
 
       case 'DELAY_ONLY':
-        // Delay user without auto-submit
         this.notify(`⚠️ ${this.getViolationMessage(type)}. Access suspended for ${this.calculateDelayDuration()}s`);
         this.startDelay(type, false);
         break;
 
       case 'AUTOSUBMIT_ONLY':
-        // Show warnings, will auto-submit at max
         if (remaining <= 2) {
           this.onAutoSubmitWarning.next({ remaining, total: cfg.maxViolations });
           this.showCriticalWarning(type, remaining);
@@ -1660,7 +2417,6 @@ export class QuizProtectionService implements OnDestroy {
         break;
 
       case 'DELAY_AND_AUTOSUBMIT':
-        // Delay on each violation, auto-submit at max
         const willAutoSubmitNext = remaining === 1;
         this.notify(`⚠️ ${this.getViolationMessage(type)}. Access suspended for ${this.calculateDelayDuration()}s`);
         this.startDelay(type, willAutoSubmitNext);
@@ -1683,7 +2439,6 @@ export class QuizProtectionService implements OnDestroy {
       'clipboard-monitor': 'Clipboard access is restricted',
       'unload-attempt': 'Leaving the page is not allowed',
       'locked': 'Quiz access suspended',
-
     };
     return messages[type] || 'Violation detected';
   }
@@ -1695,25 +2450,23 @@ export class QuizProtectionService implements OnDestroy {
   private calculateDelayDuration(): number {
     const cfg = this.config.violationConfig;
     let duration = cfg.delaySeconds;
-    
     if (cfg.delayIncrementOnRepeat && this.totalViolationCount > 1) {
       const multiplier = Math.pow(cfg.delayMultiplier, this.totalViolationCount - 1);
       duration = Math.min(Math.round(cfg.delaySeconds * multiplier), cfg.maxDelaySeconds);
     }
-    
     return duration;
   }
 
   private startDelay(violationType: string, willAutoSubmitNext: boolean): void {
     console.log(`[Quiz Protection] Starting delay for violation: ${violationType}`);
-    
+
     const duration = this.calculateDelayDuration();
     this.currentDelayDuration = duration;
     this.delayRemainingSeconds = duration;
     this.isDelayActive = true;
-    
+
     this.showDelayOverlay(violationType, duration, willAutoSubmitNext);
-    
+
     const cfg = this.config.violationConfig;
     this.onDelayStarted.next({
       violationType,
@@ -1722,49 +2475,100 @@ export class QuizProtectionService implements OnDestroy {
       maxViolations: cfg.maxViolations,
       willAutoSubmitNext,
     });
-    
+
     this.playWarningSound();
-    
     this.delayTimer = window.setInterval(() => {
-      this.delayRemainingSeconds--;
-      this.onDelayTick.next(this.delayRemainingSeconds);
-      this.updateDelayOverlay();
-      this.emitStateChange();
-      
-      if (this.delayRemainingSeconds <= 5 && this.delayRemainingSeconds > 0) {
-        this.playBeepSound();
-      }
-      
-      if (this.delayRemainingSeconds <= 0) {
-        this.endDelay();
-      }
-    }, 1000);
+  this.delayRemainingSeconds--;
+  this.onDelayTick.next(this.delayRemainingSeconds);
+  this.updateDelayOverlay();
+  this.emitStateChange();
+
+  // ✅ Save remaining seconds (counts DOWN: 200 → 199 → 198...)
+  this.saveDelayToBackend(this.delayRemainingSeconds);
+
+  if (this.delayRemainingSeconds <= 5 && this.delayRemainingSeconds > 0) {
+    this.playBeepSound();
   }
 
-  private endDelay(): void {
-    if (this.delayTimer) {
-      clearInterval(this.delayTimer);
-      this.delayTimer = undefined;
-    }
-    
-    this.totalDelayTimeServed += this.currentDelayDuration;
-    this.isDelayActive = false;
-    this.delayRemainingSeconds = 0;
-    
-    this.removeDelayOverlay();
-    this.onDelayEnded.next();
-    this.emitStateChange();
-    
-    if (this.config.enableFullscreenLock) {
-      setTimeout(() => this.requestFullscreen(), 300);
-    }
-    
-    console.log('[Quiz Protection] Delay ended, quiz access restored');
+  if (this.delayRemainingSeconds <= 0) {
+    this.endDelay();
   }
+}, 1000);
+
+    // this.delayTimer = window.setInterval(() => {
+    //   this.delayRemainingSeconds--;
+    //   this.onDelayTick.next(this.delayRemainingSeconds);
+    //   this.updateDelayOverlay();
+    //   this.emitStateChange();
+
+    //   // Save running total on every tick so reload always has the latest value
+    //   const runningTotal = this.totalDelayTimeServed + (this.currentDelayDuration - this.delayRemainingSeconds);
+    //   this.saveDelayToBackend(this.delayRemainingSeconds);
+
+    //   if (this.delayRemainingSeconds <= 5 && this.delayRemainingSeconds > 0) {
+    //     this.playBeepSound();
+    //   }
+
+    //   if (this.delayRemainingSeconds <= 0) {
+    //     this.endDelay();
+    //   }
+    // }, 1000);
+
+
+
+
+
+  }
+
+
+  private endDelay(): void {
+  if (this.delayTimer) {
+    clearInterval(this.delayTimer);
+    this.delayTimer = undefined;
+  }
+
+  this.totalDelayTimeServed += this.currentDelayDuration;
+  this.isDelayActive = false;
+  this.delayRemainingSeconds = 0;
+
+  // ✅ Save 0 = delay fully completed
+  this.saveDelayToBackend(0);
+
+  this.removeDelayOverlay();
+  this.onDelayEnded.next();
+  this.emitStateChange();
+
+  if (this.config.enableFullscreenLock) {
+    setTimeout(() => this.requestFullscreen(), 300);
+  }
+}
+  // private endDelay(): void {
+  //   if (this.delayTimer) {
+  //     clearInterval(this.delayTimer);
+  //     this.delayTimer = undefined;
+  //   }
+
+  //   this.totalDelayTimeServed += this.currentDelayDuration;
+  //   this.isDelayActive = false;
+  //   this.delayRemainingSeconds = 0;
+
+  //   // Save final confirmed total on delay end
+  //   this.saveDelayToBackend(this.totalDelayTimeServed);
+
+  //   this.removeDelayOverlay();
+  //   this.onDelayEnded.next();
+  //   this.emitStateChange();
+
+  //   if (this.config.enableFullscreenLock) {
+  //     setTimeout(() => this.requestFullscreen(), 300);
+  //   }
+
+  //   console.log('[Quiz Protection] Delay ended, quiz access restored');
+  // }
 
   private showDelayOverlay(violationType: string, duration: number, willAutoSubmitNext: boolean): void {
     this.removeDelayOverlay();
-    
+
     const overlay = this.renderer.createElement('div');
     this.delayOverlayElement = overlay;
 
@@ -1785,7 +2589,7 @@ export class QuizProtectionService implements OnDestroy {
     const cfg = this.config.violationConfig;
     const remaining = cfg.maxViolations - this.totalViolationCount;
     const warningColor = willAutoSubmitNext ? '#f44336' : '#ff9800';
-    
+
     let warningText: string;
     if (cfg.action === 'DELAY_ONLY') {
       warningText = `Violation ${this.totalViolationCount} recorded`;
@@ -1799,7 +2603,7 @@ export class QuizProtectionService implements OnDestroy {
       <div style="text-align: center; padding: 40px; max-width: 500px;">
         <h1 style="font-size: 28px; margin-bottom: 8px; color: #ff9800;">YOU HAVE BEEN SUSPENDED FOR ${this.calculateDelayDuration()} SECONDS</h1>
         <p style="font-size: 16px; opacity: 0.8; margin-bottom: 16px;">${this.getViolationMessage(violationType)}</p>
-        
+
         <div style="position: relative; width: 180px; height: 180px; margin: 0 auto 24px;">
           <svg width="180" height="180" style="transform: rotate(-90deg);">
             <circle cx="90" cy="90" r="80" fill="none" stroke="rgba(255,255,255,0.1)" stroke-width="12"/>
@@ -1811,16 +2615,16 @@ export class QuizProtectionService implements OnDestroy {
             <div style="font-size: 14px; opacity: 0.7;">seconds</div>
           </div>
         </div>
-        
+
         <div style="background: rgba(255,255,255,0.05); padding: 16px; border-radius: 8px; margin-bottom: 20px;">
           <p style="font-size: 14px; margin: 0; color: ${warningColor};">
             <strong>Violation ${this.totalViolationCount}</strong>
           </p>
           <p style="font-size: 13px; opacity: 0.7; margin: 8px 0 0 0;">${warningText}</p>
         </div>
-        
+
         <p id="delay-status" style="font-size: 14px; color: #ff9800;">Quiz will resume in ${duration} seconds...</p>
-        
+
         <p style="font-size: 12px; opacity: 0.5; margin-top: 16px;">
           Total time suspended: ${this.formatTime(this.totalDelayTimeServed)}
         </p>
@@ -1896,7 +2700,7 @@ export class QuizProtectionService implements OnDestroy {
     this.renderer.setStyle(overlay, 'font-family', 'system-ui, -apple-system, sans-serif');
 
     const cfg = this.config.violationConfig;
-    
+
     overlay.innerHTML = `
       <div style="text-align: center; padding: 40px; max-width: 500px;">
         <div style="font-size: 80px; margin-bottom: 20px;">⚠️</div>
@@ -1940,7 +2744,7 @@ export class QuizProtectionService implements OnDestroy {
 
     console.warn('[Quiz Protection] INITIATING AUTO-SUBMIT');
     this.autoSubmitTriggered = true;
-    
+
     const cfg = this.config.violationConfig;
     this.autoSubmitCountdownValue = cfg.autoSubmitCountdownSeconds;
 
@@ -1984,14 +2788,12 @@ export class QuizProtectionService implements OnDestroy {
     this.renderer.setStyle(overlay, 'color', 'white');
     this.renderer.setStyle(overlay, 'font-family', 'system-ui, -apple-system, sans-serif');
 
-    const cfg = this.config.violationConfig;
-
     overlay.innerHTML = `
       <div style="text-align: center; padding: 40px; max-width: 500px;">
         <div style="font-size: 64px; margin-bottom: 20px;">⛔</div>
         <h1 style="font-size: 28px; margin-bottom: 8px; color: #f44336;">MAXIMUM VIOLATIONS REACHED</h1>
         <p style="font-size: 16px; opacity: 0.8; margin-bottom: 24px;">Your quiz will be automatically submitted</p>
-        
+
         <div style="position: relative; width: 150px; height: 150px; margin: 0 auto 24px;">
           <svg width="150" height="150" style="transform: rotate(-90deg);">
             <circle cx="75" cy="75" r="65" fill="none" stroke="rgba(255,255,255,0.1)" stroke-width="10"/>
@@ -2001,16 +2803,16 @@ export class QuizProtectionService implements OnDestroy {
           <div id="countdown-number" style="position: absolute; top: 50%; left: 50%; transform: translate(-50%, -50%);
             font-size: 48px; font-weight: bold; color: #f44336;">${this.autoSubmitCountdownValue}</div>
         </div>
-        
+
         <p style="font-size: 14px; opacity: 0.6; margin-bottom: 16px;">Violation: ${this.getViolationMessage(violationType)}</p>
-        
+
         <div style="background: rgba(255,255,255,0.05); padding: 16px; border-radius: 8px; margin-bottom: 20px;">
           <p style="font-size: 13px; opacity: 0.7; margin: 0;">
-            Total Violations: <strong style="color: #f44336;">${this.totalViolationCount}</strong> | 
+            Total Violations: <strong style="color: #f44336;">${this.totalViolationCount}</strong> |
             Delay Served: <strong style="color: #ff9800;">${this.formatTime(this.totalDelayTimeServed)}</strong>
           </p>
         </div>
-        
+
         <p id="countdown-status" style="font-size: 14px; color: #ff9800;">Submitting in ${this.autoSubmitCountdownValue} seconds...</p>
       </div>
     `;
@@ -2023,7 +2825,6 @@ export class QuizProtectionService implements OnDestroy {
     const numberEl = document.getElementById('countdown-number');
     const statusEl = document.getElementById('countdown-status');
     const circleEl = document.getElementById('countdown-circle');
-
     const cfg = this.config.violationConfig;
 
     if (numberEl) {
@@ -2035,8 +2836,8 @@ export class QuizProtectionService implements OnDestroy {
     }
 
     if (statusEl) {
-      statusEl.textContent = this.autoSubmitCountdownValue <= 0 
-        ? 'Submitting now...' 
+      statusEl.textContent = this.autoSubmitCountdownValue <= 0
+        ? 'Submitting now...'
         : `Submitting in ${this.autoSubmitCountdownValue} second${this.autoSubmitCountdownValue !== 1 ? 's' : ''}...`;
       if (this.autoSubmitCountdownValue <= 0) statusEl.style.color = '#f44336';
     }
@@ -2062,7 +2863,7 @@ export class QuizProtectionService implements OnDestroy {
     }
 
     const cfg = this.config.violationConfig;
-    
+
     const autoSubmitEvent: AutoSubmitEvent = {
       reason: `Maximum violations reached (${this.totalViolationCount}/${cfg.maxViolations})`,
       violationType: violationType,
@@ -2080,8 +2881,6 @@ export class QuizProtectionService implements OnDestroy {
 
   public showAutoSubmitComplete(message?: string): void {
     this.removeAutoSubmitOverlay();
-
-
 
     const overlay = this.renderer.createElement('div');
     this.autoSubmitOverlayElement = overlay;
@@ -2168,7 +2967,7 @@ export class QuizProtectionService implements OnDestroy {
     this.removeWatermark();
     const watermark = this.renderer.createElement('div');
     this.watermarkElement = watermark;
-    
+
     this.renderer.setAttribute(watermark, 'id', 'quiz-watermark');
     this.renderer.setStyle(watermark, 'position', 'fixed');
     this.renderer.setStyle(watermark, 'top', '0');
@@ -2184,7 +2983,7 @@ export class QuizProtectionService implements OnDestroy {
     const userInfo = this.getUserInfo();
     const timestamp = new Date().toISOString().split('T')[0];
     const watermarkText = this.config.watermarkText || `${userInfo.username} • ${timestamp} • CONFIDENTIAL`;
-    
+
     for (let i = 0; i < this.config.watermarkCount; i++) {
       const text = this.renderer.createElement('div');
       this.renderer.setProperty(text, 'textContent', watermarkText);
@@ -2428,8 +3227,8 @@ export class QuizProtectionService implements OnDestroy {
   }
 
   private isInFullscreen(): boolean {
-    return !!(document.fullscreenElement || (document as any).webkitFullscreenElement || 
-              (document as any).mozFullScreenElement || (document as any).msFullscreenElement);
+    return !!(document.fullscreenElement || (document as any).webkitFullscreenElement ||
+      (document as any).mozFullScreenElement || (document as any).msFullscreenElement);
   }
 
   // ============================================================================

@@ -18,6 +18,8 @@ interface ProtectionConfig {
   enableFullscreenLock: boolean;
   fullscreenRetryInterval: number;
   focusCheckInterval: number;
+  enableBlurOnHidden: boolean;
+
 }
 
 @Injectable({
@@ -41,7 +43,8 @@ export class ScreenshotPreventionService implements OnDestroy {
     enableLogging: true,
     enableFullscreenLock: true,
     fullscreenRetryInterval: 2000,
-    focusCheckInterval: 1000
+    focusCheckInterval: 1000,
+    enableBlurOnHidden: true
   };
 
   constructor(
@@ -103,6 +106,46 @@ export class ScreenshotPreventionService implements OnDestroy {
       throw error;
     }
   }
+
+
+ private monitorPageVisibility(): void {
+  const handler = this.renderer.listen('document', 'visibilitychange', () => {
+
+    if (document.hidden) {
+
+      // Log violation
+      this.logEvent('visibility-hidden', 'Page hidden - tab/app switched');
+
+      // Blur screen if enabled
+      if (this.config.enableBlurOnHidden) {
+        document.body.style.transition = 'filter 0.3s ease';
+        document.body.style.filter = 'blur(20px)';
+      }
+
+    } else {
+
+      // Remove blur
+      document.body.style.filter = '';
+
+      // Log return
+      this.logEvent('visibility-visible', 'Page visible - user returned');
+
+      // Notify user
+      this.notify('⚠️ Switching tabs/apps is not allowed during the quiz');
+
+      // Force focus
+      window.focus();
+
+      // Restore fullscreen if required
+      if (this.fullscreenActive && !this.isInFullscreen()) {
+        setTimeout(() => this.requestFullscreen(), 300);
+      }
+    }
+
+  });
+
+  this.eventListeners.set('visibility-monitor', handler);
+}
 
   /**
    * Disable all protection mechanisms
@@ -431,24 +474,7 @@ export class ScreenshotPreventionService implements OnDestroy {
     this.eventListeners.set('focus-monitor', handler);
   }
 
-  private monitorPageVisibility(): void {
-    const handler = this.renderer.listen('document', 'visibilitychange', () => {
-      if (document.hidden) {
-        this.logEvent('visibility-hidden', 'Page hidden - tab/app switched');
-      } else {
-        this.logEvent('visibility-visible', 'Page visible - user returned');
-        this.notify('⚠️ Switching tabs/apps is not allowed during the quiz');
-        
-        // Force focus and restore fullscreen
-        window.focus();
-        if (this.fullscreenActive && !this.isInFullscreen()) {
-          setTimeout(() => this.requestFullscreen(), 300);
-        }
-      }
-    });
 
-    this.eventListeners.set('visibility-monitor', handler);
-  }
 
   // private monitorBeforeUnload(): void {
   //   const handler = this.renderer.listen('window', 'beforeunload', (e: BeforeUnloadEvent) => {
