@@ -2091,57 +2091,55 @@ private get jwtToken(): string {
 
 // THIS LOADFROMBACKEND WORKS
 
-// public loadDelayFromBackend(quizId: number): void {
-//   console.log('[QuizProtection] loadDelayFromBackend called:', {
-//     quizId,
-//     backendBaseUrl: this.backendBaseUrl,
-//     hasToken: !!this.jwtToken,
-//     tokenPreview: this.jwtToken ? this.jwtToken.substring(0, 20) + '...' : 'NULL'
-//   });
-//   if (!this.backendBaseUrl || !this.jwtToken) {
-//     console.warn('[QuizProtection] loadDelayFromBackend ABORTED - missing:', {
-//       backendBaseUrl: this.backendBaseUrl,
-//       jwtToken: this.jwtToken ? 'present' : 'MISSING'
-//     });
-//     return;
-//   }
-//   this.currentQuizId = quizId;
-//   const url = `${this.backendBaseUrl}/quiz-timer/getViolation-delay/${quizId}`;
-//   console.log('[QuizProtection] Sending GET to:', url);
-//   const headers = new HttpHeaders({
-//     'Content-Type': 'application/json',
-//     'Authorization': `Bearer ${this.jwtToken}`,
-//   });
-//   this.http.get<{ violationDelayTime: number }>(url, { headers }).pipe(
-//     catchError(err => {
-//       if (err.status === 404) {
-//         console.log('[QuizProtection] loadDelayFromBackend 404 - no saved delay, starting fresh');
-//         return of(null);
-//       }
-//       console.error('[QuizProtection] loadDelayFromBackend FAILED:', {
-//         status: err.status,
-//         message: err.message,
-//         url
-//       });
-//       return of(null);
-//     })
-//   ).subscribe(response => {
-//     console.log('[QuizProtection] loadDelayFromBackend response:', response);
-//     if (response?.violationDelayTime && response.violationDelayTime > 0) {
-//       this.totalDelayTimeServed = response.violationDelayTime;
-//       console.log('[QuizProtection] Delay restored:', this.totalDelayTimeServed);
-//       this.emitStateChange();
-//     } else {
-//       console.log('[QuizProtection] No delay to restore (response empty or zero)');
-//     }
-//   });
- 
-// }
-
 
 
 
 // NEW 
+// VIOLATIONCOUNT
+
+
+// Call this after every violation
+private saveViolationCountToBackend(count: number): void {
+  if (!this.currentQuizId || !this.backendBaseUrl || !this.jwtToken) return;
+
+  const headers = new HttpHeaders({
+    'Content-Type': 'application/json',
+    'Authorization': `Bearer ${this.jwtToken}`,
+  });
+
+  this.http.post(
+    `${this.backendBaseUrl}/quiz-timer/saveViolationCount/${this.currentQuizId}`,
+    { totalViolationCount: count },
+    { headers }
+  ).pipe(catchError(() => of(null))).subscribe();
+}
+
+// Call this from loadDelayFromBackend or separately on init
+public loadViolationCountFromBackend(quizId: number): void {
+  if (!this.backendBaseUrl || !this.jwtToken) return;
+
+  const headers = new HttpHeaders({
+    'Content-Type': 'application/json',
+    'Authorization': `Bearer ${this.jwtToken}`,
+  });
+
+  this.http.get<{ totalViolationCount: number }>(
+    `${this.backendBaseUrl}/quiz-timer/getViolationCount/${quizId}`,
+    { headers }
+  ).pipe(
+    catchError(err => {
+      if (err.status === 404) return of(null);
+      return of(null);
+    })
+  ).subscribe(response => {
+    const count = response?.totalViolationCount ?? 0;
+    if (count > 0) {
+      this.totalViolationCount = count;
+      console.log('[QuizProtection] Violation count restored:', count);
+      this.emitStateChange();
+    }
+  });
+}
 
 
 
@@ -2372,7 +2370,6 @@ private saveDelayToBackend(duration: number): void {
     }
 
     this.isProcessingViolation = true;
-
     const existingViolation = this.violations.find(v => v.type === type);
     if (existingViolation) {
       existingViolation.count++;
@@ -2381,7 +2378,7 @@ private saveDelayToBackend(duration: number): void {
       this.violations.push({ type, timestamp: new Date(), count: 1 });
     }
     this.totalViolationCount++;
-
+this.saveViolationCountToBackend(this.totalViolationCount); // ✅ persist immediatel
     const event = this.logEvent(type, details, severity);
     this.onViolation.next(event);
 
@@ -2447,15 +2444,45 @@ private saveDelayToBackend(duration: number): void {
   // DELAY MODE IMPLEMENTATION
   // ============================================================================
 
+  // private calculateDelayDuration(): number {
+  //   const cfg = this.config.violationConfig;
+  //   let duration = cfg.delaySeconds;
+  //   if (cfg.delayIncrementOnRepeat && this.totalViolationCount > 1) {
+  //     const multiplier = Math.pow(cfg.delayMultiplier, this.totalViolationCount - 1);
+  //     duration = Math.min(Math.round(cfg.delaySeconds * multiplier), cfg.maxDelaySeconds);
+  //   }
+  //   return duration;
+  // }
+
+
+
   private calculateDelayDuration(): number {
-    const cfg = this.config.violationConfig;
-    let duration = cfg.delaySeconds;
-    if (cfg.delayIncrementOnRepeat && this.totalViolationCount > 1) {
-      const multiplier = Math.pow(cfg.delayMultiplier, this.totalViolationCount - 1);
-      duration = Math.min(Math.round(cfg.delaySeconds * multiplier), cfg.maxDelaySeconds);
-    }
-    return duration;
+  const cfg = this.config.violationConfig;
+  console.log("CONFIG:", cfg);
+  console.log("Total Violations:", this.totalViolationCount);
+  let duration = Number(cfg.delaySeconds);
+  if (cfg.delayIncrementOnRepeat && this.totalViolationCount > 1) {
+    const multiplier = Math.pow(
+      Number(cfg.delayMultiplier),
+      this.totalViolationCount - 1
+    );
+    console.log("Multiplier:", multiplier);
+    duration = Math.round(duration * multiplier);
   }
+  console.log("Final Duration:", duration);
+  return duration;
+}
+
+//   private calculateDelayDuration(): number {
+//   const cfg = this.config.violationConfig;
+//   let duration = cfg.delaySeconds;
+//   if (cfg.delayIncrementOnRepeat && this.totalViolationCount > 1) {
+//     const multiplier = Math.pow(cfg.delayMultiplier, this.totalViolationCount - 1);
+//     duration = Math.round(cfg.delaySeconds * multiplier);
+//   }
+//   return duration;
+// }
+
 
   private startDelay(violationType: string, willAutoSubmitNext: boolean): void {
     console.log(`[Quiz Protection] Starting delay for violation: ${violationType}`);
@@ -2533,20 +2560,22 @@ private saveDelayToBackend(duration: number): void {
 
   // ✅ Save 0 = delay fully completed
   this.saveDelayToBackend(0);
-
   this.removeDelayOverlay();
   this.onDelayEnded.next();
   this.emitStateChange();
-
   if (this.config.enableFullscreenLock) {
     setTimeout(() => this.requestFullscreen(), 300);
   }
 }
+
+
+
   // private endDelay(): void {
   //   if (this.delayTimer) {
   //     clearInterval(this.delayTimer);
   //     this.delayTimer = undefined;
   //   }
+
 
   //   this.totalDelayTimeServed += this.currentDelayDuration;
   //   this.isDelayActive = false;
@@ -3448,4 +3477,6 @@ private saveDelayToBackend(duration: number): void {
   private emitStateChange(): void {
     this.onStateChange.next(this.getState());
   }
+
+
 }

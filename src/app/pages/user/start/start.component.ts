@@ -6750,13 +6750,10 @@ export class StartComponent implements OnInit, OnDestroy {
         this.courseTitle = this.quiz.category.title;
         console.log(this.quiz);
         console.log(this.quiz.quizTime);
-
         this.timeO = this.quiz.quizTime * 1;
         this.timerAll = (this.timeT + this.timeO) * 60;
-
         console.log(this.timerAll);
         console.log(this.timeO * 60);
-
         // Enable protection AFTER quiz data is loaded
         this.enableQuizProtection();
         // Wire up backend AFTER protection is active so resetState() doesn't wipe the loaded value
@@ -6764,6 +6761,7 @@ this.enableQuizProtection();
       // ✅ KEEP these too (re-sets context after enableProtection resets state)
       this.quizProtection.setQuizContext(this.qid, baseUrl, localStorage.getItem('token') || '');
       this.quizProtection.loadDelayFromBackend(this.qid);
+      this.quizProtection.loadViolationCountFromBackend(this.qid);
       },
       (error) => {
         this.isLoading = false;
