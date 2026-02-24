@@ -121,18 +121,28 @@ totalMaxMarks!: number;
     console.log(this.timeAllowed);
     this.loadTheoryAnswers();
     console.log(this.qid);
-
-    this._questions.getQuestionsOfQuiz(this.qid).subscribe((data: any) => {
-      this.questionWithAnswers = data;
-      console.log(data)
-      console.log(this.questionWithAnswers);
-      this.loadReport();
-    },
-      (error) => {
-        console.log("Error Loading questions");
-        Swal.fire("Error", "Error loading questionsssssaaa", "error");
-      }
-    );
+    
+this._questions.getQuestionsOfQuiz(this.qid).subscribe((data: any) => {
+  this.questionWithAnswers = data || [];  // fallback to empty array
+  this.loadReport();
+},
+(error) => {
+  console.log("Error Loading questions");
+  if (!this.isTheoryQuiz()) {
+    Swal.fire("Error", "Error loading questionsssssaaa", "error");
+  }
+});
+    // this._questions.getQuestionsOfQuiz(this.qid).subscribe((data: any) => {
+    //   this.questionWithAnswers = data;
+    //   console.log(data)
+    //   console.log(this.questionWithAnswers);
+    //   this.loadReport();
+    // },
+    //   (error) => {
+    //     console.log("Error Loading questions");
+    //     Swal.fire("Error", "Error loading questionsssssaaa", "error");
+    //   }
+    // );
     this.loadSubjective();
     // this.loadReport();
 
@@ -360,31 +370,60 @@ totalMaxMarks!: number;
   }
 
 
+loadQuestions(): void {
+  this.loadReport();
+  this._questions.getQuestionsOfQuizForText(this.qid).subscribe((data: any) => {
+    // Guard: if no objective questions returned, skip processing
+    if (!data || data.length === 0) {
+      console.log('No objective questions found (Theory-only quiz)');
+      this.questions = [];
+      return;
+    }
 
-  loadQuestions(): void {
-    this.loadReport();
-    this._questions.getQuestionsOfQuizForText(this.qid).subscribe((data: any) => {
-      console.log(data[0]?.answer);
-      console.log(data);
-      this.questions = data.map((q, index) => {
-        q.count = index + 1;
-        return q;
-      });
-      console.log(data[0])
-      this.timer = this.questions.length * 2 * 60;
-      this.questions.forEach(q => {
-        q['givenAnswer'] = "";
-      });
-      // this.preventBackButton();
-      // this.preventRefresh();
+    console.log(data[0]?.answer);
+    this.questions = data.map((q, index) => {
+      q.count = index + 1;
+      return q;
+    });
 
-    },
-      (error) => {
-        console.log("Error Loading questions");
-        Swal.fire("Error", "Error loading questionwwwww", "error");
-      }
-    );
-  }
+    this.timer = this.questions.length * 2 * 60;
+    this.questions.forEach(q => {
+      q['givenAnswer'] = "";
+    });
+  },
+  (error) => {
+    console.log("Error Loading questions");
+    // Don't show an error alert for theory-only quizzes
+    // Only alert if it's NOT a theory quiz
+    if (!this.isTheoryQuiz()) {
+      Swal.fire("Error", "Error loading questions", "error");
+    }
+  });
+}
+  // loadQuestions(): void {
+  //   this.loadReport();
+  //   this._questions.getQuestionsOfQuizForText(this.qid).subscribe((data: any) => {
+  //     console.log(data[0]?.answer);
+  //     console.log(data);
+  //     this.questions = data.map((q, index) => {
+  //       q.count = index + 1;
+  //       return q;
+  //     });
+  //     console.log(data[0])
+  //     this.timer = this.questions.length * 2 * 60;
+  //     this.questions.forEach(q => {
+  //       q['givenAnswer'] = "";
+  //     });
+  //     // this.preventBackButton();
+  //     // this.preventRefresh();
+
+  //   },
+  //     (error) => {
+  //       console.log("Error Loading questions");
+  //       Swal.fire("Error", "Error loading questionwwwww", "error");
+  //     }
+  //   );
+  // }
 
 
 

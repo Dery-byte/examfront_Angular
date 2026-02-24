@@ -1,89 +1,231 @@
-<app-navbar></app-navbar>
+<!-- <app-navbar></app-navbar> -->
 
-<div class="reg_container">
-  <div class="registration-container">
-    <mat-card class="registration-card">
-      <div class="registration-header">
-            <h1 [appTyping]="['Create an Account', 'Join our platform', 'Get started today!']" [speed]="100"
-          [eraseSpeed]="100" [delayBetween]="1500">
-        </h1>
+<div class="page-container">
+  <div class="accent-bar"></div>
+  <div class="bg-glow"></div>
+  <div class="grid-lines"></div>
+
+  <main class="main-content">
+    <div class="signup-wrap">
+
+      <!-- Logo -->
+      <div class="logo-area">
+        <div class="logo-tile"><span>OTC</span></div>
       </div>
-      <form (ngSubmit)="formSubmit()" class="registration-form">
-        <div class="form-grid">
-          <!-- Name Fields Row -->
-          <div class="name-fields">
-            <mat-form-field appearance="outline">
-              <mat-label>First Name</mat-label>
-              <input [(ngModel)]="user.firstname" name="firstname" matInput required>
-              <mat-icon matPrefix>person_outline</mat-icon>
-            </mat-form-field>
 
-            <mat-form-field appearance="outline">
-              <mat-label>Last Name</mat-label>
-              <input [(ngModel)]="user.lastname" name="lastname" matInput required>
-            </mat-form-field>
-          </div>
+      <!-- Heading -->
+      <div class="page-title-area">
+        <h1 class="page-title"
+          [appTyping]="['Create your account', 'Join our platform', 'Get started today']"
+          [speed]="80" [eraseSpeed]="50" [delayBetween]="2000">
+        </h1>
+        <!-- <p class="page-subtitle">Join the OTC platform — takes less than a minute</p> -->
+      </div>
 
-          <!-- Username Field -->
-          <mat-form-field appearance="outline">
-            <mat-label>Username</mat-label>
-            <input [(ngModel)]="user.username" name="username" matInput required>
-            <mat-icon matPrefix>alternate_email</mat-icon>
-            <mat-hint align="end">Must be unique( i.e Student ID)</mat-hint>
-          </mat-form-field>
-
-          <!-- Contact Fields Row -->
-          <div class="contact-fields">
-            <mat-form-field appearance="outline">
-              <mat-label>Email</mat-label>
-              <input [(ngModel)]="user.email" name="email" type="email" matInput required>
-              <mat-icon matPrefix>mail_outline</mat-icon>
-            </mat-form-field>
-
-            <mat-form-field appearance="outline">
-              <mat-label>Phone Number</mat-label>
-              <input [(ngModel)]="user.phone" name="phone" type="tel" matInput>
-              <mat-icon matPrefix>phone</mat-icon>
-            </mat-form-field>
-          </div>
-
-          <!-- Password Fields Row -->
-          <div class="password-fields">
-            <mat-form-field appearance="outline">
-              <mat-label>Password</mat-label>
-              <input [(ngModel)]="user.password" name="password" [type]="hidePassword ? 'password' : 'text'" matInput
-                required>
-              <mat-icon matPrefix>lock_outline</mat-icon>
-              <button type="button" mat-icon-button matSuffix (click)="hidePassword = !hidePassword">
-                <mat-icon>{{hidePassword ? 'visibility_off' : 'visibility'}}</mat-icon>
-              </button>
-            </mat-form-field>
-
-            <mat-form-field appearance="outline">
-              <mat-label>Confirm Password</mat-label>
-              <input [type]="hideConfirmPassword ? 'password' : 'text'" matInput required>
-              <mat-icon matPrefix>lock_outline</mat-icon>
-              <button type="button" mat-icon-button matSuffix (click)="hideConfirmPassword = !hideConfirmPassword">
-                <mat-icon>{{hideConfirmPassword ? 'visibility_off' : 'visibility'}}</mat-icon>
-              </button>
-            </mat-form-field>
-          </div>
+      <!-- Progress steps -->
+      <div class="steps-bar">
+        <div class="step active">
+          <div class="step-num">1</div>
+          <span class="step-label">Identity</span>
         </div>
-
-        <!-- Submit Button -->
-        <button type="submit" [disabled]="loading" mat-raised-button color="primary" class="submit-button">
-          <div class="button-content">
-            <mat-spinner *ngIf="loading" diameter="20" strokeWidth="3" color="accent"></mat-spinner>
-            <span>{{ loading ? 'Creating Account...' : 'Register Now' }}</span>
-          </div>
-        </button>
-
-        <!-- Login Redirect -->
-        <div class="login-redirect">
-          Already have an account? <a mat-button routerLink="/login">Sign In</a>
+        <div class="step-connector"></div>
+        <div class="step idle">
+          <div class="step-num">2</div>
+          <span class="step-label">Contact</span>
         </div>
-      </form>
-    </mat-card>
+        <div class="step-connector"></div>
+        <div class="step idle">
+          <div class="step-num">3</div>
+          <span class="step-label">Security</span>
+        </div>
+      </div>
+
+      <!-- Card -->
+      <div class="signup-card">
+
+        <form (ngSubmit)="formSubmit()" class="signup-form">
+
+          <!-- ── Section: Identity ── -->
+          <div class="section-label">
+            <div class="section-label-line"></div>
+            <span class="section-label-txt">Identity</span>
+            <div class="section-label-line"></div>
+          </div>
+
+          <!-- Name row -->
+          <div class="fields-row col-2 section-gap">
+            <div class="field-block">
+              <label class="field-lbl">First Name</label>
+              <div class="field-shell">
+                <span class="fi">
+                  <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                    <circle cx="12" cy="7" r="4"/><path d="M5.5 21a8.38 8.38 0 0 1 13 0"/>
+                  </svg>
+                </span>
+                <input [(ngModel)]="user.firstname" name="firstname" type="text"
+                  placeholder="John" required autocomplete="given-name">
+              </div>
+            </div>
+            <div class="field-block">
+              <label class="field-lbl">Last Name</label>
+              <div class="field-shell no-icon">
+                <input [(ngModel)]="user.lastname" name="lastname" type="text"
+                  placeholder="Doe" required autocomplete="family-name">
+              </div>
+            </div>
+          </div>
+
+          <!-- Username -->
+          <div class="fields-row col-1 section-gap">
+            <div class="field-block">
+              <label class="field-lbl">Username</label>
+              <div class="field-shell">
+                <span class="fi">
+                  <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                    <path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/>
+                    <circle cx="12" cy="7" r="4"/>
+                  </svg>
+                </span>
+                <input [(ngModel)]="user.username" name="username" type="text"
+                  placeholder="student.id" required autocomplete="username">
+              </div>
+              <span class="field-hint">Must be unique — e.g. your Student ID</span>
+            </div>
+          </div>
+
+          <!-- ── Section: Contact ── -->
+          <div class="section-label section-label-spaced">
+            <div class="section-label-line"></div>
+            <span class="section-label-txt">Contact</span>
+            <div class="section-label-line"></div>
+          </div>
+
+          <!-- Email + Phone -->
+          <div class="fields-row col-2 section-gap">
+            <div class="field-block">
+              <label class="field-lbl">Email</label>
+              <div class="field-shell">
+                <span class="fi">
+                  <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                    <rect x="2" y="4" width="20" height="16" rx="2"/>
+                    <path d="m22 7-8.97 5.7a1.94 1.94 0 0 1-2.06 0L2 7"/>
+                  </svg>
+                </span>
+                <input [(ngModel)]="user.email" name="email" type="email"
+                  placeholder="john@university.edu" required autocomplete="email">
+              </div>
+            </div>
+            <div class="field-block">
+              <label class="field-lbl">Phone</label>
+              <div class="field-shell">
+                <span class="fi">
+                  <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                    <path d="M22 16.92v3a2 2 0 0 1-2.18 2 19.79 19.79 0 0 1-8.63-3.07A19.5 19.5 0 0 1 4.69 12 19.79 19.79 0 0 1 1.61 3.4 2 2 0 0 1 3.58 1.22h3a2 2 0 0 1 2 1.72c.127.96.361 1.903.7 2.81a2 2 0 0 1-.45 2.11L7.91 8.77a16 16 0 0 0 6.29 6.29l1.64-1.64a2 2 0 0 1 2.11-.45c.907.339 1.85.573 2.81.7A2 2 0 0 1 22 16.92z"/>
+                  </svg>
+                </span>
+                <input [(ngModel)]="user.phone" name="phone" type="tel"
+                  placeholder="0544 073 427" autocomplete="tel">
+              </div>
+            </div>
+          </div>
+
+          <!-- ── Section: Security ── -->
+          <div class="section-label section-label-spaced">
+            <div class="section-label-line"></div>
+            <span class="section-label-txt">Security</span>
+            <div class="section-label-line"></div>
+          </div>
+
+          <!-- Passwords -->
+          <div class="fields-row col-2">
+            <div class="field-block">
+              <label class="field-lbl">Password</label>
+              <div class="field-shell">
+                <span class="fi">
+                  <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                    <rect x="3" y="11" width="18" height="11" rx="2"/>
+                    <path d="M7 11V7a5 5 0 0 1 10 0v4"/>
+                  </svg>
+                </span>
+                <input [(ngModel)]="user.password" name="password"
+                  [type]="hidePassword ? 'password' : 'text'"
+                  placeholder="••••••••" required autocomplete="new-password">
+                <button type="button" class="fi-right" (click)="hidePassword = !hidePassword">
+                  <svg *ngIf="hidePassword" width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                    <path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"/><circle cx="12" cy="12" r="3"/>
+                  </svg>
+                  <svg *ngIf="!hidePassword" width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                    <path d="M17.94 17.94A10.07 10.07 0 0 1 12 20c-7 0-11-8-11-8a18.45 18.45 0 0 1 5.06-5.94M9.9 4.24A9.12 9.12 0 0 1 12 4c7 0 11 8 11 8a18.5 18.5 0 0 1-2.16 3.19"/>
+                    <line x1="1" y1="1" x2="23" y2="23"/>
+                  </svg>
+                </button>
+              </div>
+            </div>
+
+            <div class="field-block">
+              <label class="field-lbl">Confirm Password</label>
+              <div class="field-shell">
+                <span class="fi">
+                  <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                    <rect x="3" y="11" width="18" height="11" rx="2"/>
+                    <path d="M7 11V7a5 5 0 0 1 10 0v4"/>
+                  </svg>
+                </span>
+                <input [type]="hideConfirmPassword ? 'password' : 'text'"
+                  placeholder="••••••••" required autocomplete="new-password"
+                  name="confirmPassword">
+                <button type="button" class="fi-right" (click)="hideConfirmPassword = !hideConfirmPassword">
+                  <svg *ngIf="hideConfirmPassword" width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                    <path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"/><circle cx="12" cy="12" r="3"/>
+                  </svg>
+                  <svg *ngIf="!hideConfirmPassword" width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                    <path d="M17.94 17.94A10.07 10.07 0 0 1 12 20c-7 0-11-8-11-8a18.45 18.45 0 0 1 5.06-5.94M9.9 4.24A9.12 9.12 0 0 1 12 4c7 0 11 8 11 8a18.5 18.5 0 0 1-2.16 3.19"/>
+                    <line x1="1" y1="1" x2="23" y2="23"/>
+                  </svg>
+                </button>
+              </div>
+            </div>
+          </div>
+
+          <!-- Submit -->
+          <div class="submit-section">
+            <button type="submit" class="go-btn" [disabled]="loading">
+              <span class="shimmer"></span>
+              <mat-spinner *ngIf="loading" diameter="16" strokeWidth="2" class="btn-spinner"></mat-spinner>
+              <span class="btn-txt">{{ loading ? 'Creating account…' : 'Create Account' }}</span>
+              <svg *ngIf="!loading" class="arr" width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5">
+                <path d="M5 12h14M12 5l7 7-7 7"/>
+              </svg>
+            </button>
+          </div>
+
+          <!-- Login redirect -->
+          <div class="login-row">
+            <span class="login-row-text">Already have an account?</span>
+            <a routerLink="/login" class="login-row-btn">
+              Sign in
+              <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5">
+                <path d="M5 12h14M12 5l7 7-7 7"/>
+              </svg>
+            </a>
+          </div>
+
+        </form>
+      </div><!-- /signup-card -->
+
+      <!-- Page footer links -->
+      <div class="foot-links">
+        <a routerLink="/privacy">Privacy</a>
+        <div class="foot-sep"></div>
+        <a routerLink="/terms">Terms</a>
+        <div class="foot-sep"></div>
+        <a href="#">Support</a>
+      </div>
+
+    </div><!-- /signup-wrap -->
+  </main>
+
+  <div class="copy-bar">
+    <span>© 2025 OTC PLATFORM — ALL RIGHTS RESERVED</span>
   </div>
-
 </div>
