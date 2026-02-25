@@ -63,6 +63,45 @@ selectedCategoryId: number | null = null;
     this.loadRegisteredCourses();
   }
 
+
+
+  /**
+ * Count quizzes with CLOSED status from the reports array.
+ * Used by stats strip and selector footer.
+ */
+getClosedCount(): number {
+  if (!this.reports || this.reports.length === 0) return 0;
+  return this.reports.filter((r: any) => r.status === 'CLOSED').length;
+}
+
+/**
+ * Average score across completed quizzes (0–100%).
+ * Returns '—' if nothing is completed yet.
+ */
+getAvgScore(): string {
+  if (!this.reportData || this.reportData.length === 0) return '—';
+  const completed = this.reportData.filter((r: any) => r.progress === 'Completed');
+  if (completed.length === 0) return '—';
+  const avg = completed.reduce((sum: number, r: any) => {
+    const got = this.getTotalMarks(r);
+    const max = this.getTotalMaxMarks(r);
+    return sum + (max > 0 ? (got / max) * 100 : 0);
+  }, 0) / completed.length;
+  return Math.round(avg) + '%';
+}
+
+/**
+ * Close dialog when clicking the backdrop (not the box).
+ * Bind to (click) on .dlg-backdrop in the template.
+ */
+handleDlgBackdrop(event: MouseEvent): void {
+  const backdrop = event.currentTarget as HTMLElement;
+  const box = backdrop.querySelector('.dlg-box') as HTMLElement;
+  if (box && !box.contains(event.target as Node)) {
+    this.productDialog = false;
+  }
+}
+
   // private loadInitialData(): void {
   //   this.isLoadingCourses=true;
   //   const userDetails = localStorage.getItem('user');

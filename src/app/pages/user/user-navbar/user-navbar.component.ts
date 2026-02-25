@@ -66,11 +66,49 @@ export class UserNavbarComponent {
 
 
 
+  // ── User ──────────────────────────────────────────────────────
+
+  // ── Sidebar state ─────────────────────────────────────────────
+  sidebarOpen = true;   // desktop: open by default
+  mobileOpen  = false;  // mobile overlay drawer
+
+  // ── Session timer ─────────────────────────────────────────────
+  // These match your existing timeLeftDisplay / timeDisplay bindings
+  timeDisplay: any     = { display: '--:--' };
+
+  // ── Loading ───────────────────────────────────────────────────
+  loading = false;
+
+  private timerInterval: any;
+
+
+
+
+
+  // ── Viewport check ────────────────────────────────────────────
+  @HostListener('window:resize')
+  checkViewport(): void {
+    this.isMobile   = window.innerWidth <= 768;
+    this.sidebarOpen = !this.isMobile;
+    if (this.isMobile) this.mobileOpen = false;
+  }
+
+  // ── Sidebar toggle ────────────────────────────────────────────
+  toggleSidebar(): void {
+    if (this.isMobile) {
+      this.mobileOpen = !this.mobileOpen;
+    } else {
+      this.sidebarOpen = !this.sidebarOpen;
+    }
+  }
+
 
 
 	
 
 	ngOnInit(): void {
+		    this.checkViewport();
+
 		this.startCountdown();
 		this.isloggedIn = this.login.isLoggedIn();
 		this.user = this.login.getUser();
@@ -141,7 +179,6 @@ export class UserNavbarComponent {
 	//TRYING THE TIMER
 
 	private hasLoggedOut = false;
-	timeDisplay: TimeDisplay = { display: '00 min : 00 sec', className: 'normal-minutes' };
 
 	
 
