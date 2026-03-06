@@ -20,6 +20,8 @@ export class AvailableQuizzesComponent implements OnInit {
   userRecords: any[] = [];
   categories: any;
   reportData: any[] = [];
+    displayedQuizzes:  any[] = [];   // after search filter
+ searchQuery: string;
   
   // ID variables
   pqId: number;
@@ -51,6 +53,7 @@ export class AvailableQuizzesComponent implements OnInit {
       next: (data: any) => {
         this.categories = data;
         this.userRecords = this.checkUserId();
+
         this.isLoadingCategories = false;
         this.isLoadingUserRecords = false;
       },
@@ -63,6 +66,22 @@ export class AvailableQuizzesComponent implements OnInit {
         this.isLoadingUserRecords = false;
       }
     });
+  }
+
+
+
+
+    onSearch(): void {
+    const q = this.searchQuery.toLowerCase().trim();
+    if (!q) {
+      this.displayedQuizzes = [...this.availablequizzes];
+      return;
+    }
+    this.displayedQuizzes = this.availablequizzes.filter(quiz =>
+      quiz.title.toLowerCase().includes(q) ||
+      quiz.category?.title?.toLowerCase().includes(q) ||
+      quiz.category?.courseCode?.toLowerCase().includes(q)
+    );
   }
 
   checkUserId(): any[] {
@@ -81,6 +100,7 @@ export class AvailableQuizzesComponent implements OnInit {
     this._quiz.getActieQuizzesOfCategory(this.categories.cid).subscribe({
       next: (quiz: any) => {
         this.availablequizzes = quiz;
+                  this.displayedQuizzes = [...this.availablequizzes]; // ✅ initialize here
         this.isLoadingQuizzes = false;
       },
       error: (error) => {

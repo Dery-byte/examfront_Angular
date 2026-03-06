@@ -15,34 +15,28 @@ export class AuthInterceptor implements HttpInterceptor {
 
     intercept(req: HttpRequest<any>, next: HttpHandler): Observable<HttpEvent<any>> {
         const token = localStorage.getItem('access_token'); // or sessionStorage
-
         // Clone the request and add withCredentials for cookie-based auth
         const authReq = req.clone({
             setHeaders: {
                 Authorization: `Bearer ${token}`
             }
         });
-
         return next.handle(authReq).pipe(
             catchError((error: HttpErrorResponse) => {
-
                 // Handle 401 Unauthorized errors
                 if (error.status === 401) {
                     console.error('Unauthorized request - logging out');
                     this.login.logout();
                     this.router.navigate(['/login']);
                 }
-
                 // Handle 403 Forbidden errors
                 if (error.status === 403) {
                     console.error('Forbidden - insufficient permissions');
                 }
-
                 // Handle network errors
                 if (error.status === 0) {
                     console.error('Network error - unable to reach server');
                 }
-
                 // Re-throw the error so components can handle it
                 return throwError(() => error);
             })

@@ -182,18 +182,23 @@ export class UserNavbarComponent {
 
 	
 
-	startCountdown(): void {
-		this.tokenExpirationService.startCountdownFromBackend();
 
+
+
+
+
+
+
+
+	startCountdown(): void {
+		this.tokenExpirationService.startCountdownFromLocal();
 		this.expirationSubscription = this.tokenExpirationService.expiration$.subscribe(
 			(seconds) => {
 				console.log("⏱️ Countdown seconds:", seconds);
-
 				if (seconds === 0) {
 					// Token expired - show expired state then trigger modal
 					this.logout();
 					console.log("🚨 Token expired! Showing modal...");
-
 					// Small delay to let the UI update before showing modal
 					setTimeout(() => {
 						this.handleTokenExpiration();
@@ -203,18 +208,15 @@ export class UserNavbarComponent {
 					const minutesLeft = Math.floor(seconds / 60);
 					this.timeDisplay = this.formatTime(seconds, minutesLeft);
 					console.log("⏰ Time display:", this.timeDisplay);
-
 					// Trigger alert effect when less than 1 minute left
 					if (minutesLeft === 0 && seconds <= 60 && seconds > 0) {
 						this.triggerAlertEffect();
 					}
-
 					// Optional: Show warning at 5 minutes
 					if (seconds === 300) {
 						console.log("⚠️ Warning: 5 minutes remaining!");
 						// You could show a toast notification here
 					}
-
 					// Optional: Show critical warning at 1 minute
 					if (seconds === 60) {
 						console.log("🔴 Critical: 1 minute remaining!");
@@ -230,6 +232,78 @@ export class UserNavbarComponent {
 			}
 		);
 	}
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 	private handleTokenExpiration(): void {
 		console.log("🔒 Handling token expiration - showing modal");

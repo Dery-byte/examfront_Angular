@@ -194,7 +194,7 @@ this.startCountdown();
 
   
 	startCountdown(): void {
-		this.tokenExpirationService.startCountdownFromBackend();
+		this.tokenExpirationService.startCountdownFromLocal();
 
 		this.expirationSubscription = this.tokenExpirationService.expiration$.subscribe(
 			(seconds) => {

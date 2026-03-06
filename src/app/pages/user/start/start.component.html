@@ -1,363 +1,522 @@
-<!-- {{currentQuestions|json}} -->
+<!-- {{questions |json}}
 
-<!-- {{ qid| json}}  -->
+{{currentQuestions|json}}
 
-<!-- {{totalTime() | json}} -->
+<h1>===========</h1> -->
 
-<!-- {{questions| json}} -->
+<!-- {{questionT |json}} -->
 
-<div class="bootstrap-wrapper">
-    <!-- Loading Spinner -->
-    <div *ngIf="isLoading" class="loading-overlay">
-        <mat-spinner diameter="50"></mat-spinner>
-        <p>Loading quiz content...</p>
-    </div>
-    <div class="container-fluid" *ngIf="!isSubmit && !isLoading">
-        <div class="row">
-            <div class="hideInstruct col-md-2">
 
 
 
-
-
-
-
-
-
-
-
-
-
-
-                <!-- instructions -->
-                <mat-card class="cards staticCard">
-                    <mat-card-content>
-                        <h1><b>Instructions</b></h1>
-                        <ul>
-
-
-                            <li style="color: brown;">
-                                <span *ngIf="quiz.quizType=='OBJ'">Answer all questions in Section A.</span>
-
-                                <span *ngIf="quiz.quizType=='THEORY'">
-                                    <span *ngIf="compulsoryPrefixes.length > 0">
-                                        Answer question(s) <b>{{ compulsoryPrefixes.join(', ') }}</b> (compulsory) and
-                                        any other
-                                        <b>{{ numberOfQuestionsToAnswer - compulsoryPrefixes.length }}</b> question(s)
-                                        from section B.
-                                    </span>
-                                    <span *ngIf="compulsoryPrefixes.length === 0">
-                                        Answer <b>{{numberOfQuestionsToAnswer}}</b> questions from section B.
-                                    </span>
-                                </span>
-
-                                <span *ngIf="quiz.quizType=='BOTH'">
-                                    Answer all questions in Section A and
-                                    <span *ngIf="compulsoryPrefixes.length > 0">
-                                        question(s) <b>{{ compulsoryPrefixes.join(', ') }}</b> (compulsory) plus any
-                                        other
-                                        <b>{{ numberOfQuestionsToAnswer - compulsoryPrefixes.length }}</b> question(s)
-                                        from section B.
-                                    </span>
-                                    <span *ngIf="compulsoryPrefixes.length === 0">
-                                        <b>{{numberOfQuestionsToAnswer}}</b> questions from section B.
-                                    </span>
-                                </span>
-                            </li>
-
-                            <li>Do not refresh the page. You might get new questions</li>
-                            <li>Do not switch tabs</li>
-                            <li>Also do not minimize the window</li>
-                        </ul>
-                    </mat-card-content>
-                </mat-card>
-
-
-
-            </div>
-
-            <!-- Timer counter on small devices -->
-            <div class="small-devices col-md-2">
-                <mat-card-content>
-                    <h1 class="text-center">Time Left: <i>{{ getFormmatedTime() }} </i></h1>
-                </mat-card-content>
-            </div>
-
-            <div class="col-md-8">
-                <ng-container>
-                    <h1 class="mt20">On going quiz {{quizTitle}} for <b> {{courseTitle}}</b></h1>
-                </ng-container>
-
-                <!-- {{quiz|json}} -->
-
-                <!-- <div *ngIf="quiz.quizType=='OBJ'"> -->
-                <div *ngIf="questions?.length>0">
-                    <div *ngIf="questions">
-                        <mat-card class="cards"
-                            style="font-family: 'Times New Roman', Times, serif; font-size:18px; color: white;text-align: center; background-color: purple;">
-                            <mat-label> SECTION A -{{(timeO * 60)/60}} minutes </mat-label>
-                        </mat-card>
-                    </div>
-                    <mat-card
-                        *ngFor="let q of questions| paginate:{itemsPerPage: tableSize, currentPage:page, totalItems:count}; let i = index"
-                        class="mt10">
-                        <mat-card-content>
-                            <span class="no-select">
-                                <div class="row">
-                                    <div class="col-md-12">
-                                        <p> <b> Q {{q.count}} </b> <span class="ml10" [innerHTML]="q.content"></span>
-                                        </p>
-                                    </div>
-                                </div>
-                                <mat-divider></mat-divider>
-                                <br />
-                                <div class="row mt20">
-                                    <div class="col-md-6">
-                                        <mat-checkbox [checked]="q.givenAnswer?.includes(q.option1) || false"
-                                            (change)="updateSelectedAnswers(q, q.option1, $event.checked)">
-                                            {{q.option1}}
-                                        </mat-checkbox>
-                                    </div>
-                                    <div class="col-md-6">
-                                        <mat-checkbox [checked]="q.givenAnswer?.includes(q.option2) || false"
-                                            (change)="updateSelectedAnswers(q, q.option2, $event.checked)">
-                                            {{q.option2}}
-                                        </mat-checkbox>
-                                    </div>
-                                    <div class="col-md-6">
-                                        <mat-checkbox [checked]="q.givenAnswer?.includes(q.option3) || false"
-                                            (change)="updateSelectedAnswers(q, q.option3, $event.checked)">
-                                            {{q.option3}}
-                                        </mat-checkbox>
-                                    </div>
-                                    <div class="col-md-6">
-                                        <mat-checkbox [checked]="q.givenAnswer?.includes(q.option4) || false"
-                                            (change)="updateSelectedAnswers(q, q.option4, $event.checked)">
-                                            {{q.option4}}
-                                        </mat-checkbox>
-                                    </div>
-                                </div>
-                            </span>
-                        </mat-card-content>
-                    </mat-card>
-                    <!-- PAGINATION -->
-                    <div>
-                        <pagination-controls previousLabel="Prev" nextLabel="Next"
-                            (pageChange)="onTableDataChange($event)">
-                        </pagination-controls>
-                    </div>
-                </div>
-                <!-- </div> -->
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-                <!-- subjective questions here -->
-
-
-                <div *ngIf="currentQuestions.length>0; else elseBlock">
-                    <mat-card>
-                        <mat-card class="cards"
-                            style="font-family: 'Times New Roman', Times, serif; font-size:18px; color: white;text-align: center; background-color: purple;">
-                            <mat-label> SECTION B -{{(timeT * 60)/60}} minutes </mat-label>
-                        </mat-card>
-
-
-                        <form (paste)="preventAction($event)" (copy)="preventAction($event)"
-                            (cut)="preventAction($event)" (contextmenu)="preventAction($event)"
-                            (drop)="preventAction($event)">
-                            <!-- Add compulsory alert here -->
-                            <mat-card class="cards" *ngIf="isCurrentGroupCompulsory()"
-                                style="margin: 20px; padding: 15px; font-size:16px; color: white; text-align: center; background-color: #d32f2f; border: 2px solid #b71c1c;">
-                                <mat-icon style="vertical-align: middle;">warning</mat-icon>
-                                <strong>COMPULSORY SECTION - All questions in {{prefixes[currentPage]}} must be
-                                    answered</strong>
-                            </mat-card>
-
-                            <mat-card class="cards"
-                                style=" margin: 20px;font-size:18px; color: white;text-align: center; background-color: rgb(86, 82, 82);">
-                            </mat-card>
-
-                            <div *ngFor="let question of currentQuestions; let i = index">
-                                <mat-card-content class="mat-card-content">
-                                    <input type="checkbox" [checked]="question.selected"
-                                        (change)="onQuestionSelect(question)" disabled hidden>
-                                    <mat-form-field class="mat-form-field" style="margin-top: -450px;">
-                                        <mat-label>
-                                            <span class="no-select">
-                                                {{question.quesNo}} {{ question.question }} {{question.marks}}
-                                            </span>
-                                        </mat-label>
-                                        <textarea class="input" [name]="'givenAnswer' + i"
-                                            [(ngModel)]="question.givenAnswer" matInput rows="2"
-                                            (ngModelChange)="saveAnswers()" (paste)="preventAction($event)"
-                                            (copy)="preventAction($event)" (cut)="preventAction($event)"
-                                            (contextmenu)="preventAction($event)" (drop)="preventAction($event)"
-                                            (dragover)="preventAction($event)" autocomplete="off" spellcheck="false">
-                </textarea>
-                                    </mat-form-field>
-                                </mat-card-content>
-                            </div>
-                        </form>
-                        <!-- <form>
-                            <mat-card class="cards" *ngIf="isCurrentGroupCompulsory()"
-                                style="margin: 20px; padding: 15px; font-size:16px; color: white; text-align: center; background-color: #d32f2f; border: 2px solid #b71c1c;">
-                                <mat-icon style="vertical-align: middle;">warning</mat-icon>
-                                <strong>COMPULSORY SECTION - All questions in {{prefixes[currentPage]}} must be
-                                    answered</strong>
-                            </mat-card>
-
-                            <mat-card class="cards"
-                                style=" margin: 20px;font-size:18px; color: white;text-align: center; background-color: rgb(86, 82, 82);">
-                            </mat-card>
-
-                            <div *ngFor="let question of currentQuestions; let i = index">
-                                <mat-card-content class="mat-card-content">
-                                    <input type="checkbox" [checked]="question.selected"
-                                        (change)="onQuestionSelect(question)" disabled hidden>
-                                    <mat-form-field class="mat-form-field" style="margin-top: -450px;">
-                                        <mat-label>
-                                            <span class="no-select">
-                                                {{question.quesNo}} {{ question.question }} {{question.marks}}
-                                            </span>
-                                        </mat-label>
-                                        <textarea class="input" [name]="'givenAnswer' + i"
-                                            [(ngModel)]="question.givenAnswer" matInput rows="2"
-                                            (ngModelChange)="saveAnswers()"
-                                            (ngModelChange)="disablePaste()">
-                        </textarea>
-                                    </mat-form-field>
-                                </mat-card-content>
-                            </div>
-                        </form> -->
-                        <!-- Rest of your code... -->
-                        <mat-card-actions>
-
-                            
-                            <mat-card>
-                                <div class="container navselect">
-                                    <div class="row">
-                                        <div class="col-md-6">
-                                            <div class="pagination-controls">
-                                                <button type="submit" mat-raised-button color="primary"
-                                                    (click)="prevPage()"
-                                                    [disabled]="currentPage === 0">Previous</button>
-                                                <span
-                                                    style="color: blueviolet; font-size: large; border: 2px solid red;">
-                                                    {{ prefixes[currentPage] }} of {{ prefixes[prefixes.length-1]}}
-                                                </span>
-                                                <button type="submit" mat-raised-button color="primary"
-                                                    (click)="nextPage()"
-                                                    [disabled]="currentPage === prefixes.length - 1">Next</button>
-                                            </div>
-                                        </div>
-
-
-                                        <!-- <div class="col-md-6"> -->
-                                            <mat-card-title
-                                                style="font-size: 16px; font-family: 'Times New Roman', Times, serif; color: blueviolet;">
-                                                Select {{numberOfQuestionsToAnswer}} set(s) of questions answered!
-                                            </mat-card-title>
-                                            <div *ngIf="prefixes.length > 0" class="prefix-container">
-                                                <div *ngFor="let prefix of prefixes" class="prefix-item">
-                                                    <mat-checkbox [checked]="selectedQuestions[prefix]"
-                                                        (change)="togglePrefixSelection(prefix)"
-                                                        [disabled]="isGroupCompulsory(prefix)">
-                                                        {{ prefix }}
-                                                        <span *ngIf="isGroupCompulsory(prefix)"
-                                                            style="color: red; font-weight: bold; margin-left: 5px;">
-                                                            ⚠ COMPULSORY
-                                                        </span>
-                                                    </mat-checkbox>
-                                                </div>
-                                            </div>
-                                        <!-- </div> -->
-                                    </div>
-                                </div>
-                            </mat-card>
-
-
-
-
-
-
-
-                        </mat-card-actions>
-                    </mat-card>
-                    
-                    <!-- BUTTON IF SUBJECTIVE IS INCLUSIVE -->
-                    <div class="contianer centerbtn mt40 mb20">
-                        <button mat-raised-button color="primary" (click)="submitAllQuiz()"
-                            [disabled]="isSubmitDisabled">Submit Quiz</button>
-                    </div>
-                </div>
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-                <!-- BUTTON TO SHOW If SUBJECTIVE IS NOT INCLUDED -->
-                <ng-template #elseBlock>
-                    <div class="contianer centerbtn mt40 mb20">
-                        <button mat-raised-button color="primary" (click)="submitAllQuiz()">Submit Quiz</button>
-                    </div>
-                </ng-template>
-            </div>
-
-            <div class="large-devices col-md-2 fixed-card">
-            <!-- <mat-card class="cards"> -->
-            <mat-card-content>
-                <h1 class="text-center"> Time Left: <i>{{ getFormmatedTime() }} </i></h1>
-            </mat-card-content>
-            <!-- </mat-card> -->
-            </div>
-        </div>
-    </div>
+<!-- ══════════════════════════════════════════
+     LOADING
+══════════════════════════════════════════ -->
+<div class="lo-overlay" *ngIf="isLoading">
+  <div class="lo-spin"></div>
+  <div class="lo-txt">LOADING QUIZ CONTENT…</div>
 </div>
 
+<!-- ══════════════════════════════════════════
+     EXAM SHELL
+══════════════════════════════════════════ -->
+<div class="exam-shell" *ngIf="!isSubmit && !isLoading" [class.light-theme]="isLightTheme">
 
-
-
-
-
-<!-- TIME UP MODAL -->
-<div class="timeup-backdrop" *ngIf="showTimeUpModal">
-    <div class="timeup-modal">
-        <h2 class="title">⏰ Time’s Up</h2>
-
-        <div class="countdown-wrapper">
-            <svg class="progress-ring" width="160" height="160">
-                <circle cx="80" cy="80" r="70" class="ring-bg" />
-                <circle cx="80" cy="80" r="70" class="ring-progress" [attr.stroke-dasharray]="439"
-                    [attr.stroke-dashoffset]="439 - (progressPercent / 100) * 439" />
-            </svg>
-
-            <div class="countdown-text">
-                {{ countdownText }}
-            </div>
-        </div>
+  <!-- ── TOPBAR ── -->
+  <div class="topbar">
+    <div class="tb-left">
+      <div class="tb-badge"><span class="tb-dot"></span>Live Exam</div>
+      <div class="tb-title">
+        {{ courseTitle }} — <strong>{{ quizTitle }}</strong>
+      </div>
     </div>
+
+    <div class="tb-right">
+      <!-- Theme switch -->
+      <button class="theme-toggle" (click)="isLightTheme = !isLightTheme" [title]="isLightTheme ? 'Switch to Dark' : 'Switch to Light'">
+        <!-- Sun icon -->
+        <svg *ngIf="!isLightTheme" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+          <circle cx="12" cy="12" r="5"/>
+          <line x1="12" y1="1" x2="12" y2="3"/>
+          <line x1="12" y1="21" x2="12" y2="23"/>
+          <line x1="4.22" y1="4.22" x2="5.64" y2="5.64"/>
+          <line x1="18.36" y1="18.36" x2="19.78" y2="19.78"/>
+          <line x1="1" y1="12" x2="3" y2="12"/>
+          <line x1="21" y1="12" x2="23" y2="12"/>
+          <line x1="4.22" y1="19.78" x2="5.64" y2="18.36"/>
+          <line x1="18.36" y1="5.64" x2="19.78" y2="4.22"/>
+        </svg>
+        <!-- Moon icon -->
+        <svg *ngIf="isLightTheme" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+          <path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"/>
+        </svg>
+      </button>
+
+      <!-- Timer — always visible on all screen sizes -->
+      <div class="tb-timer">{{ getFormmatedTime() }}</div>
+    </div>
+  </div>
+
+  <!-- ── SECTION NAV BAR (prominent, full-width, below topbar) ── -->
+  <div class="section-nav-bar" *ngIf="quiz.quizType === 'BOTH'">
+    <!-- Mirrors left sidebar width -->
+    <div class="snb-spacer"></div>
+    <!-- Tab rail under main + right columns -->
+    <div class="snb-rail">
+      <button
+        class="snb-tab"
+        [class.active]="activeSection === 'A'"
+        (click)="activeSection = 'A'">
+        <span class="snb-letter">A</span>
+        <span class="snb-content">
+          <span class="snb-title">Section A</span>
+          <span class="snb-sub">Objective · {{ questions?.length || 0 }} questions</span>
+        </span>
+        <span class="snb-check" *ngIf="answeredCount === questions?.length && questions?.length > 0">
+          <svg width="10" height="10" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3">
+            <polyline points="20 6 9 17 4 12"/>
+          </svg>
+        </span>
+      </button>
+
+      <div class="snb-sep"></div>
+
+      <button
+        class="snb-tab"
+        [class.active]="activeSection === 'B'"
+        (click)="activeSection = 'B'">
+        <span class="snb-letter">B</span>
+        <span class="snb-content">
+          <span class="snb-title">Section B</span>
+          <span class="snb-sub">Theory · answer {{ numberOfQuestionsToAnswer }}</span>
+        </span>
+        <span class="snb-check" *ngIf="selectedCount >= numberOfQuestionsToAnswer">
+          <svg width="10" height="10" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3">
+            <polyline points="20 6 9 17 4 12"/>
+          </svg>
+        </span>
+      </button>
+    </div>
+  </div>
+
+  <!-- ── LEFT SIDEBAR ── -->
+  <div class="sidebar-left">
+
+    <!-- Instructions -->
+    <div>
+      <div class="sl-label">Instructions</div>
+      <div class="instr-card">
+        <ul class="instr-list">
+
+          <!-- OBJ -->
+          <li class="warn" *ngIf="quiz.quizType=='OBJ'">
+            <span class="ii-box">
+              <svg width="8" height="8" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3">
+                <path d="M12 9v4"/><circle cx="12" cy="17" r="1.2" fill="currentColor"/>
+              </svg>
+            </span>
+            Answer all questions in Section A.
+          </li>
+
+          <!-- THEORY -->
+          <li class="warn" *ngIf="quiz.quizType=='THEORY'">
+            <span class="ii-box">
+              <svg width="8" height="8" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3">
+                <path d="M12 9v4"/><circle cx="12" cy="17" r="1.2" fill="currentColor"/>
+              </svg>
+            </span>
+            <span *ngIf="compulsoryPrefixes.length > 0">
+              Answer question(s) <strong>{{ compulsoryPrefixes.join(', ') }}</strong> (compulsory) and any other
+              <strong>{{ numberOfQuestionsToAnswer - compulsoryPrefixes.length }}</strong> question(s) from Section B.
+            </span>
+            <span *ngIf="compulsoryPrefixes.length === 0">
+              Answer <strong>{{ numberOfQuestionsToAnswer }}</strong> questions from Section B.
+            </span>
+          </li>
+
+          <!-- BOTH -->
+          <li class="warn" *ngIf="quiz.quizType=='BOTH'">
+            <span class="ii-box">
+              <svg width="8" height="8" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3">
+                <path d="M12 9v4"/><circle cx="12" cy="17" r="1.2" fill="currentColor"/>
+              </svg>
+            </span>
+            Answer all questions in Section A and
+            <span *ngIf="compulsoryPrefixes.length > 0">
+              question(s) <strong>{{ compulsoryPrefixes.join(', ') }}</strong> (compulsory) plus any other
+              <strong>{{ numberOfQuestionsToAnswer - compulsoryPrefixes.length }}</strong> from Section B.
+            </span>
+            <span *ngIf="compulsoryPrefixes.length === 0">
+              <strong>{{ numberOfQuestionsToAnswer }}</strong> questions from Section B.
+            </span>
+          </li>
+
+          <li>
+            <span class="ii-box">
+              <svg width="8" height="8" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5">
+                <line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/>
+              </svg>
+            </span>
+            Do not refresh — you may receive new questions.
+          </li>
+          <li>
+            <span class="ii-box">
+              <svg width="8" height="8" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5">
+                <line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/>
+              </svg>
+            </span>
+            Do not switch tabs or minimize the window.
+          </li>
+        </ul>
+      </div>
+    </div>
+
+    <!-- Objective question progress dots -->
+    <div *ngIf="questions?.length > 0">
+      <div class="sl-label">Section A — Progress</div>
+      <div class="q-dots">
+        <div
+          *ngFor="let q of questions; let i = index"
+          class="q-dot"
+          [class.answered]="q.givenAnswer?.length > 0">
+          {{ q.count }}
+        </div>
+      </div>
+    </div>
+
+  </div><!-- /sidebar-left -->
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  <!-- ── MAIN CONTENT AREA ── -->
+  <div class="main-area">
+
+    <!-- ═══ SECTION A — OBJECTIVE ═══ -->
+    <!-- Show if quizType is OBJ, or BOTH and activeSection is A -->
+    <ng-container *ngIf="questions?.length > 0 && (quiz.quizType !== 'BOTH' || activeSection === 'A')">
+
+      <div class="sec-divider">
+        <div class="sec-rule"></div>
+        <div class="sec-badge">
+          <span class="sec-name">Section A</span>
+          <span class="sec-pipe"></span>
+          <span class="sec-meta">{{ (timeO * 60) / 60 }} min · Objective</span>
+        </div>
+        <div class="sec-rule"></div>
+      </div>
+
+      <!-- Objective question cards -->
+
+
+
+      <div
+        class="q-card"
+        *ngFor="let q of questions | paginate:{itemsPerPage:tableSize, currentPage:page, totalItems:count}; let i = index"
+        [class.answered]="q.givenAnswer?.length > 0">
+
+        <div class="q-head">
+          <div class="q-meta">
+            <div class="q-num-chip">{{ q.count }}</div>
+            <div class="q-label">Question {{ q.count }}</div>
+          </div>
+          <div class="q-text" [innerHTML]="q.content"></div>
+        </div>
+
+        <!-- Options grid — always rendered, 4 option tiles -->
+        <div class="q-options">
+          <div class="opt-tile" [class.sel]="q.givenAnswer?.includes(q.option1)"
+            (click)="updateSelectedAnswers(q, q.option1, !q.givenAnswer?.includes(q.option1))">
+            <div class="opt-letter">A</div>
+            <div class="opt-txt">{{ q.option1 }}</div>
+          </div>
+          <div class="opt-tile" [class.sel]="q.givenAnswer?.includes(q.option2)"
+            (click)="updateSelectedAnswers(q, q.option2, !q.givenAnswer?.includes(q.option2))">
+            <div class="opt-letter">B</div>
+            <div class="opt-txt">{{ q.option2 }}</div>
+          </div>
+          <div class="opt-tile" [class.sel]="q.givenAnswer?.includes(q.option3)"
+            (click)="updateSelectedAnswers(q, q.option3, !q.givenAnswer?.includes(q.option3))">
+            <div class="opt-letter">C</div>
+            <div class="opt-txt">{{ q.option3 }}</div>
+          </div>
+          <div class="opt-tile" [class.sel]="q.givenAnswer?.includes(q.option4)"
+            (click)="updateSelectedAnswers(q, q.option4, !q.givenAnswer?.includes(q.option4))">
+            <div class="opt-letter">D</div>
+            <div class="opt-txt">{{ q.option4 }}</div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Pagination -->
+      <div class="pg-row" >
+        <pagination-controls style="background-color: rgb(66, 56, 71);"
+          previousLabel="Prev"
+          nextLabel="Next"
+          (pageChange)="onTableDataChange($event)">
+        </pagination-controls>
+      </div>
+
+      <!-- ─────────────────────────────────────────────
+           Submit button for OBJ-only (no theory block)
+           For BOTH type: "Next → Section B" button
+      ───────────────────────────────────────────── -->
+
+      <!-- OBJ only: show submit here -->
+      <ng-container *ngIf="quiz.quizType === 'OBJ'">
+        <div class="submit-row">
+          <button class="btn-submit" (click)="submitAllQuiz()">
+            <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5">
+              <polyline points="20 6 9 17 4 12"/>
+            </svg>
+            <span>Submit Quiz</span>
+          </button>
+        </div>
+      </ng-container>
+
+      <!-- BOTH type: "Proceed to Section B" -->
+      <ng-container *ngIf="quiz.quizType === 'BOTH'">
+        <div class="submit-row">
+          <button class="btn-next-sec" (click)="activeSection = 'B'">
+            Proceed to Section B
+            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5">
+              <polyline points="9 18 15 12 9 6"/>
+            </svg>
+          </button>
+        </div>
+      </ng-container>
+
+    </ng-container><!-- /Section A -->
+
+
+    <!-- ═══ SECTION B — THEORY ═══ -->
+    <!-- Show if quizType THEORY, or BOTH and activeSection is B -->
+    <div *ngIf="currentQuestions.length > 0 && (quiz.quizType !== 'BOTH' || activeSection === 'B'); else elseBlock">
+
+      <div class="sec-divider" style="margin-top:28px">
+        <div class="sec-rule"></div>
+        <div class="sec-badge">
+          <span class="sec-name">Section B</span>
+          <span class="sec-pipe"></span>
+          <span class="sec-meta">{{ (timeT * 60) / 60 }} min · Theory</span>
+        </div>
+        <div class="sec-rule"></div>
+      </div>
+
+      <!-- Compulsory alert -->
+      <div class="comp-alert" *ngIf="isCurrentGroupCompulsory()">
+        <div class="ca-ico">
+          <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5">
+            <path d="M10.29 3.86L1.82 18a2 2 0 0 0 1.71 3h16.94a2 2 0 0 0 1.71-3L13.71 3.86a2 2 0 0 0-3.42 0z"/>
+            <line x1="12" y1="9" x2="12" y2="13"/>
+            <line x1="12" y1="17" x2="12.01" y2="17"/>
+          </svg>
+        </div>
+        <span class="ca-txt">
+          COMPULSORY — All questions in <strong>{{ prefixes[currentPage] }}</strong> must be answered
+        </span>
+      </div>
+
+      <!-- Theory question cards -->
+      <form
+        (paste)="preventAction($event)"
+        (copy)="preventAction($event)"
+        (cut)="preventAction($event)"
+        (contextmenu)="preventAction($event)"
+        (drop)="preventAction($event)">
+
+        <div class="th-card"
+          *ngFor="let question of currentQuestions; let i = index">
+          <div class="th-head">
+            <div>
+              <div class="th-qno">{{ question.quesNo }}</div>
+              <div class="th-qtext">{{ question.question }}</div>
+            </div>
+            <div class="th-marks" *ngIf="question.marks">{{ question.marks }} </div>
+          </div>
+          <div class="th-body">
+            <textarea
+              class="th-textarea"
+              [name]="'givenAnswer' + i"
+              [(ngModel)]="question.givenAnswer"
+              (ngModelChange)="saveAnswers()"
+              (paste)="preventAction($event)"
+              (copy)="preventAction($event)"
+              (cut)="preventAction($event)"
+              (contextmenu)="preventAction($event)"
+              (drop)="preventAction($event)"
+              (dragover)="preventAction($event)"
+              autocomplete="off"
+              spellcheck="false"
+              rows="4"
+              placeholder="Write your answer here…">
+            </textarea>
+          </div>
+        </div>
+
+      </form>
+
+      <!-- Theory section navigation + prefix selector -->
+      <div class="th-card">
+        <div class="th-nav">
+
+          <!-- Prev / Next page -->
+          <div style="display:flex;align-items:center;gap:7px">
+            <button class="pg-btn" (click)="prevPage()" [disabled]="currentPage === 0">
+              <svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5">
+                <polyline points="15 18 9 12 15 6"/>
+              </svg>
+              Previous
+            </button>
+            <span class="tn-cur">{{ prefixes[currentPage] }}</span>
+            <span class="tn-of">of</span>
+            <span class="tn-end">{{ prefixes[prefixes.length - 1] }}</span>
+            <button class="pg-btn" (click)="nextPage()" [disabled]="currentPage === prefixes.length - 1">
+              Next
+              <svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5">
+                <polyline points="9 18 15 12 9 6"/>
+              </svg>
+            </button>
+          </div>
+
+          <!-- Prefix selector chips -->
+          <div class="prefix-chips" *ngIf="prefixes.length > 0">
+            <span class="ps-lbl">
+              Select {{ numberOfQuestionsToAnswer }} answered:
+            </span>
+            <span
+              *ngFor="let prefix of prefixes"
+              class="pfx-chip"
+              [class.sel]="selectedQuestions[prefix]"
+              [class.comp]="isGroupCompulsory(prefix)"
+              (click)="!isGroupCompulsory(prefix) && togglePrefixSelection(prefix)">
+              <span class="pfx-dot" *ngIf="isGroupCompulsory(prefix)"></span>
+              {{ prefix }}
+              <span *ngIf="isGroupCompulsory(prefix)" style="font-size:9px;opacity:.7">COMPULSORY</span>
+            </span>
+          </div>
+
+        </div>
+      </div>
+
+      <!-- Submit at the end of Section B — for ALL quiz types that have theory -->
+      <div class="submit-row">
+        <button class="btn-submit" (click)="submitAllQuiz()" [disabled]="isSubmitDisabled">
+          <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5">
+            <polyline points="20 6 9 17 4 12"/>
+          </svg>
+          <span>Submit Quiz</span>
+        </button>
+      </div>
+
+    </div><!-- /section B -->
+
+    <!-- elseBlock: THEORY type but currentQuestions empty — shouldn't normally occur -->
+    <ng-template #elseBlock>
+      <!-- No fallback submit here; it's already handled above per quiz type -->
+    </ng-template>
+
+  </div><!-- /main-area -->
+
+
+
+
+
+
+  
+  <!-- ── RIGHT SIDEBAR ── -->
+  <div class="sidebar-right">
+
+    <!-- Timer widget -->
+    <div class="timer-widget">
+      <div class="tw-label">Time Remaining</div>
+      <div class="tw-value">{{ getFormmatedTime() }}</div>
+      <div class="tw-sub">min · sec</div>
+      <div class="tw-bar">
+        <div class="tw-fill"></div>
+      </div>
+    </div>
+
+    <!-- Answer progress -->
+    <div>
+      <div class="sl-label">Progress</div>
+      <div class="ans-stats">
+        <div *ngIf="questions?.length > 0">
+          <div class="as-row">
+            <span>Section A</span>
+            <strong>{{ answeredCount }} / {{ questions.length }}</strong>
+          </div>
+          <div class="as-bar">
+            <div class="as-fill" [style.width.%]="answeredCount / questions.length * 100"></div>
+          </div>
+        </div>
+        <div *ngIf="currentQuestions?.length > 0" style="margin-top:6px">
+          <div class="as-row">
+            <span>Section B</span>
+            <strong>{{ selectedCount }} / {{ numberOfQuestionsToAnswer }}</strong>
+          </div>
+          <div class="as-bar">
+            <div class="as-fill" [style.width.%]="selectedCount / numberOfQuestionsToAnswer * 100"></div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+  </div><!-- /sidebar-right -->
+
+</div><!-- /exam-shell -->
+
+
+<!-- ══════════════════════════════════════════
+     TIME-UP MODAL
+══════════════════════════════════════════ -->
+<div class="tu-backdrop" *ngIf="showTimeUpModal">
+  <div class="tu-modal">
+    <div class="tu-icon">⏰</div>
+    <div class="tu-title">Time's Up</div>
+    <div class="tu-sub">Your exam is being submitted automatically. Please wait.</div>
+    <div class="countdown-wrap">
+      <svg class="prog-ring" width="130" height="130">
+        <circle cx="65" cy="65" r="55" class="ring-bg"/>
+        <circle cx="65" cy="65" r="55" class="ring-prog"
+          [attr.stroke-dasharray]="345"
+          [attr.stroke-dashoffset]="345 - (progressPercent / 100) * 345"/>
+      </svg>
+      <div class="countdown-num">{{ countdownText }}</div>
+    </div>
+  </div>
 </div>

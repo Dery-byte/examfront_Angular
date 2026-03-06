@@ -16,6 +16,8 @@ export class QuestionService {
   //   return this._http.get(`${baseUrl}/question/quiz/all/${qid}`);
   // }
 
+
+  // For the Actual Quiz (Student)
   public getQuestionsOfQuiz(qid) {
     return this._http.get(`${baseUrl}/question/quiz/all/${qid}`);
   }
@@ -196,11 +198,20 @@ uploadQuestions(qid: number, questions): Observable<any> {
 
 
 
+  // public setCompulsoryQuestion(quizId: number, prefix: string, isCompulsory: boolean) {
+  //   return this._http.put(
+  //     `${baseUrl}/update-compulsory/${quizId}/${prefix}?isCompulsory=${isCompulsory}`, null,
+  //   );
+  // }
+
+
   public setCompulsoryQuestion(quizId: number, prefix: string, isCompulsory: boolean) {
-    return this._http.put(
-      `${baseUrl}/update-compulsory/${quizId}/${prefix}?isCompulsory=${isCompulsory}`, null,
-    );
-  }
+  return this._http.put(
+    `${baseUrl}/update-compulsory/${quizId}/${prefix}?isCompulsory=${isCompulsory}`, 
+    null,
+    { responseType: 'text' as const }
+  );
+}
 
 
 }

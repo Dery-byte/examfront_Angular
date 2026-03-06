@@ -1,14 +1,17 @@
 <div class="home-container" style="position: sticky; bottom: 0; z-index: 1000;">
-    <!-- Header -->
-  
-    <!-- Footer -->
-    <footer class="footer" @fadeIn>
-      <p>&copy; 2025 OTC. All rights reserved.</p>
 
-      <nav>
-        <a mat-button routerLink="/privacy">Privacy Policy</a>
-        <a mat-button routerLink="/terms">Terms of Service</a>
-      </nav>
-    </footer>
-  </div>
-  
+  <footer class="footer" @fadeIn>
+
+    <span class="footer-copy">
+      &copy; 2025 <span class="brand">OTC</span>. All rights reserved.
+    </span>
+
+    <nav class="footer-nav">
+      <a class="footer-link" routerLink="/privacy">Privacy Policy</a>
+      <span class="footer-sep"></span>
+      <a class="footer-link" routerLink="/terms">Terms of Service</a>
+    </nav>
+
+  </footer>
+
+</div>

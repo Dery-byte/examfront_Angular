@@ -166,6 +166,8 @@ this._questions.getQuestionsOfQuiz(this.qid).subscribe((data: any) => {
     // this.printQuiz();
     this.preventBackButton();
 
+
+
     // this.qid = this._route.snapshot.params['qid'];
     this._quiz.getQuiz(this.qid).subscribe((data: any) => {
       console.log(data.title);
@@ -216,6 +218,7 @@ this._questions.getQuestionsOfQuiz(this.qid).subscribe((data: any) => {
         console.log("This is the OBJ results ", this.resultsOBJ);
       },
       error: (error) => {
+        console.log("Cannot load results")
         console.error('Error loading reports:', error);
       }
     });

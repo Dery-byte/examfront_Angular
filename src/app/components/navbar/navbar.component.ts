@@ -90,7 +90,7 @@ export class NavbarComponent implements OnInit, OnDestroy {
 
 	ngOnInit(): void {
 		this.isloggedIn = this.login.isLoggedIn();
-		this.tokenExpirationService.startCountdownFromBackend();
+		this.tokenExpirationService.startCountdownFromLocal();
 		// this.startCountdown();
 		this.user = this.login.getUser();
 		this.login.loginStatusSubject.asObservable().subscribe(data => {
