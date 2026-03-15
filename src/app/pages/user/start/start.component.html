@@ -214,7 +214,7 @@
       <ng-container *ngIf="getTrueFalseQuestions().length > 0">
         <div class="qtype-group-header">
           <span class="qtype-badge tf">True / False</span>
-          <span class="qtype-desc">Select whether each statement is true or false</span>
+          <span class="qtype-desc">Select whether the statement is true or false</span>
         </div>
 
         <div
@@ -230,17 +230,27 @@
             <div class="q-text" [innerHTML]="q.content"></div>
           </div>
 
+          <!-- ── TRUE / FALSE: single-select only ─────────────────────
+               Clicking a tile sets givenAnswer to that value exclusively.
+               Clicking the already-selected tile deselects it (clears).
+               updateSelectedAnswers is then called with the new sole value.
+          ──────────────────────────────────────────────────────────── -->
           <div class="q-options tf-options">
-            <div class="opt-tile tf-tile" [class.sel]="q.givenAnswer?.includes('True')"
-              (click)="updateSelectedAnswers(q, 'True', !q.givenAnswer?.includes('True'))">
+
+            <div class="opt-tile tf-tile"
+              [class.sel]="q.givenAnswer?.[0] === 'True'"
+              (click)="selectTrueFalse(q, 'True')">
               <div class="opt-letter tf-true">T</div>
               <div class="opt-txt">True</div>
             </div>
-            <div class="opt-tile tf-tile" [class.sel]="q.givenAnswer?.includes('False')"
-              (click)="updateSelectedAnswers(q, 'False', !q.givenAnswer?.includes('False'))">
+
+            <div class="opt-tile tf-tile"
+              [class.sel]="q.givenAnswer?.[0] === 'False'"
+              (click)="selectTrueFalse(q, 'False')">
               <div class="opt-letter tf-false">F</div>
               <div class="opt-txt">False</div>
             </div>
+
           </div>
         </div>
       </ng-container>
@@ -389,7 +399,7 @@
       <div class="comp-alert" *ngIf="isCurrentGroupCompulsory()">
         <div class="ca-ico">
           <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5">
-            <path d="M10.29 3.86L1.82 18a2 2 0 0 0 1.71 3h16.94a2 2 0 0 0 1.71-3L13.71 3.86a2 2 0 0-3.42 0z"/>
+            <path d="M10.29 3.86L1.82 18a2 2 0 0 0 1.71 3h16.94a2 2 0 0 0 1.71-3L13.71 3.86a2 2 0-3.42 0z"/>
             <line x1="12" y1="9" x2="12" y2="13"/>
             <line x1="12" y1="17" x2="12.01" y2="17"/>
           </svg>

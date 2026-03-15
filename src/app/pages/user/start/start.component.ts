@@ -294,6 +294,8 @@ export class StartComponent implements OnInit, OnDestroy {
 
     this.loadQuestions();
 
+    
+
     this._quiz.getNumerOfQuesToAnswer(this.qid).subscribe(
       (data: any) => {
         this.numberOfQuestionsToAnswer = data[0].totalQuestToAnswer;
@@ -321,6 +323,32 @@ export class StartComponent implements OnInit, OnDestroy {
 
 
   }
+
+
+
+  /**
+ * Single-select handler for True / False questions.
+ *
+ * Rules:
+ *  - Clicking a non-selected option selects it exclusively (clears the other).
+ *  - Clicking the already-selected option deselects it (allows changing mind).
+ *
+ * Drop-in addition to your component class — call this instead of
+ * updateSelectedAnswers() for T/F tiles.
+ */
+selectTrueFalse(q: any, value: 'True' | 'False'): void {
+  if (q.givenAnswer?.[0] === value) {
+    // Deselect — student clicked the currently selected option
+    q.givenAnswer = [];
+  } else {
+    // Select exclusively
+    q.givenAnswer = [value];
+  }
+  // Persist via the existing save mechanism
+  this.updateSelectedAnswers(q, value, q.givenAnswer.length > 0);
+}
+
+
 
   ngOnDestroy(): void {
     // CRITICAL: Disable protection when leaving the component
