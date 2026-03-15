@@ -326,16 +326,6 @@ export class StartComponent implements OnInit, OnDestroy {
 
 
 
-  /**
- * Single-select handler for True / False questions.
- *
- * Rules:
- *  - Clicking a non-selected option selects it exclusively (clears the other).
- *  - Clicking the already-selected option deselects it (allows changing mind).
- *
- * Drop-in addition to your component class — call this instead of
- * updateSelectedAnswers() for T/F tiles.
- */
 selectTrueFalse(q: any, value: 'True' | 'False'): void {
   if (q.givenAnswer?.[0] === value) {
     // Deselect — student clicked the currently selected option
