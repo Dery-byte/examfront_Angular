@@ -30,13 +30,11 @@ import {
   QuizViolationConfig
 } from 'src/app/services/QuizProtectionService';
 import baseUrl from 'src/app/services/helper';
-
 interface QuizAnswers {
   [prefix: string]: {
     [tqId: number]: string
   }
 }
-
 interface QuestionResponse {
   questionNumber: string;
   question: string;
@@ -46,7 +44,6 @@ interface QuestionResponse {
   feedback: string;
   keyMissed: string[];
 }
-
 interface GroupedQuestions {
   prefix: string;
   questions: QuestionResponse[];
@@ -276,7 +273,7 @@ export class StartComponent implements OnInit, OnDestroy {
         console.log(this.timerAll);
         console.log(this.timeO * 60);
         // Enable protection AFTER quiz data is loaded
-                this.enableQuizProtection();
+        this.enableQuizProtection();
         this.enableQuizProtection();
 
         // ✅ KEEP these too (re-sets context after enableProtection resets state)
@@ -1369,7 +1366,6 @@ export class StartComponent implements OnInit, OnDestroy {
       (data: any) => {
         const storedAnswers = JSON.parse(localStorage.getItem('selectedAnswers') || '{}');
         this.loadSavedAnswers();
-
         this.questions = data.map((q, index) => {
           q.count = index + 1;
           if (storedAnswers[q.quesId]) {
@@ -1687,16 +1683,16 @@ export class StartComponent implements OnInit, OnDestroy {
     return new Observable(observer => {
       this.selectedQuestionsAnswer = [];
 
-     for (const prefix in this.selectedQuestions) {
-  const group = this.groupedQuestions[prefix];
-  if (!group) {
-    console.warn(`No grouped questions found for prefix: "${prefix}"`);
-    continue;
-  }
-  this.selectedQuestionsAnswer.push(...group);
-     }
-     console.log('groupedQuestions keys:', Object.keys(this.groupedQuestions));
-console.log('selectedQuestions keys:', Object.keys(this.selectedQuestions));
+      for (const prefix in this.selectedQuestions) {
+        const group = this.groupedQuestions[prefix];
+        if (!group) {
+          console.warn(`No grouped questions found for prefix: "${prefix}"`);
+          continue;
+        }
+        this.selectedQuestionsAnswer.push(...group);
+      }
+      console.log('groupedQuestions keys:', Object.keys(this.groupedQuestions));
+      console.log('selectedQuestions keys:', Object.keys(this.selectedQuestions));
 
       console.log('selectedQuestions keys:', Object.keys(this.selectedQuestions).length);
       console.log('numberOfQuestionsToAnswer:', this.numberOfQuestionsToAnswer);
@@ -1712,11 +1708,14 @@ console.log('selectedQuestions keys:', Object.keys(this.selectedQuestions));
       this.convertJson();
 
       console.log(this.convertedJsonAPIResponsebody);
+      localStorage.setItem("convertedJsonAPIResponsebody", JSON.stringify(this.convertedJsonAPIResponsebody));
       this._quiz.evalTheory(this.convertedJsonAPIResponsebody).subscribe({
         next: (data: any) => {
           console.log("Server Response:", data);
           this.geminiResponse = data;
           localStorage.setItem("answeredAIQuestions" + this.qid, JSON.stringify(this.geminiResponse));
+
+          localStorage.setItem("ResponseFromGPT", JSON.stringify(this.geminiResponse));
           setTimeout(() => {
             this.loadSubjectiveAIEval();
           }, 1000);
@@ -2162,6 +2161,167 @@ console.log('selectedQuestions keys:', Object.keys(this.selectedQuestions));
         });
       }
     });
+  }
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  // ── Add these properties to your component class ──────────────────────────
+
+  // Tracks which answer is being dragged: { quesId -> answerText }
+  private dragPayload: { quesId: number; answer: string } | null = null;
+
+  // Tracks which drop zone is being hovered: key = `${quesId}_${pairIndex}`
+  dragOverKey: string | null = null;
+
+  // Caches shuffled answer pool per question so it doesn't re-shuffle on every CD tick
+  private _shuffledAnswersCache = new Map<number, string[]>();
+
+
+  // ── Question type filters ──────────────────────────────────────────────────
+
+  getMCQQuestions(): any[] {
+    return (this.questions || []).filter((q: any) => q.questionType === 'MCQ');
+  }
+
+  getTrueFalseQuestions(): any[] {
+    return (this.questions || []).filter((q: any) => q.questionType === 'TRUE_FALSE');
+  }
+
+  getMatchingQuestions(): any[] {
+    return (this.questions || []).filter((q: any) => q.questionType === 'MATCHING');
+  }
+
+
+  // ── Answered check (used for progress dots + .answered CSS class) ──────────
+
+  isQuestionAnswered(q: any): boolean {
+    if (q.questionType === 'MATCHING') return this.isMatchingAnswered(q);
+    return q.givenAnswer?.length > 0;
+  }
+
+  isMatchingAnswered(q: any): boolean {
+    if (!q.givenAnswer || q.givenAnswer.length === 0) return false;
+    return q.givenAnswer.every((a: string) => a && a.trim() !== '');
+  }
+
+
+  // ── Matching: answer state ─────────────────────────────────────────────────
+
+  /**
+   * givenAnswer for MATCHING is a positional array aligned to pairOrder:
+   *   index 0 → answer for pair 0, index 1 → answer for pair 1, etc.
+   */
+  getMatchingAnswer(q: any, pairIndex: number): string {
+    return q.givenAnswer?.[pairIndex] ?? '';
+  }
+
+  setMatchingAnswer(q: any, pairIndex: number, value: string): void {
+    if (!q.givenAnswer) {
+      q.givenAnswer = new Array(q.matchingPairs.length).fill('');
+    }
+    // Ensure array is long enough
+    while (q.givenAnswer.length < q.matchingPairs.length) {
+      q.givenAnswer.push('');
+    }
+    q.givenAnswer[pairIndex] = value;
+  }
+
+  clearMatchingAnswer(q: any, pairIndex: number): void {
+    this.setMatchingAnswer(q, pairIndex, '');
+  }
+
+
+  // ── Matching: answer pool ──────────────────────────────────────────────────
+
+  /**
+   * Returns all answers shuffled once and cached per question.
+   */
+  getShuffledAnswers(q: any): string[] {
+    if (!this._shuffledAnswersCache.has(q.quesId)) {
+      const answers: string[] = q.matchingPairs.map((p: any) => p.answer);
+      const shuffled = [...answers].sort(() => Math.random() - 0.5);
+      this._shuffledAnswersCache.set(q.quesId, shuffled);
+    }
+    return this._shuffledAnswersCache.get(q.quesId)!;
+  }
+
+  /**
+   * Returns only the answers not yet placed in a drop zone.
+   * This shrinks the pool as the student places answers.
+   */
+  getAvailableAnswers(q: any): string[] {
+    const placed = new Set<string>((q.givenAnswer || []).filter((a: string) => a && a !== ''));
+    return this.getShuffledAnswers(q).filter(ans => !placed.has(ans));
+  }
+
+
+  // ── Matching: drag-and-drop handlers ──────────────────────────────────────
+
+  onDragStart(event: DragEvent, quesId: number, answer: string): void {
+    this.dragPayload = { quesId, answer };
+    event.dataTransfer?.setData('text/plain', answer);
+    (event.target as HTMLElement).classList.add('dragging');
+  }
+
+  onDragOver(event: DragEvent, quesId: number, pairIndex: number): void {
+    event.preventDefault();  // Required to allow drop
+    this.dragOverKey = `${quesId}_${pairIndex}`;
+  }
+
+  onDragLeave(quesId: number, pairIndex: number): void {
+    if (this.dragOverKey === `${quesId}_${pairIndex}`) {
+      this.dragOverKey = null;
+    }
+  }
+
+  onDrop(event: DragEvent, q: any, pairIndex: number): void {
+    event.preventDefault();
+    this.dragOverKey = null;
+
+    const answer = event.dataTransfer?.getData('text/plain') || this.dragPayload?.answer;
+    if (!answer) return;
+
+    // If this drop zone already had an answer, return it to the pool
+    // (achieved simply by overwriting — getAvailableAnswers recalculates from givenAnswer)
+    this.setMatchingAnswer(q, pairIndex, answer);
+    this.dragPayload = null;
+  }
+
+  isDragOver(quesId: number, pairIndex: number): boolean {
+    return this.dragOverKey === `${quesId}_${pairIndex}`;
   }
 }
 

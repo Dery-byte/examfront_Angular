@@ -211,20 +211,62 @@ this._questions.getQuestionsOfQuiz(this.qid).subscribe((data: any) => {
     });
   }
 
-    getResultsDetails(): void{
-     this._report.getResultsDetails(this.qid).subscribe({
-      next: (data: any) => {
-        this.resultsOBJ = data;
-        console.log("This is the OBJ results ", this.resultsOBJ);
-      },
-      error: (error) => {
-        console.log("Cannot load results")
-        console.error('Error loading reports:', error);
-      }
-    });
-  }
+  //   getResultsDetails(): void{
+  //    this._report.getResultsDetails(this.qid).subscribe({
+  //     next: (data: any) => {
+  //       this.resultsOBJ = data;
+  //       console.log("This is the OBJ results ", this.resultsOBJ);
+  //     },
+  //     error: (error) => {
+  //       console.log("Cannot load results")
+  //       console.error('Error loading reports:', error);
+  //     }
+  //   });
+  // }
+getResultsDetails(): void {
+  this._report.getResultsDetails(this.qid).subscribe({
+    next: (data: any) => {
+      this.resultsOBJ = data;
+      console.log("OBJ results raw:", this.resultsOBJ);
+ 
+      // Debug: log each result's earnedMark and markAvailable so you can
+      // confirm the backend is sending them before the HTML tries to show them
+      const results = data?.results || [];
+      results.forEach((r: any, i: number) => {
+        console.log(
+          `Q${i + 1} [${r.questionType}] status=${r.status} ` +
+          `earnedMark=${r.earnedMark} markAvailable=${r.markAvailable}`
+        );
+      });
+    },
+    error: (error) => {
+      console.log("Cannot load results");
+      console.error('Error loading reports:', error);
+    }
+  });
+}
+ 
 
-  
+get groupedResults(): { mcq: any[], trueFalse: any[], matching: any[] } {
+  const results: any[] = this.resultsOBJ?.results || [];
+  return {
+    mcq:       results.filter(q => q.questionType === 'MCQ' || !q.questionType),
+    trueFalse: results.filter(q => q.questionType === 'TRUE_FALSE'),
+    matching:  results.filter(q => q.questionType === 'MATCHING'),
+  };
+}
+ 
+
+getEarnedMark(q: any): number {
+  if (q.questionType === 'MATCHING') {
+    // earnedMark is already the partial value e.g. 0.5 for 2/4 pairs
+    return q.earnedMark ?? 0;
+  }
+  // MCQ / TRUE_FALSE: full mark or zero
+  return q.status === 'CORRECT' ? (q.markAvailable ?? 0) : 0;
+}
+ 
+
   totalTime(): number {
     return (parseInt(this.reportData?.[0]?.quiz?.quizTime || 0))
          + (this.theoryDetails?.[0]?.timeAllowed || 0);
@@ -306,6 +348,14 @@ this._questions.getQuestionsOfQuiz(this.qid).subscribe((data: any) => {
     }, 0);
   }
 
+// get groupedResults(): { mcq: any[], trueFalse: any[], matching: any[] } {
+//   const results = this.resultsOBJ?.results || [];
+//   return {
+//     mcq: results.filter(q => q.questionType === 'MCQ'),
+//     trueFalse: results.filter(q => q.questionType === 'TRUE_FALSE'),
+//     matching: results.filter(q => q.questionType === 'MATCHING')
+//   };
+// }
 
   getTotalMarksForGroup(group: { prefix: string; questions: QuestionResponse[] }): number {
     if (!group || !Array.isArray(group.questions)) return 0;
@@ -398,9 +448,9 @@ loadQuestions(): void {
     console.log("Error Loading questions");
     // Don't show an error alert for theory-only quizzes
     // Only alert if it's NOT a theory quiz
-    if (!this.isTheoryQuiz()) {
-      Swal.fire("Error", "Error loading questions", "error");
-    }
+    // if (!this.isTheoryQuiz()) {
+    //   Swal.fire("Error", "Error loading questions", "error");
+    // }
   });
 }
   // loadQuestions(): void {

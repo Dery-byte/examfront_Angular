@@ -28,6 +28,11 @@ export class QuestionService {
     return this._http.get(`${baseUrl}/questions/quiz/all/${qid}`);
   }
 
+    // GET THE QUESTIONS FOR ADMIN
+  public getQuestionsOfQuizforAdmin(qid) {
+    return this._http.get(`${baseUrl}/questionAdmin/quiz/all/${qid}`);
+  }
+
   public getSubjective(qid) {
     return this._http.get(`${baseUrl}/theoryquestion/quiz/all/${qid}`);
   }
@@ -35,7 +40,6 @@ export class QuestionService {
   public getSpecificSubjective(tqId) {
     return this._http.get(`${baseUrl}/theoryquestion/${tqId}`);
   }
-
 
   //// HOPE it works
   private refreshNeeded = new Subject<void>();
@@ -76,7 +80,6 @@ export class QuestionService {
     return this._http.put(`${baseUrl}/question/updateQuestions`, question);
   }
 
-
   //update Theory
   public updateTheoryQuestions(theory) {
     return this._http.put(`${baseUrl}/theoryquestion/updateQuestions`, theory);
@@ -88,12 +91,9 @@ export class QuestionService {
     return this._http.post(`${baseUrl}/question/add-quizUserId/${qid}`, user);
   }
 
-
   //  public addNumberOfTheoryQuestions(quizNumberOfQuestion){
   //   return this._http.post(`${baseUrl}/numberOfTheoryQuestion/add`, quizNumberOfQuestion);
   // }
-
-
 
   public getNumerOfQuesToAnswer(qId) {
     return this._http.get(`${baseUrl}/numberOfTheoryQuestion/${qId}`);
@@ -103,9 +103,6 @@ export class QuestionService {
   public updateTheoryNumberOfQuestionsToAnswer(numberOfquestionsToAnswer) {
     return this._http.put(`${baseUrl}/numberOfTheoryQuestion/update`, numberOfquestionsToAnswer);
   }
-
-
-
 
   //get report with ID parameter
   public getReportIdUserId(rid) {
@@ -181,7 +178,6 @@ uploadQuestions(qid: number, questions): Observable<any> {
   //   return this._http.post(`${baseUrl}/theoryupload/${qid}`, questions);
   // }
 
-
     uploadTheoryQuestions(qid: number, questions): Observable<any> {
       const headers = new HttpHeaders({
         'Content-Type': 'application/json',
@@ -194,10 +190,6 @@ uploadQuestions(qid: number, questions): Observable<any> {
   public getNumerOfQuesToAnswerBy(qId) {
     return this._http.get(`${baseUrl}/numberOfTheoryQuestion/${qId}`);
   }
-
-
-
-
   // public setCompulsoryQuestion(quizId: number, prefix: string, isCompulsory: boolean) {
   //   return this._http.put(
   //     `${baseUrl}/update-compulsory/${quizId}/${prefix}?isCompulsory=${isCompulsory}`, null,

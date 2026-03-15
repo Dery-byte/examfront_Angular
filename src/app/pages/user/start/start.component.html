@@ -1,14 +1,3 @@
-<!-- {{questions |json}}
-
-{{currentQuestions|json}}
-
-<h1>===========</h1> -->
-
-<!-- {{questionT |json}} -->
-
-
-
-
 <!-- ══════════════════════════════════════════
      LOADING
 ══════════════════════════════════════════ -->
@@ -16,6 +5,7 @@
   <div class="lo-spin"></div>
   <div class="lo-txt">LOADING QUIZ CONTENT…</div>
 </div>
+
 
 <!-- ══════════════════════════════════════════
      EXAM SHELL
@@ -32,41 +22,28 @@
     </div>
 
     <div class="tb-right">
-      <!-- Theme switch -->
-      <button class="theme-toggle" (click)="isLightTheme = !isLightTheme" [title]="isLightTheme ? 'Switch to Dark' : 'Switch to Light'">
-        <!-- Sun icon -->
+      <button class="theme-toggle" (click)="isLightTheme = !isLightTheme"
+        [title]="isLightTheme ? 'Switch to Dark' : 'Switch to Light'">
         <svg *ngIf="!isLightTheme" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
           <circle cx="12" cy="12" r="5"/>
-          <line x1="12" y1="1" x2="12" y2="3"/>
-          <line x1="12" y1="21" x2="12" y2="23"/>
-          <line x1="4.22" y1="4.22" x2="5.64" y2="5.64"/>
-          <line x1="18.36" y1="18.36" x2="19.78" y2="19.78"/>
-          <line x1="1" y1="12" x2="3" y2="12"/>
-          <line x1="21" y1="12" x2="23" y2="12"/>
-          <line x1="4.22" y1="19.78" x2="5.64" y2="18.36"/>
-          <line x1="18.36" y1="5.64" x2="19.78" y2="4.22"/>
+          <line x1="12" y1="1" x2="12" y2="3"/><line x1="12" y1="21" x2="12" y2="23"/>
+          <line x1="4.22" y1="4.22" x2="5.64" y2="5.64"/><line x1="18.36" y1="18.36" x2="19.78" y2="19.78"/>
+          <line x1="1" y1="12" x2="3" y2="12"/><line x1="21" y1="12" x2="23" y2="12"/>
+          <line x1="4.22" y1="19.78" x2="5.64" y2="18.36"/><line x1="18.36" y1="5.64" x2="19.78" y2="4.22"/>
         </svg>
-        <!-- Moon icon -->
         <svg *ngIf="isLightTheme" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
           <path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"/>
         </svg>
       </button>
-
-      <!-- Timer — always visible on all screen sizes -->
       <div class="tb-timer">{{ getFormmatedTime() }}</div>
     </div>
   </div>
 
-  <!-- ── SECTION NAV BAR (prominent, full-width, below topbar) ── -->
+  <!-- ── SECTION NAV BAR ── -->
   <div class="section-nav-bar" *ngIf="quiz.quizType === 'BOTH'">
-    <!-- Mirrors left sidebar width -->
     <div class="snb-spacer"></div>
-    <!-- Tab rail under main + right columns -->
     <div class="snb-rail">
-      <button
-        class="snb-tab"
-        [class.active]="activeSection === 'A'"
-        (click)="activeSection = 'A'">
+      <button class="snb-tab" [class.active]="activeSection === 'A'" (click)="activeSection = 'A'">
         <span class="snb-letter">A</span>
         <span class="snb-content">
           <span class="snb-title">Section A</span>
@@ -78,13 +55,8 @@
           </svg>
         </span>
       </button>
-
       <div class="snb-sep"></div>
-
-      <button
-        class="snb-tab"
-        [class.active]="activeSection === 'B'"
-        (click)="activeSection = 'B'">
+      <button class="snb-tab" [class.active]="activeSection === 'B'" (click)="activeSection = 'B'">
         <span class="snb-letter">B</span>
         <span class="snb-content">
           <span class="snb-title">Section B</span>
@@ -101,14 +73,10 @@
 
   <!-- ── LEFT SIDEBAR ── -->
   <div class="sidebar-left">
-
-    <!-- Instructions -->
     <div>
       <div class="sl-label">Instructions</div>
       <div class="instr-card">
         <ul class="instr-list">
-
-          <!-- OBJ -->
           <li class="warn" *ngIf="quiz.quizType=='OBJ'">
             <span class="ii-box">
               <svg width="8" height="8" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3">
@@ -117,8 +85,6 @@
             </span>
             Answer all questions in Section A.
           </li>
-
-          <!-- THEORY -->
           <li class="warn" *ngIf="quiz.quizType=='THEORY'">
             <span class="ii-box">
               <svg width="8" height="8" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3">
@@ -133,8 +99,6 @@
               Answer <strong>{{ numberOfQuestionsToAnswer }}</strong> questions from Section B.
             </span>
           </li>
-
-          <!-- BOTH -->
           <li class="warn" *ngIf="quiz.quizType=='BOTH'">
             <span class="ii-box">
               <svg width="8" height="8" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3">
@@ -150,7 +114,6 @@
               <strong>{{ numberOfQuestionsToAnswer }}</strong> questions from Section B.
             </span>
           </li>
-
           <li>
             <span class="ii-box">
               <svg width="8" height="8" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5">
@@ -171,63 +134,25 @@
       </div>
     </div>
 
-    <!-- Objective question progress dots -->
+    <!-- Progress dots -->
     <div *ngIf="questions?.length > 0">
       <div class="sl-label">Section A — Progress</div>
       <div class="q-dots">
         <div
           *ngFor="let q of questions; let i = index"
           class="q-dot"
-          [class.answered]="q.givenAnswer?.length > 0">
+          [class.answered]="isQuestionAnswered(q)">
           {{ q.count }}
         </div>
       </div>
     </div>
-
   </div><!-- /sidebar-left -->
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 
 
   <!-- ── MAIN CONTENT AREA ── -->
   <div class="main-area">
 
     <!-- ═══ SECTION A — OBJECTIVE ═══ -->
-    <!-- Show if quizType is OBJ, or BOTH and activeSection is A -->
     <ng-container *ngIf="questions?.length > 0 && (quiz.quizType !== 'BOTH' || activeSection === 'A')">
 
       <div class="sec-divider">
@@ -240,63 +165,188 @@
         <div class="sec-rule"></div>
       </div>
 
-      <!-- Objective question cards -->
-
-
-
-      <div
-        class="q-card"
-        *ngFor="let q of questions | paginate:{itemsPerPage:tableSize, currentPage:page, totalItems:count}; let i = index"
-        [class.answered]="q.givenAnswer?.length > 0">
-
-        <div class="q-head">
-          <div class="q-meta">
-            <div class="q-num-chip">{{ q.count }}</div>
-            <div class="q-label">Question {{ q.count }}</div>
-          </div>
-          <div class="q-text" [innerHTML]="q.content"></div>
+      <!-- ══ MCQ GROUP ══ -->
+      <ng-container *ngIf="getMCQQuestions().length > 0">
+        <div class="qtype-group-header">
+          <span class="qtype-badge mcq">Multiple Choice</span>
+          <span class="qtype-desc">Select one or more correct answers</span>
         </div>
 
-        <!-- Options grid — always rendered, 4 option tiles -->
-        <div class="q-options">
-          <div class="opt-tile" [class.sel]="q.givenAnswer?.includes(q.option1)"
-            (click)="updateSelectedAnswers(q, q.option1, !q.givenAnswer?.includes(q.option1))">
-            <div class="opt-letter">A</div>
-            <div class="opt-txt">{{ q.option1 }}</div>
+        <div
+          class="q-card"
+          *ngFor="let q of getMCQQuestions() | paginate:{itemsPerPage:tableSize, currentPage:page, totalItems:count}; let i = index"
+          [class.answered]="q.givenAnswer?.length > 0">
+
+          <div class="q-head">
+            <div class="q-meta">
+              <div class="q-num-chip">{{ q.count }}</div>
+              <div class="q-label">Question {{ q.count }}</div>
+            </div>
+            <div class="q-text" [innerHTML]="q.content"></div>
           </div>
-          <div class="opt-tile" [class.sel]="q.givenAnswer?.includes(q.option2)"
-            (click)="updateSelectedAnswers(q, q.option2, !q.givenAnswer?.includes(q.option2))">
-            <div class="opt-letter">B</div>
-            <div class="opt-txt">{{ q.option2 }}</div>
-          </div>
-          <div class="opt-tile" [class.sel]="q.givenAnswer?.includes(q.option3)"
-            (click)="updateSelectedAnswers(q, q.option3, !q.givenAnswer?.includes(q.option3))">
-            <div class="opt-letter">C</div>
-            <div class="opt-txt">{{ q.option3 }}</div>
-          </div>
-          <div class="opt-tile" [class.sel]="q.givenAnswer?.includes(q.option4)"
-            (click)="updateSelectedAnswers(q, q.option4, !q.givenAnswer?.includes(q.option4))">
-            <div class="opt-letter">D</div>
-            <div class="opt-txt">{{ q.option4 }}</div>
+
+          <div class="q-options">
+            <div class="opt-tile" [class.sel]="q.givenAnswer?.includes(q.option1)"
+              (click)="updateSelectedAnswers(q, q.option1, !q.givenAnswer?.includes(q.option1))">
+              <div class="opt-letter">A</div>
+              <div class="opt-txt">{{ q.option1 }}</div>
+            </div>
+            <div class="opt-tile" [class.sel]="q.givenAnswer?.includes(q.option2)"
+              (click)="updateSelectedAnswers(q, q.option2, !q.givenAnswer?.includes(q.option2))">
+              <div class="opt-letter">B</div>
+              <div class="opt-txt">{{ q.option2 }}</div>
+            </div>
+            <div class="opt-tile" *ngIf="q.option3" [class.sel]="q.givenAnswer?.includes(q.option3)"
+              (click)="updateSelectedAnswers(q, q.option3, !q.givenAnswer?.includes(q.option3))">
+              <div class="opt-letter">C</div>
+              <div class="opt-txt">{{ q.option3 }}</div>
+            </div>
+            <div class="opt-tile" *ngIf="q.option4" [class.sel]="q.givenAnswer?.includes(q.option4)"
+              (click)="updateSelectedAnswers(q, q.option4, !q.givenAnswer?.includes(q.option4))">
+              <div class="opt-letter">D</div>
+              <div class="opt-txt">{{ q.option4 }}</div>
+            </div>
           </div>
         </div>
-      </div>
+      </ng-container>
+
+      <!-- ══ TRUE / FALSE GROUP ══ -->
+      <ng-container *ngIf="getTrueFalseQuestions().length > 0">
+        <div class="qtype-group-header">
+          <span class="qtype-badge tf">True / False</span>
+          <span class="qtype-desc">Select whether each statement is true or false</span>
+        </div>
+
+        <div
+          class="q-card"
+          *ngFor="let q of getTrueFalseQuestions(); let i = index"
+          [class.answered]="q.givenAnswer?.length > 0">
+
+          <div class="q-head">
+            <div class="q-meta">
+              <div class="q-num-chip">{{ q.count }}</div>
+              <div class="q-label">Question {{ q.count }}</div>
+            </div>
+            <div class="q-text" [innerHTML]="q.content"></div>
+          </div>
+
+          <div class="q-options tf-options">
+            <div class="opt-tile tf-tile" [class.sel]="q.givenAnswer?.includes('True')"
+              (click)="updateSelectedAnswers(q, 'True', !q.givenAnswer?.includes('True'))">
+              <div class="opt-letter tf-true">T</div>
+              <div class="opt-txt">True</div>
+            </div>
+            <div class="opt-tile tf-tile" [class.sel]="q.givenAnswer?.includes('False')"
+              (click)="updateSelectedAnswers(q, 'False', !q.givenAnswer?.includes('False'))">
+              <div class="opt-letter tf-false">F</div>
+              <div class="opt-txt">False</div>
+            </div>
+          </div>
+        </div>
+      </ng-container>
+
+      <!-- ══ MATCHING GROUP ══ -->
+      <ng-container *ngIf="getMatchingQuestions().length > 0">
+        <div class="qtype-group-header">
+          <span class="qtype-badge matching">Matching</span>
+          <span class="qtype-desc">Drag answers from the pool and drop them onto the correct prompt</span>
+        </div>
+
+        <div
+          class="q-card matching-card"
+          *ngFor="let q of getMatchingQuestions(); let qi = index"
+          [class.answered]="isMatchingAnswered(q)">
+
+          <div class="q-head">
+            <div class="q-meta">
+              <div class="q-num-chip">{{ q.count }}</div>
+              <div class="q-label">Question {{ q.count }}</div>
+            </div>
+            <div class="q-text" [innerHTML]="q.content"></div>
+          </div>
+
+          <div class="matching-layout">
+
+            <!-- LEFT: Prompts with drop zones -->
+            <div class="matching-prompts-col">
+              <div class="matching-col-label">Prompts</div>
+              <div
+                class="matching-prompt-row"
+                *ngFor="let pair of q.matchingPairs; let pi = index">
+
+                <div class="matching-prompt-text">
+                  <span class="matching-prompt-num">{{ pi + 1 }}</span>
+                  {{ pair.prompt }}
+                </div>
+
+                <div class="matching-arrow-icon">→</div>
+
+                <!-- Drop zone -->
+                <div
+                  class="matching-drop-zone"
+                  [class.filled]="getMatchingAnswer(q, pi) !== ''"
+                  [class.drag-over]="isDragOver(q.quesId, pi)"
+                  (dragover)="onDragOver($event, q.quesId, pi)"
+                  (dragleave)="onDragLeave(q.quesId, pi)"
+                  (drop)="onDrop($event, q, pi)">
+
+                  <ng-container *ngIf="getMatchingAnswer(q, pi) !== ''; else emptyZone">
+                    <span class="drop-zone-answer">{{ getMatchingAnswer(q, pi) }}</span>
+                    <button
+                      class="drop-zone-clear"
+                      (click)="clearMatchingAnswer(q, pi)"
+                      title="Remove answer">
+                      ×
+                    </button>
+                  </ng-container>
+
+                  <ng-template #emptyZone>
+                    <span class="drop-zone-hint">Drop answer here</span>
+                  </ng-template>
+                </div>
+              </div>
+            </div>
+
+            <!-- RIGHT: Shuffled answer pool -->
+            <div class="matching-pool-col">
+              <div class="matching-col-label">Answer Pool</div>
+              <div class="matching-pool">
+                <div
+                  class="matching-chip"
+                  *ngFor="let ans of getAvailableAnswers(q)"
+                  draggable="true"
+                  (dragstart)="onDragStart($event, q.quesId, ans)">
+                  <svg class="drag-handle-icon" width="10" height="14" viewBox="0 0 10 14" fill="none">
+                    <circle cx="3" cy="2.5" r="1.2" fill="currentColor" opacity=".5"/>
+                    <circle cx="7" cy="2.5" r="1.2" fill="currentColor" opacity=".5"/>
+                    <circle cx="3" cy="7"   r="1.2" fill="currentColor" opacity=".5"/>
+                    <circle cx="7" cy="7"   r="1.2" fill="currentColor" opacity=".5"/>
+                    <circle cx="3" cy="11.5" r="1.2" fill="currentColor" opacity=".5"/>
+                    <circle cx="7" cy="11.5" r="1.2" fill="currentColor" opacity=".5"/>
+                  </svg>
+                  {{ ans }}
+                </div>
+                <div class="pool-empty" *ngIf="getAvailableAnswers(q).length === 0">
+                  All answers placed ✓
+                </div>
+              </div>
+            </div>
+
+          </div><!-- /matching-layout -->
+        </div>
+      </ng-container>
 
       <!-- Pagination -->
-      <div class="pg-row" >
-        <pagination-controls style="background-color: rgb(66, 56, 71);"
+      <div class="pg-row">
+        <pagination-controls
+          style="background-color: rgb(66, 56, 71);"
           previousLabel="Prev"
           nextLabel="Next"
           (pageChange)="onTableDataChange($event)">
         </pagination-controls>
       </div>
 
-      <!-- ─────────────────────────────────────────────
-           Submit button for OBJ-only (no theory block)
-           For BOTH type: "Next → Section B" button
-      ───────────────────────────────────────────── -->
-
-      <!-- OBJ only: show submit here -->
+      <!-- OBJ only: submit -->
       <ng-container *ngIf="quiz.quizType === 'OBJ'">
         <div class="submit-row">
           <button class="btn-submit" (click)="submitAllQuiz()">
@@ -308,7 +358,7 @@
         </div>
       </ng-container>
 
-      <!-- BOTH type: "Proceed to Section B" -->
+      <!-- BOTH type: proceed to Section B -->
       <ng-container *ngIf="quiz.quizType === 'BOTH'">
         <div class="submit-row">
           <button class="btn-next-sec" (click)="activeSection = 'B'">
@@ -324,7 +374,6 @@
 
 
     <!-- ═══ SECTION B — THEORY ═══ -->
-    <!-- Show if quizType THEORY, or BOTH and activeSection is B -->
     <div *ngIf="currentQuestions.length > 0 && (quiz.quizType !== 'BOTH' || activeSection === 'B'); else elseBlock">
 
       <div class="sec-divider" style="margin-top:28px">
@@ -337,11 +386,10 @@
         <div class="sec-rule"></div>
       </div>
 
-      <!-- Compulsory alert -->
       <div class="comp-alert" *ngIf="isCurrentGroupCompulsory()">
         <div class="ca-ico">
           <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5">
-            <path d="M10.29 3.86L1.82 18a2 2 0 0 0 1.71 3h16.94a2 2 0 0 0 1.71-3L13.71 3.86a2 2 0 0 0-3.42 0z"/>
+            <path d="M10.29 3.86L1.82 18a2 2 0 0 0 1.71 3h16.94a2 2 0 0 0 1.71-3L13.71 3.86a2 2 0 0-3.42 0z"/>
             <line x1="12" y1="9" x2="12" y2="13"/>
             <line x1="12" y1="17" x2="12.01" y2="17"/>
           </svg>
@@ -351,7 +399,6 @@
         </span>
       </div>
 
-      <!-- Theory question cards -->
       <form
         (paste)="preventAction($event)"
         (copy)="preventAction($event)"
@@ -359,14 +406,13 @@
         (contextmenu)="preventAction($event)"
         (drop)="preventAction($event)">
 
-        <div class="th-card"
-          *ngFor="let question of currentQuestions; let i = index">
+        <div class="th-card" *ngFor="let question of currentQuestions; let i = index">
           <div class="th-head">
             <div>
               <div class="th-qno">{{ question.quesNo }}</div>
               <div class="th-qtext">{{ question.question }}</div>
             </div>
-            <div class="th-marks" *ngIf="question.marks">{{ question.marks }} </div>
+            <div class="th-marks" *ngIf="question.marks">{{ question.marks }}</div>
           </div>
           <div class="th-body">
             <textarea
@@ -387,14 +433,10 @@
             </textarea>
           </div>
         </div>
-
       </form>
 
-      <!-- Theory section navigation + prefix selector -->
       <div class="th-card">
         <div class="th-nav">
-
-          <!-- Prev / Next page -->
           <div style="display:flex;align-items:center;gap:7px">
             <button class="pg-btn" (click)="prevPage()" [disabled]="currentPage === 0">
               <svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5">
@@ -412,12 +454,8 @@
               </svg>
             </button>
           </div>
-
-          <!-- Prefix selector chips -->
           <div class="prefix-chips" *ngIf="prefixes.length > 0">
-            <span class="ps-lbl">
-              Select {{ numberOfQuestionsToAnswer }} answered:
-            </span>
+            <span class="ps-lbl">Select {{ numberOfQuestionsToAnswer }} answered:</span>
             <span
               *ngFor="let prefix of prefixes"
               class="pfx-chip"
@@ -429,11 +467,9 @@
               <span *ngIf="isGroupCompulsory(prefix)" style="font-size:9px;opacity:.7">COMPULSORY</span>
             </span>
           </div>
-
         </div>
       </div>
 
-      <!-- Submit at the end of Section B — for ALL quiz types that have theory -->
       <div class="submit-row">
         <button class="btn-submit" (click)="submitAllQuiz()" [disabled]="isSubmitDisabled">
           <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5">
@@ -445,23 +481,13 @@
 
     </div><!-- /section B -->
 
-    <!-- elseBlock: THEORY type but currentQuestions empty — shouldn't normally occur -->
-    <ng-template #elseBlock>
-      <!-- No fallback submit here; it's already handled above per quiz type -->
-    </ng-template>
+    <ng-template #elseBlock></ng-template>
 
   </div><!-- /main-area -->
 
 
-
-
-
-
-  
   <!-- ── RIGHT SIDEBAR ── -->
   <div class="sidebar-right">
-
-    <!-- Timer widget -->
     <div class="timer-widget">
       <div class="tw-label">Time Remaining</div>
       <div class="tw-value">{{ getFormmatedTime() }}</div>
@@ -471,7 +497,6 @@
       </div>
     </div>
 
-    <!-- Answer progress -->
     <div>
       <div class="sl-label">Progress</div>
       <div class="ans-stats">
@@ -495,7 +520,6 @@
         </div>
       </div>
     </div>
-
   </div><!-- /sidebar-right -->
 
 </div><!-- /exam-shell -->

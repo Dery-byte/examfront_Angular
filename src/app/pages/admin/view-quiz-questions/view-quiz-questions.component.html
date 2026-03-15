@@ -1,10 +1,9 @@
-<!-- {{questions |json}} -->
+<!-- {{questions |json}}
 
 <h1 class="mt20">{{qTitle}} Questions </h1>
 <div class="bootstrap-wrapper">
     <div class="row">
         <div class="col-md-12">
-            <!-- {{questions | json}} -->
             <div class="container text-center">
                 <button mat-raised-button color="accent" [routerLink]="'/admin/add-question/' + qId +'/' + qTitle">Add
                     Question</button>
@@ -64,7 +63,6 @@
                     </mat-card-actions>
                 </mat-card>
             </div>
-            <!-- POP UP DIALOG BOX TO EIDT OBJECTIVE QUESTIONS -->
             <ng-template #updateObj let-data="data">
                 <h1 mat-dialog-title>Update Question</h1>
                 <div mat-dialog-content>
@@ -76,7 +74,6 @@
 
                     <div class="row">
                         <div class="col-md-6">
-                            <!-- option 1 -->
                             <mat-form-field class="w100">
                                 <mat-label>Enter Option 1</mat-label>
                                 <input required [(ngModel)]="specificObjective.option1" name="option1" type="text"
@@ -85,7 +82,6 @@
                             </mat-form-field>
                         </div>
                         <div class="col-md-6">
-                            <!-- option 2 -->
                             <mat-form-field class="w100">
                                 <mat-label>Enter Option 2</mat-label>
                                 <input required [(ngModel)]="specificObjective.option2" name="option2" type="text"
@@ -97,7 +93,6 @@
 
                     <div class="row">
                         <div class="col-md-6">
-                            <!-- option 3 -->
                             <mat-form-field class="w100">
                                 <mat-label>Enter Option 3</mat-label>
                                 <input [(ngModel)]="specificObjective.option3" name="option3" type="text" matInput />
@@ -105,7 +100,6 @@
                             </mat-form-field>
                         </div>
                         <div class="col-md-6">
-                            <!-- option 4 -->
                             <mat-form-field class="w100">
                                 <mat-label>Enter Option 4</mat-label>
                                 <input [(ngModel)]="specificObjective.option4" name="option4" type="text" matInput />
@@ -114,7 +108,6 @@
                         </div>
                     </div>
 
-                    <!-- answer -->
                     <mat-form-field class="w100">
                         <mat-label>Select answer</mat-label>
                         <mat-select [(ngModel)]="specificObjective.correct_answer" name="correct_answer" multiple
@@ -141,11 +134,9 @@
 
 
 
-            <!-- POP UP DIALOG BOX TO EDIT THEORY  -->
             <ng-template #updateDialog let-data="data">
                 <h1 mat-dialog-title>Update Question</h1>
                 <div mat-dialog-content>
-                    <!-- <form> -->
                     <mat-form-field class="w100" appearance="fill">
                         <mat-label>Question No</mat-label>
                         <input matInput [(ngModel)]="theory.quesNo">
@@ -158,7 +149,6 @@
                         <mat-label>Marks</mat-label>
                         <input matInput [(ngModel)]="theory.marks">
                     </mat-form-field>
-                    <!-- </form> -->
                 </div>
                 <div mat-dialog-actions>
                     <button mat-button (click)="dialogRef.close()">Cancel</button>
@@ -167,7 +157,6 @@
             </ng-template>
 
 
-            <!-- POP UP DIALOG BOX EIDT NUMBER OF QUESTIONS TO ANSWER -->
             <ng-template #updateDialogNumQuestion let-data="data">
                 <h1 mat-dialog-title>Update Number of Questions</h1>
 
@@ -192,11 +181,9 @@
 
 
 
-            <!-- SECTION B -->
             <div *ngIf="getPrefixes().length>0">
                 <h1 style="text-align: center;">Section B</h1>
                 <mat-card>
-                    <!-- <div *ngFor="let qN of numberOfquestionsToAnswer"> -->
                     <h1 style="text-align: center;">Total Questions To Answer:
                         <b>{{numberOfquestionsToAnswers[0].totalQuestToAnswer}}</b>
                         Time Allowed:
@@ -205,7 +192,6 @@
                         <button mat-button color="primary"
                             (click)="openUpdateNumberDialog(numberOfquestionsToAnswers[0].answerTheoryId, updateDialogNumQuestion)">Update</button>
                     </h1>
-                    <!-- </div> -->
                 </mat-card>
 
 
@@ -231,17 +217,13 @@
                                 <p>
                                     <strong>{{ question.quesNo }}:</strong> {{ question.question }} ({{ question.marks
                                     }})
-                                    <!-- <mat-chip *ngIf="compulsoryPrefixes[prefix]" color="warn" selected
-                                        style="margin-left: 8px;">
-                                        Compulsory
-                                    </mat-chip> -->
+                                    
                                     <button mat-icon-button [matMenuTriggerFor]="menu"
                                         aria-label="Example icon-button with a menu">
                                         <mat-icon class="more_verti">more_vert</mat-icon>
                                     </button>
                                 </p>
 
-                                <!-- BUTTON TO OPEN MODEL -->
                                 <mat-card-actions style="margin-top: -75px;">
                                     <mat-menu #menu="matMenu">
                                         <button mat-menu-item (click)="openUpdateDialog(question.tqId, updateDialog)">
@@ -270,12 +252,388 @@
 
 
 
-
-        <!-- {{sectionB | json}} -->
-
-
-
-
     </div>
 
+</div> -->
+
+
+<h1 class="mt20">{{ qTitle }} Questions</h1>
+
+<div class="bootstrap-wrapper">
+    <div class="row">
+        <div class="col-md-12">
+
+            <!-- Add Question -->
+            <div class="container text-center mb20">
+                <button mat-raised-button color="accent" [routerLink]="'/admin/add-question/' + qId + '/' + qTitle">
+                    <mat-icon>add</mat-icon> Add Question
+                </button>
+            </div>
+
+            <!-- Empty state -->
+            <mat-card *ngIf="questions.length === 0 && getPrefixes().length === 0" class="empty-state-card mt20">
+                <mat-card-content class="text-center">
+                    <mat-icon class="empty-icon" color="warn">info</mat-icon>
+                    <h3>No questions available yet</h3>
+                    <p>Click <b>"Add Question"</b> above to get started.</p>
+                </mat-card-content>
+            </mat-card>
+
+
+            <!-- ═══════════════════════════════════════════════════════
+           SECTION A
+           ═══════════════════════════════════════════════════════ -->
+            <div *ngIf="questions.length > 0">
+                <h1 class="section-title">Section A</h1>
+
+                <!-- ── MCQ Group ──────────────────────────────────────── -->
+                <div *ngIf="mcqQuestions.length > 0" class="question-group">
+                    <div class="group-header badge-mcq-header">
+                        <mat-icon>check_box</mat-icon>
+                        Multiple Choice &nbsp;<span class="group-count">{{ mcqQuestions.length }} question(s)</span>
+                    </div>
+
+                    <mat-card *ngFor="let q of mcqQuestions; let i = index" class="mt10 question-card">
+                        <mat-card-content>
+                            <div class="question-header">
+                                <span class="question-number">Q{{ i + 1 }}.</span>
+                                <span class="type-badge badge-mcq">MCQ</span>
+                            </div>
+                            <p class="question-content" [innerHTML]="q.content"></p>
+
+                            <div class="container-fluid">
+                                <div class="row options-grid">
+                                    <div class="col-md-6" *ngIf="q.option1">
+                                        <p class="option-item"><b>1)</b> {{ q.option1 }}</p>
+                                    </div>
+                                    <div class="col-md-6" *ngIf="q.option2">
+                                        <p class="option-item"><b>2)</b> {{ q.option2 }}</p>
+                                    </div>
+                                    <div class="col-md-6" *ngIf="q.option3">
+                                        <p class="option-item"><b>3)</b> {{ q.option3 }}</p>
+                                    </div>
+                                    <div class="col-md-6" *ngIf="q.option4">
+                                        <p class="option-item"><b>4)</b> {{ q.option4 }}</p>
+                                    </div>
+                                </div>
+                                <mat-divider></mat-divider>
+                                <p class="mt10 correct-answer-row">
+                                    <b>Correct Answer(s):</b>
+                                    <span class="answer-chip" *ngFor="let ans of q.correctAnswer">{{ ans }}</span>
+                                </p>
+                            </div>
+                        </mat-card-content>
+                        <mat-card-actions>
+                            <button mat-button color="warn" (click)="deleteQuestion(q.quesId)">Delete</button>
+                            <button mat-button color="primary"
+                                (click)="openUpdateObjDialog(q.quesId, updateObj)">Update</button>
+                        </mat-card-actions>
+                    </mat-card>
+                </div>
+
+
+                <!-- ── True / False Group ─────────────────────────────── -->
+                <div *ngIf="trueFalseQuestions.length > 0" class="question-group mt20">
+                    <div class="group-header badge-tf-header">
+                        <mat-icon>toggle_on</mat-icon>
+                        True / False &nbsp;<span class="group-count">{{ trueFalseQuestions.length }} question(s)</span>
+                    </div>
+
+                    <mat-card *ngFor="let q of trueFalseQuestions; let i = index" class="mt10 question-card">
+                        <mat-card-content>
+                            <div class="question-header">
+                                <span class="question-number">Q{{ i + 1 }}.</span>
+                                <span class="type-badge badge-truefalse">True / False</span>
+                            </div>
+                            <p class="question-content" [innerHTML]="q.content"></p>
+
+                            <div class="tf-options">
+                                <div class="tf-btn" [ngClass]="{'tf-correct': q.correctAnswer?.[0] === 'True'}">
+                                    <mat-icon>{{ q.correctAnswer?.[0] === 'True' ? 'check_circle' :
+                                        'radio_button_unchecked' }}</mat-icon>
+                                    True
+                                </div>
+                                <div class="tf-btn" [ngClass]="{'tf-correct': q.correctAnswer?.[0] === 'False'}">
+                                    <mat-icon>{{ q.correctAnswer?.[0] === 'False' ? 'check_circle' :
+                                        'radio_button_unchecked' }}</mat-icon>
+                                    False
+                                </div>
+                            </div>
+                            <mat-divider></mat-divider>
+                            <p class="mt10 correct-answer-row">
+                                <b>Correct Answer:</b>
+                                <span class="answer-chip">{{ q.correctAnswer?.[0] }}</span>
+                            </p>
+                        </mat-card-content>
+                        <mat-card-actions>
+                            <button mat-button color="warn" (click)="deleteQuestion(q.quesId)">Delete</button>
+                            <button mat-button color="primary"
+                                (click)="openUpdateObjDialog(q.quesId, updateObj)">Update</button>
+                        </mat-card-actions>
+                    </mat-card>
+                </div>
+
+
+                <!-- ── Matching Group ─────────────────────────────────── -->
+                <div *ngIf="matchingQuestions.length > 0" class="question-group mt20">
+                    <div class="group-header badge-matching-header">
+                        <mat-icon>swap_horiz</mat-icon>
+                        Matching &nbsp;<span class="group-count">{{ matchingQuestions.length }} question(s)</span>
+                    </div>
+
+                    <mat-card *ngFor="let q of matchingQuestions; let i = index" class="mt10 question-card">
+                        <mat-card-content>
+                            <div class="question-header">
+                                <span class="question-number">Q{{ i + 1 }}.</span>
+                                <span class="type-badge badge-matching">Matching</span>
+                                <span class="marks-info">
+                                    <mat-icon style="font-size:14px;vertical-align:middle;">stars</mat-icon>
+                                    {{ q.matchingPairs.length }} mark(s) · 1 per pair
+                                </span>
+                            </div>
+                            <p class="question-content" [innerHTML]="q.content"></p>
+<!-- {{matchingQuestions|json}} -->
+                            <div class="matching-table">
+                                <div class="matching-header">
+                                    <span>Prompt</span>
+                                    <span></span>
+                                    <span>Correct Answer</span>
+                                </div>
+                                <div class="matching-row" *ngFor="let pair of q.matchingPairs">
+                                    <span class="matching-prompt">{{ pair.prompt }}</span>
+                                    <span class="matching-arrow">→</span>
+                                    <span class="matching-answer">{{ pair.answer }}</span>
+                                </div>
+                            </div>
+                        </mat-card-content>
+                        <mat-card-actions>
+                            <button mat-button color="warn" (click)="deleteQuestion(q.quesId)">Delete</button>
+                            <button mat-button color="primary"
+                                (click)="openUpdateObjDialog(q.quesId, updateObj)">Update</button>
+                        </mat-card-actions>
+                    </mat-card>
+                </div>
+            </div><!-- /Section A -->
+
+
+            <!-- ═══════════════════════════════════════════════════════
+           UPDATE DIALOG — handles all 3 types
+           ═══════════════════════════════════════════════════════ -->
+            <ng-template #updateObj>
+                <h1 mat-dialog-title>Update Question</h1>
+                <div mat-dialog-content>
+
+                    <!-- Type selector -->
+                    <mat-form-field class="w100">
+                        <mat-label>Question Type</mat-label>
+                        <mat-select [(ngModel)]="specificObjective.questionType" name="questionType" required>
+                            <mat-option value="MCQ">Multiple Choice (MCQ)</mat-option>
+                            <mat-option value="TRUE_FALSE">True / False</mat-option>
+                            <mat-option value="MATCHING">Matching</mat-option>
+                        </mat-select>
+                    </mat-form-field>
+
+                    <!-- Content editor -->
+                    <ckeditor [editor]="Editor" name="content" [(ngModel)]="specificObjective.content"></ckeditor>
+
+                    <!-- MCQ fields -->
+                    <ng-container *ngIf="specificObjective.questionType === 'MCQ'">
+                        <div class="row mt10">
+                            <div class="col-md-6">
+                                <mat-form-field class="w100"><mat-label>Option 1</mat-label>
+                                    <input required matInput [(ngModel)]="specificObjective.option1" name="option1" />
+                                </mat-form-field>
+                            </div>
+                            <div class="col-md-6">
+                                <mat-form-field class="w100"><mat-label>Option 2</mat-label>
+                                    <input required matInput [(ngModel)]="specificObjective.option2" name="option2" />
+                                </mat-form-field>
+                            </div>
+                            <div class="col-md-6">
+                                <mat-form-field class="w100"><mat-label>Option 3</mat-label>
+                                    <input matInput [(ngModel)]="specificObjective.option3" name="option3" />
+                                </mat-form-field>
+                            </div>
+                            <div class="col-md-6">
+                                <mat-form-field class="w100"><mat-label>Option 4</mat-label>
+                                    <input matInput [(ngModel)]="specificObjective.option4" name="option4" />
+                                </mat-form-field>
+                            </div>
+                        </div>
+                        <mat-form-field class="w100">
+                            <mat-label>Correct Answer(s)</mat-label>
+                            <mat-select [(ngModel)]="specificObjective.correctAnswer" name="correct_answer" multiple
+                                required>
+                                <mat-option *ngIf="specificObjective.option1" [value]="specificObjective.option1">{{
+                                    specificObjective.option1 }}</mat-option>
+                                <mat-option *ngIf="specificObjective.option2" [value]="specificObjective.option2">{{
+                                    specificObjective.option2 }}</mat-option>
+                                <mat-option *ngIf="specificObjective.option3" [value]="specificObjective.option3">{{
+                                    specificObjective.option3 }}</mat-option>
+                                <mat-option *ngIf="specificObjective.option4" [value]="specificObjective.option4">{{
+                                    specificObjective.option4 }}</mat-option>
+                            </mat-select>
+                        </mat-form-field>
+                    </ng-container>
+
+                    <!-- TRUE_FALSE fields
+          <ng-container *ngIf="specificObjective.questionType === 'TRUE_FALSE'">
+            <p class="hint-text">Options are fixed as True / False.</p>
+            <mat-form-field class="w100">
+              <mat-label>Correct Answer</mat-label>
+              {{specificObjective.correctAnswer}}
+              <mat-select [(ngModel)]="specificObjective.correctAnswer" name="correctAnswer" required>
+                <mat-option [value]="['True']">True</mat-option>
+                <mat-option [value]="['False']">False</mat-option>
+              </mat-select>
+            </mat-form-field>
+          </ng-container> -->
+
+
+                    <ng-container *ngIf="specificObjective.questionType === 'TRUE_FALSE'">
+                        <p class="hint-text">Options are fixed as True / False.</p>
+                        <mat-form-field class="w100">
+                            <mat-label>Correct Answer</mat-label>
+                            <mat-select [ngModel]="specificObjective.correctAnswer?.[0]"
+                                (ngModelChange)="specificObjective.correctAnswer = [$event]" name="correctAnswer"
+                                required>
+                                <mat-option value="True">True</mat-option>
+                                <mat-option value="False">False</mat-option>
+                            </mat-select>
+                        </mat-form-field>
+                    </ng-container>
+
+
+
+                    <!-- MATCHING fields -->
+                    <ng-container *ngIf="specificObjective.questionType === 'MATCHING'">
+                        <p class="hint-text">Each correct pair earns 1 mark.</p>
+                        <div *ngFor="let pair of specificObjective.matchingPairs; let pi = index"
+                            class="matching-edit-row">
+                            <mat-form-field style="flex:1">
+                                <mat-label>Prompt {{ pi + 1 }}</mat-label>
+                                <input matInput [(ngModel)]="pair.prompt" [name]="'prompt' + pi" required />
+                            </mat-form-field>
+
+                            <!-- {{pair|json}} -->
+                            <span class="edit-arrow">→</span>
+                            <mat-form-field style="flex:1">
+                                <mat-label>Answer {{ pi + 1 }}</mat-label>
+                                <input matInput [(ngModel)]="pair.answer" [name]="'answer' + pi" required />
+                            </mat-form-field>
+                            <button mat-icon-button color="warn" (click)="removeMatchingPair(pi)">
+                                <mat-icon>remove_circle</mat-icon>
+                            </button>
+                        </div>
+                        <button mat-stroked-button color="primary" (click)="addMatchingPair()" class="mt10">
+                            <mat-icon>add</mat-icon> Add Pair
+                        </button>
+                    </ng-container>
+
+                </div>
+                <div mat-dialog-actions>
+                    <button mat-button (click)="dialogRef.close()">Cancel</button>
+                    <button mat-button color="primary" (click)="updateQuestionData()">Update</button>
+                </div>
+            </ng-template>
+
+
+            <!-- ═══════════════════════════════════════════════════════
+           SECTION B — Theory (unchanged)
+           ═══════════════════════════════════════════════════════ -->
+            <div *ngIf="getPrefixes().length > 0">
+                <h1 class="section-title">Section B</h1>
+
+                <mat-card>
+                    <h2 style="text-align:center; padding: 12px 0;">
+                        Answer: <b>{{ numberOfquestionsToAnswers?.[0]?.totalQuestToAnswer }}</b> &nbsp;|&nbsp;
+                        Time: <b>{{ numberOfquestionsToAnswers?.[0]?.timeAllowed }}</b>
+                        <button mat-button color="primary"
+                            (click)="openUpdateNumberDialog(numberOfquestionsToAnswers[0].answerTheoryId, updateDialogNumQuestion)">
+                            Update
+                        </button>
+                    </h2>
+                </mat-card>
+
+                <div *ngFor="let prefix of getPrefixes()">
+                    <mat-card *ngIf="getGroupedQuestions(prefix).length > 0"
+                        [ngClass]="{'compulsory-card': compulsoryPrefixes[prefix]}" class="mt10">
+                        <mat-card-header>
+                            <mat-card-title style="display:flex; align-items:center; justify-content:space-between;">
+                                <span>{{ prefix }}</span>
+                                <div style="display:flex; align-items:center; gap:8px;">
+                                    <span style="font-size:14px; font-weight:normal;">Compulsory</span>
+                                    <mat-slide-toggle [(ngModel)]="compulsoryPrefixes[prefix]"
+                                        (change)="onCompulsoryChange(prefix, $event.checked)" color="primary"
+                                        [disabled]="isUpdatingCompulsory[prefix]">
+                                    </mat-slide-toggle>
+                                </div>
+                            </mat-card-title>
+                        </mat-card-header>
+                        <mat-card-content>
+                            <div *ngFor="let question of getGroupedQuestions(prefix)">
+                                <p>
+                                    <strong>{{ question.quesNo }}:</strong> {{ question.question }} ({{ question.marks
+                                    }})
+                                    <button mat-icon-button [matMenuTriggerFor]="menu">
+                                        <mat-icon>more_vert</mat-icon>
+                                    </button>
+                                </p>
+                                <mat-card-actions style="margin-top: -75px;">
+                                    <mat-menu #menu="matMenu">
+                                        <button mat-menu-item (click)="openUpdateDialog(question.tqId, updateDialog)">
+                                            <mat-icon color="accent">update</mat-icon><span>Update</span>
+                                        </button>
+                                        <button mat-menu-item (click)="deleteTheoryQuestion(question.tqId)">
+                                            <mat-icon color="warn">delete</mat-icon><span>Delete</span>
+                                        </button>
+                                    </mat-menu>
+                                </mat-card-actions>
+                            </div>
+                        </mat-card-content>
+                    </mat-card>
+                    <mat-divider></mat-divider>
+                </div>
+            </div>
+
+        </div>
+    </div>
 </div>
+
+
+<!-- Theory update dialog -->
+<ng-template #updateDialog>
+    <h1 mat-dialog-title>Update Theory Question</h1>
+    <div mat-dialog-content>
+        <mat-form-field class="w100" appearance="fill"><mat-label>Question No</mat-label>
+            <input matInput [(ngModel)]="theory.quesNo">
+        </mat-form-field>
+        <mat-form-field class="w100" appearance="fill"><mat-label>Question</mat-label>
+            <input matInput [(ngModel)]="theory.question">
+        </mat-form-field>
+        <mat-form-field class="w100" appearance="fill"><mat-label>Marks</mat-label>
+            <input matInput [(ngModel)]="theory.marks">
+        </mat-form-field>
+    </div>
+    <div mat-dialog-actions>
+        <button mat-button (click)="dialogRef.close()">Cancel</button>
+        <button mat-button color="primary" (click)="updateTheoryQuestion()">Update</button>
+    </div>
+</ng-template>
+
+<!-- Theory question count dialog -->
+<ng-template #updateDialogNumQuestion>
+    <h1 mat-dialog-title>Update Number of Questions</h1>
+    <div mat-dialog-content>
+        <mat-form-field class="w100" appearance="fill"><mat-label>Number to Answer</mat-label>
+            <input matInput [(ngModel)]="numberOfquestionsToAnswer[0].totalQuestToAnswer">
+        </mat-form-field>
+        <mat-form-field class="w100" appearance="fill"><mat-label>Time Allowed</mat-label>
+            <input matInput [(ngModel)]="numberOfquestionsToAnswer[0].timeAllowed">
+        </mat-form-field>
+    </div>
+    <div mat-dialog-actions>
+        <button mat-button (click)="dialogRef.close()">Cancel</button>
+        <button mat-button color="primary" (click)="updateTheoryNumberOfQuesToAnswer()">Update</button>
+    </div>
+</ng-template>
