@@ -1,6 +1,15 @@
 <!-- ══════════════════════════════════════════
      LOADING
 ══════════════════════════════════════════ -->
+
+
+
+
+
+<!-- {{question |json}} -->
+
+<!-- {{currentQuestions | json}} -->
+
 <div class="lo-overlay" *ngIf="isLoading">
   <div class="lo-spin"></div>
   <div class="lo-txt">LOADING QUIZ CONTENT…</div>
@@ -24,15 +33,21 @@
     <div class="tb-right">
       <button class="theme-toggle" (click)="isLightTheme = !isLightTheme"
         [title]="isLightTheme ? 'Switch to Dark' : 'Switch to Light'">
-        <svg *ngIf="!isLightTheme" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-          <circle cx="12" cy="12" r="5"/>
-          <line x1="12" y1="1" x2="12" y2="3"/><line x1="12" y1="21" x2="12" y2="23"/>
-          <line x1="4.22" y1="4.22" x2="5.64" y2="5.64"/><line x1="18.36" y1="18.36" x2="19.78" y2="19.78"/>
-          <line x1="1" y1="12" x2="3" y2="12"/><line x1="21" y1="12" x2="23" y2="12"/>
-          <line x1="4.22" y1="19.78" x2="5.64" y2="18.36"/><line x1="18.36" y1="5.64" x2="19.78" y2="4.22"/>
+        <svg *ngIf="!isLightTheme" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+          stroke-width="2">
+          <circle cx="12" cy="12" r="5" />
+          <line x1="12" y1="1" x2="12" y2="3" />
+          <line x1="12" y1="21" x2="12" y2="23" />
+          <line x1="4.22" y1="4.22" x2="5.64" y2="5.64" />
+          <line x1="18.36" y1="18.36" x2="19.78" y2="19.78" />
+          <line x1="1" y1="12" x2="3" y2="12" />
+          <line x1="21" y1="12" x2="23" y2="12" />
+          <line x1="4.22" y1="19.78" x2="5.64" y2="18.36" />
+          <line x1="18.36" y1="5.64" x2="19.78" y2="4.22" />
         </svg>
-        <svg *ngIf="isLightTheme" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-          <path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"/>
+        <svg *ngIf="isLightTheme" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+          stroke-width="2">
+          <path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z" />
         </svg>
       </button>
       <div class="tb-timer">{{ getFormmatedTime() }}</div>
@@ -51,7 +66,7 @@
         </span>
         <span class="snb-check" *ngIf="answeredCount === questions?.length && questions?.length > 0">
           <svg width="10" height="10" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3">
-            <polyline points="20 6 9 17 4 12"/>
+            <polyline points="20 6 9 17 4 12" />
           </svg>
         </span>
       </button>
@@ -64,7 +79,7 @@
         </span>
         <span class="snb-check" *ngIf="selectedCount >= numberOfQuestionsToAnswer">
           <svg width="10" height="10" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3">
-            <polyline points="20 6 9 17 4 12"/>
+            <polyline points="20 6 9 17 4 12" />
           </svg>
         </span>
       </button>
@@ -80,7 +95,8 @@
           <li class="warn" *ngIf="quiz.quizType=='OBJ'">
             <span class="ii-box">
               <svg width="8" height="8" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3">
-                <path d="M12 9v4"/><circle cx="12" cy="17" r="1.2" fill="currentColor"/>
+                <path d="M12 9v4" />
+                <circle cx="12" cy="17" r="1.2" fill="currentColor" />
               </svg>
             </span>
             Answer all questions in Section A.
@@ -88,7 +104,8 @@
           <li class="warn" *ngIf="quiz.quizType=='THEORY'">
             <span class="ii-box">
               <svg width="8" height="8" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3">
-                <path d="M12 9v4"/><circle cx="12" cy="17" r="1.2" fill="currentColor"/>
+                <path d="M12 9v4" />
+                <circle cx="12" cy="17" r="1.2" fill="currentColor" />
               </svg>
             </span>
             <span *ngIf="compulsoryPrefixes.length > 0">
@@ -102,7 +119,8 @@
           <li class="warn" *ngIf="quiz.quizType=='BOTH'">
             <span class="ii-box">
               <svg width="8" height="8" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3">
-                <path d="M12 9v4"/><circle cx="12" cy="17" r="1.2" fill="currentColor"/>
+                <path d="M12 9v4" />
+                <circle cx="12" cy="17" r="1.2" fill="currentColor" />
               </svg>
             </span>
             Answer all questions in Section A and
@@ -117,7 +135,8 @@
           <li>
             <span class="ii-box">
               <svg width="8" height="8" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5">
-                <line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/>
+                <line x1="18" y1="6" x2="6" y2="18" />
+                <line x1="6" y1="6" x2="18" y2="18" />
               </svg>
             </span>
             Do not refresh — you may receive new questions.
@@ -125,7 +144,8 @@
           <li>
             <span class="ii-box">
               <svg width="8" height="8" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5">
-                <line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/>
+                <line x1="18" y1="6" x2="6" y2="18" />
+                <line x1="6" y1="6" x2="18" y2="18" />
               </svg>
             </span>
             Do not switch tabs or minimize the window.
@@ -138,10 +158,7 @@
     <div *ngIf="questions?.length > 0">
       <div class="sl-label">Section A — Progress</div>
       <div class="q-dots">
-        <div
-          *ngFor="let q of questions; let i = index"
-          class="q-dot"
-          [class.answered]="isQuestionAnswered(q)">
+        <div *ngFor="let q of questions; let i = index" class="q-dot" [class.answered]="isQuestionAnswered(q)">
           {{ q.count }}
         </div>
       </div>
@@ -172,8 +189,7 @@
           <span class="qtype-desc">Select one or more correct answers</span>
         </div>
 
-        <div
-          class="q-card"
+        <div class="q-card"
           *ngFor="let q of getMCQQuestions() | paginate:{itemsPerPage:tableSize, currentPage:page, totalItems:count}; let i = index"
           [class.answered]="q.givenAnswer?.length > 0">
 
@@ -217,9 +233,7 @@
           <span class="qtype-desc">Select whether the statement is true or false</span>
         </div>
 
-        <div
-          class="q-card"
-          *ngFor="let q of getTrueFalseQuestions(); let i = index"
+        <div class="q-card" *ngFor="let q of getTrueFalseQuestions(); let i = index"
           [class.answered]="q.givenAnswer?.length > 0">
 
           <div class="q-head">
@@ -237,15 +251,13 @@
           ──────────────────────────────────────────────────────────── -->
           <div class="q-options tf-options">
 
-            <div class="opt-tile tf-tile"
-              [class.sel]="q.givenAnswer?.[0] === 'True'"
+            <div class="opt-tile tf-tile" [class.sel]="q.givenAnswer?.[0] === 'True'"
               (click)="selectTrueFalse(q, 'True')">
               <div class="opt-letter tf-true">T</div>
               <div class="opt-txt">True</div>
             </div>
 
-            <div class="opt-tile tf-tile"
-              [class.sel]="q.givenAnswer?.[0] === 'False'"
+            <div class="opt-tile tf-tile" [class.sel]="q.givenAnswer?.[0] === 'False'"
               (click)="selectTrueFalse(q, 'False')">
               <div class="opt-letter tf-false">F</div>
               <div class="opt-txt">False</div>
@@ -262,9 +274,7 @@
           <span class="qtype-desc">Drag answers from the pool and drop them onto the correct prompt</span>
         </div>
 
-        <div
-          class="q-card matching-card"
-          *ngFor="let q of getMatchingQuestions(); let qi = index"
+        <div class="q-card matching-card" *ngFor="let q of getMatchingQuestions(); let qi = index"
           [class.answered]="isMatchingAnswered(q)">
 
           <div class="q-head">
@@ -280,9 +290,7 @@
             <!-- LEFT: Prompts with drop zones -->
             <div class="matching-prompts-col">
               <div class="matching-col-label">Prompts</div>
-              <div
-                class="matching-prompt-row"
-                *ngFor="let pair of q.matchingPairs; let pi = index">
+              <div class="matching-prompt-row" *ngFor="let pair of q.matchingPairs; let pi = index">
 
                 <div class="matching-prompt-text">
                   <span class="matching-prompt-num">{{ pi + 1 }}</span>
@@ -292,20 +300,13 @@
                 <div class="matching-arrow-icon">→</div>
 
                 <!-- Drop zone -->
-                <div
-                  class="matching-drop-zone"
-                  [class.filled]="getMatchingAnswer(q, pi) !== ''"
-                  [class.drag-over]="isDragOver(q.quesId, pi)"
-                  (dragover)="onDragOver($event, q.quesId, pi)"
-                  (dragleave)="onDragLeave(q.quesId, pi)"
-                  (drop)="onDrop($event, q, pi)">
+                <div class="matching-drop-zone" [class.filled]="getMatchingAnswer(q, pi) !== ''"
+                  [class.drag-over]="isDragOver(q.quesId, pi)" (dragover)="onDragOver($event, q.quesId, pi)"
+                  (dragleave)="onDragLeave(q.quesId, pi)" (drop)="onDrop($event, q, pi)">
 
                   <ng-container *ngIf="getMatchingAnswer(q, pi) !== ''; else emptyZone">
                     <span class="drop-zone-answer">{{ getMatchingAnswer(q, pi) }}</span>
-                    <button
-                      class="drop-zone-clear"
-                      (click)="clearMatchingAnswer(q, pi)"
-                      title="Remove answer">
+                    <button class="drop-zone-clear" (click)="clearMatchingAnswer(q, pi)" title="Remove answer">
                       ×
                     </button>
                   </ng-container>
@@ -321,18 +322,15 @@
             <div class="matching-pool-col">
               <div class="matching-col-label">Answer Pool</div>
               <div class="matching-pool">
-                <div
-                  class="matching-chip"
-                  *ngFor="let ans of getAvailableAnswers(q)"
-                  draggable="true"
+                <div class="matching-chip" *ngFor="let ans of getAvailableAnswers(q)" draggable="true"
                   (dragstart)="onDragStart($event, q.quesId, ans)">
                   <svg class="drag-handle-icon" width="10" height="14" viewBox="0 0 10 14" fill="none">
-                    <circle cx="3" cy="2.5" r="1.2" fill="currentColor" opacity=".5"/>
-                    <circle cx="7" cy="2.5" r="1.2" fill="currentColor" opacity=".5"/>
-                    <circle cx="3" cy="7"   r="1.2" fill="currentColor" opacity=".5"/>
-                    <circle cx="7" cy="7"   r="1.2" fill="currentColor" opacity=".5"/>
-                    <circle cx="3" cy="11.5" r="1.2" fill="currentColor" opacity=".5"/>
-                    <circle cx="7" cy="11.5" r="1.2" fill="currentColor" opacity=".5"/>
+                    <circle cx="3" cy="2.5" r="1.2" fill="currentColor" opacity=".5" />
+                    <circle cx="7" cy="2.5" r="1.2" fill="currentColor" opacity=".5" />
+                    <circle cx="3" cy="7" r="1.2" fill="currentColor" opacity=".5" />
+                    <circle cx="7" cy="7" r="1.2" fill="currentColor" opacity=".5" />
+                    <circle cx="3" cy="11.5" r="1.2" fill="currentColor" opacity=".5" />
+                    <circle cx="7" cy="11.5" r="1.2" fill="currentColor" opacity=".5" />
                   </svg>
                   {{ ans }}
                 </div>
@@ -348,10 +346,7 @@
 
       <!-- Pagination -->
       <div class="pg-row">
-        <pagination-controls
-          style="background-color: rgb(66, 56, 71);"
-          previousLabel="Prev"
-          nextLabel="Next"
+        <pagination-controls style="background-color: rgb(66, 56, 71);" previousLabel="Prev" nextLabel="Next"
           (pageChange)="onTableDataChange($event)">
         </pagination-controls>
       </div>
@@ -361,7 +356,7 @@
         <div class="submit-row">
           <button class="btn-submit" (click)="submitAllQuiz()">
             <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5">
-              <polyline points="20 6 9 17 4 12"/>
+              <polyline points="20 6 9 17 4 12" />
             </svg>
             <span>Submit Quiz</span>
           </button>
@@ -374,7 +369,7 @@
           <button class="btn-next-sec" (click)="activeSection = 'B'">
             Proceed to Section B
             <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5">
-              <polyline points="9 18 15 12 9 6"/>
+              <polyline points="9 18 15 12 9 6" />
             </svg>
           </button>
         </div>
@@ -396,7 +391,7 @@
         <div class="sec-rule"></div>
       </div>
 
-      <div class="comp-alert" *ngIf="isCurrentGroupCompulsory()">
+      <!-- <div class="comp-alert" *ngIf="isCurrentGroupCompulsory()">
         <div class="ca-ico">
           <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5">
             <path d="M10.29 3.86L1.82 18a2 2 0 0 0 1.71 3h16.94a2 2 0 0 0 1.71-3L13.71 3.86a2 2 0-3.42 0z"/>
@@ -407,14 +402,19 @@
         <span class="ca-txt">
           COMPULSORY — All questions in <strong>{{ prefixes[currentPage] }}</strong> must be answered
         </span>
+      </div> -->
+      <!-- ADD this right above the *ngFor th-card div -->
+      <div class="comp-prefix-banner" *ngIf="isGroupCompulsory(prefixes[currentPage])">
+        <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5">
+          <path d="M12 2L2 7l10 5 10-5-10-5z" />
+          <path d="M2 17l10 5 10-5" />
+          <path d="M2 12l10 5 10-5" />
+        </svg>
+        COMPULSORY GROUP — This entire group must be answered
       </div>
 
-      <form
-        (paste)="preventAction($event)"
-        (copy)="preventAction($event)"
-        (cut)="preventAction($event)"
-        (contextmenu)="preventAction($event)"
-        (drop)="preventAction($event)">
+      <form (paste)="preventAction($event)" (copy)="preventAction($event)" (cut)="preventAction($event)"
+        (contextmenu)="preventAction($event)" (drop)="preventAction($event)">
 
         <div class="th-card" *ngFor="let question of currentQuestions; let i = index">
           <div class="th-head">
@@ -425,20 +425,10 @@
             <div class="th-marks" *ngIf="question.marks">{{ question.marks }}</div>
           </div>
           <div class="th-body">
-            <textarea
-              class="th-textarea"
-              [name]="'givenAnswer' + i"
-              [(ngModel)]="question.givenAnswer"
-              (ngModelChange)="saveAnswers()"
-              (paste)="preventAction($event)"
-              (copy)="preventAction($event)"
-              (cut)="preventAction($event)"
-              (contextmenu)="preventAction($event)"
-              (drop)="preventAction($event)"
-              (dragover)="preventAction($event)"
-              autocomplete="off"
-              spellcheck="false"
-              rows="4"
+            <textarea class="th-textarea" [name]="'givenAnswer' + i" [(ngModel)]="question.givenAnswer"
+              (ngModelChange)="saveAnswers()" (paste)="preventAction($event)" (copy)="preventAction($event)"
+              (cut)="preventAction($event)" (contextmenu)="preventAction($event)" (drop)="preventAction($event)"
+              (dragover)="preventAction($event)" autocomplete="off" spellcheck="false" rows="4"
               placeholder="Write your answer here…">
             </textarea>
           </div>
@@ -450,7 +440,7 @@
           <div style="display:flex;align-items:center;gap:7px">
             <button class="pg-btn" (click)="prevPage()" [disabled]="currentPage === 0">
               <svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5">
-                <polyline points="15 18 9 12 15 6"/>
+                <polyline points="15 18 9 12 15 6" />
               </svg>
               Previous
             </button>
@@ -460,16 +450,13 @@
             <button class="pg-btn" (click)="nextPage()" [disabled]="currentPage === prefixes.length - 1">
               Next
               <svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5">
-                <polyline points="9 18 15 12 9 6"/>
+                <polyline points="9 18 15 12 9 6" />
               </svg>
             </button>
           </div>
           <div class="prefix-chips" *ngIf="prefixes.length > 0">
             <span class="ps-lbl">Select {{ numberOfQuestionsToAnswer }} answered:</span>
-            <span
-              *ngFor="let prefix of prefixes"
-              class="pfx-chip"
-              [class.sel]="selectedQuestions[prefix]"
+            <span *ngFor="let prefix of prefixes" class="pfx-chip" [class.sel]="selectedQuestions[prefix]"
               [class.comp]="isGroupCompulsory(prefix)"
               (click)="!isGroupCompulsory(prefix) && togglePrefixSelection(prefix)">
               <span class="pfx-dot" *ngIf="isGroupCompulsory(prefix)"></span>
@@ -483,7 +470,7 @@
       <div class="submit-row">
         <button class="btn-submit" (click)="submitAllQuiz()" [disabled]="isSubmitDisabled">
           <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5">
-            <polyline points="20 6 9 17 4 12"/>
+            <polyline points="20 6 9 17 4 12" />
           </svg>
           <span>Submit Quiz</span>
         </button>
@@ -545,10 +532,9 @@
     <div class="tu-sub">Your exam is being submitted automatically. Please wait.</div>
     <div class="countdown-wrap">
       <svg class="prog-ring" width="130" height="130">
-        <circle cx="65" cy="65" r="55" class="ring-bg"/>
-        <circle cx="65" cy="65" r="55" class="ring-prog"
-          [attr.stroke-dasharray]="345"
-          [attr.stroke-dashoffset]="345 - (progressPercent / 100) * 345"/>
+        <circle cx="65" cy="65" r="55" class="ring-bg" />
+        <circle cx="65" cy="65" r="55" class="ring-prog" [attr.stroke-dasharray]="345"
+          [attr.stroke-dashoffset]="345 - (progressPercent / 100) * 345" />
       </svg>
       <div class="countdown-num">{{ countdownText }}</div>
     </div>

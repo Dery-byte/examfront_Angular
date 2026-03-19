@@ -243,9 +243,9 @@ export class StartComponent implements OnInit, OnDestroy {
   // ============================================================================
 
   ngOnInit(): void {
-    this.screenshotPrevention.enableProtection();
+    // this.screenshotPrevention.enableProtection();
     this.isLoading = true;
-    this.screenshotPrevention.enableProtection();
+    // this.screenshotPrevention.enableProtection();
     // After enableProtection():
 
 
@@ -256,9 +256,9 @@ export class StartComponent implements OnInit, OnDestroy {
     //  this.quizProtection.setQuizContext(this.qid, baseUrl, localStorage.getItem('token') || '');
 
     //     // Inside initializeTimer():
-    this.quizProtection.loadDelayFromBackend(this.qid);
+    // this.quizProtection.loadDelayFromBackend(this.qid);
     // Setup protection subscriptions FIRST
-    this.setupProtectionSubscriptions();
+    // this.setupProtectionSubscriptions();
     this.startAutoSaveviolationDelay(); // <-- ADD THIS LINE HERE
 
     this._quiz.getQuiz(this.qid).subscribe(
@@ -273,8 +273,8 @@ export class StartComponent implements OnInit, OnDestroy {
         console.log(this.timerAll);
         console.log(this.timeO * 60);
         // Enable protection AFTER quiz data is loaded
-        this.enableQuizProtection();
-        this.enableQuizProtection();
+        // this.enableQuizProtection();
+        // this.enableQuizProtection();
 
         // ✅ KEEP these too (re-sets context after enableProtection resets state)
 
@@ -1242,6 +1242,7 @@ selectTrueFalse(q: any, value: 'True' | 'False'): void {
     this._questions.getSubjective(this.qid).subscribe(
       (theory: any) => {
         console.log(theory);
+        this.sectionB = theory;
         this.groupedQuestions = this.getQuestionsGroupedByPrefix(theory);
         this.prefixes = this.sortPrefixesByCompulsory(this.groupedQuestions);
         this.compulsoryPrefixes = this.getCompulsoryPrefixes();
@@ -1271,28 +1272,52 @@ selectTrueFalse(q: any, value: 'True' | 'False'): void {
     return this.currentQuestions.every(q => q.isCompulsory);
   }
 
+
   isGroupCompulsory(prefix: string): boolean {
-    const questions = this.groupedQuestions[prefix];
-    if (!questions || questions.length === 0) {
-      return false;
-    }
-    return questions.every((q: any) => q.isCompulsory);
+  const questions = this.sectionB.filter(q => q.quesNo.startsWith(prefix));
+  if (!questions || questions.length === 0) {
+    return false;
   }
+  return questions.some((q: any) => q.compulsory === true || q.isCompulsory === true);
+}
+
+
+
+  // isGroupCompulsory(prefix: string): boolean {
+  //   const questions = this.groupedQuestions[prefix];
+  //   if (!questions || questions.length === 0) {
+  //     return false;
+  //   }
+  //   return questions.every((q: any) => q.isCompulsory);
+  // }
+
 
   sortPrefixesByCompulsory(groupedQuestions: any): string[] {
     const prefixes = Object.keys(groupedQuestions);
-
     return prefixes.sort((prefixA, prefixB) => {
       const questionsA = groupedQuestions[prefixA];
       const questionsB = groupedQuestions[prefixB];
-      const isGroupACompulsory = questionsA.every((q: any) => q.isCompulsory);
-      const isGroupBCompulsory = questionsB.every((q: any) => q.isCompulsory);
-
+      const isGroupACompulsory = questionsA.some((q: any) => q.compulsory === true || q.isCompulsory === true);
+      const isGroupBCompulsory = questionsB.some((q: any) => q.compulsory === true || q.isCompulsory === true);
       if (isGroupACompulsory && !isGroupBCompulsory) return -1;
       if (!isGroupACompulsory && isGroupBCompulsory) return 1;
       return prefixA.localeCompare(prefixB, undefined, { numeric: true });
     });
   }
+  // sortPrefixesByCompulsory(groupedQuestions: any): string[] {
+  //   const prefixes = Object.keys(groupedQuestions);
+
+  //   return prefixes.sort((prefixA, prefixB) => {
+  //     const questionsA = groupedQuestions[prefixA];
+  //     const questionsB = groupedQuestions[prefixB];
+  //     const isGroupACompulsory = questionsA.every((q: any) => q.isCompulsory);
+  //     const isGroupBCompulsory = questionsB.every((q: any) => q.isCompulsory);
+
+  //     if (isGroupACompulsory && !isGroupBCompulsory) return -1;
+  //     if (!isGroupACompulsory && isGroupBCompulsory) return 1;
+  //     return prefixA.localeCompare(prefixB, undefined, { numeric: true });
+  //   });
+  // }
 
   getQuestionsGroupedByPrefix(questions): any {
     return questions.reduce((acc, question) => {
