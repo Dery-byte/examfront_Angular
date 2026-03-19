@@ -129,3 +129,19 @@ mat-card {
   /* ── Matching edit rows (inside dialog) ──────── */
   .matching-edit-row { display:flex; align-items:flex-start; gap:8px; margin-bottom:4px; }
   .edit-arrow        { padding:0 8px; line-height:56px; color:#c8502a; font-weight:700; }
+
+
+
+
+
+
+
+
+  .compulsory-card {
+    background-color: #f3be11 !important;
+    border-left: 4px solid #0e0d0d;
+}
+
+.compulsory-card .mat-mdc-card {
+    background-color: #fff8e1 !important;
+}

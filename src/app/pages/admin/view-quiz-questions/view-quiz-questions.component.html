@@ -1,264 +1,11 @@
-<!-- {{questions |json}}
-
-<h1 class="mt20">{{qTitle}} Questions </h1>
-<div class="bootstrap-wrapper">
-    <div class="row">
-        <div class="col-md-12">
-            <div class="container text-center">
-                <button mat-raised-button color="accent" [routerLink]="'/admin/add-question/' + qId +'/' + qTitle">Add
-                    Question</button>
-            </div>
-            <mat-card *ngIf="questions.length === 0 && getPrefixes().length === 0" class="empty-state-card mt20">
-                <mat-card-content class="text-center">
-                    <mat-icon class="empty-icon" color="warn">info</mat-icon>
-                    <h3>No questions available yet</h3>
-                    <p>Click <b>"Add Question"</b> above to add questions.</p>
-                </mat-card-content>
-            </mat-card>
 
 
 
+<!-- {{questions |json}} -->
 
 
-
-
-
-            <div *ngIf="questions.length>0">
-                <h1 style="text-align: center;">Section A</h1>
-                <mat-card *ngFor="let q of questions; let i= index" class="mt20">
-                    <mat-card-content>
-
-                        <p>
-                            <b>Q {{i+1}}.</b> <span class="ml20" [innerHTML]="q.content"></span>
-                        </p>
-
-                        <div class="container-fluid">
-                            <div class="row">
-                                <div class="col-md-6">
-                                    <p> <b>1)</b> {{ q.option1}}</p>
-                                </div>
-
-                                <div class="col-md-6">
-                                    <p> <b>2)</b>{{ q.option2}}</p>
-                                </div>
-                                <div class="col-md-6">
-                                    <p> <b>3)</b> {{ q.option3}}</p>
-                                </div>
-
-                                <div class="col-md-6">
-                                    <p> <b>4)</b>{{ q.option4}}</p>
-                                </div>
-                            </div>
-                            <mat-divider></mat-divider>
-                            <p class="mt10">
-                                <b>Correct Answer(s):</b> {{q.correct_answer}}
-                            </p>
-                        </div>
-                    </mat-card-content>
-                    <mat-card-actions style="margin-top: -20px;">
-                        <button mat-button color="warn" (click)="deleteQuestion(q.quesId)">Delete</button>
-
-                        <button mat-button color="primary"
-                            (click)="openUpdateObjDialog(q.quesId, updateObj)">Update</button>
-                    </mat-card-actions>
-                </mat-card>
-            </div>
-            <ng-template #updateObj let-data="data">
-                <h1 mat-dialog-title>Update Question</h1>
-                <div mat-dialog-content>
-
-                    <ckeditor [editor]="Editor" data="<h2>Type the Question here !</h2>" name="content"
-                        value="specificObjective.content" [(ngModel)]="specificObjective.content">
-                        {{specificObjective.content}}
-                    </ckeditor>
-
-                    <div class="row">
-                        <div class="col-md-6">
-                            <mat-form-field class="w100">
-                                <mat-label>Enter Option 1</mat-label>
-                                <input required [(ngModel)]="specificObjective.option1" name="option1" type="text"
-                                    matInput />
-
-                            </mat-form-field>
-                        </div>
-                        <div class="col-md-6">
-                            <mat-form-field class="w100">
-                                <mat-label>Enter Option 2</mat-label>
-                                <input required [(ngModel)]="specificObjective.option2" name="option2" type="text"
-                                    matInput />
-
-                            </mat-form-field>
-                        </div>
-                    </div>
-
-                    <div class="row">
-                        <div class="col-md-6">
-                            <mat-form-field class="w100">
-                                <mat-label>Enter Option 3</mat-label>
-                                <input [(ngModel)]="specificObjective.option3" name="option3" type="text" matInput />
-
-                            </mat-form-field>
-                        </div>
-                        <div class="col-md-6">
-                            <mat-form-field class="w100">
-                                <mat-label>Enter Option 4</mat-label>
-                                <input [(ngModel)]="specificObjective.option4" name="option4" type="text" matInput />
-
-                            </mat-form-field>
-                        </div>
-                    </div>
-
-                    <mat-form-field class="w100">
-                        <mat-label>Select answer</mat-label>
-                        <mat-select [(ngModel)]="specificObjective.correct_answer" name="correct_answer" multiple
-                            required>
-                            <mat-option *ngIf="specificObjective.option1"
-                                [value]="specificObjective.option1">{{specificObjective.option1}}</mat-option>
-                            <mat-option *ngIf="specificObjective.option2"
-                                [value]="specificObjective.option2">{{specificObjective.option2}}</mat-option>
-                            <mat-option *ngIf="specificObjective.option3"
-                                [value]="specificObjective.option3">{{specificObjective.option3}}</mat-option>
-                            <mat-option *ngIf="specificObjective.option4"
-                                [value]="specificObjective.option4">{{specificObjective.option4}}</mat-option>
-                        </mat-select>
-                    </mat-form-field>
-
-                </div>
-
-                <div mat-dialog-actions>
-                    <button mat-button (click)="dialogRef.close()">Cancel</button>
-                    <button mat-button (click)="updateQuestionData()">Update</button>
-                </div>
-            </ng-template>
-
-
-
-
-            <ng-template #updateDialog let-data="data">
-                <h1 mat-dialog-title>Update Question</h1>
-                <div mat-dialog-content>
-                    <mat-form-field class="w100" appearance="fill">
-                        <mat-label>Question No</mat-label>
-                        <input matInput [(ngModel)]="theory.quesNo">
-                    </mat-form-field>
-                    <mat-form-field class="w100" appearance="fill">
-                        <mat-label>Question</mat-label>
-                        <input matInput [(ngModel)]="theory.question">
-                    </mat-form-field>
-                    <mat-form-field class="w100" appearance="fill">
-                        <mat-label>Marks</mat-label>
-                        <input matInput [(ngModel)]="theory.marks">
-                    </mat-form-field>
-                </div>
-                <div mat-dialog-actions>
-                    <button mat-button (click)="dialogRef.close()">Cancel</button>
-                    <button mat-button (click)="updateTheoryQuestion()">Update</button>
-                </div>
-            </ng-template>
-
-
-            <ng-template #updateDialogNumQuestion let-data="data">
-                <h1 mat-dialog-title>Update Number of Questions</h1>
-
-                <div mat-dialog-content>
-                    <mat-form-field class="w100" appearance="fill">
-                        <mat-label>Number Theory to Answer</mat-label>
-                        <input matInput [(ngModel)]='numberOfquestionsToAnswer[0].totalQuestToAnswer'>
-                    </mat-form-field>
-                    <mat-form-field class="w100" appearance="fill">
-                        <mat-label>Time Allowed</mat-label>
-                        <input matInput [(ngModel)]='numberOfquestionsToAnswer[0].timeAllowed'>
-                    </mat-form-field>
-                </div>
-
-                <div mat-dialog-actions>
-                    <button mat-button (click)="dialogRef.close()">Cancel</button>
-                    <button mat-button (click)="updateTheoryNumberOfQuesToAnswer()">Update</button>
-                </div>
-            </ng-template>
-
-
-
-
-
-            <div *ngIf="getPrefixes().length>0">
-                <h1 style="text-align: center;">Section B</h1>
-                <mat-card>
-                    <h1 style="text-align: center;">Total Questions To Answer:
-                        <b>{{numberOfquestionsToAnswers[0].totalQuestToAnswer}}</b>
-                        Time Allowed:
-                        <b>{{numberOfquestionsToAnswers[0].timeAllowed}}</b>
-
-                        <button mat-button color="primary"
-                            (click)="openUpdateNumberDialog(numberOfquestionsToAnswers[0].answerTheoryId, updateDialogNumQuestion)">Update</button>
-                    </h1>
-                </mat-card>
-
-
-
-
-
-                <div *ngFor="let prefix of getPrefixes()">
-                    <mat-card *ngIf="getGroupedQuestions(prefix).length > 0"
-                        [ngClass]="{'compulsory-card': compulsoryPrefixes[prefix]}">
-                        <mat-card-header>
-                            <mat-card-title style="display: flex; align-items: center; justify-content: space-between;">
-                                <span>{{ prefix }}</span>
-                                <div style="display: flex; align-items: center; gap: 8px;">
-                                    <span style="font-size: 14px; font-weight: normal;">Mark as Compulsory</span>
-                                    <mat-slide-toggle [(ngModel)]="compulsoryPrefixes[prefix]"
-                                        (change)="onCompulsoryChange(prefix, $event.checked)" color="primary">
-                                    </mat-slide-toggle>
-                                </div>
-                            </mat-card-title>
-                        </mat-card-header>
-                        <mat-card-content>
-                            <div *ngFor="let question of getGroupedQuestions(prefix)">
-                                <p>
-                                    <strong>{{ question.quesNo }}:</strong> {{ question.question }} ({{ question.marks
-                                    }})
-                                    
-                                    <button mat-icon-button [matMenuTriggerFor]="menu"
-                                        aria-label="Example icon-button with a menu">
-                                        <mat-icon class="more_verti">more_vert</mat-icon>
-                                    </button>
-                                </p>
-
-                                <mat-card-actions style="margin-top: -75px;">
-                                    <mat-menu #menu="matMenu">
-                                        <button mat-menu-item (click)="openUpdateDialog(question.tqId, updateDialog)">
-                                            <mat-icon color="accent">update</mat-icon>
-                                            <span>Update</span>
-                                        </button>
-                                        <button mat-menu-item (click)="deleteTheoryQuestion(question.tqId)">
-                                            <mat-icon color="accent">delete</mat-icon>
-                                            <span>Delete</span>
-                                        </button>
-                                    </mat-menu>
-                                </mat-card-actions>
-                            </div>
-                        </mat-card-content>
-                    </mat-card>
-                    <mat-divider></mat-divider>
-                </div>
-
-
-
-
-
-
-            </div>
-        </div>
-
-
-
-    </div>
-
-</div> -->
-
-
+<!-- {{sectionB | json}} -->
 <h1 class="mt20">{{ qTitle }} Questions</h1>
-
 <div class="bootstrap-wrapper">
     <div class="row">
         <div class="col-md-12">
@@ -541,7 +288,68 @@
             <!-- ═══════════════════════════════════════════════════════
            SECTION B — Theory (unchanged)
            ═══════════════════════════════════════════════════════ -->
-            <div *ngIf="getPrefixes().length > 0">
+
+
+
+
+
+           <!-- ═══════════════════════════════════════════════════════
+   SECTION B — Theory (unchanged)
+   ═══════════════════════════════════════════════════════ -->
+<div *ngIf="getPrefixes().length > 0">
+    <h1 class="section-title">Section B</h1>
+
+    <mat-card>
+        <h2 style="text-align:center; padding: 12px 0;">
+            Answer: <b>{{ numberOfquestionsToAnswers?.[0]?.totalQuestToAnswer }}</b> &nbsp;|&nbsp;
+            Time: <b>{{ numberOfquestionsToAnswers?.[0]?.timeAllowed }}</b>
+            <button mat-button color="primary"
+                (click)="openUpdateNumberDialog(numberOfquestionsToAnswers[0].answerTheoryId, updateDialogNumQuestion)">
+                Update
+            </button>
+        </h2>
+    </mat-card>
+
+    <div *ngFor="let prefix of getPrefixes()">
+        <mat-card *ngIf="getGroupedQuestions(prefix).length > 0"
+            [ngClass]="{'compulsory-card': compulsoryPrefixes[prefix]}" class="mt10">
+            <mat-card-header>
+                <mat-card-title style="display:flex; align-items:center; justify-content:space-between;">
+                    <span>{{ prefix }}</span>
+                    <div style="display:flex; align-items:center; gap:8px;">
+                        <span style="font-size:14px; font-weight:normal;">Compulsory</span>
+                        <mat-slide-toggle [(ngModel)]="compulsoryPrefixes[prefix]"
+                            (change)="onCompulsoryChange(prefix, $event.checked)" color="primary"
+                            [disabled]="isUpdatingCompulsory[prefix]">
+                        </mat-slide-toggle>
+                    </div>
+                </mat-card-title>
+            </mat-card-header>
+            <mat-card-content>
+                <div *ngFor="let question of getGroupedQuestions(prefix)">
+                    <p>
+                        <strong>{{ question.quesNo }}:</strong> {{ question.question }} ({{ question.marks }})
+                        <button mat-icon-button [matMenuTriggerFor]="menu">
+                            <mat-icon>more_vert</mat-icon>
+                        </button>
+                    </p>
+                    <mat-card-actions style="margin-top: -75px;">
+                        <mat-menu #menu="matMenu">
+                            <button mat-menu-item (click)="openUpdateDialog(question.tqId, updateDialog)">
+                                <mat-icon color="accent">update</mat-icon><span>Update</span>
+                            </button>
+                            <button mat-menu-item (click)="deleteTheoryQuestion(question.tqId)">
+                                <mat-icon color="warn">delete</mat-icon><span>Delete</span>
+                            </button>
+                        </mat-menu>
+                    </mat-card-actions>
+                </div>
+            </mat-card-content>
+        </mat-card>
+        <mat-divider></mat-divider>
+    </div>
+</div>
+            <!-- <div *ngIf="getPrefixes().length > 0">
                 <h1 class="section-title">Section B</h1>
 
                 <mat-card>
@@ -571,6 +379,8 @@
                             </mat-card-title>
                         </mat-card-header>
                         <mat-card-content>
+
+                            
                             <div *ngFor="let question of getGroupedQuestions(prefix)">
                                 <p>
                                     <strong>{{ question.quesNo }}:</strong> {{ question.question }} ({{ question.marks
@@ -594,7 +404,7 @@
                     </mat-card>
                     <mat-divider></mat-divider>
                 </div>
-            </div>
+            </div> -->
 
         </div>
     </div>
